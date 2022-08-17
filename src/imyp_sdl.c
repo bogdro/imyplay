@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- SDL backend.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -69,6 +69,7 @@ struct imyp_sdl_backend_data
 	SDL_AudioSpec received;
 	volatile int inside_callback;
 	volatile int called;
+	long int samples_remain;
 };
 
 #ifndef HAVE_MALLOC
@@ -142,14 +143,25 @@ static void SDLCALL imyp_sdl_fill_buffer (
 		}
 		quality = 16;
 	}
-	for ( i=data->last_index; i < data->last_index + (unsigned long int)len; i++ )
+	for ( i = data->last_index; i < data->last_index + (unsigned long int)len; i++ )
 	{
 		((char *)stream)[i-data->last_index] = 0;
 	}
 
-	data->inside_callback = 1;
-	len = imyp_generate_samples (data->tone_freq, data->volume_level, data->duration, stream, len,
-		is_le, is_uns, quality, (unsigned int)data->received.freq, &(data->last_index));
+	if ( data->samples_remain > 0 )
+	{
+		data->inside_callback = 1;
+		len = imyp_generate_samples (data->tone_freq, data->volume_level,
+			data->duration, stream,
+			(int)(IMYP_MIN(len, data->samples_remain) * ((int)quality / 8)),
+			is_le, is_uns, quality, (unsigned int)data->received.freq,
+			&(data->last_index));
+		data->samples_remain -= (long int)len;
+		if ( data->samples_remain <= 0 )
+		{
+			data->samples_remain = 0;
+		}
+	}
 	data->inside_callback = 0;
 }
 
@@ -171,7 +183,7 @@ imyp_sdl_play_tune (
 	const int volume_level,
 	const int duration,
 	void * const buf IMYP_ATTR ((unused)),
-	int bufsize IMYP_ATTR ((unused)))
+	int bufsize)
 #else
 	imyp_data, freq, volume_level, duration, buf, bufsize)
 	imyp_backend_data_t * const imyp_data;
@@ -179,9 +191,11 @@ imyp_sdl_play_tune (
 	const int volume_level;
 	const int duration;
 	void * const buf IMYP_ATTR ((unused));
-	int bufsize IMYP_ATTR ((unused));
+	int bufsize;
 #endif
 {
+	int qual_bits = 16;
+	int qual_bytes;
 	struct imyp_sdl_backend_data * data =
 		(struct imyp_sdl_backend_data *)imyp_data;
 
@@ -196,8 +210,18 @@ imyp_sdl_play_tune (
 	data->last_index = 0;
 	data->called = 0;
 
+	/* set the number of remaining samples to the initial duration of the tone */
+	if ( (data->received.format == AUDIO_U8) || (data->received.format == AUDIO_S8) )
+	{
+		qual_bits = 8;
+	}
+	qual_bytes = qual_bits/8;
+	data->samples_remain = (long int)(duration * (long int)data->received.freq * qual_bytes) / 1000; /* bytes */
+	data->samples_remain = IMYP_MIN (bufsize, data->samples_remain); /* bytes */
+	data->samples_remain /= qual_bytes; /* samples */
+
 	SDL_PauseAudio (0);	/* start playing */
-	while ( (data->called == 0) && (sig_recvd == 0) ) {}
+	while ( (data->called == 0) && (imyp_sig_recvd == 0) ) {}
 
 	/*imyp_sdl_pause (duration);*/
 	SDL_PauseAudio (1);
@@ -208,6 +232,7 @@ imyp_sdl_play_tune (
 	data->volume_level = 0;
 	data->duration = 0;
 	data->last_index = 0;
+	data->samples_remain = 0;
 
 	return 0;
 }
@@ -442,4 +467,3 @@ imyp_sdl_version (
 # endif
 #endif
 }
-

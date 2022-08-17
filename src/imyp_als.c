@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- ALSA backend.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -145,7 +145,7 @@ imyp_alsa_play_tune (
 	snd_pcm_hw_params_get_rate (data->params, &sampfreq, &dir);
 	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
 		is_le, is_uns, quality, sampfreq, NULL);
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -2;
 	}
@@ -354,4 +354,3 @@ imyp_alsa_version (
 	printf ( "ALSA: ?\n" );
 #endif
 }
-

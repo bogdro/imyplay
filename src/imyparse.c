@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing file.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -129,10 +129,10 @@ imyp_read_line (
 	{
 		is_eof = 1;
 	}
-	while ( (sig_recvd == 0) && (is_eof == 0) )
+	while ( (imyp_sig_recvd == 0) && (is_eof == 0) )
 	{
 		while ( (((*buf_index) < 0) || (unsigned int)(*buf_index) + min_current >= strlen (buffer))
-			&& (is_eof == 0) && (sig_recvd == 0) )
+			&& (is_eof == 0) && (imyp_sig_recvd == 0) )
 		{
 			remainder = (int)(strlen (buffer) - (unsigned int)(*buf_index));
 			if ( remainder > 0 )
@@ -162,7 +162,7 @@ imyp_read_line (
 			}
 			*buf_index = 0;
 			curr_buflen = strlen (buffer);
-			if ( (curr_buflen >= strlen (IMYP_MEL_END))
+			if ( (curr_buflen >= 11 /* strlen (IMYP_MEL_END) */)
 				&& (strstr (buffer, IMYP_MEL_END) == buffer) )
 			{
 				printf ("%s", buffer);
@@ -421,13 +421,13 @@ imyp_get_duration (
 		|| (IMYP_TOUPPER (note_buffer[imyp_index]) == 'G')
 		|| (IMYP_TOUPPER (note_buffer[imyp_index]) == 'A')
 		|| (IMYP_TOUPPER (note_buffer[imyp_index]) == 'B'))
-		&& (sig_recvd == 0)
+		&& (imyp_sig_recvd == 0)
 	)
 	{
 		imyp_index++;
 		imyp_read_line (note_buffer, &imyp_index, strlen (note_buffer), imyfile, 0);
 	}
-	if ( (sig_recvd != 0) || (is_eof != 0) )
+	if ( (imyp_sig_recvd != 0) || (is_eof != 0) )
 	{
 		return 0;
 	}
@@ -539,7 +539,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave-1][IMYP_NOTES_PER_OCTAVE-1],
 			volume, *note_duration,
 			buf16, IMYP_SAMPBUFSIZE, curr);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n",
 				_(err_play_tune));
@@ -551,7 +551,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave][note_index-1],
 			volume, *note_duration,
 			buf16, IMYP_SAMPBUFSIZE, curr);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n",
 				_(err_play_tune));
@@ -564,7 +564,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave+1][0],
 			volume, *note_duration,
 			buf16, IMYP_SAMPBUFSIZE, curr);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n",
 				_(err_play_tune));
@@ -576,7 +576,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave][note_index+1],
 			volume, *note_duration,
 			buf16, IMYP_SAMPBUFSIZE, curr);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n",
 				_(err_play_tune));
@@ -590,7 +590,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave][note_index],
 			volume, *note_duration,
 			buf16, IMYP_SAMPBUFSIZE, curr);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n",
 				_(err_play_tune));
@@ -613,10 +613,9 @@ static int imyp_check_string IMYP_PARAMS ((const char string[]));
 
 /**
  * Finds and skips the given string.
- * \param[in] imy The file to get any additional data from.
  * \param[in] string The string to find and skip. It is assumed the whole
  *	string is in the 'melody_line' buffer, starting at 'melody_index'.
- * \return 1 if the full string has been found and skipped, 0 otherwise.
+ * \return 1 if the full string has been found, 0 otherwise.
  */
 static int
 #ifdef IMYP_ANSIC
@@ -752,7 +751,7 @@ imyp_play_file (
 			{
 				imyp_put_text (melody_line, curr);
 				/* parse beat */
-				scanf_res = sscanf (&melody_line[5], "%d", &bpm);
+				scanf_res = sscanf (&melody_line[5] /* "BEAT:" */, "%d", &bpm);
 				if ( scanf_res != 1 )
 				{
 					printf ("%s: %s.\n", _(err_parse_beat), melody_line);
@@ -782,11 +781,19 @@ imyp_play_file (
 			{
 				imyp_put_text (melody_line, curr);
 				/* parse volume */
-				scanf_res = sscanf (&melody_line[8], "%d", &volume);
+				scanf_res = sscanf (&melody_line[8] /* "VOLUME:" */, "%d", &volume);
 				if ( scanf_res != 1 )
 				{
 					printf ("%s: %s.\n", _(err_parse_vol), melody_line);
 					volume = 7;
+				}
+				if ( volume < 0 )
+				{
+					volume = 0;
+				}
+				else if ( volume > IMYP_MAX_IMY_VOLUME )
+				{
+					volume = IMYP_MAX_IMY_VOLUME;
 				}
 			}
 			else if ( strstr (melody_line, "MELODY:") != NULL )
@@ -801,7 +808,7 @@ imyp_play_file (
 					/* get a line from the file and skip the whitespace */
 					imyp_read_line (melody_line, &melody_index,
 						sizeof (melody_line) - 10, imy, 0);
-					if ( sig_recvd != 0 )
+					if ( imyp_sig_recvd != 0 )
 					{
 						is_eof = 1;
 					}
@@ -1124,7 +1131,7 @@ imyp_play_file (
 #endif
 								/* find the repeat count: */
 								while ( (melody_line[melody_index] != '@')
-									&& (sig_recvd == 0) && (is_eof == 0)
+									&& (imyp_sig_recvd == 0) && (is_eof == 0)
 								 )
 								{
 									melody_index++;
@@ -1140,7 +1147,7 @@ imyp_play_file (
 										break;
 									}
 								}
-								if (sig_recvd != 0)
+								if (imyp_sig_recvd != 0)
 								{
 									is_eof = 1;
 									break;
@@ -1189,6 +1196,14 @@ imyp_play_file (
 									{
 										volume++;
 										melody_index++;
+									}
+									if ( volume < 0 )
+									{
+										volume = 0;
+									}
+									else if ( volume > IMYP_MAX_IMY_VOLUME )
+									{
+										volume = IMYP_MAX_IMY_VOLUME;
 									}
 								}
 								/* start repeating */
@@ -1261,7 +1276,7 @@ imyp_play_file (
 									is_repeat = 0;
 									/* skip the repeat block */
 									while ( (melody_line[melody_index] != ')')
-										&& (sig_recvd == 0) && (is_eof == 0)
+										&& (imyp_sig_recvd == 0) && (is_eof == 0)
 									)
 									{
 										melody_index++;
@@ -1270,7 +1285,7 @@ imyp_play_file (
 											sizeof (melody_line) - 10,
 											imy, 0);
 									}
-									if ( sig_recvd != 0 )
+									if ( imyp_sig_recvd != 0 )
 									{
 										is_eof = 1;
 										break;
@@ -1326,9 +1341,9 @@ imyp_play_file (
 							is_flat = 0;
 							break;
 					} /* switch */
-				} while ((is_eof == 0) && (sig_recvd == 0));
+				} while ((is_eof == 0) && (imyp_sig_recvd == 0));
 			} /* else if ( strstr (melody_line, "MELODY:") != NULL ) */
-		} while ((is_eof == 0) && (sig_recvd == 0));
+		} while ((is_eof == 0) && (imyp_sig_recvd == 0));
 		fclose (imy);
 		return 0;
 	}
@@ -1338,4 +1353,3 @@ imyp_play_file (
 		return -4;
 	}
 }
-

@@ -2,11 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(imyplay, 1.0, bogdandr@op.pl)
+AC_INIT(imyplay, 1.1, bogdandr@op.pl)
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \
-	src/imyp_cfg.h:src/imyp_cfg.hin doc/Makefile po/Makefile])
+	src/imyp_cfg.h:src/imyp_cfg.hin doc/Makefile po/Makefile test/Makefile])
 AC_CONFIG_SRCDIR([src/imyplay.c])
 AC_CONFIG_HEADER([config.h:config.hin])
 
@@ -160,7 +160,9 @@ AC_ARG_ENABLE(LIBNETBLOCK,[[  --enable-LIBNETBLOCK	Enable libnetblock for imypla
 #ALL_LINGUAS="pl"
 
 # ==================== Checks for programs.
+AC_LANG(C)
 AC_PROG_CC
+AM_PROG_CC_C_O
 AC_PROG_RANLIB
 AM_CONDITIONAL(ISGCC, [test "x$GCC" = "xyes"])
 
@@ -655,6 +657,13 @@ AM_GNU_GETTEXT([external])
 # The macros above set the correct CFLAGS if this option is given.
 
 AC_CHECK_HEADERS([libintl.h])
+
+have_check=no
+#ACTION-IF-NOT-FOUND is required, otherwise 'configure' fails
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.4], [have_check=yes], [have_check=no])
+#AM_PATH_CHECK([], [have_check=yes])
+
+AM_CONDITIONAL([IMY_TESTS_ENABLED], [test "x$have_check" = "xyes"])
 
 if (test "x$GCC" = "xyes" ); then
 

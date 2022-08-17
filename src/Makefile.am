@@ -6,7 +6,7 @@ imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 
 imyplay_LDADD = $(INTLLIBS)
 localedir = $(datadir)/locale
-INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\"
+AM_CPPFLAGS = -I../intl -DLOCALEDIR=\"$(localedir)\"
 EXTRA_DIST = imyp_cfg.hin imypdos.asm
 
 if ALLEGRO
@@ -63,14 +63,19 @@ imyplay_SOURCES += imyp_spk.c imyp_spk.h
 endif
 
 if FLEX
+
 imyplay_SOURCES += imyparsf.l
-BUILT_SOURCES = imyparsf.c
+#BUILT_SOURCES = imyparsf.c
 
 # WARNING: enabling nodist_imyplay_SOURCES in this form makes
 # the program fail to link:
 #nodist_imyplay_SOURCES = imyparsf.c
 
 imyplay_DISTCLEANFILES = imyparsf.c
+CLEANFILES = imyparsf.c
+
 else
+
 imyplay_SOURCES += imyparse.c
+
 endif

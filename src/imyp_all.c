@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- Allegro backend.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -274,7 +274,7 @@ imyp_all_play_tune (
 	{
 		bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
 			1, 1, (unsigned int)data->quality, (unsigned int)data->sampfreq, NULL);
-		if ( sig_recvd != 0 )
+		if ( imyp_sig_recvd != 0 )
 		{
 			stop_audio_stream (as);
 			return -2;
@@ -290,7 +290,7 @@ imyp_all_play_tune (
 				((char *)new_buf)[i] = ((char *)buf)[i];
 			}
 #endif
-			if ( sig_recvd != 0 )
+			if ( imyp_sig_recvd != 0 )
 			{
 				stop_audio_stream (as);
 				return -2;
@@ -503,4 +503,3 @@ imyp_all_version (
 	printf ( "Allegro: ?\n" );
 #endif
 }
-

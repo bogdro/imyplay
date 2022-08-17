@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- MIDI writer backend.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -316,47 +316,7 @@ imyp_midi_init (
 # endif
 		return -2;
 	}
-/*
-len = strlen (filename);
-	imy = strstr (filename, ".imy");
-	if ( imy != NULL )
-	{
-		strncpy (imy, ".mid", 4);
-		imy[4] = '\0';
-		data->midi = midiFileCreate (file_out, TRUE);
-		strncpy (imy, ".imy", 4);
-		imy[4] = '\0';
-		if ( data->midi == NULL )
-		{
-# ifdef HAVE_MALLOC
-			free (data);
-# endif
-			return -2;
-		}
-	}
-	else
-	{
-#ifdef HAVE_MALLOC
-		imy = (char *) malloc (len + 4+1);
-		if ( imy == NULL )
-		{
-			return -3;
-		}
-		strncpy (imy, filename, len);
-		strncpy (&imy[len], ".mid", 4+1);
-		imy[len+4] = '\0';
-		data->midi = midiFileCreate (imy, TRUE);
-		free (imy);
-		if ( data->midi == NULL )
-		{
-			free (data);
-			return -4;
-		}
-#else
-		return -5;
-#endif
-	}
-	*/
+
 	midiFileSetTracksDefaultChannel (data->midi, 1, MIDI_CHANNEL_1);
 	if ( instrument == -1 )
 	{
@@ -422,4 +382,3 @@ imyp_midi_version (
 	/* this is an internal backend */
 	printf ( "MIDI: 1.3\n" );
 }
-

@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- utility functions.
  *
- * Copyright (C) 2012-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -363,7 +363,7 @@ imyp_generate_samples (
 		periods_in_full = 2 * M_PI / nperiods;
 		for ( i = last_index; i < last_index + imyp_bufsize; i++ )
 		{
-			if ( sig_recvd != 0 )
+			if ( imyp_sig_recvd != 0 )
 			{
 				if ( qual_bits == 16 )
 				{
@@ -438,7 +438,7 @@ imyp_generate_samples (
 	{
 		for ( i = last_index; i < last_index + imyp_bufsize; i++ )
 		{
-			if ( sig_recvd != 0 )
+			if ( imyp_sig_recvd != 0 )
 			{
 				return (int)(i - last_index);
 			}
@@ -547,7 +547,7 @@ imyp_generate_filename (
 	}
 	else
 	{
-		imy_index = -1;
+		imy_index = (int)fnlen;
 		imy = (char *) malloc (fnlen + elen + 1);
 		target_fname_len = fnlen + elen + 1;
 	}
@@ -565,20 +565,17 @@ imyp_generate_filename (
 #endif
 	strncpy (imy, filename, fnlen);
 	/* If ".imy" extension is present, change it to the provided one.
-	   Else, leave whatever the filename was requested. */
-	if ( imy_index >= 0 )
+	   Else, append the requested extension. */
+	for (i = (size_t)imy_index; i < fnlen; i++ )
 	{
-		for (i = (size_t)imy_index; i < fnlen; i++ )
-		{
-			imy[i] = '\0';
-		}
-		fnlen = (size_t)imy_index;
-		strncpy (&imy[fnlen], ext, elen + 1);
-		imy[fnlen + elen] = '\0';
+		imy[i] = '\0';
 	}
+	fnlen = (size_t)imy_index;
+	strncpy (&imy[fnlen], ext, elen + 1);
+	imy[fnlen + elen] = '\0';
+
 	return imy;
 #else
 	return NULL;
 #endif
 }
-

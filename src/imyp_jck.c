@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- JACK backend.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -67,6 +67,7 @@ struct imyp_jack_backend_data
 	jack_port_t * joutput;
 	jack_client_t * jclient;
 	const char **ports;
+	long int samples_remain;
 };
 
 #ifndef HAVE_MALLOC
@@ -99,6 +100,7 @@ static int imyp_jack_fill_buffer (
 	double nperiods;
 	unsigned long int nperiods_rounded;
 	double periods_in_full;
+	jack_nframes_t frames_to_play;
 
 	struct imyp_jack_backend_data * data =
 		(struct imyp_jack_backend_data *)arg;
@@ -116,6 +118,16 @@ static int imyp_jack_fill_buffer (
 	}
 
 	data->inside_callback = 1;
+	/* zero-out the whole buffer first */
+	for ( i = data->last_index; i < data->last_index + nframes; i++ )
+	{
+		if ( imyp_sig_recvd != 0 )
+		{
+			data->inside_callback = 0;
+			return -2;
+		}
+		output[i - data->last_index] = 0;
+	}
 	if ( data->tone_freq > 0.0 )
 	{
 		sampfreq = jack_get_sample_rate (data->jclient);
@@ -124,9 +136,10 @@ static int imyp_jack_fill_buffer (
 		/* nperiods_rounded = (unsigned long int)IMYP_ROUND(nperiods); */
 		nperiods_rounded = (unsigned long int)nperiods;
 		periods_in_full = 2 * M_PI / nperiods;
-		for ( i = data->last_index; i < data->last_index + nframes; i++ )
+		frames_to_play = IMYP_MIN(nframes, (unsigned long int)data->samples_remain);
+		for ( i = data->last_index; i < data->last_index + frames_to_play; i++ )
 		{
-			if ( sig_recvd != 0 )
+			if ( imyp_sig_recvd != 0 )
 			{
 				data->inside_callback = 0;
 				return -2;
@@ -156,7 +169,7 @@ static int imyp_jack_fill_buffer (
 		}
 		data->last_index += i - data->last_index;
 		/* just slows things down
-		while ( (data->last_index > (unsigned long int)NSAMP) && (sig_recvd == 0) )
+		while ( (data->last_index > (unsigned long int)NSAMP) && (imyp_sig_recvd == 0) )
 		{
 			data->last_index -= (unsigned long int)NSAMP;
 		}*/
@@ -165,15 +178,6 @@ static int imyp_jack_fill_buffer (
 	else
 	{
 		/*data->last_index = 0;*/
-		for ( i = data->last_index; i < data->last_index + nframes; i++ )
-		{
-			if ( sig_recvd != 0 )
-			{
-				data->inside_callback = 0;
-				return -2;
-			}
-			output[i - data->last_index] = 0;
-		}
 	}
 	data->inside_callback = 0;
 	return 0;
@@ -197,7 +201,7 @@ imyp_jack_play_tune (
 	const int volume_level,
 	const int duration,
 	void * const buf IMYP_ATTR((unused)),
-	int bufsize IMYP_ATTR((unused)))
+	int bufsize)
 #else
 	imyp_data, freq, volume_level, duration, buf, bufsize)
 	imyp_backend_data_t * const imyp_data;
@@ -205,7 +209,7 @@ imyp_jack_play_tune (
 	const int volume_level;
 	const int duration;
 	void * const buf IMYP_ATTR((unused));
-	int bufsize IMYP_ATTR((unused));
+	int bufsize ;
 #endif
 {
 	struct imyp_jack_backend_data * data =
@@ -221,6 +225,10 @@ imyp_jack_play_tune (
 	data->duration = duration;
 	data->last_index = 0;
 
+	/* set the number of remaining samples to the initial duration of the tone */
+	data->samples_remain = (long int)(duration * (long int)jack_get_sample_rate (data->jclient)) / 1000; /* samples */
+	data->samples_remain = IMYP_MIN (bufsize, data->samples_remain); /* samples */
+
 	imyp_jack_pause (imyp_data, duration);
 
 	while ( data->inside_callback != 0 ) {}
@@ -229,6 +237,7 @@ imyp_jack_play_tune (
 	data->volume_level = 0;
 	data->duration = 0;
 	data->last_index = 0;
+	data->samples_remain = 0;
 
 	return 0;
 }
@@ -447,4 +456,3 @@ imyp_jack_version (
 	/* no version information currently available */
 	printf ( "JACK: ?\n" );
 }
-

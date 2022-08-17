@@ -217,7 +217,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave-1][IMYP_NOTES_PER_OCTAVE-1],
 			volume, *duration,
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n", _(err_play_tune));
 		}
@@ -228,7 +228,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave][note_index-1],
 			volume, *duration,
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n", _(err_play_tune));
 		}
@@ -240,7 +240,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave+1][0],
 			volume, *duration,
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n", _(err_play_tune));
 		}
@@ -251,7 +251,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave][note_index+1],
 			volume, *duration,
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n", _(err_play_tune));
 		}
@@ -264,7 +264,7 @@ imyp_play_current_note (
 		*play_res = imyp_play_tune (imyp_notes[octave][note_index],
 			volume, *duration,
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
-		if ( (*play_res != 0) && (sig_recvd == 0) )
+		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
 			printf ("%s\n", _(err_play_tune));
 		}
@@ -299,7 +299,7 @@ imyp_make_pause (
 	const int current_bpm;
 #endif
 {
-	if ( (melody == NULL) || (curr_lib == IMYP_CURR_NONE) || (sig_recvd != 0) )
+	if ( (melody == NULL) || (curr_lib == IMYP_CURR_NONE) || (imyp_sig_recvd != 0) )
 	{
 		return;
 	}
@@ -365,7 +365,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 
 	ECHO;
 	/* parse beat */
-	scanf_res = sscanf (yytext+5, "%d", &bpm);
+	scanf_res = sscanf (yytext+5 /* "BEAT:" */, "%d", &bpm);
 	if ( scanf_res != 1 )
 	{
 		printf ("%s: %s.\n", _(err_parse_beat), yytext+5);
@@ -375,7 +375,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	{
 		bpm = 120;
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -395,7 +395,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	{
 		style = 0;
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -405,7 +405,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 
 	ECHO;
 	/* parse volume */
-	scanf_res = sscanf (yytext+8, "%d", &volume);
+	scanf_res = sscanf (yytext+8 /* VOLUME:V */, "%d", &volume);
 	if ( scanf_res != 1 )
 	{
 		printf ("%s: %s.\n", _(err_parse_vol), yytext+8);
@@ -419,7 +419,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	{
 		volume = IMYP_MAX_IMY_VOLUME;
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -431,7 +431,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 
 	pos = 0;
 	BEGIN (IN_MELODY_LINE);
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -442,7 +442,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	imyp_play_current_note (yytext, &note_duration, curr, &play_result, 0, 0, bpm);
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -454,7 +454,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		curr, &play_result, 0, 1, bpm);
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -466,7 +466,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		curr, &play_result, 1, 0, bpm);
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -477,7 +477,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	imyp_make_pause (yytext, curr, bpm);
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -487,7 +487,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -519,7 +519,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -545,7 +545,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -568,7 +568,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -581,7 +581,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* initialize repeat block variables: */
 	repeat_count = -2;
 	repeat_pos = pos;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -593,7 +593,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	BEGIN (IN_IMELODY);
 	/* return everything to the stream, so we can catch the line again. */
 	yyless (0);
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -603,7 +603,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 <IN_MELODY_LINE>[\n\r]			{
 
 	pos = 0;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -614,7 +614,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -633,7 +633,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		imyp_play_current_note (yytext + yyleng-2, &note_duration, curr,
 			&play_result, 0, 0, bpm);
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -652,7 +652,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		imyp_play_current_note (yytext + yyleng-3 + 1 /* skip the '&' */,
 			&note_duration, curr, &play_result, 0, 0, bpm);
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -671,7 +671,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		imyp_play_current_note (yytext + yyleng-3 + 1 /* skip the '#' */,
 			&note_duration, curr, &play_result, 0, 0, bpm);
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -689,7 +689,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		/* perform any action here, where we know that the block has been fully parsed */
 		imyp_make_pause (yytext, curr, bpm);
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -706,7 +706,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	{
 		/* perform any action here, where we know that the block has been fully parsed */
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -745,7 +745,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 				repeat_pos+1);
 		}
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -778,7 +778,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 			volume = IMYP_MAX_IMY_VOLUME;
 		}
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -837,7 +837,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 				repeat_pos+1);
 		}
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -872,7 +872,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking throuhg the whole repeat block. */
 	yymore ();
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -906,7 +906,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		}
 	}
 	BEGIN (REPEAT_BLOCK_END);
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -937,7 +937,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 			repeat_pos = 0;
 		}
 	}
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -949,7 +949,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	BEGIN (IN_IMELODY);
 	/* return everything to the stream, so we can catch the line again. */
 	yyless (0);
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -962,7 +962,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking throuhg the whole repeat block. */
 	yymore ();
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -976,7 +976,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking throuhg the whole repeat block. */
 	yymore ();
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -994,7 +994,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		pos+1);
 	/* update the line position to display the position of unknown tokens */
 	pos += yyleng;
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -1015,7 +1015,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking throuhg the whole repeat block. */
 	yymore ();
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -1027,7 +1027,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	ECHO;
 	/* print a newline no matter if it was present in the file, so we can use just one pattern. */
 	printf ("\n");
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -1036,7 +1036,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 <IN_IMELODY>.|\n			{
 
 	ECHO; /* echo unknown lines inside the melody block */
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}
@@ -1047,7 +1047,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 
 	fflush(stdout);
 	/* eat up everything before "BEGIN:IMELODY" or after "END:IMELODY" */
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;
 	}

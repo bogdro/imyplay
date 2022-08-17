@@ -38,7 +38,7 @@ This manual is for IMYplay, version @VERSION@
 
 @c ==================================================================
 
-    Copyright (c)  2009-2016 Bogdan Drozdowski
+    Copyright (c)  2009-2018 Bogdan Drozdowski
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -1688,7 +1688,7 @@ marked with capital letters in the header:
 
 @quotation
 # YOUR LANGUAGE translations for IMYplay package.@*
-# Copyright (C) 2009-2016 Bogdan 'bogdro' Drozdowski@*
+# Copyright (C) 2009-2018 Bogdan 'bogdro' Drozdowski@*
 # This file is distributed under the same license as@*
 # the IMYplay package.@*
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.@*

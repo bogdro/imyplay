@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- signal handling.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@
 #include "imyp_sig.h"
 
 /* This has to be public: */
-volatile sig_atomic_t sig_recvd = 0;		/* non-zero after signal received */
+volatile sig_atomic_t imyp_sig_recvd = 0;		/* non-zero after signal received */
 
 #ifdef HAVE_SIGNAL_H
 # if (defined HAVE_SIGACTION) && (!defined __STRICT_ANSI__)
@@ -172,7 +172,7 @@ term_signal_received (
 	if ( signum != SIGCHLD )
 # endif
 	{
-		sig_recvd = signum;
+		imyp_sig_recvd = signum;
 	}
 
 # define void 1

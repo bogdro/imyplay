@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- FILE backend.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -130,7 +130,7 @@ imyp_file_play_tune (
 
 	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
 		is_le, is_uns, quality, (unsigned int)data->samp_rate, NULL);
-	if ( sig_recvd != 0 )
+	if ( imyp_sig_recvd != 0 )
 	{
 		return -2;
 	}
@@ -352,4 +352,3 @@ imyp_file_version (
 	/* this is an internal backend */
 	printf ( "FILE\n" );
 }
-

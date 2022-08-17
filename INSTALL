@@ -145,4 +145,3 @@ Building an RPM package (the new way):
 3) type
         rpmbuild -ba $HOME/rpmbuild/SPECS/imyplay.spc
 4) get the rpms from $HOME/rpmbuild/RPMS/i386 and $HOME/rpmbuild/SRPMS
-

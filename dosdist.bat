@@ -1,6 +1,9 @@
 cd src
 
-sed 's/[@]VERSION[@]/1.0/' imyp_cfg.hin > imyp_cfg.h
+set imymajor=1
+set imyminor=1
+
+sed 's/[@]VERSION[@]/%imymajor%.%imyminor%/' imyp_cfg.hin > imyp_cfg.h
 if not "%errorlevel%"=="0" goto end
 nasm -O999 -f coff -DIMYPLAY_32BIT=1 -o imypdos.obj imypdos.asm
 if not "%errorlevel%"=="0" goto end
@@ -10,7 +13,13 @@ upx -9 imyplay.exe
 
 cd ..
 
-set imyver=10
+set imyver=%imymajor%-%imyminor%
+
+del imy-%imyver%\po\*.* imy-%imyver%\doc\*.* imy-%imyver%\imy\*.* imy-%imyver%\*.*
+rmdir imy-%imyver%\po
+rmdir imy-%imyver%\doc
+rmdir imy-%imyver%\imy
+rmdir imy-%imyver%
 
 mkdir imy-%imyver%
 mkdir imy-%imyver%\doc
@@ -40,4 +49,3 @@ rem rmdir imy-%imyver%
 set imyver=
 
 :end
-

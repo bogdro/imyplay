@@ -1,3 +1,61 @@
+2018-07-08	Bogdan Drozdowski <bogdandr@op.pl>
+
+	* IMYplay version 1.1
+	  PortAudio output improvements. Small improvements in SDL & JACK
+	  output. Fixed creating output file names. Small improvements in
+	  the building mechanism. Added unit tests.
+	* configure.ac: setting AC_LANG(C). Checking for the "check" library
+	  for unit tests. Added AM_PROG_CC_C_O for compatibility.
+	* src/imyparse.c: Removed some invalid comments
+	* src/Makefile.am: changed deprecated INCLUDES to AM_CPPFLAGS
+	* src/imyp_por.c (imyp_portaudio_play_tune): move output initialization
+	  to imyp_portaudio_init and closing to imyp_portaudio_close. Now
+	  initializing the stream just once and only calling start and stop
+	  for each tone. Synchronous mode is easier to program, but either
+	  crashes or reports underrun errors in the output device, so for now,
+	  asynchronous mode will stay. Setting up the maximum number of frames
+	  needed for the tone.
+	* src/imyp_por.c (imyp_portaudio_fill_buffer): now filling just as
+	  many frames as is needed for the tone (setting up the maximum number
+	  of frames needed and decreasing it each time a buffer is filled).
+	  This allows a bit finer control over the duration of the tone being
+	  played. The output buffer is zeroed-out on each call before filling
+	  it with data.
+	* src/imyp_por.c (imyp_portaudio_init): initializing not only the
+	  output backend, but also the playing stream.
+	* src/imyp_por.c (imyp_portaudio_close): closing not only the output
+	  backend, but also the playing stream.
+	* src/imyp_sdl.c (imyp_sdl_fill_buffer): now filling just as
+	  many frames as is needed for the tone (setting up the maximum number
+	  of frames needed and decreasing it each time a buffer is filled).
+	  This allows a bit finer control over the duration of the tone being
+	  played. The output buffer is zeroed-out on each call before filling
+	  it with data.
+	* src/imyp_sdl.c (imyp_sdl_play_tune): setting up the maximum number
+	  of frames needed for the tone.
+	* src/imyp_jck.c (imyp_jack_fill_buffer): now filling just as
+	  many frames as is needed for the tone (setting up the maximum number
+	  of frames needed and decreasing it each time a buffer is filled).
+	  This allows a bit finer control over the duration of the tone being
+	  played. The output buffer is zeroed-out on each call before filling
+	  it with data.
+	* src/imyp_jck.c (imyp_jack_play_tune): setting up the maximum number
+	  of frames needed for the tone.
+	* src/imyparse.c (imyp_play_file): checking the volume values for
+	  overflow.
+	* src/imyparse.c (imyp_read_line): use a constant instead of
+	  strlen (IMYP_MEL_END).
+	* test: added unit tests for IMYplay, currently only for the
+	  imyp_compare() and imyp_generate_filename() of src/imyputil.c
+	* src/imyputil.c (imyp_generate_filename): if the filename doesn't
+	  contain ".imy", the requested extension is appended. This prevents
+	  overwriting input files.
+	* doc/Makefile.am: noted why it's impossible to correctly remove the
+	  generated imyplay.txi from the distribution. corrected man pages'
+	  distribution settings.
+	* src/imyp_sig.h, *.c, imyparsf.l: rename sig_recvd to imyp_sig_recvd
+	* imyplay.spi: small improvements
+
 2016-07-29	Bogdan Drozdowski <bogdandr@op.pl>
 
 	* IMYplay version 1.0

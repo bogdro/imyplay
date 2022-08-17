@@ -30,7 +30,8 @@ call an external program on each note.
 
 %build
 
-CFLAGS='-march=i386' ./configure --prefix=/usr/local --libdir=/usr/local/lib
+CFLAGS='-march=i386' ./configure --prefix=/usr/local --libdir=/usr/local/lib \
+	--infodir=/usr/share/info --mandir=/usr/share/man
 %{__make} 2>/dev/null
 
 %install

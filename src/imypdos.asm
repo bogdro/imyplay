@@ -2,7 +2,7 @@
 ; A program for playing iMelody ringtones (IMY files).
 ;	-- DOS routines (currently for the PC-speaker backend).
 ;
-; Copyright (C) 2012-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+; Copyright (C) 2012-2018 Bogdan Drozdowski, bogdandr (at) op.pl
 ; License: GNU General Public License, v3+
 ;
 ; This program is free software; you can redistribute it and/or
@@ -129,4 +129,3 @@ imyp_spkr_dos_tone:
 
 	; sound is now disabled. Return to caller.
 	IMYPLAY_RETURN_SUCCESS
-

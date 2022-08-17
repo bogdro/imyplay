@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- EXEC backend.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -297,7 +297,7 @@ static int launch_program (
 # ifdef WIFSIGNALED
 		if ( WIFSIGNALED (sys_ret) )
 		{
-			sig_recvd = 1; /* anything not zero */
+			imyp_sig_recvd = 1; /* anything not zero */
 		}
 # endif /* WIFSIGNALED */
 #else /* ! WEXITSTATUS */
@@ -489,4 +489,3 @@ imyp_exec_version (
 	/* this is an internal backend */
 	printf ( "EXEC\n" );
 }
-

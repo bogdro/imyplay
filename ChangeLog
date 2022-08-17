@@ -1,3 +1,37 @@
+2012-07-14	Bogdan Drozdowski <bogdandr@op.pl>
+
+	* IMYplay version 0.7
+	  PC-speaker output support. Portability improvements. Code cleanup
+	  (removed unnecessary includes and made other corrections for
+	  various backends).
+	* src/imyparsf.l: correctly freeing all memory after processing.
+	* configure.ac: corrected the JACK, Pulseaudio, Portaudio, Libao,
+	  OSS, ALSA, SDL and Allegro backends in the summary and in the
+	  automake conditionals. The malloc() and realloc() functions are
+	  now required for the flex-based parser. Corrected the
+	  --enable-GSTREAMER option. Corrected checking for requirements of
+	  the flex-based parser.
+	* src/imyp_spk.{c,h}, configure.ac, src/imypwrap.c, src/imyputil.c,
+	  src/imyplay.h, src/Makefile.am, src/imypdos.asm: PC-speaker support.
+	* README, doc/imyplay.txc, INSTALL, doc/imyplay.1: documentation update
+	* dosfiles.txt: added the PC-speaker to be available under DOS.
+	* src/imyp_cfg.hin: added a constant when compiling under DOS. Making
+	  sys/select.h unavailable unedr DOS (as it should be).
+	* src/imyp_fil.c (imyp_file_init): corrected compiling for non-ANSI-C
+	  compilers.
+	* dosdist.bat: checking the error code after important commands, added
+	  optimization when compiling, converting line endings and file names
+	  of the documents.
+	* src/imypwrap.c (imyp_init_selected): corrected compiling for
+	  non-ANSI-C compilers. Marked some parameters as unused when the
+	  corresponding backends are not compiled.
+	* src/imyplay.c (main): corrected compiling when the MIDI or FILE
+	  backends are disabled.
+	* src/Makefile.am: corrected the FILE backend condition
+	* src/imypwrap.c (imyp_lib_init): marked some parameters as unused
+	  when the corresponding backends are not compiled.
+	* imyplay.spi: added the supported backends to the description
+
 2011-10-06	Bogdan Drozdowski <bogdandr@op.pl>
 
 	* IMYplay version 0.6

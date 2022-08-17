@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- ALSA backend.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -43,15 +43,7 @@
 #  include <alsa/version.h>
 # endif
 #else
-# error The ALSA library was not found.
-#endif
-
-#ifdef HAVE_MATH_H
-# include <math.h>	/* sin() */
-#endif
-
-#ifndef M_PI
-# define M_PI 3.14159265358979323846
+# error ALSA requested, but components not found.
 #endif
 
 /* select() the old way */

@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- MIDI writer backend.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -31,9 +31,8 @@
 
 #include <stdio.h>
 
-#if ! ((defined HAVE_MALLOC) && (defined HAVE_REALLOC) && (defined HAVE_MEMSET) \
-	&& (defined HAVE_MEMCPY) && (defined HAVE_QSORT))
-# error MIDI output disabled, but is being compiled.
+#ifndef IMYP_HAVE_MIDI
+# error MIDI requested, but components not found.
 #endif
 
 #ifdef HAVE_STRING_H

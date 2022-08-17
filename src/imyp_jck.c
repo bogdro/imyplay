@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- JACK backend.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@
 #  include <jack/jack.h>
 # endif
 #else
-# error The JACK library was not found.
+# error JACK requested, but components not found.
 #endif
 
 #ifndef HAVE_JACK_FREE
@@ -47,7 +47,7 @@
 #  include <stdlib.h>
 # endif
 # ifdef HAVE_MALLOC_H
-#  include <malloc.h>
+#  include <malloc.h>	/* malloc() is not used here, but free() is */
 # endif
 #endif
 

@@ -6,7 +6,7 @@ imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 imyplay_LDADD = $(INTLLIBS)
 localedir = $(datadir)/locale
 INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\"
-EXTRA_DIST = imyp_cfg.hin
+EXTRA_DIST = imyp_cfg.hin imypdos.asm
 
 if ALLEGRO
 imyplay_SOURCES += imyp_all.c imyp_all.h
@@ -52,8 +52,12 @@ if GSTREAMER
 imyplay_SOURCES += imyp_gst.c imyp_gst.h
 endif
 
-if GSTREAMER
+if FILE
 imyplay_SOURCES += imyp_fil.c imyp_fil.h
+endif
+
+if SPKR
+imyplay_SOURCES += imyp_spk.c imyp_spk.h
 endif
 
 if FLEX

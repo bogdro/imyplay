@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- main file.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -82,7 +82,7 @@
 #define	PROGRAM_NAME	PACKAGE
 
 static const char ver_str[] = N_("version");
-static const char author_str[] = "Copyright (C) 2009-2011 Bogdan 'bogdro' Drozdowski, bogdandr@op.pl\n" \
+static const char author_str[] = "Copyright (C) 2009-2012 Bogdan 'bogdro' Drozdowski, bogdandr@op.pl\n" \
 	"MIDI code: Copyright 1998-2008, Steven Goodwin (StevenGoodwin@gmail.com)";
 static const char lic_str[] = N_(							\
 	"Program for playing iMelody ringtones (IMY files).\n"				\
@@ -380,6 +380,7 @@ main (
 			device = optarg;
 			opt_dev = 0;
 		}
+# ifdef IMYP_HAVE_MIDI
 		if ( opt_midiins == 1 )
 		{
 			if ( sscanf (optarg, "%d", &midi_instrument) != 1 )
@@ -389,6 +390,7 @@ main (
 			}
 			opt_midiins = 0;
 		}
+# endif
 		if ( (opt_char == (int)'o') || (opt_output == 1) )
 		{
 			output_system = optarg;
@@ -542,14 +544,27 @@ main (
 			IMYP_CURR_LIB sel = imyp_parse_system (output_system);
 			if ( sel == IMYP_CURR_MIDI )
 			{
+#ifdef IMYP_HAVE_MIDI
 				opt_tomidi = 1;
+#endif
 			}
 			else if ( (sel != IMYP_CURR_MIDI)
 				&& (sel != IMYP_CURR_EXEC) && (sel != IMYP_CURR_FILE) )
 			{
 				/* try to initialize the given output system */
 				if ( imyp_init_selected (output_system,
-					device, midi_instrument, out_file) != 0 )
+					device,
+#ifdef IMYP_HAVE_MIDI
+					midi_instrument,
+#else
+					0,
+#endif
+#ifdef IMYP_HAVE_FILE
+					out_file
+#else
+					NULL
+#endif
+					) != 0 )
 				{
 					printf ("%s\n", _(err_lib_init));
 					return -2;
@@ -559,7 +574,18 @@ main (
 			}
 		}
 		else if ( imyp_lib_init (&current_library, 0, device, 0,
-			midi_instrument, 0, out_file) != 0 )
+#ifdef IMYP_HAVE_MIDI
+			midi_instrument,
+#else
+			0,
+#endif
+			0,
+#ifdef IMYP_HAVE_FILE
+			out_file
+#else
+			NULL
+#endif
+			) != 0 )
 		{
 			printf ("%s\n", _(err_lib_init));
 			return -2;
@@ -584,7 +610,13 @@ main (
 		if ( opt_tomidi == 1 )
 		{
 			if ( imyp_lib_init (&current_library, 1, argv[imyp_optind],
-				0, midi_instrument, 0, out_file) != 0 )
+				0, midi_instrument, 0,
+#ifdef IMYP_HAVE_FILE
+				out_file
+#else
+				NULL
+#endif
+				) != 0 )
 			{
 				printf ("%s\n", _(err_lib_init));
 				imyp_optind++;
@@ -596,7 +628,19 @@ main (
 		if ( exec_program != NULL )
 		{
 			if ( imyp_lib_init (&current_library, 0, exec_program,
-				1, midi_instrument, 0, out_file) != 0 )
+				1,
+# ifdef IMYP_HAVE_MIDI
+				midi_instrument,
+# else
+				0,
+# endif
+				0,
+#ifdef IMYP_HAVE_FILE
+				out_file
+#else
+				NULL
+#endif
+				) != 0 )
 			{
 				printf ("%s\n", _(err_lib_init));
 				imyp_optind++;
@@ -608,7 +652,13 @@ main (
 		if ( out_file != NULL )
 		{
 			if ( imyp_lib_init (&current_library, 0, device,
-				0, midi_instrument, 1, out_file) != 0 )
+				0,
+# ifdef IMYP_HAVE_MIDI
+				midi_instrument,
+# else
+				0,
+# endif
+				1, out_file) != 0 )
 			{
 				printf ("%s\n", _(err_lib_init));
 				imyp_optind++;

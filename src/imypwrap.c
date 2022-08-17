@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- wrapper functions between the main program and the backends.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -89,6 +89,10 @@
 
 #ifdef IMYP_HAVE_FILE
 # include "imyp_fil.h"
+#endif
+
+#ifdef IMYP_HAVE_SPKR
+# include "imyp_spk.h"
 #endif
 
 /**
@@ -198,6 +202,12 @@ imyp_pause (
 		imyp_file_pause (milliseconds, buf, bufsize);
 #endif
 	}
+	else if ( curr == IMYP_CURR_SPKR )
+	{
+#ifdef IMYP_HAVE_SPKR
+		imyp_spkr_pause (milliseconds);
+#endif
+	}
 }
 
 /**
@@ -285,6 +295,12 @@ imyp_put_text (
 	{
 #ifdef IMYP_HAVE_FILE
 		imyp_file_put_text (text);
+#endif
+	}
+	else if ( curr == IMYP_CURR_SPKR )
+	{
+#ifdef IMYP_HAVE_SPKR
+		imyp_spkr_put_text (text);
 #endif
 	}
 }
@@ -390,6 +406,12 @@ imyp_play_tune (
 		return imyp_file_play_tune (freq, volume_level, duration, buf, bufsize);
 #endif
 	}
+	else if ( curr == IMYP_CURR_SPKR )
+	{
+#ifdef IMYP_HAVE_SPKR
+		return imyp_spkr_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
+	}
 	return -1;
 }
 
@@ -403,17 +425,38 @@ imyp_play_tune (
 int
 imyp_init_selected (
 #ifdef IMYP_ANSIC
-	const char output_system[], const char * const filename,
-	const int midi_instrument, const char * const out_file
+	const char output_system[], const char * const filename
+# ifndef IMYP_HAVE_FILE
+	IMYP_ATTR ((unused))
+# endif
+	,
+	const int midi_instrument
+# ifndef IMYP_HAVE_MIDI
+	IMYP_ATTR ((unused))
+# endif
+	, const char * const out_file
 # ifndef IMYP_HAVE_FILE
 	IMYP_ATTR ((unused))
 # endif
 	)
 #else
-	curr, filename, midi_instrument)
-	const IMYP_CURR_LIB curr;
-	const char * const filename;
-	const int midi_instrument;
+	output_system, filename, midi_instrument, out_file)
+	const char output_system[];
+	const char * const filename
+# ifdef IMYP_HAVE_FILE
+	IMYP_ATTR ((unused))
+# endif
+	;
+	const int midi_instrument
+# ifndef IMYP_HAVE_MIDI
+	IMYP_ATTR ((unused))
+# endif
+	;
+	const char * const out_file
+# ifndef IMYP_HAVE_FILE
+	IMYP_ATTR ((unused))
+# endif
+	;
 #endif
 {
 	int res = -1;
@@ -531,6 +574,13 @@ imyp_init_selected (
 		if ( res == 0 ) return res;
 	}
 #endif
+#ifdef IMYP_HAVE_SPKR
+	else if ( curr == IMYP_CURR_SPKR )
+	{
+		res = imyp_spkr_init (filename);
+		if ( res == 0 ) return res;
+	}
+#endif
 	return res;
 }
 
@@ -550,7 +600,11 @@ imyp_lib_init (
 # ifndef IMYP_HAVE_MIDI
 	IMYP_ATTR ((unused))
 # endif
-	, const char * const filename, const int want_exec
+	, const char * const filename
+# ifndef IMYP_HAVE_FILE
+	IMYP_ATTR ((unused))
+# endif
+	, const int want_exec
 # ifndef IMYP_HAVE_EXEC
 	IMYP_ATTR ((unused))
 # endif
@@ -575,7 +629,11 @@ imyp_lib_init (
 	IMYP_ATTR ((unused))
 # endif
 	;
-	const char * const filename;
+	const char * const filename
+# ifdef IMYP_HAVE_FILE
+	IMYP_ATTR ((unused))
+# endif
+	;
 	const int want_exec
 # ifndef IMYP_HAVE_EXEC
 	IMYP_ATTR ((unused))
@@ -702,6 +760,14 @@ imyp_lib_init (
 		return res;
 	}
 #endif
+#ifdef IMYP_HAVE_SPKR
+	res = imyp_spkr_init (filename);
+	if ( res == 0 )
+	{
+		*curr = IMYP_CURR_SPKR;
+		return res;
+	}
+#endif
 	return res;
 }
 
@@ -791,6 +857,12 @@ imyp_lib_close (
 		return imyp_file_close ();
 #endif
 	}
+	else if ( curr == IMYP_CURR_SPKR )
+	{
+#ifdef IMYP_HAVE_SPKR
+		return imyp_spkr_close ();
+#endif
+	}
 	return -1;
 }
 
@@ -839,5 +911,8 @@ imyp_report_versions (
 #endif
 #ifdef IMYP_HAVE_FILE
 	imyp_file_version ();
+#endif
+#ifdef IMYP_HAVE_SPKR
+	imyp_spkr_version ();
 #endif
 }

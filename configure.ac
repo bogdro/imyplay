@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(imyplay, 0.6, bogdandr@op.pl)
+AC_INIT(imyplay, 0.7, bogdandr@op.pl)
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \
@@ -102,7 +102,7 @@ AC_ARG_ENABLE(EXEC,[[  --enable-EXEC		Enable executing commands as output.]],
 	]
 	,feat_EXEC=yes)
 
-AC_ARG_ENABLE(GSTRAMER,[[  --enable-GSTREAMER	Enable GStreamer output.]],
+AC_ARG_ENABLE(GSTREAMER,[[  --enable-GSTREAMER	Enable GStreamer output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_GST=no
 	 else
@@ -119,6 +119,15 @@ AC_ARG_ENABLE(FILE,[[  --enable-FILE		Enable raw file output.]],
 	 fi
 	]
 	,feat_FILE=yes)
+
+AC_ARG_ENABLE(SPKR,[[  --enable-SPKR		Enable PC-Speaker output.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_SPKR=no
+	 else
+		feat_SPKR=yes
+	 fi
+	]
+	,feat_SPKR=yes)
 
 AC_ARG_ENABLE(FLEXPARSER,[[  --enable-FLEXPARSER	Enable flex-based parser.]],
 	[if (test "x$enableval" = "xno"); then
@@ -401,7 +410,7 @@ fi
 
 if ( test "x$have_asoundlib_h" = "xyes" || test "x$feat_OSS" = "xyes"		\
 	|| test "x$have_ao_h" = "xyes" || test "x$have_portaudio_h" = "xyes"	\
-	|| test "x$have_jack_h" = "xyes"); then
+	|| test "x$have_jack_h" = "xyes" || test "x$feat_SPKR" = "xyes"); then
 
 	have_select=yes
 	AC_CHECK_FUNCS([select],AC_DEFINE([HAVE_SELECT],[1],
@@ -421,11 +430,17 @@ if ( test "x$have_asoundlib_h" = "xyes" || test "x$feat_OSS" = "xyes"		\
 	fi
 fi
 
-if ( test "x$feat_OSS" = "xyes" ); then
 
-	have_sys_soundcard_h=yes
-	AC_CHECK_HEADERS([sys/soundcard.h], AC_DEFINE([HAVE_SYS_SOUNDCARD_H],[1],
-		[Whether you have the sys/soundcard.h header.]), have_sys_soundcard_h=no)
+if ( test "x$feat_SPKR" = "xyes" ); then
+
+	have_sys_kd_h=yes
+	AC_CHECK_HEADERS([sys/kd.h], AC_DEFINE([HAVE_SYS_KD_H],[1],
+		[Whether you have the sys/kd.h header.]), have_sys_kd_h=no)
+
+fi
+
+if ( test "x$feat_SPKR" = "xyes" || test "x$feat_OSS" = "xyes" ); then
+
 	have_sys_ioctl_h=yes
 	AC_CHECK_HEADERS([sys/ioctl.h], AC_DEFINE([HAVE_SYS_IOCTL_H],[1],
 		[Whether you have the sys/ioctl.h header.]), have_sys_ioctl_h=no)
@@ -433,10 +448,9 @@ if ( test "x$feat_OSS" = "xyes" ); then
 	AC_CHECK_HEADERS([fcntl.h], AC_DEFINE([HAVE_FCNTL_H],[1],
 		[Whether you have the fcntl.h header.]), have_fcntl_h=no)
 
-	if ( test "x$have_sys_soundcard_h" = "xyes"	\
-		&& test "x$have_sys_ioctl_h" = "xyes"	\
+	if ( test "x$have_sys_ioctl_h" = "xyes"	\
 		&& test "x$have_fcntl_h" = "xyes"	\
-	 ); then
+	); then
 
 		have_ioctl=yes
 		AC_CHECK_FUNCS([ioctl],AC_DEFINE([HAVE_IOCTL],[1],
@@ -447,6 +461,18 @@ if ( test "x$feat_OSS" = "xyes" ); then
 		have_close=yes
 		AC_CHECK_FUNCS([close],AC_DEFINE([HAVE_CLOSE],[1],
 			[Whether you have the close() function.]),[have_close=no])
+	fi
+fi
+
+if ( test "x$feat_OSS" = "xyes" ); then
+
+	have_sys_soundcard_h=yes
+	AC_CHECK_HEADERS([sys/soundcard.h], AC_DEFINE([HAVE_SYS_SOUNDCARD_H],[1],
+		[Whether you have the sys/soundcard.h header.]), have_sys_soundcard_h=no)
+	if ( test "x$have_sys_soundcard_h" = "xyes"	\
+		&& test "x$have_fcntl_h" = "xyes"	\
+	 ); then
+
 		have_write=yes
 		AC_CHECK_FUNCS([write],AC_DEFINE([HAVE_WRITE],[1],
 			[Whether you have the write() function.]),[have_write=no])
@@ -478,6 +504,15 @@ if ( test "x$feat_LIBNETBLOCK" = "xyes" && test "x$libnb" = "xyes" ); then
 		[Whether you have the libnetblock.h header.]), have_libnetblock_h=no)
 fi
 
+if ( test "x$feat_FILE" = "xyes" ); then
+
+	# check for a marker function (that is always present), so we can detect it
+	have_fwrite=yes
+	AC_CHECK_FUNCS([fwrite],AC_DEFINE([HAVE_FWRITE],[1],
+		[Whether you have the fwrite() function.]),[have_fwrite=no])
+
+fi
+
 have_malloc=yes
 AC_CHECK_FUNCS([malloc],AC_DEFINE([HAVE_MALLOC],[1],
 	[Whether you have the malloc() function.]),[have_malloc=no])
@@ -488,30 +523,36 @@ have_memcpy=yes
 AC_CHECK_FUNCS([memcpy],AC_DEFINE([HAVE_MEMCPY],[1],
 	[Whether you have the memcpy() function.]),[have_memcpy=no])
 
-if ( test "x$feat_MIDI" == "xyes" ); then
+if ( test "x$feat_MIDI" == "xyes" || test "x$feat_FLEX" = "xyes" ); then
 	have_realloc=yes
 	AC_CHECK_FUNCS([realloc],AC_DEFINE([HAVE_REALLOC],[1],
 		[Whether you have the realloc() function.]),[have_realloc=no])
+fi
+
+if ( test "x$feat_MIDI" == "xyes" ); then
 	have_qsort=yes
 	AC_CHECK_FUNCS([qsort],AC_DEFINE([HAVE_QSORT],[1],
 		[Whether you have the qsort() function.]),[have_qsort=no])
 fi
 
 
-AM_CONDITIONAL(ALLEGRO, [(test "x$liballeg" = "xyes" || test "x$alleg_ldflags" != "x") && \
-	test "x$have_all_h" = "xyes" && test "x$feat_allegro" = "xyes"])
+AM_CONDITIONAL(ALLEGRO, [test "x$feat_allegro" = "xyes" && 				\
+	(test "x$liballeg" = "xyes" || test "x$alleg_ldflags" != "x") &&		\
+	test "x$have_all_h" = "xyes"])
 
-AM_CONDITIONAL(SDL, [test "x$libsdl" = "xyes" && test "x$have_sdl_h" = "xyes"		\
-	&& test "x$feat_SDL" = "xyes"])
+AM_CONDITIONAL(SDL, [test "x$feat_SDL" = "xyes" && test "x$libsdl" = "xyes"		\
+	&& test "x$have_sdl_h" = "xyes"])
 
-AM_CONDITIONAL(ALSA, [test "x$libalsa" = "xyes" && test "x$have_asoundlib_h" = "xyes"	\
+AM_CONDITIONAL(ALSA, [test "x$feat_ALSA" = "xyes" && test "x$libalsa" = "xyes"		\
+	&& test "x$have_asoundlib_h" = "xyes"	\
 	&& test "x$have_select" = "xyes" && ( test "x$have_sys_select_h" = "xyes" || (	\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
 		test "x$have_unistd_h" = "xyes")					\
-		) && test "x$feat_ALSA" = "xyes"])
+		)])
 
-AM_CONDITIONAL(OSS, [test "x$have_ioctl" = "xyes" && test "x$have_sys_soundcard_h" = "xyes"	\
+AM_CONDITIONAL(OSS, [test "x$feat_OSS" = "xyes" && test "x$have_ioctl" = "xyes"	\
+	&& test "x$have_sys_soundcard_h" = "xyes"	\
 	&& test "x$have_sys_ioctl_h" = "xyes" && test "x$have_fcntl_h" = "xyes"			\
 	&& test "x$have_unistd_h" = "xyes" && test "x$have_open" = "xyes"			\
 	&& test "x$have_close" = "xyes" && test "x$have_write" = "xyes"				\
@@ -520,26 +561,28 @@ AM_CONDITIONAL(OSS, [test "x$have_ioctl" = "xyes" && test "x$have_sys_soundcard_
 		test "x$have_sys_types_h" = "xyes")						\
 		)])
 
-AM_CONDITIONAL(LIBAO, [test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"		\
+AM_CONDITIONAL(LIBAO, [test "x$feat_LIBAO" = "xyes" && test "x$libao" = "xyes" 	\
+	&& test "x$have_ao_h" = "xyes"		\
 	&& test "x$have_select" = "xyes" && ( test "x$have_sys_select_h" = "xyes" || (	\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
 		test "x$have_unistd_h" = "xyes")					\
-		) && test "x$feat_LIBAO" = "xyes"])
+		)])
 
-AM_CONDITIONAL(PORTAUDIO, [test "x$libportaudio" = "xyes" && \
-	test "x$have_portaudio_h" = "xyes" && test "x$feat_PORTAUDIO" = "xyes"])
+AM_CONDITIONAL(PORTAUDIO, [test "x$feat_PORTAUDIO" = "xyes" && test "x$libportaudio" = "xyes" && \
+	test "x$have_portaudio_h" = "xyes"])
 
-AM_CONDITIONAL(PULSEAUDIO, [test "x$libpulseaudio_simple" = "xyes"			\
-	&& test "x$libpulseaudio" = "xyes"						\
-	&& test "x$have_pulseaudio_simple_h" = "xyes" && test "x$feat_PULSEAUDIO" = "xyes"])
+AM_CONDITIONAL(PULSEAUDIO, [test "x$feat_PULSEAUDIO" = "xyes"				\
+	&& test "x$libpulseaudio_simple" = "xyes" && test "x$libpulseaudio" = "xyes"	\
+	&& test "x$have_pulseaudio_simple_h" = "xyes"])
 
-AM_CONDITIONAL(JACK, [test "x$libjack" = "xyes" && test "x$have_jack_h" = "xyes"	\
+AM_CONDITIONAL(JACK, [test "x$feat_JACK" = "xyes" && test "x$libjack" = "xyes"		\
+	&& test "x$have_jack_h" = "xyes"	\
 	&& test "x$have_select" = "xyes" && ( test "x$have_sys_select_h" = "xyes" || (	\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
 		test "x$have_unistd_h" = "xyes")					\
-		) && test "x$feat_JACK" = "xyes"])
+		)])
 
 AM_CONDITIONAL(MIDI, [test "x$feat_MIDI" = "xyes" && test "x$have_malloc" = "xyes"	\
 	&& test "x$have_realloc" = "xyes" && test "x$have_memset" = "xyes"		\
@@ -548,13 +591,25 @@ AM_CONDITIONAL(MIDI, [test "x$feat_MIDI" = "xyes" && test "x$have_malloc" = "xye
 AM_CONDITIONAL(EXEC, [test "x$feat_EXEC" = "xyes" && test "x$have_stdlib_h" = "xyes"	\
 	&& test "x$have_system" = "xyes"])
 
-AM_CONDITIONAL(GSTREAMER, [test "x$libgstreamer" = "xyes" && test "x$feat_GST" = "xyes"])
+AM_CONDITIONAL(GSTREAMER, [test "x$feat_GST" = "xyes" && test "x$libgstreamer" = "xyes" \
+	&& test "x$feat_GST" = "xyes"])
 
-AM_CONDITIONAL(FILE, [test "x$feat_FILE" = "xyes"])
+AM_CONDITIONAL(FILE, [test "x$feat_FILE" = "xyes" && test "x$have_fwrite" = "xyes"])
+
+AM_CONDITIONAL(SPKR, [test "x$feat_SPKR" = "xyes" && test "x$have_ioctl" = "xyes"		\
+	&& test "x$have_sys_kd_h" = "xyes"	\
+	&& test "x$have_sys_ioctl_h" = "xyes" && test "x$have_fcntl_h" = "xyes"			\
+	&& test "x$have_unistd_h" = "xyes" && test "x$have_open" = "xyes"			\
+	&& test "x$have_close" = "xyes"	&& test "x$have_select" = "xyes" 			\
+	&& ( test "x$have_sys_select_h" = "xyes" || (						\
+		test "x$have_sys_time_h" = "xyes"	&& 					\
+		test "x$have_sys_types_h" = "xyes")						\
+		)])
 
 AM_CONDITIONAL(FLEX, [test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"	\
 	&& test "x$have_unistd_h" = "xyes" &&  test "x$have_errno_h" = "xyes"		\
-	&& test "x$have_stdlib_h" = "xyes" &&  test "x$have_inttypes_h" = "xyes" ])
+	&& test "x$have_stdlib_h" = "xyes" &&  test "x$have_inttypes_h" = "xyes"	\
+	&& test "x$have_malloc" = "xyes" && test "x$have_realloc" = "xyes" ])
 
 # ===================== Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -645,7 +700,7 @@ AC_OUTPUT
 
 echo "***********************************"
 
-if (	(test "x$liballeg" = "xyes" || test "x$alleg_ldflags" != "x") && \
+if (	test "x$feat_allegro" = "xyes" && (test "x$liballeg" = "xyes" || test "x$alleg_ldflags" != "x") && \
 	test "x$have_all_h" = "xyes"); then
 
 	echo " *	Allegro: yes"
@@ -661,7 +716,7 @@ else
 	fi
 fi
 
-if (	test "x$libsdl" = "xyes" && test "x$have_sdl_h" = "xyes"); then
+if (	test "x$feat_SDL" = "xyes" && test "x$libsdl" = "xyes" && test "x$have_sdl_h" = "xyes"); then
 
 	echo " *	SDL: yes"
 else
@@ -676,7 +731,8 @@ else
 	fi
 fi
 
-if (	test "x$libalsa" = "xyes" && test "x$have_asoundlib_h" = "xyes"	\
+if (	test "x$feat_ALSA" = "xyes" && test "x$libalsa" = "xyes" &&			\
+	test "x$have_asoundlib_h" = "xyes"	\
 	&& test "x$have_select" = "xyes" && ( test "x$have_sys_select_h" = "xyes" || (	\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
@@ -706,7 +762,8 @@ else
 	fi
 fi
 
-if (	test "x$have_ioctl" = "xyes" && test "x$have_sys_soundcard_h" = "xyes"		\
+if (	test "x$feat_OSS" = "xyes" && test "x$have_ioctl" = "xyes"			\
+	&& test "x$have_sys_soundcard_h" = "xyes"		\
 	&& test "x$have_sys_ioctl_h" = "xyes" && test "x$have_fcntl_h" = "xyes"		\
 	&& test "x$have_unistd_h" = "xyes" && test "x$have_open" = "xyes"		\
 	&& test "x$have_close" = "xyes" && test "x$have_write" = "xyes"			\
@@ -760,7 +817,7 @@ else
 	fi
 fi
 
-if (	test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"	\
+if (	test "x$feat_LIBAO" = "xyes" && test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"	\
 	&& test "x$have_select" = "xyes" && ( test "x$have_sys_select_h" = "xyes" || (	\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
@@ -790,7 +847,8 @@ else
 	fi
 fi
 
-if (	test "x$libportaudio" = "xyes" && test "x$have_portaudio_h" = "xyes" ); then
+if (	test "x$feat_PORTAUDIO" = "xyes" && test "x$libportaudio" = "xyes" &&		\
+	 test "x$have_portaudio_h" = "xyes" ); then
 
 	echo " *	PortAudiov19: yes"
 else
@@ -805,8 +863,8 @@ else
 	fi
 fi
 
-if (	test "x$libpulseaudio_simple" = "xyes" && test "x$libpulseaudio" = "xyes" && \
-	test "x$have_pulseaudio_simple_h" = "xyes" ); then
+if (	test "x$feat_PULSEAUDIO" = "xyes" && test "x$libpulseaudio_simple" = "xyes" &&	\
+	 test "x$libpulseaudio" = "xyes" && test "x$have_pulseaudio_simple_h" = "xyes" ); then
 
 	echo " *	PulseAudio: yes"
 else
@@ -822,8 +880,9 @@ else
 	fi
 fi
 
-if (	test "x$libjack" = "xyes" && test "x$have_jack_h" = "xyes"	\
-	&& test "x$have_select" = "xyes" && ( test "x$have_sys_select_h" = "xyes" || (	\
+if (	test "x$feat_JACK" = "xyes" && test "x$libjack" = "xyes" 			\
+	&& test "x$have_jack_h" = "xyes" && test "x$have_select" = "xyes" &&		\
+	 ( test "x$have_sys_select_h" = "xyes" || (	\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
 		test "x$have_unistd_h" = "xyes")					\
@@ -912,7 +971,7 @@ else
 	fi
 fi
 
-if (	test "x$feat_FILE" = "xyes" ); then
+if (	test "x$feat_FILE" = "xyes" && test "x$have_fwrite" = "xyes" ); then
 
 	echo " *	FILE: yes"
 else
@@ -922,11 +981,64 @@ else
 	fi
 fi
 
+if (	test "x$feat_SPKR" = "xyes" && test "x$have_ioctl" = "xyes"			\
+	&& test "x$have_sys_kd_h" = "xyes"		\
+	&& test "x$have_sys_ioctl_h" = "xyes" && test "x$have_fcntl_h" = "xyes"		\
+	&& test "x$have_unistd_h" = "xyes" && test "x$have_open" = "xyes"		\
+	&& test "x$have_close" = "xyes" && test "x$have_select" = "xyes" &&		\
+	 ( test "x$have_sys_select_h" = "xyes" || (	\
+		test "x$have_sys_time_h" = "xyes"	&& 				\
+		test "x$have_sys_types_h" = "xyes")					\
+		)									\
+	); then
+
+	echo " *	PC-Speaker: yes"
+else
+	if (test "x$feat_SPKR" != "xyes"); then
+		echo " *	PC-Speaker: no (disabled by command line)"
+
+	elif (test "x$have_sys_kd_h" != "xyes"); then
+		echo " *	PC-Speaker: no (sys/kd.h header missing)"
+
+	elif ( test "x$have_ioctl" != "xyes" ); then
+		echo " *	PC-Speaker: no (ioctl() function missing)"
+
+	elif ( test "x$have_sys_ioctl_h" != "xyes" ); then
+		echo " *	PC-Speaker: no (sys/ioctl.h header missing)"
+
+	elif ( test "x$have_fcntl_h" != "xyes" ); then
+		echo " *	PC-Speaker: no (fcntl.h header missing)"
+
+	elif ( test "x$have_unistd_h" != "xyes" ); then
+		echo " *	PC-Speaker: no (unistd.h header missing)"
+
+	elif ( test "x$have_open" != "xyes" ); then
+		echo " *	PC-Speaker: no (open() function missing)"
+
+	elif ( test "x$have_close" != "xyes" ); then
+		echo " *	PC-Speaker: no (close() function missing)"
+
+	elif ( test "x$have_select" != "xyes" ); then
+		echo " *	PC-Speaker: no (select() function missing)"
+
+	elif ( ! ( test "x$have_sys_select_h" = "xyes" || (				\
+		test "x$have_sys_time_h" = "xyes"	&& 				\
+		test "x$have_sys_types_h" = "xyes"	&& 				\
+		test "x$have_unistd_h" = "xyes")					\
+		) ); then
+		echo " *	PC-Speaker: no (select() headers missing or unusable)"
+	else
+		echo " *	PC-Speaker: no (reason unknown)"
+
+	fi
+fi
+
 echo "***********************************"
 
-if (	test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"	\
+if (	test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"			\
 	&& test "x$have_unistd_h" = "xyes" &&  test "x$have_errno_h" = "xyes"		\
-	&& test "x$have_stdlib_h" = "xyes" &&  test "x$have_inttypes_h" = "xyes" ); then
+	&& test "x$have_stdlib_h" = "xyes" &&  test "x$have_inttypes_h" = "xyes"	\
+	&& test "x$have_malloc" = "xyes" && test "x$have_realloc" = "xyes" ); then
 
 	echo " *	Flex parser: yes"
 	AC_MSG_WARN([Flex-based parser enabled. If it does not compile for])
@@ -947,6 +1059,12 @@ else
 
 	elif ( test "x$have_inttypes_h" != "xyes" ); then
 		echo " *	Flex parser: no (inttypes.h missing)"
+
+	elif ( test "x$have_malloc" != "xyes" ); then
+		echo " *	Flex parser: no (malloc() function missing)"
+
+	elif ( test "x$have_realloc" != "xyes" ); then
+		echo " *	Flex parser: no (realloc() function missing)"
 
 	else	#( test "x$have_flex" != "xyes" ); then
 		echo " *	Flex parser: no (flex missing)"

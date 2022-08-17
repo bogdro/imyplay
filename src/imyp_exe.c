@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- EXEC backend.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@
 #if (defined HAVE_STDLIB_H) && (defined HAVE_SYSTEM)
 # include <stdlib.h>
 #else
-# error Exec output selected, but stdlib.h or sysytem() not found.
+# error Exec output requested, but components not found.
 #endif
 
 #ifdef HAVE_STRING_H

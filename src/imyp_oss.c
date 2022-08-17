@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- OSS backend.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -32,23 +32,10 @@
 
 #include <stdio.h>
 
-#if (defined HAVE_IOCTL) && (defined HAVE_SYS_SOUNDCARD_H) && (defined HAVE_SYS_IOCTL_H) \
- && (defined HAVE_FCNTL_H) && (defined HAVE_UNISTD_H) && (defined HAVE_OPEN)		\
- && (defined HAVE_CLOSE) && (defined HAVE_WRITE) && (defined HAVE_SELECT)		\
- && ((defined HAVE_SYS_SELECT_H) || (((defined TIME_WITH_SYS_TIME)				\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))				\
- && (defined HAVE_UNISTD_H)))
+#ifdef IMYP_HAVE_OSS
 # include <sys/soundcard.h>
 #else
 # error OSS requested, but components not found.
-#endif
-
-#ifdef HAVE_MATH_H
-# include <math.h>	/* sin() */
-#endif
-
-#ifndef M_PI
-# define M_PI 3.14159265358979323846
 #endif
 
 /* select() the old way */
@@ -248,7 +235,10 @@ imyp_oss_init (
 		if ( pcm_fd < 0 )
 		{
 			pcm_fd = open ("/dev/dsp", O_WRONLY);
-			if ( pcm_fd < 0 ) return -1;
+			if ( pcm_fd < 0 )
+			{
+				return -1;
+			}
 		}
 	}
 

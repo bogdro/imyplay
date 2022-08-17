@@ -45,10 +45,11 @@ bin_PROGRAMS = imyplay$(EXEEXT)
 @JACK_TRUE@am__append_8 = imyp_jck.c imyp_jck.h
 @MIDI_TRUE@am__append_9 = imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h midibase.h
 @EXEC_TRUE@am__append_10 = imyp_exe.c imyp_exe.h
-@GSTREAMER_TRUE@am__append_11 = imyp_gst.c imyp_gst.h imyp_fil.c \
-@GSTREAMER_TRUE@	imyp_fil.h
-@FLEX_TRUE@am__append_12 = imyparsf.l
-@FLEX_FALSE@am__append_13 = imyparse.c
+@GSTREAMER_TRUE@am__append_11 = imyp_gst.c imyp_gst.h
+@FILE_TRUE@am__append_12 = imyp_fil.c imyp_fil.h
+@SPKR_TRUE@am__append_13 = imyp_spk.c imyp_spk.h
+@FLEX_TRUE@am__append_14 = imyparsf.l
+@FLEX_FALSE@am__append_15 = imyparse.c
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/imyp_cfg.hin imyparsf.c
@@ -74,7 +75,8 @@ am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 	imyp_por.c imyp_por.h imyp_pul.c imyp_pul.h imyp_jck.c \
 	imyp_jck.h imyp_mid.c imyp_mid.h midifile.c midifile.h \
 	midiinfo.h midibase.h imyp_exe.c imyp_exe.h imyp_gst.c \
-	imyp_gst.h imyp_fil.c imyp_fil.h imyparsf.l imyparse.c
+	imyp_gst.h imyp_fil.c imyp_fil.h imyp_spk.c imyp_spk.h \
+	imyparsf.l imyparse.c
 @ALLEGRO_TRUE@am__objects_1 = imyp_all.$(OBJEXT)
 @SDL_TRUE@am__objects_2 = imyp_sdl.$(OBJEXT)
 @ALSA_TRUE@am__objects_3 = imyp_als.$(OBJEXT)
@@ -85,15 +87,18 @@ am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 @JACK_TRUE@am__objects_8 = imyp_jck.$(OBJEXT)
 @MIDI_TRUE@am__objects_9 = imyp_mid.$(OBJEXT) midifile.$(OBJEXT)
 @EXEC_TRUE@am__objects_10 = imyp_exe.$(OBJEXT)
-@GSTREAMER_TRUE@am__objects_11 = imyp_gst.$(OBJEXT) imyp_fil.$(OBJEXT)
-@FLEX_TRUE@am__objects_12 = imyparsf.$(OBJEXT)
-@FLEX_FALSE@am__objects_13 = imyparse.$(OBJEXT)
+@GSTREAMER_TRUE@am__objects_11 = imyp_gst.$(OBJEXT)
+@FILE_TRUE@am__objects_12 = imyp_fil.$(OBJEXT)
+@SPKR_TRUE@am__objects_13 = imyp_spk.$(OBJEXT)
+@FLEX_TRUE@am__objects_14 = imyparsf.$(OBJEXT)
+@FLEX_FALSE@am__objects_15 = imyparse.$(OBJEXT)
 am_imyplay_OBJECTS = imyplay.$(OBJEXT) imypwrap.$(OBJEXT) \
 	imyp_sig.$(OBJEXT) imyputil.$(OBJEXT) $(am__objects_1) \
 	$(am__objects_2) $(am__objects_3) $(am__objects_4) \
 	$(am__objects_5) $(am__objects_6) $(am__objects_7) \
 	$(am__objects_8) $(am__objects_9) $(am__objects_10) \
-	$(am__objects_11) $(am__objects_12) $(am__objects_13)
+	$(am__objects_11) $(am__objects_12) $(am__objects_13) \
+	$(am__objects_14) $(am__objects_15)
 imyplay_OBJECTS = $(am_imyplay_OBJECTS)
 am__DEPENDENCIES_1 =
 imyplay_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -239,10 +244,11 @@ imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c \
 	$(am__append_2) $(am__append_3) $(am__append_4) \
 	$(am__append_5) $(am__append_6) $(am__append_7) \
 	$(am__append_8) $(am__append_9) $(am__append_10) \
-	$(am__append_11) $(am__append_12) $(am__append_13)
+	$(am__append_11) $(am__append_12) $(am__append_13) \
+	$(am__append_14) $(am__append_15)
 imyplay_LDADD = $(INTLLIBS)
 INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\"
-EXTRA_DIST = imyp_cfg.hin
+EXTRA_DIST = imyp_cfg.hin imypdos.asm
 all: all-am
 
 .SUFFIXES:
@@ -339,6 +345,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_pul.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_sdl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_sig.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_spk.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyparse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyparsf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyplay.Po@am__quote@

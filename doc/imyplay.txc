@@ -33,7 +33,7 @@ This manual is for IMYplay, version @VERSION@
 
 @c ==================================================================
 
-    Copyright (c)  2009-2011 Bogdan Drozdowski
+    Copyright (c)  2009-2012 Bogdan Drozdowski
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -74,6 +74,9 @@ libao (http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/),
 PulseAudio (http://www.pulseaudio.org/), JACK1/JACK2 (http://jackaudio.org/),
 GStreamer (http://gstreamer.freedesktop.org/, gstreamer-plugin-base required).
 
+It can also write raw samples to an output file, use the PC-speaker or
+call an external program on each note.
+
 IMYplay, of course, requires working sound hardware with drivers to produce
 any sound.
 
@@ -86,9 +89,22 @@ any sound.
 
 
 
-@node How to compile?, Usage, What is IMYplay?, Top
+@node How to compile?, Compile under Un*x, What is IMYplay?, Top
 @comment  node-name, next,      previous,  up
 @chapter How to compile the program?
+
+@menu
+* Compile under Un*x::		Compile under Linux/Unix
+* Compile under DOS::		Compile under DOS
+@end menu
+
+@c ==================================================================
+
+
+
+@node Compile under Un*x, Compile under DOS, How to compile?, How to compile?
+@comment  node-name, next,      previous,  up
+@section Compile under Un*x
 
 The program compiles on:
 @itemize
@@ -99,7 +115,7 @@ The program compiles on:
 @item Debian 5.0 GNU/Linux, i686
 @end itemize
 
-Requirements for compiling the full version of the program:@*
+Requirements for compiling the full version of the program under Un*x:@*
 @itemize
 @item a non-root account. Please, @strong{NEVER} compile or 'make' anything as root.
 @item a working C compiler
@@ -108,7 +124,8 @@ The getopt.h header and the getopt_long() from it are not required, but
 useful. The signal.h header is used to catch signals, and is optional.
 The translation headers (locale.h, libintl.h or other) are optional.
 @item if you want sound, not just MIDI conversion, a development package for one of the
-supported libraries (except OSS, which requires only the C library and system support).
+supported libraries (except OSS and PC-speaker, which require only
+the C library and system support).
 If you don't have any of these installed or available (check twice), then go to@*
    	http://alleg.sf.net/@*
    	http://www.libsdl.org/@*
@@ -128,9 +145,10 @@ Type './configure' to configure the program for your system. If you do not
 with support for a particular output mechanism, configure the program with@*
 	@command{./configure --enable-XXX=no}@*
 where "XXX" is the output system you wish to disable (allegro, SDL, ALSA,
-OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE).
+OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE, SPKR).
 
-By default, a flex-based scanner will be generated to parse the input file.
+By default, a flex-based scanner will be generated to parse the input file,
+if flex is available.
 If the scanner does not compile for you or works incorrectly, disable it with@*
 	@command{./configure --enable-FLEXPARSER=no}@*
 and recompile imyplay.
@@ -141,18 +159,6 @@ get LibHideIP>=0.2 and LibNetBlock and configure imyplay with@*
 @strong{NOTE}: this may cause network sound output to fail.
 
 Type 'make' to compile the program.
-
-To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT
-the standard one) and change the line@*
-	#include "syslimits.h"@*
-to@*
-	#include "syslimit.h"@*
-Then go to the src directory. Change VERSION with the at- and quotation marks
-in the imyp_cfg.hin file to the current version number, so the line reads:@*
-	#  define PACKAGE_VERSION "@VERSION@"@*
-and rename the file to imyp_cfg.h. Then run@*
-	@command{gcc -o imyplay.exe *.c -lalleg}@*
-The resulting imyplay.exe is the program to use.
 
 Documentation is compiled, but may be recompiled, if you have the 'makeinfo'
 program ('texinfo' package).
@@ -183,9 +189,68 @@ To create an RPM package (the new way):
 @item get the rpms from $HOME/rpmbuild/RPMS/i386
 @end enumerate
 
+
 @c ==================================================================
 
-@node Usage, Return values, How to compile?, Top
+
+@node Compile under DOS, Usage, Compile under Un*x, How to compile?
+@comment  node-name, next,      previous,  up
+@section Compile under DOS
+
+
+Requirements for automatic compiling the DOS version:
+@itemize
+@item a working GCC compiler (preferably DJGPP).
+
+@item development package for the C library (comes with DJGPP)
+
+@item the 'make' program (comes with DJGPP)
+
+@item if you want sound, not just MIDI conversion, a development package for one
+of the supported libraries (except PC-speaker, which requires only
+the C library and system support). If you don't have any of these installed
+or available (check twice), then go to
+   	http://alleg.sf.net/		- for the Allegro library
+
+@item MIDI output requires the following functions from the standard C library:
+malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),
+fclose() and qsort().
+
+@item the 'sed' utility (comes with DJGPP)
+
+@item the 'zip' utility (comes with DJGPP)
+
+@item NASM assembler version >= 2.0 (www.nasm.us)
+
+@item the 'upx' utility (upx.sf.net) is optional. The program is compiled
+correctly without it.
+
+@item the 'tr' utility (comes with DJGPP coreutils) is optional. The program is compiled
+correctly without it.
+
+@end itemize
+
+To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT
+the standard one) and change the line@*
+	#include "syslimits.h"@*
+to@*
+	#include "syslimit.h"@*
+
+Then run the "dosdist.bat" file.
+
+If you prefer to compile manually (like when you don't have all of the
+required utilities, then go to the src directory. Change VERSION with
+the at- and quotation marks the current version number in the
+imyp_cfg.hin file, so the line reads:@*
+	#  define PACKAGE_VERSION "@VERSION@"@*
+and rename the file to imyp_cfg.h. Then compile all the files you
+wish to (the dosfiles.txt file is a good starting point), for example:@*
+	@command{gcc -o imyplay.exe *.c -lalleg}@*
+The resulting imyplay.exe is the program to use.
+
+@c ==================================================================
+
+@node Usage, Return values, Compile under DOS, Top
 @comment  node-name, next,      previous,  up
 @chapter Usage
 
@@ -199,7 +264,7 @@ Options for the full version:
 
 @noindent @option{-d <dev>}@*@option{--device <dev>}@*
 @quotation
-Try to use the given device (ALSA, OSS, GStreamer), driver ID (libao)
+Try to use the given device (ALSA, OSS, GStreamer, PC-speaker), driver ID (libao)
 or server name (JACK1, JACK2, PulseAudio) for sound output.
 @end quotation
 
@@ -278,8 +343,12 @@ Use the given MIDI instrument number.
 @noindent @option{-o <system>}@*@option{--output <system>}
 @quotation
 Use the given sound output system (allegro, sdl, alsa,
-oss, ao/libao, portaudio/port, jack, pulseaudio/pulse, gstreamer/gst).
+oss, ao/libao, portaudio/port, jack, pulseaudio/pulse, gstreamer/gst,
+speaker/pcspeaker/spkr/pcspkr).
 Names are NOT case-sensitive.
+
+PC-Speaker output may require the "snd-pcsp" kernel module to be loaded and
+permissions to access "/dev/console".
 @end quotation
 
 @noindent @option{--to-midi}@*
@@ -1597,7 +1666,7 @@ marked with capital letters in the header:
 
 @quotation
 # YOUR LANGUAGE translations for IMYplay package.@*
-# Copyright (C) 2009-2011 Bogdan 'bogdro' Drozdowski@*
+# Copyright (C) 2009-2012 Bogdan 'bogdro' Drozdowski@*
 # This file is distributed under the same license as@*
 # the IMYplay package.@*
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.@*

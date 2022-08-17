@@ -1,6 +1,6 @@
 # Polish translations for imyplay package
 # Polskie t³umaczenia dla pakietu imyplay.
-# Copyright (C) 2009-2011 Bogdan bogdro Drozdowski
+# Copyright (C) 2009-2012 Bogdan bogdro Drozdowski
 # This file is distributed under the same license as the imyplay package.
 # Bogdan Drozdowski <bogdandr@op.pl>, 2009.
 #
@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 0.1\n"
 "Report-Msgid-Bugs-To: bogdandr@op.pl\n"
-"POT-Creation-Date: 2011-10-02 13:02+0200\n"
+"POT-Creation-Date: 2012-07-20 17:30+0200\n"
 "PO-Revision-Date: 2010-05-30 13:52+0100\n"
 "Last-Translator: Bogdan Drozdowski <bogdandr@op.pl>\n"
 "Language-Team: Polish\n"

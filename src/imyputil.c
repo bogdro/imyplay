@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- utility functions.
  *
- * Copyright (C) 2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -171,6 +171,13 @@ imyp_parse_system (
 	else if ( imyp_compare (system_name, "file") == 0 )
 	{
 		return IMYP_CURR_FILE;
+	}
+	else if ( (imyp_compare (system_name, "speaker") == 0)
+		|| (imyp_compare (system_name, "pcspeaker") == 0)
+		|| (imyp_compare (system_name, "spkr") == 0)
+		|| (imyp_compare (system_name, "pcspkr") == 0) )
+	{
+		return IMYP_CURR_SPKR;
 	}
 	return IMYP_CURR_NONE;
 }

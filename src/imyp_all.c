@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- Allegro backend.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -32,18 +32,10 @@
 
 #include <stdio.h>
 
-#if (defined HAVE_LIBALLEG) && (defined HAVE_ALLEGRO_H)
+#if IMYP_HAVE_ALLEGRO
 # include <allegro.h>
 #else
-# error The Allegro library was not found.
-#endif
-
-#ifdef HAVE_MATH_H
-# include <math.h>	/* sin() */
-#endif
-
-#ifndef M_PI
-# define M_PI 3.14159265358979323846
+# error Allegro requested, but components not found.
 #endif
 
 #ifdef HAVE_STRING_H

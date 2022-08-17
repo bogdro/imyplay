@@ -17,11 +17,14 @@ SDL (Simple DirectMedia Layer), ALSA (Advanced Linux Sound Architecture),
 OSS (Open Sound System), libao, PortAudiov19, PulseAudio, JACK1/JACK2, GStreamer
 (gstreamer-plugin-base required).
 
+It can also write raw samples to an output file, use the PC-speaker or
+call an external program on each note.
+
 .SH OPTIONS (for the full version)
 
 .IP "-d|--device <dev>"
-Try to use the given device (ALSA, OSS, GStreamer), driver ID (libao) or server name
-(JACK1, PulseAudio) for sound output.
+Try to use the given device (ALSA, OSS, GStreamer, PC-speaker), driver ID
+(libao) or server name (JACK1, PulseAudio) for sound output.
 .IP "-e|--exec <program>"
 Execute the given program instead of normal sound output. Overrides --output.
 
@@ -64,7 +67,9 @@ Print license information.
 Use the given MIDI instrument number.
 .IP "-o|--output <system>"
 Use the given sound output system (allegro, sdl, alsa, oss, ao/libao, portaudio/port,
-jack, pulseaudio/pulse, gstreamer/gst). Names are NOT case-sensitive.
+jack, pulseaudio/pulse, gstreamer/gst, speaker/pcspeaker/spkr/pcspkr). Names are NOT case-sensitive.
+PC-Speaker output may require the "snd-pcsp" kernel module to be loaded and
+permissions to access "/dev/console".
 .IP --to-midi
 Convert the given files to MIDI format (if the target file exists, it is deleted).
 Overrides --output.

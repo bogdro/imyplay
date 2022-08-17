@@ -19,6 +19,11 @@ BuildRequires:	gcc, glibc, glibc-devel, glibc-headers, make
 %description
 
 The imyplay is a program for playing iMelody ringtones (IMY files).
+IMYplay can use the following libraries to produce sound: the Allegro game
+library, SDL, ALSA, OSS, libao, PortAudiov19, PulseAudio, JACK1/JACK2,
+GStreamer (gstreamer-plugin-base required).
+It can also write raw samples to an output file, use the PC-speaker or
+call an external program on each note.
 
 %prep
 %setup -q

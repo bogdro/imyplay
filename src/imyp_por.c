@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PortAudio backend.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@
 #  include <portaudio/portaudio.h>
 # endif
 #else
-# error The PortAudio library was not found.
+# error PortAudio requested, but components not found.
 #endif
 
 #ifdef HAVE_MATH_H

@@ -1,20 +1,22 @@
-cd src
+rem cd src
 
 set imymajor=1
-set imyminor=2
-set imysubminor=1
+set imyminor=3
+rem set imysubminor=
 
-sed 's/[@]VERSION[@]/%imymajor%.%imyminor%.%imysubminor%/' imyp_cfg.hin > imyp_cfg.h
+rem sed 's/[@]VERSION[@]/%imymajor%.%imyminor%.%imysubminor%/' src\imyp_cfg.hin > src\imyp_cfg.h
+sed 's/[@]VERSION[@]/%imymajor%.%imyminor%/' src\imyp_cfg.hin > src\imyp_cfg.h
 if not "%errorlevel%"=="0" goto end
-nasm -O999 -f coff -DIMYPLAY_32BIT=1 -o imypdos.obj imypdos.asm
+nasm -O999 -f coff -DIMYPLAY_32BIT=1 -o src\imypdos.obj src\imypdos.asm
 if not "%errorlevel%"=="0" goto end
-gcc -O3 -o imyplay.exe @../DOSFILES.TXT
+gcc -O3 -o imyplay.exe @DOSFILES.TXT
 if not "%errorlevel%"=="0" goto end
 upx -9 imyplay.exe
 
-cd ..
+rem cd ..
 
-set imyver=%imymajor%-%imyminor%-%imysubminor%
+rem set imyver=%imymajor%-%imyminor%-%imysubminor%
+set imyver=%imymajor%-%imyminor%
 
 del imy%imyver%\po\*.* imy%imyver%\doc\*.* imy%imyver%\imy\*.* imy%imyver%\*.*
 rmdir imy%imyver%\po
@@ -29,7 +31,7 @@ mkdir imy%imyver%\imy
 copy imy imy%imyver%\imy
 mkdir imy%imyver%\po
 copy po\imyplay.pot po\pl.gmo imy%imyver%\po
-copy src\imyplay.exe imy%imyver%
+copy imyplay.exe imy%imyver%
 sed 's/$//' < AUTHORS  > imy%imyver%\AUTHORS.txt
 sed 's/$//' < ChangeLo > imy%imyver%\Changes.txt
 sed 's/$//' < COPYING  > imy%imyver%\COPYING.txt

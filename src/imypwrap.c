@@ -45,8 +45,12 @@
 # include "imyp_all.h"
 #endif
 
-#ifdef IMYP_HAVE_SDL
+#ifdef IMYP_HAVE_SDL2
 # include "imyp_sdl.h"
+#else
+# ifdef IMYP_HAVE_SDL
+#  include "imyp_sdl.h"
+# endif
 #endif
 
 #ifdef IMYP_HAVE_ALSA
@@ -154,8 +158,12 @@ imyp_pause (
 	}
 	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
-#ifdef IMYP_HAVE_SDL
+#ifdef IMYP_HAVE_SDL2
 		imyp_sdl_pause (curr->imyp_data, milliseconds);
+#else
+# ifdef IMYP_HAVE_SDL
+		imyp_sdl_pause (curr->imyp_data, milliseconds);
+# endif
 #endif
 	}
 	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
@@ -253,8 +261,12 @@ imyp_put_text (
 	}
 	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
-#ifdef IMYP_HAVE_SDL
+#ifdef IMYP_HAVE_SDL2
 		imyp_sdl_put_text (curr->imyp_data, text);
+#else
+# ifdef IMYP_HAVE_SDL
+		imyp_sdl_put_text (curr->imyp_data, text);
+# endif
 #endif
 	}
 	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
@@ -367,9 +379,14 @@ imyp_play_tune (
 	}
 	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
-#ifdef IMYP_HAVE_SDL
+#ifdef IMYP_HAVE_SDL2
 		return imyp_sdl_play_tune (curr->imyp_data,
 			freq, volume_level, duration, buf, bufsize);
+#else
+# ifdef IMYP_HAVE_SDL
+		return imyp_sdl_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
+# endif
 #endif
 	}
 	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
@@ -501,11 +518,18 @@ imyp_init_selected (
 		res = imyp_midi_init (&(curr->imyp_data), filename, midi_instrument);
 	}
 #endif
-#ifdef IMYP_HAVE_SDL
+#ifdef IMYP_HAVE_SDL2
 	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
 		res = imyp_sdl_init (&(curr->imyp_data), filename);
 	}
+#else
+# ifdef IMYP_HAVE_SDL
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
+	{
+		res = imyp_sdl_init (&(curr->imyp_data), filename);
+	}
+# endif
 #endif
 #ifdef IMYP_HAVE_ALSA
 	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
@@ -672,13 +696,22 @@ imyp_lib_init (
 		return res;
 	}
 #endif
-#ifdef IMYP_HAVE_SDL
+#ifdef IMYP_HAVE_SDL2
 	res = imyp_sdl_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
 		curr->imyp_curr_lib = IMYP_CURR_SDL;
 		return res;
 	}
+#else
+# ifdef IMYP_HAVE_SDL
+	res = imyp_sdl_init (&(curr->imyp_data), filename);
+	if ( res == 0 )
+	{
+		curr->imyp_curr_lib = IMYP_CURR_SDL;
+		return res;
+	}
+# endif
 #endif
 #ifdef IMYP_HAVE_JACK
 	res = imyp_jack_init (&(curr->imyp_data), filename);
@@ -750,8 +783,12 @@ imyp_lib_close (
 	}
 	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
-#ifdef IMYP_HAVE_SDL
+#ifdef IMYP_HAVE_SDL2
 		return imyp_sdl_close (curr->imyp_data);
+#else
+# ifdef IMYP_HAVE_SDL
+		return imyp_sdl_close (curr->imyp_data);
+# endif
 #endif
 	}
 	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
@@ -838,8 +875,12 @@ imyp_report_versions (
 #ifdef IMYP_HAVE_ALLEGRO
 	imyp_all_version (curr->imyp_data);
 #endif
-#ifdef IMYP_HAVE_SDL
+#ifdef IMYP_HAVE_SDL2
 	imyp_sdl_version (curr->imyp_data);
+#else
+# ifdef IMYP_HAVE_SDL
+	imyp_sdl_version (curr->imyp_data);
+# endif
 #endif
 #ifdef IMYP_HAVE_ALSA
 	imyp_alsa_version (curr->imyp_data);

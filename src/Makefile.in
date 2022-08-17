@@ -90,30 +90,35 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = imyplay$(EXEEXT)
 @ALLEGRO_TRUE@am__append_1 = imyp_all.c imyp_all.h
-@SDL_TRUE@am__append_2 = imyp_sdl.c imyp_sdl.h
-@ALSA_TRUE@am__append_3 = imyp_als.c imyp_als.h
-@OSS_TRUE@am__append_4 = imyp_oss.c imyp_oss.h
-@LIBAO_TRUE@am__append_5 = imyp_ao.c imyp_ao.h
-@PORTAUDIO_TRUE@am__append_6 = imyp_por.c imyp_por.h
-@PULSEAUDIO_TRUE@am__append_7 = imyp_pul.c imyp_pul.h
-@JACK_TRUE@am__append_8 = imyp_jck.c imyp_jck.h
-@MIDI_TRUE@am__append_9 = imyp_mid.c imyp_mid.h midifile.c midifile.h \
+
+# SDLv2 has functions with the same names as those in SDLv1,
+# so enable at most one of the libraries at the same time
+@SDL2_TRUE@am__append_2 = imyp_sdl.c imyp_sdl.h
+@SDL2_FALSE@@SDL_TRUE@am__append_3 = imyp_sdl.c imyp_sdl.h
+@ALSA_TRUE@am__append_4 = imyp_als.c imyp_als.h
+@OSS_TRUE@am__append_5 = imyp_oss.c imyp_oss.h
+@LIBAO_TRUE@am__append_6 = imyp_ao.c imyp_ao.h
+@PORTAUDIO_TRUE@am__append_7 = imyp_por.c imyp_por.h
+@PULSEAUDIO_TRUE@am__append_8 = imyp_pul.c imyp_pul.h
+@JACK_TRUE@am__append_9 = imyp_jck.c imyp_jck.h
+@MIDI_TRUE@am__append_10 = imyp_mid.c imyp_mid.h midifile.c midifile.h \
 @MIDI_TRUE@	midiinfo.h midibase.h
 
-@EXEC_TRUE@am__append_10 = imyp_exe.c imyp_exe.h
-@GSTREAMER_TRUE@am__append_11 = imyp_gst.c imyp_gst.h
-@FILE_TRUE@am__append_12 = imyp_fil.c imyp_fil.h
-@SPKR_TRUE@am__append_13 = imyp_spk.c imyp_spk.h
-@FLEX_TRUE@am__append_14 = imyparsf.l
-@FLEX_FALSE@am__append_15 = imyparse.c
+@EXEC_TRUE@am__append_11 = imyp_exe.c imyp_exe.h
+@GSTREAMER_TRUE@am__append_12 = imyp_gst.c imyp_gst.h
+@FILE_TRUE@am__append_13 = imyp_fil.c imyp_fil.h
+@SPKR_TRUE@am__append_14 = imyp_spk.c imyp_spk.h
+@FLEX_TRUE@am__append_15 = imyparsf.l
+@FLEX_FALSE@am__append_16 = imyparse.c
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
-	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/iconv.m4 \
-	$(top_srcdir)/m4/intlmacosx.m4 $(top_srcdir)/m4/lib-ld.m4 \
-	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/host-cpu-c-abi.m4 \
+	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
+	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
@@ -133,27 +138,29 @@ am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 	imyp_exe.h imyp_gst.c imyp_gst.h imyp_fil.c imyp_fil.h \
 	imyp_spk.c imyp_spk.h imyparsf.l imyparse.c
 @ALLEGRO_TRUE@am__objects_1 = imyp_all.$(OBJEXT)
-@SDL_TRUE@am__objects_2 = imyp_sdl.$(OBJEXT)
-@ALSA_TRUE@am__objects_3 = imyp_als.$(OBJEXT)
-@OSS_TRUE@am__objects_4 = imyp_oss.$(OBJEXT)
-@LIBAO_TRUE@am__objects_5 = imyp_ao.$(OBJEXT)
-@PORTAUDIO_TRUE@am__objects_6 = imyp_por.$(OBJEXT)
-@PULSEAUDIO_TRUE@am__objects_7 = imyp_pul.$(OBJEXT)
-@JACK_TRUE@am__objects_8 = imyp_jck.$(OBJEXT)
-@MIDI_TRUE@am__objects_9 = imyp_mid.$(OBJEXT) midifile.$(OBJEXT)
-@EXEC_TRUE@am__objects_10 = imyp_exe.$(OBJEXT)
-@GSTREAMER_TRUE@am__objects_11 = imyp_gst.$(OBJEXT)
-@FILE_TRUE@am__objects_12 = imyp_fil.$(OBJEXT)
-@SPKR_TRUE@am__objects_13 = imyp_spk.$(OBJEXT)
-@FLEX_TRUE@am__objects_14 = imyparsf.$(OBJEXT)
-@FLEX_FALSE@am__objects_15 = imyparse.$(OBJEXT)
+@SDL2_TRUE@am__objects_2 = imyp_sdl.$(OBJEXT)
+@SDL2_FALSE@@SDL_TRUE@am__objects_3 = imyp_sdl.$(OBJEXT)
+@ALSA_TRUE@am__objects_4 = imyp_als.$(OBJEXT)
+@OSS_TRUE@am__objects_5 = imyp_oss.$(OBJEXT)
+@LIBAO_TRUE@am__objects_6 = imyp_ao.$(OBJEXT)
+@PORTAUDIO_TRUE@am__objects_7 = imyp_por.$(OBJEXT)
+@PULSEAUDIO_TRUE@am__objects_8 = imyp_pul.$(OBJEXT)
+@JACK_TRUE@am__objects_9 = imyp_jck.$(OBJEXT)
+@MIDI_TRUE@am__objects_10 = imyp_mid.$(OBJEXT) midifile.$(OBJEXT)
+@EXEC_TRUE@am__objects_11 = imyp_exe.$(OBJEXT)
+@GSTREAMER_TRUE@am__objects_12 = imyp_gst.$(OBJEXT)
+@FILE_TRUE@am__objects_13 = imyp_fil.$(OBJEXT)
+@SPKR_TRUE@am__objects_14 = imyp_spk.$(OBJEXT)
+@FLEX_TRUE@am__objects_15 = imyparsf.$(OBJEXT)
+@FLEX_FALSE@am__objects_16 = imyparse.$(OBJEXT)
 am_imyplay_OBJECTS = imyplay.$(OBJEXT) imypwrap.$(OBJEXT) \
 	imyp_sig.$(OBJEXT) imyputil.$(OBJEXT) iparsers.$(OBJEXT) \
 	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
 	$(am__objects_4) $(am__objects_5) $(am__objects_6) \
 	$(am__objects_7) $(am__objects_8) $(am__objects_9) \
 	$(am__objects_10) $(am__objects_11) $(am__objects_12) \
-	$(am__objects_13) $(am__objects_14) $(am__objects_15)
+	$(am__objects_13) $(am__objects_14) $(am__objects_15) \
+	$(am__objects_16)
 imyplay_OBJECTS = $(am_imyplay_OBJECTS)
 am__DEPENDENCIES_1 =
 imyplay_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -236,8 +243,6 @@ ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AM_LDFLAGS = @AM_LDFLAGS@
-AO_CFLAGS = @AO_CFLAGS@
-AO_LIBS = @AO_LIBS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -247,6 +252,7 @@ CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CHECK_CFLAGS = @CHECK_CFLAGS@
 CHECK_LIBS = @CHECK_LIBS@
+CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
@@ -284,8 +290,8 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
 MSGFMT = @MSGFMT@
-MSGFMT_015 = @MSGFMT_015@
 MSGMERGE = @MSGMERGE@
+MSGMERGE_FOR_MSGFMT_OPTION = @MSGMERGE_FOR_MSGFMT_OPTION@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -366,7 +372,8 @@ imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c \
 	$(am__append_4) $(am__append_5) $(am__append_6) \
 	$(am__append_7) $(am__append_8) $(am__append_9) \
 	$(am__append_10) $(am__append_11) $(am__append_12) \
-	$(am__append_13) $(am__append_14) $(am__append_15)
+	$(am__append_13) $(am__append_14) $(am__append_15) \
+	$(am__append_16)
 imyplay_LDADD = $(INTLLIBS)
 AM_CPPFLAGS = -I../intl -DLOCALEDIR=\"$(localedir)\"
 EXTRA_DIST = imyp_cfg.hin imypdos.asm

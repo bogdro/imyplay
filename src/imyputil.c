@@ -50,17 +50,12 @@
 #endif
 
 /* select() the old way */
-#if TIME_WITH_SYS_TIME
+#if HAVE_SYS_TIME_H
 # include <sys/time.h>
+#endif
+
+#ifdef HAVE_TIME_H
 # include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  ifdef HAVE_TIME_H
-#   include <time.h>
-#  endif
-# endif
 #endif
 
 #ifdef HAVE_UNISTD_H
@@ -552,13 +547,12 @@ imyp_generate_filename (
 	if ( imy != NULL )
 	{
 		imy_index = (size_t)(imy - filename);
-		target_fname_len = fnlen + 1;
 	}
 	else
 	{
 		imy_index = fnlen;
-		target_fname_len = fnlen + elen + 1;
 	}
+	target_fname_len = fnlen + elen + 1;
 	new_filename = (char *) malloc (target_fname_len);
 	if ( new_filename == NULL )
 	{
@@ -572,7 +566,7 @@ imyp_generate_filename (
 		((char *)new_filename)[i] = '\0';
 	}
 # endif
-	strncpy (new_filename, filename, fnlen+1);
+	strncpy (new_filename, filename, target_fname_len-1);
 	/* If ".imy" extension is present, change it to the provided one.
 	   Else, append the requested extension. */
 	for (i = imy_index; i < fnlen; i++ )

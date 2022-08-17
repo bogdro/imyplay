@@ -13,8 +13,14 @@ if ALLEGRO
 imyplay_SOURCES += imyp_all.c imyp_all.h
 endif
 
+# SDLv2 has functions with the same names as those in SDLv1,
+# so enable at most one of the libraries at the same time
+if SDL2
+ imyplay_SOURCES += imyp_sdl.c imyp_sdl.h
+else
 if SDL
-imyplay_SOURCES += imyp_sdl.c imyp_sdl.h
+ imyplay_SOURCES += imyp_sdl.c imyp_sdl.h
+endif
 endif
 
 if ALSA

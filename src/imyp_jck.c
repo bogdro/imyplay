@@ -119,7 +119,7 @@ static int imyp_jack_fill_buffer (
 
 	output = jack_port_get_buffer (data->joutput, nframes);
 
-	if ( output == NULL )
+	if ( (output == NULL) || (data->buf == NULL) )
 	{
 		return -1;
 	}
@@ -309,8 +309,9 @@ imyp_jack_init (
 #else
 	data = &imyp_jack_backend_data_static;
 #endif
-
 	data->last_index = 0;
+	data->samples_remain = 0;
+	data->buf = NULL;
 
 	/* sample server start: "jackd -d alsa -r 44100 -p 8192 &" */
 	data->jclient = jack_client_open ("IMYplay", JackNullOption, &jstatus, dev_file);

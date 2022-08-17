@@ -6,13 +6,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: imyplay 0.1\n"
+"Project-Id-Version: imyplay 1.2.1\n"
 "Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-08-29 16:26+0200\n"
+"POT-Creation-Date: 2021-09-26 21:10+0200\n"
 "PO-Revision-Date: 2010-05-30 13:52+0100\n"
 "Last-Translator: Bogdan Drozdowski <bogdro@users.sourceforge.net>\n"
 "Language-Team: Polish\n"
-"Language: \n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-2\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -123,32 +123,41 @@ msgstr "Przekonwertuj podane pliki na format MIDI"
 msgid "Print version number"
 msgstr "Wy¶wietl numer wersji"
 
-#~ msgid "Unknown token"
-#~ msgstr "Nieznany token"
+#: src/iparsers.c:40
+msgid "Unknown token"
+msgstr "Nieznany token"
 
-#~ msgid "at position"
-#~ msgstr "na pozycji"
+#: src/iparsers.c:41
+msgid "at position"
+msgstr "na pozycji"
 
-#~ msgid "Unexpected token"
-#~ msgstr "Nieoczekiwany token"
+#: src/iparsers.c:42
+msgid "Unexpected token"
+msgstr "Nieoczekiwany token"
 
-#~ msgid "Can't open file"
-#~ msgstr "Nie mogê otworzyæ pliku"
+#: src/iparsers.c:43
+msgid "Can't open file"
+msgstr "Nie mogê otworzyæ pliku"
 
-#~ msgid "Problem parsing beat"
-#~ msgstr "Problem z parsowaniem beatu"
+#: src/iparsers.c:44
+msgid "Problem parsing beat"
+msgstr "Problem z parsowaniem beatu"
 
-#~ msgid "Problem parsing style"
-#~ msgstr "Problem z parsowaniem stylu"
+#: src/iparsers.c:45
+msgid "Problem parsing style"
+msgstr "Problem z parsowaniem stylu"
 
-#~ msgid "Problem parsing volume"
-#~ msgstr "Problem z parsowaniem g³o¶no¶ci"
+#: src/iparsers.c:46
+msgid "Problem parsing volume"
+msgstr "Problem z parsowaniem g³o¶no¶ci"
 
-#~ msgid "Not iMelody file"
-#~ msgstr "Nie jest plikiem iMelody"
+#: src/iparsers.c:47
+msgid "Not iMelody file"
+msgstr "Nie jest plikiem iMelody"
 
-#~ msgid "Error playing tune"
-#~ msgstr "B³±d podczas odtwarzania d¼wiêku"
+#: src/iparsers.c:48
+msgid "Error playing tune"
+msgstr "B³±d podczas odtwarzania d¼wiêku"
 
 #~ msgid "Setting signal handlers"
 #~ msgstr "Ustawianie procedur obs³ugi sygna³ów"

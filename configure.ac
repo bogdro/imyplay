@@ -1,18 +1,18 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-AC_PREREQ(2.59)
-AC_INIT(imyplay, 1.2.1, bogdro@users.sourceforge.net)
-AM_INIT_AUTOMAKE
+AC_PREREQ([2.71])
+AC_INIT([imyplay],[1.3],[bogdro@users.sourceforge.net])
+AM_INIT_AUTOMAKE([-Wall])
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
-	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \
-	src/imyp_cfg.h:src/imyp_cfg.hin doc/Makefile po/Makefile test/Makefile])
+	po/Makefile.in po/Makefile imyplay.spc:imyplay.spi \
+	src/imyp_cfg.h:src/imyp_cfg.hin doc/Makefile test/Makefile])
 AC_CONFIG_SRCDIR([src/imyplay.c])
-AC_CONFIG_HEADER([config.h:config.hin])
+AC_CONFIG_HEADERS([config.h:config.hin])
 
 # ==================== configure arguments
 
-AC_ARG_ENABLE(allegro,[[  --enable-allegro	Use the Allegro library (default).]],
+AC_ARG_ENABLE(allegro,[[  --enable-allegro	Enable Allegro output (default).]],
 	[if (test "x$enableval" = "xno"); then
 		feat_allegro=no
 	 else
@@ -21,7 +21,7 @@ AC_ARG_ENABLE(allegro,[[  --enable-allegro	Use the Allegro library (default).]],
 	]
 	,feat_allegro=yes)
 
-AC_ARG_ENABLE(SDL,[[  --enable-SDL		Use the SDL library.]],
+AC_ARG_ENABLE(SDL,[[  --enable-SDL		Enable SDLv1 output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_SDL=no
 	 else
@@ -30,7 +30,16 @@ AC_ARG_ENABLE(SDL,[[  --enable-SDL		Use the SDL library.]],
 	]
 	,feat_SDL=yes)
 
-AC_ARG_ENABLE(ALSA,[[  --enable-ALSA		Use the ALSA library.]],
+AC_ARG_ENABLE(SDL2,[[  --enable-SDL2		Enable SDLv2 output.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_SDL2=no
+	 else
+		feat_SDL2=yes
+	 fi
+	]
+	,feat_SDL2=yes)
+
+AC_ARG_ENABLE(ALSA,[[  --enable-ALSA		Enable ALSA output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_ALSA=no
 	 else
@@ -39,7 +48,7 @@ AC_ARG_ENABLE(ALSA,[[  --enable-ALSA		Use the ALSA library.]],
 	]
 	,feat_ALSA=yes)
 
-AC_ARG_ENABLE(OSS,[[  --enable-OSS		Use the OSS subsystem.]],
+AC_ARG_ENABLE(OSS,[[  --enable-OSS		Enable OSS output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_OSS=no
 	 else
@@ -48,7 +57,7 @@ AC_ARG_ENABLE(OSS,[[  --enable-OSS		Use the OSS subsystem.]],
 	]
 	,feat_OSS=yes)
 
-AC_ARG_ENABLE(LIBAO,[[  --enable-LIBAO	Use the LIBAO library.]],
+AC_ARG_ENABLE(LIBAO,[[  --enable-LIBAO	Enable LIBAO output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_LIBAO=no
 	 else
@@ -57,7 +66,7 @@ AC_ARG_ENABLE(LIBAO,[[  --enable-LIBAO	Use the LIBAO library.]],
 	]
 	,feat_LIBAO=yes)
 
-AC_ARG_ENABLE(PORTAUDIO,[[  --enable-PORTAUDIO	Use the PORTAUDIOv19 library.]],
+AC_ARG_ENABLE(PORTAUDIO,[[  --enable-PORTAUDIO	Enable PORTAUDIOv19 output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_PORTAUDIO=no
 	 else
@@ -66,7 +75,7 @@ AC_ARG_ENABLE(PORTAUDIO,[[  --enable-PORTAUDIO	Use the PORTAUDIOv19 library.]],
 	]
 	,feat_PORTAUDIO=yes)
 
-AC_ARG_ENABLE(PULSEAUDIO,[[  --enable-PULSEAUDIO	Use the PULSEAUDIO library.]],
+AC_ARG_ENABLE(PULSEAUDIO,[[  --enable-PULSEAUDIO	Enable PULSEAUDIO output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_PULSEAUDIO=no
 	 else
@@ -75,7 +84,7 @@ AC_ARG_ENABLE(PULSEAUDIO,[[  --enable-PULSEAUDIO	Use the PULSEAUDIO library.]],
 	]
 	,feat_PULSEAUDIO=yes)
 
-AC_ARG_ENABLE(JACK,[[  --enable-JACK		Use the JACK library.]],
+AC_ARG_ENABLE(JACK,[[  --enable-JACK		Enable JACK output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_JACK=no
 	 else
@@ -171,6 +180,9 @@ have_flex=no
 # used in 'make dist'
 #if ( test "x$feat_FLEX" = "xyes" ); then
 
+	# required by AM_PROG_LEX, otherwise called without
+	# any arguments and that's deprecated:
+	AC_PROG_LEX([noyywrap])
 	AM_PROG_LEX
 	if ( test "x$LEX" = "xflex" ); then
 
@@ -180,11 +192,19 @@ have_flex=no
 
 # ==================== Checks for libraries.
 
-if ( test "x$feat_SDL" = "xyes" ); then
+# SDLv2 has functions with the same names as those in SDLv1,
+# so enable at most one of the libraries at the same time
+if ( test "x$feat_SDL2" = "xyes" ); then
+
+	libsdl2=yes
+	AC_CHECK_LIB([SDL2],[SDL_OpenAudio],,[libsdl2=no])
+fi
+if ( test "x$feat_SDL" = "xyes" && test "x$libsdl2" != "xyes" ); then
 
 	libsdl=yes
 	AC_CHECK_LIB([SDL],[SDL_OpenAudio],,[libsdl=no])
 fi
+
 
 if ( test "x$feat_allegro" = "xyes" ); then
 
@@ -213,7 +233,7 @@ if ( test "x$feat_LIBAO" = "xyes" ); then
 
 	libao=yes
 	AC_CHECK_LIB([ao],[ao_initialize],,[libao=no])
-	XIPH_PATH_AO()
+# 	XIPH_PATH_AO()
 fi
 
 if ( test "x$feat_PORTAUDIO" = "xyes" ); then
@@ -317,7 +337,10 @@ if ( test "x$feat_LIBNETBLOCK" = "xyes" ); then
 fi
 
 # ==================== Checks for header files.
-AC_HEADER_STDC
+# AC_ HEADER_ STDC
+AC_CHECK_INCLUDES_DEFAULT
+AC_PROG_EGREP
+
 AC_HEADER_SYS_WAIT()
 
 has_sys_wait_h=yes
@@ -365,14 +388,22 @@ if ( test "x$liballeg" = "xyes" || test "x$alleg_ldflags" != "x" ); then
 		[Whether you have the allegro.h header.]), have_all_h=no)
 fi
 
-if ( test "x$libsdl" = "xyes" ); then
+if ( test "x$libsdl2" = "xyes" ); then
+
+	have_sdl2_h=yes
+	AC_CHECK_HEADER([SDL2/SDL.h],AC_DEFINE([HAVE_SDL2_SDL_H],[1],
+		[Whether you have the SDL2/SDL.h header.]),
+			have_sdl2_h=no)
+fi
+
+# SDLv2 has functions with the same names as those in SDLv1,
+# so enable at most one of the libraries at the same time
+if ( test "x$libsdl" = "xyes" && test "x$libsdl2" != "xyes" ); then
 
 	have_sdl_h=yes
 	AC_CHECK_HEADER([SDL/SDL.h],AC_DEFINE([HAVE_SDL_SDL_H],[1],
 		[Whether you have the SDL/SDL.h header.]),
-			[AC_CHECK_HEADER([SDL.h],AC_DEFINE([HAVE_SDL_H],[1],
-				[Whether you have the SDL.h header.]),
-			have_sdl_h=no)])
+			have_sdl_h=no)
 fi
 
 if ( test "x$libalsa" = "xyes" ); then
@@ -429,7 +460,22 @@ fi
 		have_sys_select_h=yes
 		have_sys_time_h=yes
 		have_sys_types_h=yes
-		AC_HEADER_TIME()
+
+		# AC_ HEADER_ TIME()
+		# m4_warn([obsolete],
+		# [Update your code to rely only on HAVE_SYS_TIME_H,
+		# then remove this warning and the obsolete code below it.
+		# All current systems provide time.h; it need not be checked for.
+		# Not all systems provide sys/time.h, but those that do, all allow
+		# you to include it and time.h simultaneously.])dnl
+		# AC_CHECK_HEADERS_ONCE([sys/time.h])
+		# Obsolete code to be removed.
+		# if test $ac_cv_header_sys_time_h = yes; then
+		#   AC_DEFINE([TIME_WITH_SYS_TIME],[1],[Define to 1 if you can safely include both <sys/time.h>
+		# 	     and <time.h>.  This macro is obsolete.])
+		# fi
+		# End of obsolete code.
+
 		AC_CHECK_HEADERS([sys/select.h], AC_DEFINE([HAVE_SYS_SELECT_H],[1],
 			[Whether you have the sys/select.h header.]), have_sys_select_h=no)
 		AC_CHECK_HEADERS([sys/time.h], AC_DEFINE([HAVE_SYS_TIME_H],[1],
@@ -542,6 +588,7 @@ if ( test "x$feat_MIDI" == "xyes" ); then
 	have_qsort=yes
 	AC_CHECK_FUNCS([qsort],AC_DEFINE([HAVE_QSORT],[1],
 		[Whether you have the qsort() function.]),[have_qsort=no])
+	AC_CHECK_HEADERS([stdint.h])
 fi
 
 
@@ -549,8 +596,13 @@ AM_CONDITIONAL(ALLEGRO, [test "x$feat_allegro" = "xyes" && 				\
 	(test "x$liballeg" = "xyes" || test "x$alleg_ldflags" != "x") &&		\
 	test "x$have_all_h" = "xyes"])
 
+# SDLv2 has functions with the same names as those in SDLv1,
+# so enable at most one of the libraries at the same time
+AM_CONDITIONAL(SDL2, [test "x$feat_SDL2" = "xyes" && test "x$libsdl2" = "xyes"		\
+	&& test "x$have_sdl2_h" = "xyes"])
+
 AM_CONDITIONAL(SDL, [test "x$feat_SDL" = "xyes" && test "x$libsdl" = "xyes"		\
-	&& test "x$have_sdl_h" = "xyes"])
+	&& test "x$have_sdl_h" = "xyes" && test "x$libsdl2" != "xyes" ])
 
 AM_CONDITIONAL(ALSA, [test "x$feat_ALSA" = "xyes" && test "x$libalsa" = "xyes"		\
 	&& test "x$have_asoundlib_h" = "xyes"	\
@@ -646,7 +698,20 @@ AC_CHECK_TYPES([sig_atomic_t],,,
 	])
 
 # Checks for library functions.
-AC_TYPE_SIGNAL
+# AC_ TYPE_ SIGNAL
+# m4_warn([obsolete],
+# [your code may safely assume C89 semantics that RETSIGTYPE is void.
+# Remove this warning and the AC_CACHE_CHECK when you adjust the code.])dnl
+AC_CACHE_CHECK([return type of signal handlers],[ac_cv_type_signal],[AC_COMPILE_IFELSE(
+[AC_LANG_PROGRAM([#include <sys/types.h>
+#include <signal.h>
+],
+		 [return *(signal (0, 0)) (0) == 1;])],
+		   [ac_cv_type_signal=int],
+		   [ac_cv_type_signal=void])])
+AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type of signal handlers
+		    (int or void).])
+
 AC_FUNC_MALLOC
 
 AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long])
@@ -655,7 +720,7 @@ if ( test "x$imyp_flex_enabled" != "xyes" ); then
 	AC_CHECK_FUNCS([fseeko ftello])
 fi
 
-AM_GNU_GETTEXT_VERSION([0.17])
+AM_GNU_GETTEXT_VERSION([0.21])
 AM_GNU_GETTEXT([external])
 
 # Can be /usr/local/include/libintl.h. Use --with-libintl-prefix=DIR then.
@@ -750,18 +815,45 @@ else
 	fi
 fi
 
-if (	test "x$feat_SDL" = "xyes" && test "x$libsdl" = "xyes" && test "x$have_sdl_h" = "xyes"); then
+# SDLv2 has functions with the same names as those in SDLv1,
+# so enable at most one of the libraries at the same time
+if (	test "x$feat_SDL2" = "xyes" && test "x$libsdl2" = "xyes" && test "x$have_sdl2_h" = "xyes"); then
 
-	echo " *	SDL: yes"
+	echo " *	SDLv2: yes"
 else
-	if (test "x$feat_SDL" != "xyes"); then
-		echo " *	SDL: no (disabled by command line)"
+	if (test "x$feat_SDL2" != "xyes"); then
+		echo " *	SDLv2: no (disabled by command line)"
+
+	elif ( test "x$libsdl2" != "xyes" ); then
+		echo " *	SDLv2: no (library missing or unusable)"
+
+	else	#if (test "x$have_sdl2_h" != "xyes"); then
+		echo " *	SDLv2: no (SDL.h header missing)"
+	fi
+fi
+
+AM_CONDITIONAL(SDL2, [test "x$feat_SDL2" = "xyes" && test "x$libsdl2" = "xyes"		\
+	&& test "x$have_sdl2_h" = "xyes"])
+
+if (	test "x$feat_SDL" = "xyes" && test "x$libsdl" = "xyes" \
+	&& test "x$have_sdl_h" = "xyes" && 
+	test "x$feat_SDL2" != "xyes" && test "x$libsdl2" != "xyes"		\
+	&& test "x$have_sdl2_h" != "xyes"); then
+
+	echo " *	SDLv1: yes"
+else
+	if (test "x$feat_SDL2" = "xyes" && test "x$libsdl2" = "xyes"		\
+		&& test "x$have_sdl2_h" = "xyes"); then
+		echo " *	SDLv1: no (disabled by SDLv2)"
+
+	elif (test "x$feat_SDL" != "xyes"); then
+		echo " *	SDLv1: no (disabled by command line)"
 
 	elif ( test "x$libsdl" != "xyes" ); then
-		echo " *	SDL: no (library missing or unusable)"
+		echo " *	SDLv1: no (library missing or unusable)"
 
 	else	#if (test "x$have_sdl_h" != "xyes"); then
-		echo " *	SDL: no (SDL.h header missing)"
+		echo " *	SDLv1: no (SDL.h header missing)"
 	fi
 fi
 
@@ -1075,9 +1167,9 @@ if (	test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"			\
 	&& test "x$have_malloc" = "xyes" && test "x$have_realloc" = "xyes" ); then
 
 	echo " *	Flex parser: yes"
-	AC_MSG_WARN([Flex-based parser enabled. If it does not compile for])
-	AC_MSG_WARN([you or works incorrectly, re-configure imyplay with])
-	AC_MSG_WARN([./configure --enable-FLEXPARSER=no])
+	AC_MSG_WARN([[Flex-based parser enabled. If it does not compile for]])
+	AC_MSG_WARN([[you or works incorrectly, re-configure imyplay with]])
+	AC_MSG_WARN([[./configure --enable-FLEXPARSER=no]])
 else
 	if (test "x$feat_FLEX" != "xyes"); then
 		echo " *	Flex parser: no (disabled by command line)"
@@ -1110,9 +1202,9 @@ if (	test "x$feat_LIBHIDEIP" = "xyes" && test "x$libhip" = "xyes" \
 	&& test "x$have_libhideip_h" = "xyes" ); then
 
 	echo " *	LibHideIP enabled: yes"
-	AC_MSG_WARN([LibHideIP may cause network sound output not to work.])
-	AC_MSG_WARN([If you do not wish to enable LibHideIP, re-configure imyplay with])
-	AC_MSG_WARN([./configure --enable-LIBHIDEIP=no])
+	AC_MSG_WARN([[LibHideIP may cause network sound output not to work.]])
+	AC_MSG_WARN([[If you do not wish to enable LibHideIP, re-configure imyplay with]])
+	AC_MSG_WARN([[./configure --enable-LIBHIDEIP=no]])
 else
 	if (test "x$feat_LIBHIDEIP" != "xyes"); then
 		echo " *	LibHideIP enabled: no (disabled by command line)"
@@ -1130,9 +1222,9 @@ if (	test "x$feat_LIBNETBLOCK" = "xyes" && test "x$libnb" = "xyes" \
 	&& test "x$have_libnetblock_h" = "xyes" ); then
 
 	echo " *	LibNetBlock enabled: yes"
-	AC_MSG_WARN([LibNetBlock may cause network sound output not to work.])
-	AC_MSG_WARN([If you do not wish to enable LibNetBlock, re-configure imyplay with])
-	AC_MSG_WARN([./configure --enable-LIBNETBLOCK=no])
+	AC_MSG_WARN([[LibNetBlock may cause network sound output not to work.]])
+	AC_MSG_WARN([[If you do not wish to enable LibNetBlock, re-configure imyplay with]])
+	AC_MSG_WARN([[./configure --enable-LIBNETBLOCK=no]])
 else
 	if (test "x$feat_LIBNETBLOCK" != "xyes"); then
 		echo " *	LibNetBlock enabled: no (disabled by command line)"

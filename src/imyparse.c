@@ -1005,7 +1005,7 @@ imyp_play_file (
 								}
 								else if ( imyp_check_string ("CKOFF") == 1 )
 								{
-									melody_index += 5 /*strlen(BEOFF)*/;
+									melody_index += 5 /*strlen(CKOFF)*/;
 									imyp_read_line (melody_line,
 										&melody_index,
 										sizeof (melody_line) - 10,

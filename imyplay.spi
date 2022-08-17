@@ -1,18 +1,19 @@
+# @configure_input@
 # Special names here like {__make} come from /usr/lib/rpm/macros, /usr/lib/rpm/macros.rpmbuild
 
 %define imyp_version @VERSION@
 %define imyp_release 1
 %define imyp_name imyplay
 %define imyp_url https://imyplay.sourceforge.io
-%define imyp_descr The imyplay is a program for playing iMelody ringtones (IMY files). \
+%define imyp_descr IMYplay is a program for playing iMelody ringtones (IMY files). \
 IMYplay can use the following libraries to produce sound: the Allegro game \
-library, SDL, ALSA, OSS, libao, PortAudiov19, PulseAudio, JACK1/JACK2, \
+library, SDL v1/v2, ALSA, OSS, libao, PortAudiov19, PulseAudio, JACK1/JACK2, \
 GStreamer (gstreamer-plugin-base required). \
 It can also write raw samples to an output file, use the PC-speaker or \
 call an external program on each note.
 
 %define imyp_lic GPLv3
-%define imyp_summary Program for playing iMelody ringtones (IMY files)
+%define imyp_summary A program for playing iMelody ringtones (IMY files)
 
 Summary:	%{imyp_summary}
 Name:		%{imyp_name}

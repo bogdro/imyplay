@@ -4,3 +4,4 @@
 info_TEXINFOS = imyplay.txi
 dist_man1_MANS = imyplay.1
 EXTRA_DIST = imyplay.txc imyplay.info imelody.txt
+AM_MAKEINFOHTMLFLAGS = --css-ref=../sf_bogdro.css

@@ -5,6 +5,9 @@
  *  AUTHOR: Steven Goodwin (StevenGoodwin@gmail.com)
  *          Copyright 1998-2008, Steven Goodwin
  *
+ * Changes: Bogdan Drozdowski <bogdro@users.sourceforge.net>:
+ *	2021-09-28: adapt to 64-bit systems
+ *
  *  This program is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU General Public License as
  *  published by the Free Software Foundation; either version 2 of
@@ -29,12 +32,21 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_STDINT_H
+# include <stdint.h>
+#else
+/*# if (defined __MSDOS) || (defined __MSDOS__) || (defined MSDOS)*/
+typedef	unsigned long		uint32_t;
+/*# endif / * DOS */
+#endif
+
 /*
 ** Types because we're dealing with files, and need to be careful
 */
 typedef	unsigned char		BYTE;
 typedef	unsigned short		WORD;
-typedef	unsigned long		DWORD;
+typedef	uint32_t		DWORD;	/* MUST be 32 bits! */
+
 typedef	int					BOOL;
 
 #ifndef TRUE
@@ -50,4 +62,3 @@ typedef	int					BOOL;
 #endif
 
 #endif /* _MIDIBASE_H */
-

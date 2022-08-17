@@ -1,4 +1,4 @@
-This is the README file for imyplay, a program for playing iMelody
+This is the README file for IMYplay, a program for playing iMelody
  ringtones (IMY files).
 
 Read the info documentation (type 'info doc/imyplay.info') to get more
@@ -6,25 +6,31 @@ Read the info documentation (type 'info doc/imyplay.info') to get more
 
 This program is used for playing iMelody ringtones (IMY files),
 conforming to the iMelody specification, as written in doc/imelody.txt.
-It can also convert IMY ringtones to MIDI files.
 
-IMYplay can use the following libraries to produce sound: the Allegro game
-library (http://alleg.sf.net), SDL (Simple DirectMedia Layer;
-http://www.libsdl.org), ALSA (Advanced Linux Sound Architecture;
-http://alsa-project.org), OSS (Open Sound System), libao
-(http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/), PulseAudio
-(http://www.pulseaudio.org/), JACK1/JACK2 (http://jackaudio.org/),
-GStreamer (http://gstreamer.freedesktop.org/, gstreamer-plugin-base required).
-It can also write raw samples to an output file, use the PC-speaker or
-call an external program on each note.
+IMYplay can use the following outputs to produce sound:
+1. the Allegro game library (<http://alleg.sf.net>),
+2. SDL (Simple DirectMedia Layer; <http://www.libsdl.org>),
+3. ALSA (Advanced Linux Sound Architecture; <http://alsa-project.org>),
+4. OSS (Open Sound System),
+5. libao (<http://xiph.org/ao/>),
+6. PortAudiov19 (<http://www.portaudio.com/>),
+7. PulseAudio (<http://www.pulseaudio.org/>),
+8. JACK1/JACK2 (<http://jackaudio.org/>),
+9. GStreamer (<http://gstreamer.freedesktop.org/>, gstreamer-plugin-base
+   required).
 
+It can also:
+- convert IMY ringtones to MIDI files,
+- write raw samples to an output file,
+- use the PC-speaker,
+- call an external program on each note.
 
-Author: Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+Author: Bogdan Drozdowski, bogdro (at) users . sourceforge . net
 License: GPLv3+
 
 ================================================================
 
-The binary version of imyplay is linked with the GNU C Library,
+The binary version of IMYplay is linked with the GNU C Library,
  licensed under the GNU LGPL:
 
 Copyright (C) 1991,92,93,94,95,96,97,98,99,2000,2001,2002,2003,2004,2005,
@@ -46,22 +52,22 @@ You should have received a copy of the GNU Lesser General Public License
 
 ================================================================
 
-The program compiles on:
+IMYplay, in various versions, has been successfully compiled on the following
+systems:
 - Fedora Core 4 GNU/Linux, i686
 - Fedora 12 GNU/Linux, i686
 - Mandriva 2008.1 GNU/Linux, i686
-- Mandriva 2011 GNU/Linux (i686 CPU) - versions from 0.7 (earlier not checked)
-- OpenMandriva 3.0 GNU/Linux, x86-64 - version 1.2 (other not checked)
-- OpenMandriva 4.2 GNU/Linux, x86-64 - versions from 1.2.1 (earlier not checked)
+- Mandriva 2011 GNU/Linux, i686 
+- OpenMandriva 3.0 GNU/Linux, amd64
+- OpenMandriva 4.2 GNU/Linux, amd64
 - OpenBSD 3.8, i586
-- FreeDOS
 - Debian 5.0 GNU/Linux, i686
+- FreeDOS
+- DOSBox
 
 ================================================================
 
 Requirements for compiling the full version under Un*x:
-
-- a non-root account. Please, NEVER compile or 'make' anything as root.
 
 - a working C compiler.
 
@@ -94,8 +100,9 @@ Type './configure' to configure the program for your system. If you do not
 
 	./configure --enable-XXX=no
 
- where "XXX" is the output system you wish to disable (allegro, SDL, ALSA,
- OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE, SPKR).
+ where "XXX" is the output system you wish to disable (allegro, SDL, SDL2,
+ ALSA, OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER,
+ FILE, SPKR).
 
 By default, a flex-based scanner will be generated to parse the input file,
  if flex is available. If the scanner does not compile for you or works
@@ -103,10 +110,10 @@ By default, a flex-based scanner will be generated to parse the input file,
 
 	./configure --enable-FLEXPARSER=no
 
- and recompile imyplay.
+ and recompile IMYplay.
 
-If you do NOT wish imyplay to use the network or get the computer's IP
- address, get LibHideIP>=0.2 and LibNetBlock and configure imyplay with
+If you do NOT wish IMYplay to use the network or get the computer's IP
+ address, get LibHideIP>=0.2 and LibNetBlock and configure IMYplay with
 
 	./configure --enable-LIBHIDEIP --enable-LIBNETBLOCK
 
@@ -119,7 +126,7 @@ Documentation will be compiled, if you have the 'makeinfo' program
 Translations will be compiled, if you have the 'gettext' package.
 
 Type 'make install' to install the program. NOTE: 'make install' is
- NOT recommended. Create and install an rpm package instead, if possible.
+ NOT recommended. Create and install an RPM package instead, if possible.
 
 
 ================================================================
@@ -133,7 +140,7 @@ Requirements for automatic compiling the DOS version:
 - if you want sound, not just MIDI conversion, a development package for one
   of the supported libraries (except PC-speaker, which requires only
   the C library and system support). If you don't have any of these installed
-  or available (check twice), then go to
+  or available, then go to
    	http://alleg.sf.net/		- for the Allegro library
 
 - MIDI output requires the following functions from the standard C library:
@@ -158,7 +165,8 @@ to
 
 	#include "syslimit.h"
 
-Then run the "dosdist.bat" file.
+The run "make -f Makefile.dos". If you don't have a 'make' utility, you can
+run the "dosdist.bat" file.
 
 If you prefer to compile manually (like when you don't have all of the
  required utilities), then go to the src directory. Change @VERSION@ to
@@ -179,7 +187,7 @@ Syntax:
 
 	imyplay [options] file.imy [...]
 
-Command line options (for the full version):
+Command line options (in the full version):
 
 -d|--device <dev>	Try to use the given device (ALSA, OSS, GStreamer,
 			PC-speaker), driver ID (libao), server name
@@ -189,24 +197,27 @@ Command line options (for the full version):
 			"--dev 44100:s16le" for the FILE, Allegro, PortAudio
 			and SDL backends.
 -e|--exec <program>	Execute the given program instead of normal sound
-			output. Read below for options. Overrides --output
-			and -f.
+			output. Read below for options. Overrides -o/--output
+			and -f/--file.
 -f|--file <file>	Write raw samples to this file instead of normal
-			sound output. Overrides --output. Changes any ".imy"
-			file extension to ".raw".
--h|--help		Print help
--l|--license		Print license information
---midi-instr <number>	Use the given MIDI instrument number.
+			sound output. Overrides -o/--output. Changes any
+			".imy" file extension to ".raw" in the output file's
+			name if filename not provided.
+-h|--help		Print help.
+-l|--license		Print license information.
+--midi-instr <number>	Use the given MIDI instrument number in MIDI output.
 -o|--output <system>	Use the given sound output system (allegro, sdl, alsa,
 			oss, ao/libao, portaudio/port, jack, pulseaudio/pulse,
 			gstreamer/gst, speaker/pcspeaker/spkr/pcspkr). Names
-			are NOT case-sensitive. PC-Speaker output may require
-			the "snd-pcsp" kernel module to be loaded and
-			permissions to access "/dev/console".
+			are NOT case-sensitive. PC-Speaker output under Linux
+			may require the "snd-pcsp" kernel module to be loaded
+			and permissions to access "/dev/console".
 --to-midi		Convert the given files to MIDI format (if the target
-			file exists, it is deleted). Overrides --output, -f
-			and -e. Changes any ".imy" file extension to ".mid".
--V|--version		Print version number
+			file exists, it is deleted). Overrides -o/--output,
+			-f/--file and -e/--exec. Changes any ".imy" file
+			extension to ".mid" in the output file's name if
+			filename not provided.
+-V|--version		Print version numbers.
 
 Alternatively to using the --output option, you can launch the program as
  "imyplay-alsa", "imyplay-allegro" and so on (these can be symbolic links
@@ -231,7 +242,7 @@ the program is about to be started:
 %l - the tone/pause duration in milliseconds as a floating point number
 	(accurate), example: 1250.3. This equals to %s (not rounded)
 	times 1000.
-%v - the tone's volume, form 0 to 15 inclusive.
+%v - the tone's volume, from 0 to 15 inclusive.
 
 Any other %X expressions will NOT be altered.
 
@@ -242,21 +253,21 @@ JACK output: if the JACK server doesn't start automatically, you can run it
 
 =======================================================
 
+Building an RPM package:
+
+1) copy the imyplay.spc file to $HOME/rpmbuild/SPECS
+2) copy the source package imyplay-XX.tar.gz to $HOME/rpmbuild/SOURCES
+3) type
+        rpmbuild -ba $HOME/rpmbuild/SPECS/imyplay.spc
+4) get the rpms from $HOME/rpmbuild/RPMS/<arch> and $HOME/rpmbuild/SRPMS
+
 Building an RPM package (the old way):
 
 1) copy the imyplay.spc file to /usr/src/redhat/SPECS
 2) copy the source package imyplay-XX.tar.gz to /usr/src/redhat/SOURCES
 3) type
 	rpmbuild -ba /usr/src/redhat/SPECS/imyplay.spc
-4) get the rpms from /usr/src/redhat/RPMS/i386 and /usr/src/redhat/SRPMS
-
-Building an RPM package (the new way):
-
-1) copy the imyplay.spc file to $HOME/rpmbuild/SPECS
-2) copy the source package imyplay-XX.tar.gz to $HOME/rpmbuild/SOURCES
-3) type
-        rpmbuild -ba $HOME/rpmbuild/SPECS/imyplay.spc
-4) get the rpms from $HOME/rpmbuild/RPMS/i386 and $HOME/rpmbuild/SRPMS
+4) get the rpms from /usr/src/redhat/RPMS/<arch> and /usr/src/redhat/SRPMS
 
 =======================================================
 
@@ -270,15 +281,15 @@ you wish.
  In the resulting XX.po file you have to fill in all the fields
 marked with capital letters in the header:
 
-# YOUR LANGUAGE translations for imyplay package.
+# YOUR LANGUAGE translations for IMYplay package.
 # Copyright (C) 2009-2021 Bogdan 'bogdro' Drozdowski
 # This file is distributed under the same license as
-# the imyplay package.
+# the IMYplay package.
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: imyplay VERSION\n"
+"Project-Id-Version: IMYplay VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2011-03-23 18:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -293,5 +304,4 @@ them all and send me the resulting XX.po file.
 
 Translating the documentation:
 - info: simply change the imyplay.txc file
-- man: Unpack the page using 'gunzip imyplay.1.gz' and
-  translate the resulting imyplay.1 file.
+- man: Unpack the page and translate the resulting imyplay.1 file.

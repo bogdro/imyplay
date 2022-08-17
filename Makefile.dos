@@ -1,0 +1,119 @@
+#
+# A program for playing iMelody ringtones (IMY files).
+# 	-- Makefile for the DOS system.
+#
+#  Copyright (C) 2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+#  License: GNU General Public License, v3+
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 3
+#  of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software Foudation:
+# 		Free Software Foundation
+# 		51 Franklin Street, Fifth Floor
+# 		Boston, MA 02110-1301
+# 		USA
+
+VERSION_MAJ = 1
+VERSION_MIN = 3
+VERSION_SUB = 
+
+##################################
+
+ifeq ($(CC),)
+CC = gcc
+endif
+
+ifeq ($(CC_OPTS),)
+CC_OPTS = -O3
+endif
+
+ifeq ($(FORMAT16),)
+FORMAT = coff
+ASM_BITS_FLAG = 1
+else
+FORMAT = obj
+ASM_BITS_FLAG = 0
+endif
+
+#SHELL = /bin/sh
+SED = sed
+RM_FILES = del
+RM_DIR = rmdir
+COPY = copy
+MKDIR = mkdir
+
+NASM = nasm
+NASM_OPTS = -O999 -f $(FORMAT) -DIMYPLAY_32BIT=$(ASM_BITS_FLAG)
+UPX = upx
+UPX_OPTS = -9
+PACK = zip
+PACK_OPTS = -9 -r -T
+
+##################################
+
+ifeq ($(VERSION_SUB),)
+VER_STRING_CODE = $(VERSION_MAJ).$(VERSION_MIN)
+VER_STRING_DIST = -$(VERSION_MAJ)-$(VERSION_MIN)
+else
+VER_STRING_CODE = $(VERSION_MAJ).$(VERSION_MIN).$(VERSION_SUB)
+VER_STRING_DIST = $(VERSION_MAJ)-$(VERSION_MIN)-$(VERSION_SUB)
+endif
+
+PROGNAME = imyplay
+EXE_EXT = .exe
+DIST_EXT = .zip
+
+all:	$(PROGNAME)$(EXE_EXT)
+
+$(PROGNAME)$(EXE_EXT): src/imyp_cfg.hin src/*.c src/*.h src/imypdos.asm Makefile.dos
+	$(SED) 's/[@]VERSION[@]/$(VER_STRING_CODE)/' src\imyp_cfg.hin > src\imyp_cfg.h
+	$(NASM) $(NASM_OPTS) -o src\imypdos.obj src\imypdos.asm
+	$(CC) $(CC_OPTS) -o $(PROGNAME)$(EXE_EXT) @DOSFILES.TXT
+	$(UPX) $(UPX_OPTS) $(PROGNAME)$(EXE_EXT)
+
+dist:	$(PROGNAME)$(DIST_EXT)
+
+$(PROGNAME)$(DIST_EXT): all doc/imelody.txt doc/$(PROGNAME).1 doc/$(PROGNAME).inf \
+		imy/*.imy \
+		po/$(PROGNAME).pot po/*.gmo \
+		AUTHORS ChangeLo COPYING README THANKS Makefile.dos
+	$(MKDIR) imy$(VER_STRING_DIST)
+	$(MKDIR) imy$(VER_STRING_DIST)\doc
+	$(COPY) doc\imelody.txt doc\$(PROGNAME).1 doc\$(PROGNAME).inf imy$(VER_STRING_DIST)\doc
+	$(MKDIR) imy$(VER_STRING_DIST)\imy
+	$(COPY) imy\*.imy imy$(VER_STRING_DIST)\imy
+	$(MKDIR) imy$(VER_STRING_DIST)\po
+	$(COPY) po\$(PROGNAME).pot po\*.gmo imy$(VER_STRING_DIST)\po
+	$(COPY) $(PROGNAME)$(EXE_EXT) imy$(VER_STRING_DIST)
+	$(SED) 's/$$//' < AUTHORS  > imy$(VER_STRING_DIST)\AUTHORS.txt
+	$(SED) 's/$$//' < ChangeLo > imy$(VER_STRING_DIST)\Changes.txt
+	$(SED) 's/$$//' < COPYING  > imy$(VER_STRING_DIST)\COPYING.txt
+	$(SED) 's/$$//' < README   > imy$(VER_STRING_DIST)\README.txt
+	$(SED) 's/$$//' < THANKS   > imy$(VER_STRING_DIST)\THANKS.txt
+	@rem SET TZ=CET-1CES
+	$(PACK) $(PACK_OPTS) $(PROGNAME)$(DIST_EXT) imy$(VER_STRING_DIST)
+
+cleandist:
+	$(RM_FILES) imy$(VER_STRING_DIST)\po\*.*
+	$(RM_DIR) imy$(VER_STRING_DIST)\po
+	$(RM_FILES) imy$(VER_STRING_DIST)\doc\*.*
+	$(RM_DIR) imy$(VER_STRING_DIST)\doc
+	$(RM_FILES) imy$(VER_STRING_DIST)\imy\*.*
+	$(RM_DIR) imy$(VER_STRING_DIST)\imy
+	$(RM_FILES) imy$(VER_STRING_DIST)\*.*
+	$(RM_DIR) imy$(VER_STRING_DIST)
+	$(RM_FILES) $(PROGNAME)$(DIST_EXT)
+
+clean: cleandist
+	$(RM_FILES) $(PROGNAME)$(EXE_EXT) src\imyp_cfg.h src\imypdos.obj
+
+.PHONY: all dist cleandist clean

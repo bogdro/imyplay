@@ -451,6 +451,9 @@ imyp_portaudio_init (
 		}
 		if ( i == sizeof (formats) / sizeof (formats[0]) )
 		{
+#ifdef HAVE_MALLOC
+			free (data);
+#endif
 			return -3;
 		}
 	}

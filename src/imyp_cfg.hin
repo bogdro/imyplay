@@ -2,6 +2,8 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- configuration header file.
  *
+ * @configure_input@
+ *
  * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
@@ -71,6 +73,7 @@
 #   define HAVE_SIGNAL_H		1
 #   define HAVE_SIZE_T			1
 #   undef HAVE_SNPRINTF
+#   undef HAVE_STDINT_H
 #   define HAVE_STDLIB_H		1
 #   define HAVE_STRING_H		1
 #   define HAVE_SYSTEM			1
@@ -124,6 +127,7 @@
 #   define HAVE_SIGNAL_H		1
 #   define HAVE_SIZE_T			1
 #   define HAVE_SNPRINTF		1
+#   define HAVE_STDINT_H		1
 #   define HAVE_STDLIB_H		1
 #   define HAVE_STRING_H		1
 #   define HAVE_SYSTEM			1

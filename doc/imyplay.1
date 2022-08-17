@@ -13,7 +13,7 @@ imyplay \- A program for playing iMelody ringtones (IMY files).
 .SH DESCRIPTION
 The imyplay program plays the given iMelody files or converts them to MIDI format.
 IMYplay can use the following libraries to produce sound: the Allegro game library,
-SDL (Simple DirectMedia Layer), ALSA (Advanced Linux Sound Architecture),
+SDL v1 and v2 (Simple DirectMedia Layer), ALSA (Advanced Linux Sound Architecture),
 OSS (Open Sound System), libao, PortAudiov19, PulseAudio, JACK1/JACK2, GStreamer
 (gstreamer-plugin-base required).
 
@@ -31,8 +31,10 @@ s16be, u16le, u16be, s8le, s8be, u8le, u8be), e.g.
 and SDL backends.
 .IP "-e|--exec <program>"
 Execute the given program instead of normal sound output. Overrides the
-.B --output
-option.
+.B -o/--output
+and
+.B -f/--file
+options.
 
 You can pass the following expressions in the
 <program> argument and these will get substituted by the correct values when
@@ -61,8 +63,9 @@ Any other %X expressions will NOT be altered.
 
 .IP "-f|--file <file>"
 Write raw samples to this file instead of normal sound output. Overrides the
-.B --output
-option.
+.B -o/--output
+option. Changes any ".imy" file extension to ".raw" in the output file's
+name if filename not provided.
 Use
 .B --dev
 to specify the sampling rate and samples' format.
@@ -71,13 +74,13 @@ Print help.
 .IP -l|--license
 Print license information.
 .IP "--midi-instr <number>"
-Use the given MIDI instrument number.
+Use the given MIDI instrument number in MIDI output.
 .IP "-o|--output <system>"
 Use the given sound output system (allegro, sdl, alsa, oss, ao/libao, portaudio/port,
 jack, pulseaudio/pulse, gstreamer/gst, speaker/pcspeaker/spkr/pcspkr). Names are NOT case-sensitive.
 
-PC-Speaker output may require the "snd-pcsp" kernel module to be loaded and
-permissions to access "/dev/console".
+PC-Speaker output under Linux may require the "snd-pcsp" kernel module
+to be loaded and permissions to access "/dev/console".
 
 JACK output: if the JACK server doesn't start automatically, you can run it
 yourself with e.g. "jackd -d alsa -r 44100 -p 8192 &".
@@ -85,10 +88,13 @@ yourself with e.g. "jackd -d alsa -r 44100 -p 8192 &".
 .IP --to-midi
 Convert the given files to MIDI format (if the target file exists, it is deleted).
 Overrides the
-.B --output
-option.
+.B -e/--exec
+and
+.B -f/--file
+options. Changes any ".imy" file extension to ".mid" in the output file's
+name if filename not provided.
 .IP -V|--version
-Print version number.
+Print version numbers.
 
 .LP
 Alternatively to using the --output option, you can launch the program as

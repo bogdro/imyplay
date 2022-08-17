@@ -607,6 +607,14 @@ main (
 				opt_file = 1;
 #endif
 			}
+#ifdef IMYP_HAVE_EXEC
+			else if ( (sel == IMYP_CURR_EXEC) && (exec_program == NULL) )
+			{
+				/* EXEC backend selected, but no program to run chosen. */
+				print_help (imyp_progname);
+				return -2;
+			}
+#endif
 			else if ( (sel != IMYP_CURR_MIDI)
 				&& (sel != IMYP_CURR_EXEC)
 				&& (sel != IMYP_CURR_FILE) )

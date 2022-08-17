@@ -1,7 +1,8 @@
 \input texinfo   @c -*-texinfo-*-
+@c @configure_input@
 @c %**start of header
 @setfilename imyplay.info
-@settitle IMYplay manual @VERSION@
+@settitle IMYplay @VERSION@ manual
 @c %**end of header
 
 @dircategory Individual utilities
@@ -53,6 +54,7 @@ Free Documentation License" in the "Copying" chapter.
 * Usage::				How to use this thing.
 * Return values::			Program's return values.
 * Signals::				Behaviour upon receiving signals.
+* Reporting issues::			How to report issues.
 * Author::				How to contact me.
 * Thanks::				Who I'd like to thank.
 * Copying::				License - your rights and freedoms.
@@ -69,21 +71,33 @@ Free Documentation License" in the "Copying" chapter.
 @chapter What is IMYplay?
 
 This program is used for playing iMelody ringtones (IMY files),
-conforming to the iMelody specification, as written in doc/imelody.txt.
-It can also convert IMY ringtones to MIDI files.
+conforming to the iMelody specification, as written in @file{doc/imelody.txt}.
 
-IMYplay can use the following libraries to produce sound: the Allegro game library
-(http://alleg.sf.net), SDL (Simple DirectMedia Layer; http://www.libsdl.org), ALSA
-(Advanced Linux Sound Architecture; http://alsa-project.org), OSS (Open Sound System),
-libao (http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/),
-PulseAudio (http://www.pulseaudio.org/), JACK1/JACK2 (http://jackaudio.org/),
-GStreamer (http://gstreamer.freedesktop.org/, gstreamer-plugin-base required).
+IMYplay can use the following outputs to produce sound:
+@enumerate
+@item the Allegro game library (@url{http://alleg.sf.net}),
+@item SDL v1 and v2 (Simple DirectMedia Layer; @url{http://www.libsdl.org}),
+@item ALSA (Advanced Linux Sound Architecture; @url{http://alsa-project.org}),
+@item OSS (Open Sound System),
+@item libao (@url{http://xiph.org/ao/}),
+@item PortAudiov19 (@url{http://www.portaudio.com/}),
+@item PulseAudio (@url{http://www.pulseaudio.org/}),
+@item JACK1/JACK2 (@url{http://jackaudio.org/}),
+@item GStreamer (@url{http://gstreamer.freedesktop.org/}, gstreamer-plugin-base required).
+@end enumerate
 
-It can also write raw samples to an output file, use the PC-speaker or
-call an external program on each note.
+It can also:
+@itemize
+@item convert IMY ringtones to MIDI files,
+@item write raw samples to an output file,
+@item use the PC-speaker,
+@item call an external program on each note.
+@end itemize
 
 IMYplay, of course, requires working sound hardware with drivers to produce
 any sound.
+
+IMYplay's homepage is @url{https://imyplay.sourceforge.io}.
 
 @c @cindex first chapter
 
@@ -111,98 +125,126 @@ any sound.
 @comment  node-name, next,      previous,  up
 @section Compile under Un*x
 
-The program compiles on:
+IMYplay, in various versions, has been successfully compiled on the following systems:
 @itemize
 @item Fedora Core 4 GNU/Linux, i686
 @item Fedora 12 GNU/Linux, i686
 @item Mandriva 2008.1 GNU/Linux, i686
-@item Mandriva 2011 GNU/Linux, i686 - versions from 0.7 (earlier not checked)
-@item OpenMandriva 3.0 GNU/Linux, x86-64 - version 1.2 (other not checked)
-@item OpenMandriva 4.2 GNU/Linux, x86-64 - versions from 1.2.1 (earlier not checked)
+@item Mandriva 2011 GNU/Linux, i686 
+@item OpenMandriva 3.0 GNU/Linux, amd64
+@item OpenMandriva 4.2 GNU/Linux, amd64
 @item OpenBSD 3.8, i586
 @item Debian 5.0 GNU/Linux, i686
 @end itemize
 
 Requirements for compiling the full version of the program under Un*x:@*
 @itemize
-@item a non-root account. Please, @strong{NEVER} compile or 'make' anything as root.
 @item a working C compiler
-@item development package for the C library (like glibc-devel and glibc-headers).
-The getopt.h header and the getopt_long() from it are not required, but
-useful. The signal.h header is used to catch signals, and is optional.
-The translation headers (locale.h, libintl.h or other) are optional.
+@item development package for the C library (like @file{glibc-devel} and @file{glibc-headers}).
+The @file{getopt.h} header and the @samp{getopt_long()} from it are not required, but
+useful. The @file{signal.h} header is used to catch signals, and is optional.
+The translation headers (@file{locale.h}, @file{libintl.h} or other) are optional.
 @item if you want sound, not just MIDI conversion, a development package for one of the
 supported libraries (except OSS and PC-speaker, which require only
 the C library and system support).
 If you don't have any of these installed or available (check twice), then go to@*
-   	http://alleg.sf.net/@*
-   	http://www.libsdl.org/@*
-   	http://alsa-project.org/@*
-   	http://xiph.org/ao/@*
-   	http://www.portaudio.com/@*
-   	http://www.pulseaudio.org/@*
-   	http://jackaudio.org/@*
-	http://gstreamer.freedesktop.org/@*
+   	@url{http://alleg.sf.net/}@*
+   	@url{http://www.libsdl.org/}@*
+   	@url{http://alsa-project.org/}@*
+   	@url{http://xiph.org/ao/}@*
+   	@url{http://www.portaudio.com/}@*
+   	@url{http://www.pulseaudio.org/}@*
+   	@url{http://jackaudio.org/}@*
+	@url{http://gstreamer.freedesktop.org/}@*
 @item MIDI output requires the following functions from the standard C library:
-malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),
-fclose() and qsort().
+@samp{malloc()}, @samp{realloc()}, @samp{memset()}, @samp{memcpy()}, @samp{fopen()},
+@samp{fwrite()}, @samp{fseek()}, @samp{fclose()} and @samp{qsort()}.
 @end itemize
-@*@*
 
-Type './configure' to configure the program for your system. If you do not
-with support for a particular output mechanism, configure the program with
+Type
 
-	@command{./configure --enable-XXX=no}
+	@samp{./configure}
 
-where "XXX" is the output system you wish to disable (allegro, SDL, ALSA,
+to configure the program for your system.
+
+
+If you do not with support for a particular output mechanism,
+give the @option{--enable-XXX=no} option to @samp{./configure}
+(XXX=allegro, SDL, SDL2, ALSA,
 OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE, SPKR).
 
+Run @samp{./configure --help} for details.
+
 By default, a flex-based scanner will be generated to parse the input file,
-if flex is available.
+if @command{flex} is available.
 If the scanner does not compile for you or works incorrectly
 (it hangs on binary files, for example), disable it with
 
-	@command{./configure --enable-FLEXPARSER=no}
+	@samp{./configure --enable-FLEXPARSER=no}
 
-and recompile imyplay.
+and recompile IMYplay.
 
-If you do NOT wish imyplay to use the network or get the computer's IP address,
-get LibHideIP>=0.2 and LibNetBlock and configure imyplay with
+If you do @strong{NOT} wish IMYplay to use the network or get the computer's IP address,
+get @url{https://libhideip.sourceforge.io, LibHideIP>=0.2} and
+@url{https://libnetblock.sourceforge.io, LibNetBlock} and configure IMYplay with
 
-	@command{./configure --enable-LIBHIDEIP --enable-LIBNETBLOCK}
+	@samp{./configure --enable-LIBHIDEIP --enable-LIBNETBLOCK}
 
 @strong{NOTE}: this may cause network sound output to fail.
 
-Type 'make' to compile the program.
+Type
 
-Documentation is compiled, but may be recompiled, if you have the 'makeinfo'
-program ('texinfo' package).
-Translations will be compiled, if you have the 'gettext' package.
+	@samp{make}
 
-@strong{NOTE}: if you have trouble compiling, send me some of the first error messages
-in each file and the config.h file generated by the @command{configure} script.
+to compile the program.
 
-Type 'make install' to install the program.
+Documentation is compiled, but may be recompiled, if you have the @command{makeinfo}
+program (@file{texinfo} package).
+Translations will be compiled, if you have the @file{gettext} package.
 
-@strong{NOTE}: 'make install' is @strong{NOT} recommended. Create and install
-an RPM package instead, if possible.
+
+@strong{NOTE}: if you have trouble compiling, send me:
+@enumerate
+@item the compiler name and version (e.g. @samp{gcc version 10}),
+@item the C standard library name and version (e.g. @samp{glibc version 2.x}),
+@item the output of the @command{configure} script. You can capture it by running
+@samp{./configure > configure-output.txt 2>&1},
+@item the generated @file{config.log} file,
+@item the generated @file{config.h} file, if it exists,
+@item the output of the @command{make} command. You can capture it by running
+@samp{make > make-output.txt 2>&1},
+@item any other error messages,
+@item any other information that you think could lead to solving the problem.
+@end enumerate
+
+Type
+
+	@samp{make install}
+
+to install the program.
+
+@strong{NOTE}: @samp{make install} is @strong{NOT} recommended. 
+Create and install an RPM package instead, if possible.
+
+To create an RPM package:
+
+@enumerate
+@item copy the @file{imyplay.spc} file to @file{$HOME/rpmbuild/SPECS}
+@item copy the source package @file{imyplay-@VERSION@.tar.gz} to @file{$HOME/rpmbuild/SOURCES}
+@item type @samp{rpmbuild -bb $HOME/rpmbuild/SPECS/imyplay.spc}
+@item get the RPMs from @file{$HOME/rpmbuild/RPMS/your_cpu_arch}
+@end enumerate
 
 To create an RPM package (the old way):
-@enumerate
-@item copy the imyplay.spc file to /usr/src/redhat/SPECS
-@item copy the source package imyplay-@VERSION@.tar.gz to /usr/src/redhat/SOURCES
-@item type @command{rpmbuild -bb /usr/src/redhat/SPECS/imyplay.spc}
-@item get the RPMs from /usr/src/redhat/RPMS/i386
-@end enumerate
-
-To create an RPM package (the new way):
 
 @enumerate
-@item copy the imyplay.spc file to $HOME/rpmbuild/SPECS
-@item copy the source package imyplay-@VERSION@.tar.gz to $HOME/rpmbuild/SOURCES
-@item type @command{rpmbuild -bb $HOME/rpmbuild/SPECS/imyplay.spc}
-@item get the RPMs from $HOME/rpmbuild/RPMS/i386
+@item copy the @file{imyplay.spc} file to @file{/usr/src/redhat/SPECS}
+@item copy the source package @file{imyplay-@VERSION@.tar.gz} to @file{/usr/src/redhat/SOURCES}
+@item type @samp{rpmbuild -bb /usr/src/redhat/SPECS/imyplay.spc}
+@item get the RPMs from @file{/usr/src/redhat/RPMS/your_cpu_arch}
 @end enumerate
+
+@strong{NOTE}: some systems may use other directories than these.
 
 
 @c ==================================================================
@@ -213,9 +255,11 @@ To create an RPM package (the new way):
 @section Compile under DOS
 
 
-The program compiles on:
+IMYplay, in various versions, has been successfully compiled on the following
+systems:
 @itemize
 @item FreeDOS
+@item DOSBox
 @end itemize
 
 Requirements for automatic compiling the DOS version:
@@ -224,53 +268,54 @@ Requirements for automatic compiling the DOS version:
 
 @item development package for the C library (comes with DJGPP)
 
-@item the 'make' program (comes with DJGPP)
+@item the @command{make} program (comes with DJGPP)
 
 @item if you want sound, not just MIDI conversion, a development package for one
 of the supported libraries (except PC-speaker, which requires only
 the C library and system support). If you don't have any of these installed
-or available (check twice), then go to
-   	http://alleg.sf.net/		- for the Allegro library
+or available, then go to@*
+   	@url{http://alleg.sf.net/}	- for the Allegro library
 
 @item MIDI output requires the following functions from the standard C library:
-malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),
-fclose() and qsort().
+@samp{malloc()}, @samp{realloc()}, @samp{memset()}, @samp{memcpy()}, @samp{fopen()},
+@samp{fwrite()}, @samp{fseek()}, @samp{fclose()} and @samp{qsort()}.
 
-@item the 'sed' utility (comes with DJGPP)
+@item the @command{sed} utility (comes with DJGPP)
 
-@item the 'zip' utility (comes with DJGPP)
+@item the @command{zip} utility (comes with DJGPP)
 
-@item NASM assembler version >= 2.0 (www.nasm.us)
+@item NASM assembler version >= 2.0 (@url{https://www.nasm.us})
 
-@item the 'upx' utility (upx.sf.net) is optional. The program is compiled
-correctly without it.
+@item the @command{upx} utility (@url{http://upx.sf.net}) is optional.
+The program is compiled correctly without it.
 
 @end itemize
 
 To compile under DOS using DJGPP, either enable LFN support or find your
-GCC's "limits.h" file (NOT the standard one) and change the line
+GCC's @file{limits.h} file (@strong{NOT} the standard one) and change the line
 
-	#include "syslimits.h"
+	@code{#include "syslimits.h"}
 
 to
 
-	#include "syslimit.h"
+	@code{#include "syslimit.h"}
 
-Then run the "dosdist.bat" file.
+The run @samp{make -f Makefile.dos}. If you don't have a @command{make} utility, you can
+run the @command{dosdist.bat} file.
 
 If you prefer to compile manually (like when you don't have all of the
-required utilities, then go to the src directory. Change VERSION with
-the at- and quotation marks the current version number in the
-imyp_cfg.hin file, so the line reads:
+required utilities, then go to the @file{src} directory. Change @var{VERSION} with
+the at- and quotation marks to the current version number in the
+@file{imyp_cfg.hin} file, so the line reads:
 
-	#  define PACKAGE_VERSION "@VERSION@"
+	@code{#  define PACKAGE_VERSION "@VERSION@"}
 
-and rename the file to imyp_cfg.h. Then compile all the files you
-wish to (the dosfiles.txt file is a good starting point), for example:
+and rename the file to @file{imyp_cfg.h}. Then compile all the files you
+wish to (the @file{dosfiles.txt} file is a good starting point), for example:
 
-	@command{gcc -o imyplay.exe *.c -lalleg}
+	@samp{gcc -o imyplay.exe *.c -lalleg}
 
-The resulting imyplay.exe is the program to use.
+The resulting @file{imyplay.exe} is the program to use.
 
 @c ==================================================================
 
@@ -280,11 +325,11 @@ The resulting imyplay.exe is the program to use.
 
 Basic syntax is:
 
- imyplay [options] ringtone.imy [...]
+ @samp{imyplay [options] ringtone.imy [...]}
 
-The 'ringtone.imy' part stands for a supported iMelody file.
+The @file{ringtone.imy} part stands for a supported iMelody file.
 
-Options for the full version:
+Options in the full version:
 
 @noindent @option{-d <dev>}@*@option{--device <dev>}@*
 @quotation
@@ -292,64 +337,68 @@ Try to use the given device (ALSA, OSS, GStreamer, PC-speaker), driver ID (libao
 server name (JACK1, JACK2, PulseAudio) for sound output or set the sampling
 rate and samples' format (case-insensitive: s16le,
 s16be, u16le, u16be, s8le, s8be, u8le, u8be), e.g.
-"--dev 44100:s16le" for the FILE, Allegro, PortAudio
+@option{--dev 44100:s16le} for the FILE, Allegro, PortAudio
 and SDL backends.
 @end quotation
 
 @noindent @option{-e <program>}@*@option{--exec <program>}@*
 @quotation
 Execute the given program instead of normal sound output.
-Overrides @option{--output} and @option{-f}.@*
+Overrides @option{-o}/@option{--output} and @option{-f}/@option{--file} options.@*
 You can pass the following expressions in the
-<program> argument and these will get substituted by the correct values when
-the program is about to be started:@*@*
-%i
+@samp{<program>} argument and these will get substituted by the correct values when
+the program is about to be started:
+@itemize
+@item %i
 @quotation
 the tone frequency as an integer (rounded), example: 523. Zero means a pause.
 @end quotation
 
-%f
+@item %f
 @quotation
 the tone frequency as a floating point number (accurate), example: 523.250916.
 Zero means a pause.@*@*
 @end quotation
 
-%d
+@item %d
 @quotation
 the tone/pause duration in seconds as an integer (rounded), example: 1.
-This equals to %m divided by 1000.@*@*
+This equals to @code{%m} divided by 1000.@*@*
 @end quotation
 
-%s
+@item %s
 @quotation
 the tone/pause duration in seconds as a floating point number (accurate),
-example: 1.25. This equals to %l divided by 1000.@*@*
+example: 1.25. This equals to @code{%l} divided by 1000.@*@*
 @end quotation
 
-%m
+@item %m
 @quotation
 the tone/pause duration in milliseconds as an integer (rounded),
-example: 1250. This equals to %d (not rounded) times 1000.@*@*
+example: 1250. This equals to @code{%d} (not rounded) times 1000.@*@*
 @end quotation
 
-%l
+@item %l
 @quotation
 the tone/pause duration in milliseconds as a floating point number
-(accurate), example: 1250.3. This equals to %s (not rounded) times 1000.@*@*
+(accurate), example: 1250.3. This equals to @code{%s} (not rounded) times 1000.@*@*
 @end quotation
 
-%v
+@item %v
 @quotation
 the tone's volume, form 0 to 15 inclusive.@*@*
 @end quotation
+@end itemize
 
-Any other %X expressions will NOT be altered.
+Any other @code{%X} expressions will @strong{NOT} be altered.
 @end quotation
 
 @noindent @option{-f <file>}@*@option{--file <file>}@*
 @quotation
-Write raw samples to this file instead of normal sound output. Overrides @option{--output}.
-Changes any ".imy" file extension to ".raw".
+Write raw samples to this file instead of normal sound output. Overrides the
+@option{-o}/@option{--output}.
+Changes any @file{.imy} file extension to @file{.raw} in the output file's
+name if filename not provided.
 Use @option{--dev} to specify the sampling rate and samples' format.
 @end quotation
 
@@ -365,7 +414,7 @@ Print license information and exit.
 
 @noindent @option{--midi-instr <number>}
 @quotation
-Use the given MIDI instrument number.
+Use the given MIDI instrument number in MIDI output.
 @end quotation
 
 @noindent @option{-o <system>}@*@option{--output <system>}
@@ -373,28 +422,29 @@ Use the given MIDI instrument number.
 Use the given sound output system (allegro, sdl, alsa,
 oss, ao/libao, portaudio/port, jack, pulseaudio/pulse, gstreamer/gst,
 speaker/pcspeaker/spkr/pcspkr).
-Names are NOT case-sensitive.
+Names are @strong{NOT} case-sensitive.
 
-PC-Speaker output may require the "snd-pcsp" kernel module to be loaded and
-permissions to access "/dev/console".
+PC-Speaker output under Linux may require the @file{snd-pcsp} kernel module
+to be loaded and permissions to access @file{/dev/console}.
 
 JACK output: if the JACK server doesn't start automatically, you can run it
 yourself with e.g.
 
-	@command{jackd -d alsa -r 44100 -p 8192 &}
+	@samp{jackd -d alsa -r 44100 -p 8192 &}
 
 @end quotation
 
 @noindent @option{--to-midi}@*
 @quotation
 Convert the given files to MIDI format (if the target file exists, it is deleted).
-Overrides @option{--output}, @option{-f} and @option{-e}. Changes any ".imy"
-file extension to ".mid".
+Overrides @option{-o}/@option{--output}, @option{-f}/@option{--file}
+and @option{-e}/@option{--exec}. Changes any @file{.imy} file extension to @file{.mid}
+in the output file's name if filename not provided.
 @end quotation
 
 @noindent @option{-V}@*@option{--version}@*
 @quotation
-Print version number and exit.
+Print version numbers and exit.
 @end quotation
 
 Alternatively to using the @option{--output} option, you can launch the program as
@@ -402,6 +452,9 @@ Alternatively to using the @option{--output} option, you can launch the program 
 or copies of the executable file). This overrides the default order of output systems,
 but does @strong{NOT} override the @option{--to-midi}, @option{-f}/@option{--file}
 and @option{-e}/@option{--exec} options.
+
+If @command{imyplay-exec} is called, the @option{-e}/@option{--exec} is still
+required to provide the program to run.
 
 @c ==================================================================
 
@@ -427,7 +480,8 @@ or was caught after SIGCONT was received).
 @strong{NOTE}: Actually, the negative values are subtracted from 256,
 so -1 could turn up as 255, -2 as 254 and so on.
 
-@strong{NOTE}: The error code is reset after each file. If the last file was played successfully,
+@strong{NOTE}: The error code is reset after each file. If the last
+file was played successfully,
 but the previous weren't, their errors are currently lost.
 
 
@@ -435,12 +489,12 @@ but the previous weren't, their errors are currently lost.
 
 
 
-@node Signals, Author, Return values, Top
+@node Signals, Reporting issues, Return values, Top
 @comment  node-name, next,      previous,  up
 @chapter Signals
 
 The program will terminate normally (that is: will close the file and the library)
-if any of the following signals are caught: SIGINT (Ctrl+C), SIGQUIT, SIGILL,
+if any of the following signals are caught: SIGINT (@kbd{Ctrl+C}), SIGQUIT, SIGILL,
 SIGABRT, SIGFPE, SIGSEGV, SIGPIPE, SIGALRM, SIGTERM, SIGUSR1, SIGUSR2, SIGTTIN,
 SIGTTOU, SIGBUS, SIGPOLL, SIGPROF, SIGSYS, SIGTRAP, SIGXCPU, SIGXFSZ, SIGPWR, SIGVTALRM,
 SIGUNUSED, SIGCHLD, SIGEMT, SIGIO and SIGLOST.
@@ -449,19 +503,54 @@ If the program receives the SIGKILL signal, it will, of course, be killed. But i
 won't be able to close the file and the library and finish working normally.
 Try to avoid stopping the program this way.
 
-You can freeze the program by sending the SIGSTOP signal (like @command{killall -STOP imyplay})
-to it or by pressing Ctrl+Z in the terminal on which the program is running. The program will
-continue if it receives the SIGCONT signal (like with @command{killall -CONT imyplay}).
+You can freeze the program by sending the SIGSTOP signal (like @samp{killall -STOP imyplay})
+to it or by pressing @kbd{Ctrl+Z} in the terminal on which the program is running. The program will
+continue if it receives the SIGCONT signal (like with @samp{killall -CONT imyplay}).
 You can still send other signals to it, if you wish to terminate it.
 
-@strong{NOTE}: for signal handling to work, your compiler probably needs a working 'volatile'
-data type. If you are using GCC, no worries.
+@strong{NOTE}: for signal handling to work, your compiler probably needs
+a working @samp{volatile} data type. If you are using GCC, no worries.
 
 @c ==================================================================
 
 
 
-@node Author, Thanks, Signals, Top
+@node Reporting issues, Author, Signals, Top
+@comment  node-name, next,      previous,  up
+@chapter Reporting issues
+
+To report build or installation problems, include:
+@enumerate
+@item the compiler name and version (e.g. @command{gcc} version 10),
+@item the C standard library name and version (e.g. @file{glibc} version 2.x),
+@item the output of the @command{configure} script. You can capture it by running
+ @samp{./configure > configure-output.txt 2>&1},
+@item the generated @file{config.log} file,
+@item the generated @file{config.h} file, if it exists,
+@item the output of the @command{make} command. You can capture it by running
+ @samp{make > make-output.txt 2>&1},
+@item any other error messages,
+@item any other information that you think could lead to solving the problem.
+@end enumerate
+
+To report usage problems, include:
+@enumerate
+@item all the above things you include when reporting building problems,
+@item a description of the problem that the software causes,
+@item any error messages that are displayed,
+@item information whether you tried other input files and whether they are processed correctly,
+@item information whether you tried another sound output system, if possible, and whether it worked,
+@item (if the problem is with an input file) if possible, the whole input file or a
+ minimalistic input file that causes the problem to show up,
+@item any other information that you think could lead to solving the problem.
+@end enumerate
+
+
+@c ==================================================================
+
+
+
+@node Author, Thanks, Reporting issues, Top
 @comment  node-name, next,      previous,  up
 @chapter Author
 
@@ -1696,41 +1785,41 @@ to permit their use in free software.
 @comment  node-name, next,      previous,  up
 @chapter Translating
 
-Type @command{msginit -i imyplay.pot -o XX.po}, substituting your
-2-letter language code for 'XX' (e.g. 'pl' or 'de'). This requires the 'gettext'
-package installed. You can manually copy the file imyplay.pot to XX.po and
+Type @samp{msginit -i imyplay.pot -o XX.po}, substituting your
+2-letter language code for @var{XX} (e.g. @var{pl} or @var{de}). This requires the @file{gettext}
+package installed. You can manually copy the file @file{imyplay.pot} to @file{XX.po} and
 manually add the following header, if you wish.@*
-In the resulting XX.po file you have to fill in all the fields
+In the resulting @file{XX.po} file you have to fill in all the fields
 marked with capital letters in the header:
 
-@quotation
-# YOUR LANGUAGE translations for IMYplay package.@*
-# Copyright (C) 2009-2021 Bogdan 'bogdro' Drozdowski@*
-# This file is distributed under the same license as@*
-# the IMYplay package.@*
-# YOUR FULL NAME <EMAILADDRESS>, YEAR.@*
-#@*
-msgid ""@*
-msgstr ""@*
-"Project-Id-Version: IMYplay VERSION\n"@*
-"Report-Msgid-Bugs-To: \n"@*
-"POT-Creation-Date: 2011-03-23 18:41+0100\n"@*
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"@*
-"Last-Translator: FULL NAME <EMAILADDRESS>\n"@*
-"Language-Team: LANGUAGE <EMAILADDRESS>\n"@*
-"MIME-Version: 1.0\n"@*
-"Content-Type: text/plain; charset=CHARSET\n"@*
-"Content-Transfer-Encoding: 8bit\n"@*
-@end quotation
+@verbatim
+# YOUR LANGUAGE translations for IMYplay package.
+# Copyright (C) 2009-2021 Bogdan 'bogdro' Drozdowski
+# This file is distributed under the same license as
+# the IMYplay package.
+# YOUR FULL NAME <EMAILADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: IMYplay VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-03-23 18:41+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAILADDRESS>\n"
+"Language-Team: LANGUAGE <EMAILADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+@end verbatim
 
 The rest of the file will contain messages from the program. Translate them all
-and send me the resulting XX.po file.
+and send me the resulting @file{XX.po} file.
 
 Translating the documentation:
 @itemize
-@item info: simply change the imyplay.txc file
-@item man: Unpack the page using @command{gunzip imyplay.1.gz} and translate the
-resulting imyplay.1 file (it's a text file).
+@item info: simply change the @file{imyplay.txc} file
+@item man: Unpack the page and translate the
+resulting @file{imyplay.1} file (it's a text file).
 @end itemize
 
 

@@ -1,3 +1,104 @@
+2021-10-21	Bogdan Drozdowski <bogdro@users.sourceforge.net>
+
+	* IMYplay version 1.3
+	  SDLv2 support. Improvements in the SDL backend. Fixed the MIDI
+	  backend on 64-bit systems. Fixed the EXEC backend with a missing
+	  parameter. Fixed uninitialized values in the JACK backend. Updates
+	  in the build system for DOS. Other compatibility improvements.
+	  Documentation updates and improvements. Translations rebuilt. New
+	  unit tests.
+	* configure.ac: Updated using autoconf 2.71. Disable XIPH_PATH_AO()
+	  because of incompatibilities and continue checking manually.
+	  Double-quote all AC_MSG_* messages. Added enabling all Automake
+	  warnings. Added checking for the stdint.h header, now required by
+	  the MIDI backend because of compatibility issues on 64-bit systems.
+	  Made the descriptions of --enable-XX options similar. Added SDLv2
+	  support (since function names are the same for SDLv1 and SDLv2, it's
+	  not possible to enable both backends at the same time; also, since
+	  header names are also the same, searching for just "SDL.h" is not
+	  supported anymore - the script searches for SDL2/SDL.h and then
+	  for SDL/SDL.h).
+	* src/imyputil.c: updated #including the time header files as
+	  recommended by the new autoconf.
+	* src/imyp_cfg.hin: added defining HAVE_STDINT_H.
+	* src/midibase.h: define DWORD to be a 32-bit type - uint32_t when
+	  available, or unsigned long otherwise (the default). This fixes an
+	  incompatibility on 64-bit systems that breaks the output file.
+	* src/imyp_sdl.c (imyp_sdl_fill_buffer, imyp_sdl_play_tune): moved
+	  generating the samples out of the buffer-filling callback to the
+	  main thread for efficiency.
+	* src/{imyplay.h,Makefile.am,imyp_sdl.c,imywrap.c}: added support for
+	  SDLv2. Since function and header names are the same for SDLv1 and
+	  SDLv2, it's not possible to enable both backends at the same time.
+	  Since the versions are similar enough, the same IMYplay backend
+	  file supports both.
+	* src/imyplay.c (main): fail fast, display help and return an error
+	  if IMYplay is called by the name imyplay-exec, thus choosing the
+	  EXEC backend, and no command to run is provided.
+	* src/imyp_jck.c (imyp_jack_init): initialize all the members of the
+	  user data structure before activating the backend.
+	* src/imyp_jck.c (imyp_jack_fill_buffer): leave also if the buffer is
+	  NULL, just in case the callback fires when not fully initialized.
+	* src/imyp_por.c (imyp_portaudio_init): free() the backend's data on
+	  one error path when initialization failed.
+	* src/imyp_sdl.c (imyp_sdl_close): call also SDL_AudioQuit().
+	* src/imyputil.c (imyp_generate_filename): always allocate the maximum
+	  predicted room for the new filename, copy as much as it can hold.
+	* src/imyp_cfg.hin, doc/imyplay.txc, imyplay.spi: added a comment
+	  saying that 'configure' processes these files.
+	* Makefile.am: added a fake helper target, 'x-gen-potfiles-in', to
+	  show how to rebuild the po/POTFILES.in file. Renamed the 'pack'
+	  target to 'x-pack'.
+	* test/utiltest.c: added tests for the imyp_parse_system() and
+	  imyp_get_format() functions.
+	* Makefile.dos: a Makefile to build the DOS version of IMYplay under
+	  DOSBox (which doesn't set %ERRORLEVEL%).
+	* dosfiles.txt: changed to suite both dosdist.bat and Makefile.dos.
+	* dosdist.bat: commented-out changing the working directory to be
+	  compatible with Makefile.dos and made the necessary adjustments.
+	* imyplay.spi: updated the description.
+	* doc/imyplay.txc, README, INSTALL-imyplay.txt: removed the specific
+	  versions of IMYplay that compile on various systems and replaced
+	  the text with a generic note. Added the "SDL2" backend to the list
+	  of backends that can be disabled. Added information that IMYplay
+	  builds under DOSBox. Updates in how to build RPMs. Make the common
+	  parts say the same.
+	* README, doc/imyplay.txc, doc/imyplay.1: fix typos, make options'
+	  descriptions more clear
+	* doc/imyplay.txc: many improvements in the documentation: made URLs
+	  into proper links, use the TeXinfo @file, @option, @kbd, @samp,
+	  @command, @code and @verbatim properly, improved the description
+	  on how to report errors, added a link to the home page on the
+	  "What is IMYplay" page, added "Reporting issues".
+	* doc/Makefile.am: added flags for generating the HTML documentation.
+	* po/Makefile.in.in: renamed from po/Makefile.inn because of the
+	  requirements of the new autoconf/gettext. It is thus no longer
+	  possible to build IMYplay translations using autotools on systems
+	  without long filename support (program compilation will still work).
+	* po/POTFILES.in: updated finally after moving some of the messages
+	  to src/iparsers.c.
+	* ABOUT-NLS, config.rpath, po/Makefile.in.in, po/boldquot.sed,
+	  po/en@boldquot.header, po/en@quot.header, po/insert-header.sin
+	  po/Makevars.template, po/quot.sed, po/remove-potcdate.sin
+	  po/Rules-quot, po/ChangeLog, m4/gettext.m4, m4/host-cpu-c-abi.m4,
+	  m4/iconv.m4, m4/intlmacosx.m4, m4/lib-ld.m4, m4/lib-link.m4,
+	  m4/lib-prefix.m4, m4/nls.m4, m4/po.m4, m4/progtest.m4, m4/ChangeLog,
+	  configure.ac, po/Makevars: updated gettext to 0.21.
+
+2021-09-23  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* m4/gettext.m4: Upgrade to gettext-0.21.
+	* m4/host-cpu-c-abi.m4: New file, from gettext-0.21.
+	* m4/iconv.m4: Upgrade to gettext-0.21.
+	* m4/intlmacosx.m4: Upgrade to gettext-0.21.
+	* m4/lib-ld.m4: Upgrade to gettext-0.21.
+	* m4/lib-link.m4: Upgrade to gettext-0.21.
+	* m4/lib-prefix.m4: Upgrade to gettext-0.21.
+	* m4/nls.m4: Upgrade to gettext-0.21.
+	* m4/po.m4: Upgrade to gettext-0.21.
+	* m4/progtest.m4: Upgrade to gettext-0.21.
+	* configure.ac (AM_GNU_GETTEXT_VERSION): Bump to 0.21.
+
 2021-09-07	Bogdan Drozdowski <bogdro@users.sourceforge.net>
 
 	* IMYplay version 1.2.1
@@ -34,7 +135,7 @@
 	* src/imyp_gst.c (imyp_gst_close): deinitializing the library on close
 	* src/*.c: added a preprocessor block that marks ANSI C as disabled,
 	  for internal testing compiler compatibility.
-	* src/midi*: fixed te FSF address as required by rpmlint.
+	* src/midi*: fixed the FSF address as required by rpmlint.
 	* test/Makefile.am: added a target to just compile the tests
 	* doc/imyplay.txc, doc/imyplay.1, src/*.c, src/*.h*, AUTHORS,
 	  ChangeLog, INSTALL-imyplay.txt, imyplay.spi, po/*.po, po/imyplay.pot,

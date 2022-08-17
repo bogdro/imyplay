@@ -32,16 +32,22 @@
 
 #include <stdio.h>
 
-#ifdef IMYP_HAVE_SDL
-# if (defined HAVE_SDL_SDL_H)
-#  include <SDL/SDL.h>
-#  include <SDL/SDL_version.h>
+#ifdef IMYP_HAVE_SDL2
+# ifdef HAVE_SDL2_SDL_H
+#  include <SDL2/SDL.h>
 # else
-#  include <SDL.h>
-#  include <SDL_version.h>
+#  error SDL2 requested, but headers not found.
 # endif
-#else
-# error SDL requested, but components not found.
+#else /* ! IMYP_HAVE_SDL2 */
+# ifdef IMYP_HAVE_SDL
+#  ifdef HAVE_SDL_SDL_H
+#   include <SDL/SDL.h>
+#  else
+#   error SDL requested, but components not found.
+#  endif
+# else /* ! IMYP_HAVE_SDL */
+#  error SDL requested, but components not found.
+# endif
 #endif
 
 #ifdef HAVE_STDLIB_H
@@ -69,6 +75,7 @@ struct imyp_sdl_backend_data
 	/* modified in the callback: */
 	volatile unsigned long int last_index;
 	volatile long int samples_remain;
+	void * buf;
 };
 
 #ifdef TEST_COMPILE
@@ -105,9 +112,7 @@ static void SDLCALL imyp_sdl_fill_buffer (
 {
 	unsigned long int i;
 	unsigned int quality = 16;
-	int is_le = 1;
-	int is_uns = 0;
-	int nsamp;
+	unsigned long int nsamp;
 	struct imyp_sdl_backend_data * data =
 		(struct imyp_sdl_backend_data *)userdata;
 
@@ -118,56 +123,33 @@ static void SDLCALL imyp_sdl_fill_buffer (
 
 	if ( (data->received.format == AUDIO_U8) || (data->received.format == AUDIO_S8) )
 	{
-		if ( data->received.format == AUDIO_U8 )
-		{
-			is_uns = 1;
-		}
-		else
-		{
-			is_uns = 0;
-		}
 		quality = 8;
-	}
-	else if ( (data->received.format == AUDIO_S16LSB) || (data->received.format == AUDIO_S16MSB)
-		|| (data->received.format == AUDIO_U16LSB) || (data->received.format == AUDIO_U16MSB) )
-	{
-		if ( (data->received.format == AUDIO_S16MSB) || (data->received.format == AUDIO_U16MSB) )
-		{
-			is_le = 0;
-		}
-		else
-		{
-			is_le = 1;
-		}
-		if ( (data->received.format == AUDIO_U16LSB) || (data->received.format == AUDIO_U16MSB) )
-		{
-			is_uns = 1;
-		}
-		else
-		{
-			is_uns = 0;
-		}
-		quality = 16;
-	}
-	for ( i = data->last_index; i < data->last_index + (unsigned long int)len; i++ )
-	{
-		((char *)stream)[i - data->last_index] = 0;
 	}
 
 	if ( data->samples_remain > 0 )
 	{
-		/* the number of samples to put in the buffer: */
-		nsamp = (int)IMYP_MIN(len / ((int)quality / 8), data->samples_remain);
-		i = data->last_index;
-		imyp_generate_samples (data->tone_freq, data->volume_level,
-			data->duration, stream, nsamp,
-			is_le, is_uns, quality, (unsigned int)data->received.freq,
-			&i);
-		data->last_index = i;
-		data->samples_remain -= nsamp;
+		nsamp = IMYP_MIN((unsigned int)len / (quality / 8), (unsigned long int)data->samples_remain);
+		for ( i = 0; i < nsamp; i++ )
+		{
+			((char *)stream)[i] = ((char *)data->buf)[data->last_index + i];
+		}
+		/* fill the remaining part of the buffer, if any: */
+		for ( /* "i" is already set */; i < (unsigned int)len; i++ )
+		{
+			((char *)stream)[i] = 0;
+		}
+		data->last_index += nsamp;
+		data->samples_remain -= (long int)nsamp;
 		if ( data->samples_remain <= 0 )
 		{
 			data->samples_remain = 0;
+		}
+	}
+	else
+	{
+		for ( i = 0; i < (unsigned int)len; i++ )
+		{
+			((char *)stream)[i] = 0;
 		}
 	}
 }
@@ -189,7 +171,7 @@ imyp_sdl_play_tune (
 	const double freq,
 	const int volume_level,
 	const int duration,
-	void * const buf IMYP_ATTR ((unused)),
+	void * const buf,
 	int bufsize)
 #else
 	imyp_data, freq, volume_level, duration, buf, bufsize)
@@ -197,12 +179,15 @@ imyp_sdl_play_tune (
 	const double freq;
 	const int volume_level;
 	const int duration;
-	void * const buf IMYP_ATTR ((unused));
+	void * const buf;
 	int bufsize;
 #endif
 {
-	int qual_bits = 16;
-	int qual_bytes;
+	unsigned int qual_bits = 16;
+	unsigned int qual_bytes;
+	int is_uns = 0;
+	int is_le = 1;
+	int nsamp;
 	struct imyp_sdl_backend_data * data =
 		(struct imyp_sdl_backend_data *)imyp_data;
 
@@ -211,35 +196,84 @@ imyp_sdl_play_tune (
 		return -100;
 	}
 
-	data->tone_freq = freq;
-	data->volume_level = volume_level;
-	data->duration = duration;
-	data->last_index = 0;
-
-	/* set the number of remaining samples to the initial duration of the tone */
-	if ( (data->received.format == AUDIO_U8) || (data->received.format == AUDIO_S8) )
+	if ( (duration > 0) && (bufsize > 0) )
 	{
-		qual_bits = 8;
+		/* zero-out the old values first */
+#ifdef HAVE_MEMSET
+		memset(buf, 0, (size_t)bufsize);
+#else
+		for ( bi = 0; bi < bufsize; bi++ )
+		{
+			((char *)buf)[bi] = '\0';
+		}
+#endif
+		if ( (data->received.format == AUDIO_U8) || (data->received.format == AUDIO_S8) )
+		{
+			if ( data->received.format == AUDIO_U8 )
+			{
+				is_uns = 1;
+			}
+			else
+			{
+				is_uns = 0;
+			}
+			qual_bits = 8;
+		}
+		else if ( (data->received.format == AUDIO_S16LSB) || (data->received.format == AUDIO_S16MSB)
+			|| (data->received.format == AUDIO_U16LSB) || (data->received.format == AUDIO_U16MSB) )
+		{
+			if ( (data->received.format == AUDIO_S16MSB) || (data->received.format == AUDIO_U16MSB) )
+			{
+				is_le = 0;
+			}
+			else
+			{
+				is_le = 1;
+			}
+			if ( (data->received.format == AUDIO_U16LSB) || (data->received.format == AUDIO_U16MSB) )
+			{
+				is_uns = 1;
+			}
+			else
+			{
+				is_uns = 0;
+			}
+			qual_bits = 16;
+		}
+		data->buf = buf;
+
+		qual_bytes = qual_bits/8;
+		data->samples_remain = (long int)(duration * (long int)data->received.freq * qual_bytes) / 1000; /* bytes */
+		data->samples_remain = IMYP_MIN (bufsize, data->samples_remain); /* bytes */
+		data->samples_remain /= qual_bytes; /* samples */
+
+		/* the number of samples to put in the buffer: */
+		nsamp = IMYP_MIN(bufsize / ((int)qual_bits / 8), (int)data->samples_remain);
+		imyp_generate_samples (freq, volume_level,
+			duration, buf, nsamp,
+			is_le, is_uns, qual_bits, (unsigned int)data->received.freq,
+			NULL);
+		data->last_index = 0;
+
+		SDL_PauseAudio (0);	/* start playing */
+		SDL_UnlockAudio ();
+
+		while ( (data->samples_remain > 0) && (imyp_sig_recvd == 0) ) {}
+
+		/*imyp_sdl_pause (imyp_data, duration); */
+		SDL_PauseAudio (1);
+		SDL_LockAudio ();
+
+		data->tone_freq = 0.0;
+		data->volume_level = 0;
+		data->duration = 0;
+		data->last_index = 0;
+		data->samples_remain = 0;
 	}
-	qual_bytes = qual_bits/8;
-	data->samples_remain = (long int)(duration * (long int)data->received.freq * qual_bytes) / 1000; /* bytes */
-	data->samples_remain = IMYP_MIN (bufsize, data->samples_remain); /* bytes */
-	data->samples_remain /= qual_bytes; /* samples */
-
-	SDL_PauseAudio (0);	/* start playing */
-	SDL_UnlockAudio ();
-
-	while ( (data->samples_remain > 0) && (imyp_sig_recvd == 0) ) {}
-
-	/*imyp_sdl_pause (imyp_data, duration); */
-	SDL_PauseAudio (1);
-	SDL_LockAudio ();
-
-	data->tone_freq = 0.0;
-	data->volume_level = 0;
-	data->duration = 0;
-	data->last_index = 0;
-	data->samples_remain = 0;
+	else
+	{
+		return -2;
+	}
 
 	return 0;
 }
@@ -312,8 +346,17 @@ imyp_sdl_init (
 {
 	int res;
 	struct imyp_sdl_backend_data * data;
-	SDL_AudioSpec desired = {44100, AUDIO_S16LSB, 1, 0, 44100 /* do NOT set to less than 32768 */,
-		0, 0, &imyp_sdl_fill_buffer, NULL};
+	SDL_AudioSpec desired = {
+		44100, /**< DSP frequency -- samples per second */
+		AUDIO_S16LSB, /**< Audio data format */
+		1, /**< Number of channels: 1 mono, 2 stereo */
+		0, /**< Audio buffer silence value (calculated) */
+		44100 /**< Audio buffer size in samples *//* do NOT set to less than 32768 */,
+		0, /**< Necessary for some compile environments */
+		0, /**< Audio buffer size in bytes (calculated) */
+		&imyp_sdl_fill_buffer,
+		NULL /* userdata */
+	};
 	enum IMYP_SAMPLE_FORMATS format;
 	char * colon;
 	int scanf_res;
@@ -435,6 +478,7 @@ imyp_sdl_close (
 {
 	SDL_UnlockAudio ();
 	SDL_CloseAudio ();
+	SDL_AudioQuit ();
 	SDL_Quit ();
 	if ( imyp_data != NULL )
 	{

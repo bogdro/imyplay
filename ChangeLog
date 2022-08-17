@@ -1,3 +1,27 @@
+2009-06-27	Bogdan Drozdowski <bogdandr@op.pl>
+
+	* IMYplay version 0.3
+	  SDL, ALSA, OSS, LIBAO, PortAudiov19, PulseAudio and JACK1 support.
+	  Fixed endianess problem of 16-bit samples. Checking if the standard
+	  output isn't NULL before printing text in the backends.
+	* configure.ac: fixed: getopt.h no longer required, reacting on
+	  parameters, check for off_t and size_t. Added "--enable-allegro",
+	  "--enable-SDL", "--enable-ALSA", "--enable-LIBAO",
+	  "--enable-PORTAUDIO", "--enable-PULSEAUDIO" and "--enable-JACK"
+	  options.
+	* configure.ac, src/Makefile.am: the program now really compiles
+	  without the Allegro library.
+	* imyplay.h: defining library constants, added IMYP_MAX_IMY_VOLUME,
+	  added MIN() and MAX() macros.
+	* imyp_sdl.{c,h}, imypwrap.c: SDL support.
+	* imyplay.c, imyp_all.c, imyp_sdl.c: using IMYP_MAX_IMY_VOLUME.
+	* imyp_als.{c,h}, imypwrap.c: ALSA support.
+	* imyp_ao.{c,h}, imypwrap.c: LIBAO support.
+	* imyp_por.{c,h}, imypwrap.c: PortAudiov19 support.
+	* imyp_pul.{c,h}, imypwrap.c: PulseAudio support.
+	* imyp_jck.{c,h}, imypwrap.c: JACK1 support.
+	* imyplay.c (imyp_read_line): fixed getting the current file position.
+
 2009-02-21	Bogdan Drozdowski <bogdandr@op.pl>
 
 	* IMYplay version 0.2
@@ -18,4 +42,3 @@
 	  Allegro library, captures signals. Modular structure allows easy
 	  adding new sound libraries in the future. Full documentation
 	  included.
-

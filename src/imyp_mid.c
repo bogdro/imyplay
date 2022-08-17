@@ -25,8 +25,6 @@
 
 #include "imyp_cfg.h"
 
-#include <stdio.h>	/* FIXME */
-
 #ifdef HAVE_STRING_H
 # if ((!defined STDC_HEADERS) || (!STDC_HEADERS)) && (defined HAVE_MEMORY_H)
 #  include <memory.h>
@@ -46,8 +44,9 @@
 #include "imyp_mid.h"
 #include "imyp_sig.h"
 
-#define FABS(x)		( ((x) >= 0.0)? (x) : (-(x)) )
-#define EPSILON		0.0001
+#define IMYP_MIDI_FABS(x)		( ((x) >= 0.0)? (x) : (-(x)) )
+#define IMYP_MIDI_EPSILON		0.0001
+#define IMYP_MIDI_DURATION_DIVISOR	2
 
 #include "midibase.h"
 #include "midiinfo.h"
@@ -113,7 +112,7 @@ imyp_midi_play_tune (
 	{
 		for ( note = 0; note < NOTES_PER_OCTAVE; note++ )
 		{
-			if ( FABS (freq-notes[oct][note]) < EPSILON )
+			if ( IMYP_MIDI_FABS (freq-notes[oct][note]) < IMYP_MIDI_EPSILON )
 			{
 				midinote = octaves[oct] + midinotes[note];
 				break;
@@ -124,9 +123,10 @@ imyp_midi_play_tune (
 	/* set the correct duration */
 	for ( oct = 0; oct < sizeof (durations) / sizeof (durations[0]) - 1; oct++ )
 	{
-		if ( durations[oct] <= duration/2 && duration/2 <= durations[oct+1] )
+		if ( durations[oct] <= duration/IMYP_MIDI_DURATION_DIVISOR
+			&& duration/IMYP_MIDI_DURATION_DIVISOR <= durations[oct+1] )
 		{
-			if ( duration/2 >= (durations[oct+1]-durations[oct])/2 )
+			if ( duration/IMYP_MIDI_DURATION_DIVISOR >= (durations[oct+1]-durations[oct])/2 )
 				dur = durations[oct+1];
 			else
 				dur = durations[oct];
@@ -135,8 +135,7 @@ imyp_midi_play_tune (
 	}
 	if ( midinote < 0 ) return -1;
 	res = midiTrackAddNote (midi, 1 /* track */, midinote /*int iNote*/,
-		dur,
-		vol, TRUE /*BOOL bAutoInc*/, TRUE /*BOOL bOverrideLength*/);
+		dur, vol, TRUE /*BOOL bAutoInc*/, TRUE /*BOOL bOverrideLength*/);
 	if (res == TRUE) return 0;
 	return -2;
 }
@@ -220,7 +219,7 @@ imyp_midi_init (
 		imy = (char *) malloc ( strlen (filename) + 5 );
 		if ( imy == NULL ) return -3;
 		strncpy ( imy, filename, strlen (filename) );
-		strncpy ( &imy[strlen(filename)], ".mid", 5);
+		strncpy ( &imy[strlen (filename)], ".mid", 5);
 		midi = midiFileCreate (filename, TRUE);
 		free (imy);
 		if ( midi == NULL ) return -4;
@@ -248,11 +247,9 @@ imyp_midi_close (
 #endif
 )
 {
-	BOOL res;
 	if ( midi != NULL )
 	{
-		res = midiFileClose (midi);
-		if ( res == FALSE ) return -1;
+		if ( midiFileClose (midi) == FALSE ) return -1;
 	}
 	return 0;
 }

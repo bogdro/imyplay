@@ -5,7 +5,7 @@
  * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
- * Syntax example: imyplayer ringtone.imy
+ * Syntax example: imyplay ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

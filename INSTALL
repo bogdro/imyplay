@@ -1,25 +1,75 @@
-IMYplay - a program for playing iMelody ringtones (IMY files).
+This is the INSTALL file for imyplay, a program for playing iMelody
+ ringtones (IMY files).
+
+Read the info documentation (type 'info doc/imyplay.info') to get more
+ information.
+
+This program is used for playing iMelody ringtones (IMY files),
+conforming to the iMelody specification, as written in doc/imelody.txt.
+It can also convert IMY ringtones to MIDI files.
+
+IMYplay can use the following libraries to produce sound: the Allegro game
+library (http://alleg.sf.net), SDL (Simple DirectMedia Layer;
+http://www.libsdl.org), ALSA (Advanced Linux Sound Architecture;
+http://alsa-project.org), OSS (Open Sound System), libao
+(http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/), PulseAudio
+(http://www.pulseaudio.org/), JACK1 (http://jackaudio.org/).
+
+
+Author: Bogdan Drozdowski, bogdandr @ op . pl
+License: GPLv3+
+
+The program compiles on:
+- Fedora Core 4 GNU/Linux, i686
+- Mandriva 2008.1 GNU/Linux, i686
+- OpenBSD 3.8, i586
 
 Requirements for compiling the full version:
+
 - a non-root account. Please, NEVER compile or 'make' anything as root.
-- a working C compiler
+
+- a working C compiler.
+
 - development package for the C library (like glibc-devel and glibc-headers)
-- development package for the Allegro game library (usually
-  included in something like allegro-devel). If you don't have anything
-  like this installed or available (check twice), then go to
-  	http://alleg.sf.net/
-  Then compile and install that package.
+  The getopt.h header and the getopt_long() from it are required. The
+  signal.h header is used to catch signals, and is optional. The translation
+  headers (locale.h, libintl.h or other) are optional.
+
 - the 'make' program
+
+- if you want sound, not just MIDI conversion, a development package for one
+  of the supported libraries (except OSS, which requires only the C library
+  and system support). If you don't have any of these installed or available
+  (check twice), then go to
+   	http://alleg.sf.net/		- for the Allegro library
+   	http://www.libsdl.org/		- for the SDL library
+   	http://alsa-project.org/	- for the ALSA library
+   	http://xiph.org/ao/		- for the AO library
+   	http://www.portaudio.com/	- for the PortAudiov19 library
+   	http://www.pulseaudio.org/	- for the PulseAudio library
+   	http://jackaudio.org/		- for the JACK1 library
 
 Type './configure' to configure the program for your system.
 
 Type 'make' to compile the program.
+To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT
+ the standard one) and change the line
+	#include "syslimits.h"
+to
+	#include "syslimit.h"
+Then go to the src directory. Change @VERSION@ to the current version number
+in the imyp_cfg.hin file and rename the file to imyp_cfg.h. Then run
+	gcc -o imyplay.exe *.c -lalleg
+The resulting imyplay.exe is the program to use.
+
 Documentation will be compiled, if you have the 'makeinfo' program
  ('texinfo' package).
 Translations will be compiled, if you have the 'gettext' package.
 
-Type 'make install' to install the program.  NOTE: 'make install' is
+Type 'make install' to install the program. NOTE: 'make install' is
  NOT recommended. Create and install an rpm package instead, if possible.
+
+Type 'info imyplay' to get help.
 
 =======================================================
 
@@ -30,4 +80,3 @@ Building an RPM package:
 3) type
 	rpmbuild -ba /usr/src/redhat/SPECS/imyplay.spc
 4) get the rpms from /usr/src/redhat/RPMS/i386 and /usr/src/redhat/SRPMS
-

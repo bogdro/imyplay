@@ -4,8 +4,25 @@ This is the README file for imyplay, a program for playing iMelody
 Read the info documentation (type 'info doc/imyplay.info') to get more
  information.
 
+This program is used for playing iMelody ringtones (IMY files),
+conforming to the iMelody specification, as written in doc/imelody.txt.
+It can also convert IMY ringtones to MIDI files.
+
+IMYplay can use the following libraries to produce sound: the Allegro game
+library (http://alleg.sf.net), SDL (Simple DirectMedia Layer;
+http://www.libsdl.org), ALSA (Advanced Linux Sound Architecture;
+http://alsa-project.org), OSS (Open Sound System), libao
+(http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/), PulseAudio
+(http://www.pulseaudio.org/), JACK1 (http://jackaudio.org/).
+
+
 Author: Bogdan Drozdowski, bogdandr @ op . pl
 License: GPLv3+
+
+The program compiles on:
+- Fedora Core 4 GNU/Linux, i686
+- Mandriva 2008.1 GNU/Linux, i686
+- OpenBSD 3.8, i586
 
 Requirements for compiling the full version:
 
@@ -20,11 +37,17 @@ Requirements for compiling the full version:
 
 - the 'make' program
 
-- development package for the Allegro game library (usually included in
-  something like allegro-devel). If you don't have
-  anything like this installed or available (check twice), then go to
-  	http://alleg.sf.net/
-  Then compile and install that package.
+- if you want sound, not just MIDI conversion, a development package for one
+  of the supported libraries (except OSS, which requires only the C library
+  and system support). If you don't have any of these installed or available
+  (check twice), then go to
+   	http://alleg.sf.net/		- for the Allegro library
+   	http://www.libsdl.org/		- for the SDL library
+   	http://alsa-project.org/	- for the ALSA library
+   	http://xiph.org/ao/		- for the AO library
+   	http://www.portaudio.com/	- for the PortAudiov19 library
+   	http://www.pulseaudio.org/	- for the PulseAudio library
+   	http://jackaudio.org/		- for the JACK1 library
 
 Type './configure' to configure the program for your system.
 
@@ -55,6 +78,9 @@ Syntax:
 
 Command line options:
 
+-d|--device <dev>	Try to use the given device (ALSA, OSS), driver ID
+			(libao) or server name (JACK1, PulseAudio)
+			sound output.
 -h|--help		Print help
 -l|--license		Print license information
 --to-midi		Convert the given files to MIDI format
@@ -84,7 +110,7 @@ you wish.
 marked with capital letters in the header:
 
 # YOUR LANGUAGE translations for imyplay package.
-# Copyright (C) 2007 Bogdan 'bogdro' Drozdowski
+# Copyright (C) 2009 Bogdan 'bogdro' Drozdowski
 # This file is distributed under the same license as
 # the imyplay package.
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.

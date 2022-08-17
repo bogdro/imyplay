@@ -5,7 +5,7 @@
  * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
- * Syntax example: imyplayer ringtone.imy
+ * Syntax example: imyplay ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,6 +29,10 @@
 
 #include "imyplay.h"
 
+#if (defined HAVE_GETOPT_H) && (defined HAVE_GETOPT_LONG)
+# include <getopt.h>
+#endif
+
 #include <stdio.h>
 
 #ifdef HAVE_STRING_H
@@ -36,11 +40,6 @@
 #  include <memory.h>
 # endif
 # include <string.h>
-#endif
-
-#if (defined HAVE_GETOPT_H) && (defined HAVE_GETOPT_LONG)
-# define _GNU_SOURCE	1	/* getopt_long() */
-# include <getopt.h>
 #endif
 
 #ifdef HAVE_LIBINTL_H
@@ -66,7 +65,7 @@
 #  pragma GCC poison strcpy strcat
 # endif
 
-#ifdef HAVE_LIBALLEG
+#ifdef IMYP_HAVE_ALLEGRO
 # include <allegro.h>	/* END_OF_MAIN() */
 #endif
 
@@ -112,10 +111,12 @@ const char * const sig_unk = N_("unknown");
 static char *imyp_progname;	/* The name of the program */
 
 /* Command-line options. */
-/* These two unconditionally: */
+/* These unconditionally: */
 static int opt_tomidi  = 0;
 static int imyp_optind  = 0;
-#ifdef HAVE_GETOPT_H
+static int opt_dev = 0;
+static char * device = NULL;
+#if (defined HAVE_GETOPT_H) && (defined HAVE_GETOPT_LONG)
 static int opt_help    = 0;
 static int opt_license = 0;
 static int opt_version = 0;
@@ -124,6 +125,7 @@ static int opt_char    = 0;
 
 static const struct option opts[] =
 {
+	{ "device",     required_argument, &opt_dev,     1 },
 	{ "help",       no_argument,       &opt_help,    1 },
 	{ "licence",    no_argument,       &opt_license, 1 },
 	{ "license",    no_argument,       &opt_license, 1 },
@@ -276,7 +278,6 @@ const float notes[9][12] =
 	}
 };
 
-#define SAMPBUFSIZE (128*1024)
 #define IMYP_DEF_BPM 120
 
 static unsigned short buf16[SAMPBUFSIZE];
@@ -376,6 +377,7 @@ print_help (
 	printf ( "%s", _(" [options] ") );
 	printf ( "ringtone.imy [...]\n\n" );
 	printf ( "%s:", _("Options") );
+	printf ( "\n-d|--device <dev>\t%s", _("Try to use this device") );
 	printf ( "\n-h|--help\t\t%s", _("Print help") );
 	printf ( "\n-l|--license\t\t%s", _("Print license information") );
 	printf ( "\n--to-midi\t\t%s", _("Convert the given files to MIDI format") );
@@ -455,7 +457,7 @@ imyp_read_line (
 				*/
 				strncpy (tmpbuf, buffer, bufsize);
 #if (defined HAVE_FSEEKO) && (defined HAVE_FTELLO)
-				curr_pos = ftello (imyfile);
+				curr_pos = ftello (imyfile)
 					/* substract the already-read line */
 					- strlen (buffer)
 					/* add the offset of the current char: */
@@ -904,7 +906,8 @@ imyp_play_file (
 								imyp_read_line (melody_line, &melody_index,
 									sizeof (melody_line) - 10, imy);
 								if ( volume < 0 ) volume = 0;
-								else if ( volume > 15 ) volume = 15;
+								else if ( volume > IMYP_MAX_IMY_VOLUME )
+									volume = IMYP_MAX_IMY_VOLUME;
 							}
 							is_sharp = 0;
 							is_flat = 0;
@@ -1698,6 +1701,10 @@ imyp_play_file (
 int _mangled_main (int argc, char * argv[]);
 #endif
 
+/* SDL: */
+#ifdef __cplusplus
+extern "C"
+#endif
 int
 main (
 #if defined (__STDC__) || defined (_AIX) \
@@ -1750,11 +1757,11 @@ main (
 	}
 
 	/* Parsing the command line */
-#ifdef HAVE_GETOPT_H
+#if (defined HAVE_GETOPT_H) && (defined HAVE_GETOPT_LONG)
 	optind = 0;
 	while (1==1)
 	{
-		opt_char = getopt_long ( argc, argv, "Vhl", opts, NULL );
+		opt_char = getopt_long ( argc, argv, "Vhld:", opts, NULL );
 		if ( opt_char == -1 )
 		{
 			break;
@@ -1778,6 +1785,11 @@ main (
 			puts ( _(lic_str) );
 			puts ( author_str );
 			return 1;
+		}
+		if ( (opt_char == (int)'d') || (opt_dev == 1) )
+		{
+			device = optarg;
+			opt_dev = 0;
 		}
 	}
 	imyp_optind = optind;
@@ -1807,8 +1819,20 @@ main (
 			opt_tomidi = 1;
 			argv[i] = NULL;
 		}
+		if ( (strstr (argv[i], "--device") == argv[i]) || (strstr (argv[i], "-d") == argv[i]) )
+		{
+			if ( i+1 < (unsigned)argc )
+			{
+				device = argv[i+1];
+				argv[i+1] = NULL;
+			}
+			argv[i] = NULL;
+		}
 	}
 	imyp_optind = 1;
+#endif
+#ifdef __GNUC__
+# pragma GCC poison optind
 #endif
 	if ( imyp_optind >= argc )
 	{
@@ -1818,7 +1842,7 @@ main (
 
 	if ( opt_tomidi == 0 )
 	{
-		if ( imyp_lib_init (&current_library, 0, NULL) != 0 )
+		if ( imyp_lib_init (&current_library, 0, device) != 0 )
 		{
 			printf ("%s\n", _(err_lib_init));
 			return -2;

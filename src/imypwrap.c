@@ -5,7 +5,7 @@
  * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
- * Syntax example: imyplayer ringtone.imy
+ * Syntax example: imyplay ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,8 +34,39 @@
 
 #include "imyplay.h"
 #include "imypwrap.h"
-#include "imyp_all.h"
 #include "imyp_mid.h"
+
+#ifdef IMYP_HAVE_ALLEGRO
+# include "imyp_all.h"
+#endif
+
+#ifdef IMYP_HAVE_SDL
+# include "imyp_sdl.h"
+#endif
+
+#ifdef IMYP_HAVE_ALSA
+# include "imyp_als.h"
+#endif
+
+#ifdef IMYP_HAVE_OSS
+# include "imyp_oss.h"
+#endif
+
+#ifdef IMYP_HAVE_LIBAO
+# include "imyp_ao.h"
+#endif
+
+#ifdef IMYP_HAVE_PORTAUDIO
+# include "imyp_por.h"
+#endif
+
+#ifdef IMYP_HAVE_PULSEAUDIO
+# include "imyp_pul.h"
+#endif
+
+#ifdef IMYP_HAVE_JACK1
+# include "imyp_jck.h"
+#endif
 
 /**
  * Pause for the specified amount of time.
@@ -58,8 +89,50 @@ imyp_pause (
 {
 	if ( curr == CURR_ALLEGRO )
 	{
-#ifdef HAVE_LIBALLEG
+#ifdef IMYP_HAVE_ALLEGRO
 		imyp_all_pause (milliseconds);
+#endif
+	}
+	else if ( curr == CURR_SDL )
+	{
+#ifdef IMYP_HAVE_SDL
+		imyp_sdl_pause (milliseconds);
+#endif
+	}
+	else if ( curr == CURR_ALSA )
+	{
+#ifdef IMYP_HAVE_ALSA
+		imyp_alsa_pause (milliseconds);
+#endif
+	}
+	else if ( curr == CURR_OSS )
+	{
+#ifdef IMYP_HAVE_OSS
+		imyp_oss_pause (milliseconds);
+#endif
+	}
+	else if ( curr == CURR_LIBAO )
+	{
+#ifdef IMYP_HAVE_LIBAO
+		imyp_ao_pause (milliseconds);
+#endif
+	}
+	else if ( curr == CURR_PORTAUDIO )
+	{
+#ifdef IMYP_HAVE_PORTAUDIO
+		imyp_portaudio_pause (milliseconds);
+#endif
+	}
+	else if ( curr == CURR_JACK1 )
+	{
+#ifdef IMYP_HAVE_JACK1
+		imyp_jack1_pause (milliseconds);
+#endif
+	}
+	else if ( curr == CURR_PULSEAUDIO )
+	{
+#ifdef IMYP_HAVE_PULSEAUDIO
+		imyp_pulse_pause (milliseconds);
 #endif
 	}
 	else if ( curr == CURR_MIDI )
@@ -87,8 +160,50 @@ imyp_put_text (
 {
 	if ( curr == CURR_ALLEGRO )
 	{
-#ifdef HAVE_LIBALLEG
+#ifdef IMYP_HAVE_ALLEGRO
 		imyp_all_put_text (text);
+#endif
+	}
+	else if ( curr == CURR_SDL )
+	{
+#ifdef IMYP_HAVE_SDL
+		imyp_sdl_put_text (text);
+#endif
+	}
+	else if ( curr == CURR_ALSA )
+	{
+#ifdef IMYP_HAVE_ALSA
+		imyp_alsa_put_text (text);
+#endif
+	}
+	else if ( curr == CURR_OSS )
+	{
+#ifdef IMYP_HAVE_OSS
+		imyp_oss_put_text (text);
+#endif
+	}
+	else if ( curr == CURR_LIBAO )
+	{
+#ifdef IMYP_HAVE_LIBAO
+		imyp_ao_put_text (text);
+#endif
+	}
+	else if ( curr == CURR_PORTAUDIO )
+	{
+#ifdef IMYP_HAVE_PORTAUDIO
+		imyp_portaudio_put_text (text);
+#endif
+	}
+	else if ( curr == CURR_JACK1 )
+	{
+#ifdef IMYP_HAVE_JACK1
+		imyp_jack1_put_text (text);
+#endif
+	}
+	else if ( curr == CURR_PULSEAUDIO )
+	{
+#ifdef IMYP_HAVE_PULSEAUDIO
+		imyp_pulse_put_text (text);
 #endif
 	}
 	else if ( curr == CURR_MIDI )
@@ -130,8 +245,50 @@ imyp_play_tune (
 {
 	if ( curr == CURR_ALLEGRO )
 	{
-#ifdef HAVE_LIBALLEG
+#ifdef IMYP_HAVE_ALLEGRO
 		return imyp_all_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
+	}
+	else if ( curr == CURR_SDL )
+	{
+#ifdef IMYP_HAVE_SDL
+		return imyp_sdl_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
+	}
+	else if ( curr == CURR_ALSA )
+	{
+#ifdef IMYP_HAVE_ALSA
+		return imyp_alsa_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
+	}
+	else if ( curr == CURR_OSS )
+	{
+#ifdef IMYP_HAVE_OSS
+		return imyp_oss_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
+	}
+	else if ( curr == CURR_LIBAO )
+	{
+#ifdef IMYP_HAVE_LIBAO
+		return imyp_ao_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
+	}
+	else if ( curr == CURR_PORTAUDIO )
+	{
+#ifdef IMYP_HAVE_PORTAUDIO
+		return imyp_portaudio_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
+	}
+	else if ( curr == CURR_JACK1 )
+	{
+#ifdef IMYP_HAVE_JACK1
+		return imyp_jack1_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
+	}
+	else if ( curr == CURR_PULSEAUDIO )
+	{
+#ifdef IMYP_HAVE_PULSEAUDIO
+		return imyp_pulse_play_tune (freq, volume_level, duration, buf, bufsize);
 #endif
 	}
 	else if ( curr == CURR_MIDI )
@@ -169,9 +326,71 @@ imyp_lib_init (
 		if ( res == 0 ) *curr = CURR_MIDI;
 		return res;
 	}
-#ifdef HAVE_LIBALLEG
+	/* first try the general, portable libraries */
+#ifdef IMYP_HAVE_ALLEGRO
 	res = imyp_all_init ();
-	if ( res == 0 ) *curr = CURR_ALLEGRO;
+	if ( res == 0 )
+	{
+		*curr = CURR_ALLEGRO;
+		return res;
+	}
+#endif
+#ifdef IMYP_HAVE_SDL
+	res = imyp_sdl_init ();
+	if ( res == 0 )
+	{
+		*curr = CURR_SDL;
+		return res;
+	}
+#endif
+#ifdef IMYP_HAVE_LIBAO
+	res = imyp_ao_init (filename);
+	if ( res == 0 )
+	{
+		*curr = CURR_LIBAO;
+		return res;
+	}
+#endif
+#ifdef IMYP_HAVE_PORTAUDIO
+	res = imyp_portaudio_init (filename);
+	if ( res == 0 )
+	{
+		*curr = CURR_PORTAUDIO;
+		return res;
+	}
+#endif
+#ifdef IMYP_HAVE_JACK1
+	res = imyp_jack1_init (filename);
+	if ( res == 0 )
+	{
+		*curr = CURR_JACK1;
+		return res;
+	}
+#endif
+#ifdef IMYP_HAVE_PULSEAUDIO
+	res = imyp_pulse_init (filename);
+	if ( res == 0 )
+	{
+		*curr = CURR_PULSEAUDIO;
+		return res;
+	}
+#endif
+	/* now try the less-portable sound systems */
+#ifdef IMYP_HAVE_ALSA
+	res = imyp_alsa_init (filename);
+	if ( res == 0 )
+	{
+		*curr = CURR_ALSA;
+		return res;
+	}
+#endif
+#ifdef IMYP_HAVE_OSS
+	res = imyp_oss_init (filename);
+	if ( res == 0 )
+	{
+		*curr = CURR_OSS;
+		return res;
+	}
 #endif
 	return res;
 }
@@ -194,8 +413,50 @@ imyp_lib_close (
 {
 	if ( curr == CURR_ALLEGRO )
 	{
-#ifdef HAVE_LIBALLEG
+#ifdef IMYP_HAVE_ALLEGRO
 		return imyp_all_close ();
+#endif
+	}
+	else if ( curr == CURR_SDL )
+	{
+#ifdef IMYP_HAVE_SDL
+		return imyp_sdl_close ();
+#endif
+	}
+	else if ( curr == CURR_ALSA )
+	{
+#ifdef IMYP_HAVE_ALSA
+		return imyp_alsa_close ();
+#endif
+	}
+	else if ( curr == CURR_OSS )
+	{
+#ifdef IMYP_HAVE_OSS
+		return imyp_oss_close ();
+#endif
+	}
+	else if ( curr == CURR_LIBAO )
+	{
+#ifdef IMYP_HAVE_LIBAO
+		return imyp_ao_close ();
+#endif
+	}
+	else if ( curr == CURR_PORTAUDIO )
+	{
+#ifdef IMYP_HAVE_PORTAUDIO
+		return imyp_portaudio_close ();
+#endif
+	}
+	else if ( curr == CURR_JACK1 )
+	{
+#ifdef IMYP_HAVE_JACK1
+		return imyp_jack1_close ();
+#endif
+	}
+	else if ( curr == CURR_PULSEAUDIO )
+	{
+#ifdef IMYP_HAVE_PULSEAUDIO
+		return imyp_pulse_close ();
 #endif
 	}
 	else if ( curr == CURR_MIDI )

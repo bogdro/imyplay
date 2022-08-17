@@ -11,10 +11,16 @@ imyplay \- A program for playing iMelody ringtones (IMY files).
 .B ...
 
 .SH DESCRIPTION
-The imyplay program plays the given iMelody file.
+The imyplay program plays the given iMelody files or converts them to MIDI format.
+IMYplay can use the following libraries to produce sound: the Allegro game library,
+SDL (Simple DirectMedia Layer), ALSA (Advanced Linux Sound Architecture),
+OSS (Open Sound System), libao, PortAudiov19, PulseAudio, JACK1.
 
 .SH OPTIONS
 
+.IP "-d|--device <dev>"
+Try to use the given device (ALSA, OSS), driver ID (libao) or server name
+(JACK1, PulseAudio) for sound output.
 .IP -h|--help
 Print help
 .IP -l|--license

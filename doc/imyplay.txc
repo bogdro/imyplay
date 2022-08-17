@@ -57,8 +57,13 @@ This manual is for IMYplay, version @VERSION@
 
 This program is used for playing iMelody ringtones (IMY files),
 conforming to the iMelody specification, as written in doc/imelody.txt.
+It can also convert IMY ringtones to MIDI files.
 
-IMYplay currently uses the Allegro game library to produce sound.
+IMYplay can use the following libraries to produce sound: the Allegro game library
+(http://alleg.sf.net), SDL (Simple DirectMedia Layer; http://www.libsdl.org), ALSA
+(Advanced Linux Sound Architecture; http://alsa-project.org), OSS (Open Sound System),
+libao (http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/),
+PulseAudio (http://www.pulseaudio.org/), JACK1 (http://jackaudio.org/).
 
 IMYplay, of course, requires working sound hardware with drivers to produce
 any sound.
@@ -76,14 +81,28 @@ any sound.
 @comment  node-name, next,      previous,  up
 @chapter How to compile the program?
 
+The program compiles on:
+@itemize
+@item Fedora Core 4 GNU/Linux, i686
+@item Mandriva 2008.1 GNU/Linux, i686
+@item OpenBSD 3.8, i586
+@end itemize
+
 Requirements for compiling the full version of the program:@*
 @itemize
 @item a non-root account. Please, @strong{NEVER} compile or 'make' anything as root.
 @item a working C compiler
 @item development package for the C library (like glibc-devel and glibc-headers).
-@item development package for the Allegro library. If you don't have anything
-like this installed or available (check twice), then go to@*
+@item if you want sound, not just MIDI conversion, a development package for one of the
+supported libraries (except OSS, which requires only the C library and system support).
+If you don't have any of these installed or available (check twice), then go to@*
    	http://alleg.sf.net/@*
+   	http://www.libsdl.org/@*
+   	http://alsa-project.org/@*
+   	http://xiph.org/ao/@*
+   	http://www.portaudio.com/@*
+   	http://www.pulseaudio.org/@*
+   	http://jackaudio.org/@*
 @end itemize
 @*@*
 
@@ -136,6 +155,12 @@ Basic syntax is:
 The 'ringtone.imy' part stands for a supported iMelody file.
 
 Options:
+
+@noindent @option{-d <dev>}@*@option{--device <dev>}@*
+@quotation
+Try to use the given device (ALSA, OSS), driver ID (libao) or server name (JACK1, PulseAudio)
+for sound output.
+@end quotation
 
 @noindent @option{-h}@*@option{--help}@*
 @quotation
@@ -197,9 +222,7 @@ The program will terminate normally (that is: will close the file and the librar
 if any of the following signals are caught: SIGINT (Ctrl+C), SIGQUIT, SIGILL,
 SIGABRT, SIGFPE, SIGSEGV, SIGPIPE, SIGALRM, SIGTERM, SIGUSR1, SIGUSR2, SIGTTIN,
 SIGTTOU, SIGBUS, SIGPOLL, SIGPROF, SIGSYS, SIGTRAP, SIGXCPU, SIGXFSZ, SIGPWR, SIGVTALRM,
-SIGUNUSED, SIGCHLD.
-The program will close cleanly also upon receiving the SIGEMT and SIGLOST signals, if they're
-available (during compiling).
+SIGUNUSED, SIGCHLD, SIGEMT, SIGIO and SIGLOST.
 
 If the program receives the SIGKILL signal, it will, of course, be killed. But it
 won't be able to close the file and the library and finish working normally.

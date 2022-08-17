@@ -140,9 +140,9 @@ imyp_all_audiostream_init (
 #endif
 {
 	AUDIOSTREAM * as;
-#define IMYP_ALL_VOL (vol*255/15)
+#define IMYP_ALL_VOL (vol*255/IMYP_MAX_IMY_VOLUME)
 
-	as = play_audio_stream ((int)number_of_samples, 16, FALSE, 44100, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples, 16, FALSE, 44100, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
 		*quality = 16;
@@ -244,15 +244,16 @@ imyp_all_play_tune (
 				/* The "/3" is required to have a full sine wave, not
 				   trapese-like wave */
 				IMYP_ROUND (((1<<(quality-1))-1)
-					*sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3);
-				/*if ( i < NSAMP ) printf("buf[%d]=%d\n", i, buf[i]);*/;
+					* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3);
 #else
 			samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
 				(((1<<(quality-1))-1)/NSAMP));
 #endif
 			if ( quality == 16 )
 			{
-				((short *)buf)[i] = samp;
+				((char *)buf)[i] = samp & 0x0FF;
+				i++;
+				((char *)buf)[i] = (samp >> 8) & 0x0FF;
 			}
 			else if ( quality == 8 )
 			{
@@ -270,7 +271,7 @@ imyp_all_play_tune (
 			}
 			free_audio_stream_buffer (as);
 		}
-		rest (duration);
+		imyp_all_pause (duration);
 		stop_audio_stream (as);
 		return 0;
 	}
@@ -314,7 +315,7 @@ imyp_all_put_text (
 	const char * const text;
 #endif
 {
-	if ( text != NULL ) printf ("%s", text);
+	if ( (text != NULL) && (stdout != NULL) ) printf ("%s", text);
 }
 
 /**

@@ -14,7 +14,7 @@ Packager:	Bogdan Drozdowski <bogdandr@op.pl>
 Prefix:		/usr/local
 Source:		%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-build
-BuildRequires:	gcc, glibc, glibc-devel, glibc-headers, make, allegro-devel
+BuildRequires:	gcc, glibc, glibc-devel, glibc-headers, make
 
 %description
 

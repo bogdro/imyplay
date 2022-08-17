@@ -39,6 +39,14 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = imyplay$(EXEEXT)
+@ALLEGRO_TRUE@am__append_1 = imyp_all.c imyp_all.h
+@SDL_TRUE@am__append_2 = imyp_sdl.c imyp_sdl.h
+@ALSA_TRUE@am__append_3 = imyp_als.c imyp_als.h
+@OSS_TRUE@am__append_4 = imyp_oss.c imyp_oss.h
+@LIBAO_TRUE@am__append_5 = imyp_ao.c imyp_ao.h
+@PORTAUDIO_TRUE@am__append_6 = imyp_por.c imyp_por.h
+@PULSEAUDIO_TRUE@am__append_7 = imyp_pul.c imyp_pul.h
+@JACK_TRUE@am__append_8 = imyp_jck.c imyp_jck.h
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/imyp_cfg.hin
@@ -57,9 +65,25 @@ CONFIG_CLEAN_FILES = imyp_cfg.h
 am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
+am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
+	imyp_sig.c imyp_sig.h imyp_mid.c imyp_mid.h midifile.c \
+	midifile.h midiinfo.h midibase.h imyp_all.c imyp_all.h \
+	imyp_sdl.c imyp_sdl.h imyp_als.c imyp_als.h imyp_oss.c \
+	imyp_oss.h imyp_ao.c imyp_ao.h imyp_por.c imyp_por.h \
+	imyp_pul.c imyp_pul.h imyp_jck.c imyp_jck.h
+@ALLEGRO_TRUE@am__objects_1 = imyp_all.$(OBJEXT)
+@SDL_TRUE@am__objects_2 = imyp_sdl.$(OBJEXT)
+@ALSA_TRUE@am__objects_3 = imyp_als.$(OBJEXT)
+@OSS_TRUE@am__objects_4 = imyp_oss.$(OBJEXT)
+@LIBAO_TRUE@am__objects_5 = imyp_ao.$(OBJEXT)
+@PORTAUDIO_TRUE@am__objects_6 = imyp_por.$(OBJEXT)
+@PULSEAUDIO_TRUE@am__objects_7 = imyp_pul.$(OBJEXT)
+@JACK_TRUE@am__objects_8 = imyp_jck.$(OBJEXT)
 am_imyplay_OBJECTS = imyplay.$(OBJEXT) imypwrap.$(OBJEXT) \
-	imyp_sig.$(OBJEXT) imyp_all.$(OBJEXT) imyp_mid.$(OBJEXT) \
-	midifile.$(OBJEXT)
+	imyp_sig.$(OBJEXT) imyp_mid.$(OBJEXT) midifile.$(OBJEXT) \
+	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
+	$(am__objects_4) $(am__objects_5) $(am__objects_6) \
+	$(am__objects_7) $(am__objects_8)
 imyplay_OBJECTS = $(am_imyplay_OBJECTS)
 am__DEPENDENCIES_1 =
 imyplay_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -71,16 +95,22 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(imyplay_SOURCES)
-DIST_SOURCES = $(imyplay_SOURCES)
+DIST_SOURCES = $(am__imyplay_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
+ALLEGRO_FALSE = @ALLEGRO_FALSE@
+ALLEGRO_TRUE = @ALLEGRO_TRUE@
+ALSA_FALSE = @ALSA_FALSE@
+ALSA_TRUE = @ALSA_TRUE@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
 AM_CFLAGS = @AM_CFLAGS@
 AM_LDFLAGS = @AM_LDFLAGS@
+AO_CFLAGS = @AO_CFLAGS@
+AO_LIBS = @AO_LIBS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -108,7 +138,11 @@ INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
 ISGCC_FALSE = @ISGCC_FALSE@
 ISGCC_TRUE = @ISGCC_TRUE@
 ISSED = @ISSED@
+JACK_FALSE = @JACK_FALSE@
+JACK_TRUE = @JACK_TRUE@
 LDFLAGS = @LDFLAGS@
+LIBAO_FALSE = @LIBAO_FALSE@
+LIBAO_TRUE = @LIBAO_TRUE@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
@@ -121,6 +155,8 @@ MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
 MSGMERGE = @MSGMERGE@
 OBJEXT = @OBJEXT@
+OSS_FALSE = @OSS_FALSE@
+OSS_TRUE = @OSS_TRUE@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -128,8 +164,14 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PORTAUDIO_FALSE = @PORTAUDIO_FALSE@
+PORTAUDIO_TRUE = @PORTAUDIO_TRUE@
 POSUB = @POSUB@
+PULSEAUDIO_FALSE = @PULSEAUDIO_FALSE@
+PULSEAUDIO_TRUE = @PULSEAUDIO_TRUE@
 RANLIB = @RANLIB@
+SDL_FALSE = @SDL_FALSE@
+SDL_TRUE = @SDL_TRUE@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -175,10 +217,11 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h	\
-	imyp_sig.c imyp_sig.h imyp_all.c imyp_all.h \
-	imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h midibase.h
-
+imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c \
+	imyp_sig.h imyp_mid.c imyp_mid.h midifile.c midifile.h \
+	midiinfo.h midibase.h $(am__append_1) $(am__append_2) \
+	$(am__append_3) $(am__append_4) $(am__append_5) \
+	$(am__append_6) $(am__append_7) $(am__append_8)
 imyplay_LDADD = $(INTLLIBS)
 localedir = $(datadir)/locale
 INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\"
@@ -252,7 +295,14 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_all.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_als.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_ao.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_jck.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_mid.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_oss.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_por.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_pul.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_sdl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_sig.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyplay.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imypwrap.Po@am__quote@

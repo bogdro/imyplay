@@ -5,7 +5,7 @@
  * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
- * Syntax example: imyplayer ringtone.imy
+ * Syntax example: imyplay ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -67,66 +67,66 @@ static struct sigaction sa/* = { .sa_handler = &term_signal_received }*/;
 static const int signals[] =
 {
 	SIGINT
-#ifdef SIGQUIT
+# ifdef SIGQUIT
 	, SIGQUIT
-#endif
-#ifdef SIGILL
+# endif
+# ifdef SIGILL
 	, SIGILL
-#endif
-#ifdef SIGABRT
+# endif
+# ifdef SIGABRT
 	, SIGABRT
-#endif
-#ifdef SIGFPE
+# endif
+# ifdef SIGFPE
 	, SIGFPE
-#endif
-#ifdef SIGSEGV
+# endif
+# ifdef SIGSEGV
 	, SIGSEGV
-#endif
-#ifdef SIGPIPE
+# endif
+# ifdef SIGPIPE
 	, SIGPIPE
-#endif
-#ifdef SIGALRM
+# endif
+# ifdef SIGALRM
 	, SIGALRM
-#endif
-#ifdef SIGTERM
+# endif
+# ifdef SIGTERM
 	, SIGTERM
-#endif
-#ifdef SIGUSR1
+# endif
+# ifdef SIGUSR1
 	, SIGUSR1
-#endif
-#ifdef SIGUSR2
+# endif
+# ifdef SIGUSR2
 	, SIGUSR2
-#endif
-#ifdef SIGTTIN
+# endif
+# ifdef SIGTTIN
 	, SIGTTIN
-#endif
-#ifdef SIGTTOU
+# endif
+# ifdef SIGTTOU
 	, SIGTTOU
-#endif
-#ifdef SIGBUS
+# endif
+# ifdef SIGBUS
 	, SIGBUS
-#endif
-#ifdef SIGPROF
+# endif
+# ifdef SIGPROF
 	, SIGPROF
-#endif
-#ifdef SIGSYS
+# endif
+# ifdef SIGSYS
 	, SIGSYS
-#endif
-#ifdef SIGTRAP
+# endif
+# ifdef SIGTRAP
 	, SIGTRAP
-#endif
-#ifdef SIGXCPU
+# endif
+# ifdef SIGXCPU
 	, SIGXCPU
-#endif
-#ifdef SIGXFSZ
+# endif
+# ifdef SIGXFSZ
 	, SIGXFSZ
-#endif
-#ifdef SIGVTALRM
+# endif
+# ifdef SIGVTALRM
 	, SIGVTALRM
-#endif
-#ifdef SIGCHLD
+# endif
+# ifdef SIGCHLD
 	, SIGCHLD
-#endif
+# endif
 # ifdef SIGPOLL
 	, SIGPOLL
 # endif

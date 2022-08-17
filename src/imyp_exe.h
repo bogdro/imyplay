@@ -1,6 +1,6 @@
 /*
  * A program for playing iMelody ringtones (IMY files).
- *	-- LIBAO backend, header file.
+ *	-- EXEC backend, header file.
  *
  * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
@@ -23,16 +23,16 @@
  *		USA
  */
 
-#ifndef IMYP_AO
-# define IMYP_AO 1
+#ifndef IMYP_EXEC
+# define IMYP_EXEC 1
 
 # include "imyplay.h"
 
-extern void imyp_ao_pause PARAMS((const int milliseconds));
-extern void imyp_ao_put_text PARAMS((const char * const text));
-extern int imyp_ao_play_tune PARAMS((const double freq, const int volume_level,
+extern void imyp_exec_pause PARAMS((const int milliseconds));
+extern void imyp_exec_put_text PARAMS((const char * const text));
+extern int imyp_exec_play_tune PARAMS((const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_ao_init PARAMS((const char * const dev_file));
-extern int imyp_ao_close PARAMS((void));
+extern int imyp_exec_init PARAMS((const char * const program));
+extern int imyp_exec_close PARAMS((void));
 
-#endif /* IMYP_AO */
+#endif /* IMYP_EXEC */

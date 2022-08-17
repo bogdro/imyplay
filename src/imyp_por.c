@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PortAudio backend.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -49,13 +49,6 @@
 # define M_PI 3.14159265358979323846
 #endif
 
-#ifdef HAVE_STRING_H
-# if ((!defined STDC_HEADERS) || (!STDC_HEADERS)) && (defined HAVE_MEMORY_H)
-#  include <memory.h>
-# endif
-# include <string.h>
-#endif
-
 /* select() the old way */
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -87,36 +80,42 @@ struct imyp_portaudio_sound_data
 	unsigned long int last_index;
 	PaSampleFormat format;
 	double sampfreq;
+	volatile int inside_callback;
 };
 
 static struct imyp_portaudio_sound_data sound_data;
 static PaStream * stream;
 
+#ifndef IMYP_ANSIC
+static int imyp_portaudio_fill_buffer PARAMS((const void * input IMYP_ATTR((unused)), void * output,
+	unsigned long int frameCount,
+	const PaStreamCallbackTimeInfo * timeInfo IMYP_ATTR((unused)),
+	PaStreamCallbackFlags statusFlags IMYP_ATTR((unused)),
+	void * userData));
+#endif
+
 /**
  * The stream callback function.
  */
 static int imyp_portaudio_fill_buffer (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const void * input IMYP_ATTR((unused)), void * output,
-	unsigned long frameCount,
+	unsigned long int frameCount,
 	const PaStreamCallbackTimeInfo * timeInfo IMYP_ATTR((unused)),
 	PaStreamCallbackFlags statusFlags IMYP_ATTR((unused)),
 	void * userData)
 #else
-	input IMYP_ATTR((unused)), output, frameCount, timeInfo IMYP_ATTR((unused)),
-	statusFlags IMYP_ATTR((unused)), userData)
-	const void * input;
+	input, output, frameCount, timeInfo, statusFlags, userData)
+	const void * input IMYP_ATTR((unused));
 	void *output;
-	unsigned long frameCount;
-	const PaStreamCallbackTimeInfo * timeInfo;
-	PaStreamCallbackFlags statusFlags;
+	unsigned long int frameCount;
+	const PaStreamCallbackTimeInfo * timeInfo IMYP_ATTR((unused));
+	PaStreamCallbackFlags statusFlags IMYP_ATTR((unused));
 	void * userData;
 #endif
 {
 	int samp;	/* better than float */
-	unsigned long i;
+	unsigned long int i;
 	unsigned int quality = 16;
 	int is_uns = 0;
 
@@ -141,42 +140,67 @@ static int imyp_portaudio_fill_buffer (
 		quality = 16;
 	}
 
-#define NSAMP (data->sampfreq/data->tone_freq)
-	for ( i=data->last_index; i < data->last_index+frameCount; i++ )
+	if ( data->tone_freq > 0.0 )
 	{
-		if ( sig_recvd != 0 )
+		data->inside_callback = 1;
+#define NSAMP ((data->sampfreq)/(data->tone_freq))
+		for ( i=data->last_index; i < data->last_index+frameCount; i++ )
 		{
-			return -2;
-		}
+			if ( sig_recvd != 0 )
+			{
+				data->inside_callback = 0;
+				return paAbort;
+			}
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
-		samp = ((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-			/* The "/3" is required to have a full sine wave, not
-			   trapese-like wave */
-			IMYP_ROUND (((1<<(quality-1))-1)
-				* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3);
+			samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
+				/* The "/3" is required to have a full sine wave, not
+				trapese-like wave */
+				IMYP_ROUND (((1<<(quality-1))-1)
+					* sin ((i%((unsigned long int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
+			if ( is_uns == 0 )
+			{
+				samp -= (1<<(quality-1))-1;
+			}
 #else
-		samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-			(((1<<(quality-1))-1)/NSAMP));
+			samp = (int) IMYP_ROUND ((i%((unsigned long int)IMYP_ROUND(NSAMP)))*
+				(((1<<(quality-1))-1)/NSAMP));
 #endif
-		if ( is_uns != 0 )
-		{
-			samp += (1<<(quality-1));
+			if ( quality == 16 )
+			{
+				if ( (i-data->last_index)*2 >= frameCount ) break;
+				((char *)output)[(i-data->last_index)*2] =
+					(char)(((samp * data->volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
+				((char *)output)[(i-data->last_index)*2+1] =
+					(char)((((samp * data->volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
+			}
+			else if ( quality == 8 )
+			{
+				((char *)output)[i-data->last_index] =
+					(char)(((samp * data->volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
+			}
 		}
-		if ( quality == 16 )
+		data->last_index += frameCount;
+		/* just slows things down
+		while ( (data->last_index > (unsigned long int)NSAMP) && (sig_recvd == 0) )
 		{
-			((char *)output)[(i-data->last_index)*2] = ((samp * data->volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF;
-			/*i++;*/
-			((char *)output)[(i-data->last_index)*2+1] = (((samp * data->volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF;
-		}
-		else if ( quality == 8 )
-		{
-			((char *)output)[i-data->last_index] = (samp * data->volume_level) / IMYP_MAX_IMY_VOLUME;
-		}
+			data->last_index -= (unsigned long int)NSAMP;
+		}*/
+		data->inside_callback = 0;
 	}
-	data->last_index += i-data->last_index;
-	while ( data->last_index > (unsigned long)NSAMP )
+	else
 	{
-		data->last_index -= (unsigned long)NSAMP;
+		data->inside_callback = 1;
+		data->last_index = 0;
+		for ( i=data->last_index; i < data->last_index+frameCount; i++ )
+		{
+			if ( sig_recvd != 0 )
+			{
+				data->inside_callback = 0;
+				return paAbort;
+			}
+			((char *)output)[i-data->last_index] = 0;
+		}
+		data->inside_callback = 0;
 	}
 	return paContinue;
 }
@@ -192,21 +216,19 @@ static int imyp_portaudio_fill_buffer (
  */
 int
 imyp_portaudio_play_tune (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const double freq,
 	const int volume_level,
 	const int duration,
 	void * const buf IMYP_ATTR((unused)),
 	int bufsize IMYP_ATTR((unused)))
 #else
-	freq, volume_level, duration, buf IMYP_ATTR((unused)), bufsize IMYP_ATTR((unused)))
+	freq, volume_level, duration, buf, bufsize)
 	const double freq;
 	const int volume_level;
 	const int duration;
-	void * const buf;
-	int bufsize;
+	void * const buf IMYP_ATTR((unused));
+	int bufsize IMYP_ATTR((unused));
 #endif
 {
 	PaError error;
@@ -250,7 +272,15 @@ imyp_portaudio_play_tune (
 		return -1;
 	}
 	imyp_portaudio_pause (duration);
+	Pa_StopStream (stream);
 	Pa_CloseStream (stream);
+
+	while ( sound_data.inside_callback != 0 ) {};
+	sound_data.tone_freq = 0.0;
+	sound_data.volume_level = 0;
+	sound_data.duration = 0;
+	sound_data.last_index = 0;
+
 	return 0;
 }
 
@@ -260,23 +290,24 @@ imyp_portaudio_play_tune (
  */
 void
 imyp_portaudio_pause (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const int milliseconds)
 #else
 	milliseconds)
 	const int milliseconds;
 #endif
 {
+	if ( milliseconds <= 0 ) return;
 #if (((defined HAVE_SYS_SELECT_H) || (((defined TIME_WITH_SYS_TIME)	\
 	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))		\
  		&& (defined HAVE_UNISTD_H)))				\
 	&& (defined HAVE_SELECT))
-	struct timeval tv;
-	tv.tv_sec = milliseconds / 1000;
-	tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
-	select ( 0, NULL, NULL, NULL, &tv );
+	{
+		struct timeval tv;
+		tv.tv_sec = milliseconds / 1000;
+		tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
+		select ( 0, NULL, NULL, NULL, &tv );
+	}
 #else
 	Pa_Sleep (milliseconds);
 #endif
@@ -288,9 +319,7 @@ imyp_portaudio_pause (
  */
 void
 imyp_portaudio_put_text (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const char * const text)
 #else
 	text)
@@ -302,20 +331,25 @@ imyp_portaudio_put_text (
 
 /**
  * Initializes the PortAudio library for use.
+ * \param dev_file The device to open.
  * \return 0 on success.
  */
 int
 imyp_portaudio_init (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const char * const dev_file IMYP_ATTR((unused)))
 #else
-	dev_file IMYP_ATTR((unused)))
-	const char * const dev_file;
+	dev_file)
+	const char * const dev_file IMYP_ATTR((unused));
 #endif
 {
 	if ( Pa_Initialize () != paNoError ) return -1;
+	sound_data.tone_freq = 0.0;
+	sound_data.volume_level = 0;
+	sound_data.duration = 0;
+	sound_data.last_index = 0;
+	sound_data.inside_callback = 0;
+
 	return 0;
 }
 
@@ -325,9 +359,7 @@ imyp_portaudio_init (
  */
 int
 imyp_portaudio_close (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	void
 #endif
 )

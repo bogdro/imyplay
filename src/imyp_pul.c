@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PulseAudio backend.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -54,13 +54,6 @@
 # define M_PI 3.14159265358979323846
 #endif
 
-#ifdef HAVE_STRING_H
-# if ((!defined STDC_HEADERS) || (!STDC_HEADERS)) && (defined HAVE_MEMORY_H)
-#  include <memory.h>
-# endif
-# include <string.h>
-#endif
-
 static pa_simple * stream;
 static pa_sample_spec conf;
 
@@ -75,9 +68,7 @@ static pa_sample_spec conf;
  */
 int
 imyp_pulse_play_tune (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const double freq,
 	const int volume_level,
 	const int duration,
@@ -98,6 +89,8 @@ imyp_pulse_play_tune (
 	int res;
 	int is_le = 1;
 
+	if ( (buf == NULL) || (bufsize <= 0) ) return -1;
+
 	if ( conf.format == PA_SAMPLE_U8 )
 	{
 		quality = 8;
@@ -115,44 +108,61 @@ imyp_pulse_play_tune (
 		quality = 16;
 	}
 
-	bufsize = MIN (bufsize, (duration * (int)conf.rate * ((int)quality/8)) / 1000);
+	bufsize = IMYP_MIN (bufsize, (duration * (int)conf.rate * ((int)quality/8)) / 1000);
 
-#define NSAMP (conf.rate/freq)
-	for ( i=0; i < bufsize; i++ )
+	if ( freq > 0.0 )
 	{
-		if ( sig_recvd != 0 )
+#define NSAMP ((conf.rate)/(freq))
+		for ( i=0; i < bufsize; i++ )
 		{
-			return -2;
-		}
+			if ( sig_recvd != 0 )
+			{
+				return -2;
+			}
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
-		samp = ((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-			/* The "/3" is required to have a full sine wave, not
-			   trapese-like wave */
-			IMYP_ROUND (((1<<(quality-1))-1)
-				* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3);
-			/*if ( i < NSAMP ) printf("buf[%d]=%d\n", i, buf[i]);*/;
+			samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
+				/* The "/3" is required to have a full sine wave, not
+				trapese-like wave */
+				IMYP_ROUND (((1<<(quality-1))-1)
+					* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
+				/*if ( i < NSAMP ) printf("buf[%d]=%d\n", i, buf[i]);*/;
 #else
-		samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-			(((1<<(quality-1))-1)/NSAMP));
+			samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
+				(((1<<(quality-1))-1)/NSAMP));
 #endif
-		if ( quality == 16 )
-		{
-			if ( is_le != 0 )
+			if ( quality == 16 )
 			{
-				((char *)buf)[i] = ((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF;
-				i++;
-				((char *)buf)[i] = (((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF;
+				if ( i*2 >= bufsize ) break;
+				if ( is_le != 0 )
+				{
+					((char *)buf)[i*2] =
+						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
+					((char *)buf)[i*2+1] =
+						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
+				}
+				else
+				{
+					((char *)buf)[i*2] =
+						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
+					((char *)buf)[i*2+1] =
+						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
+				}
 			}
-			else
+			else if ( quality == 8 )
 			{
-				((char *)buf)[i] = (((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF;
-				i++;
-				((char *)buf)[i] = ((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF;
+				((char *)buf)[i] = (char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
 			}
 		}
-		else if ( quality == 8 )
+	}
+	else
+	{
+		for ( i=0; i < bufsize; i++ )
 		{
-			((char *)buf)[i] = (samp * volume_level) / IMYP_MAX_IMY_VOLUME;
+			if ( sig_recvd != 0 )
+			{
+				return -2;
+			}
+			((char *)buf)[i] = 0;
 		}
 	}
 	res = pa_simple_write (stream, buf, (size_t)bufsize, NULL);
@@ -170,15 +180,14 @@ imyp_pulse_play_tune (
  */
 void
 imyp_pulse_pause (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const int milliseconds)
 #else
 	milliseconds)
 	const int milliseconds;
 #endif
 {
+	if ( milliseconds <= 0 ) return;
 	pa_msleep ((unsigned long int)milliseconds);
 }
 
@@ -188,9 +197,7 @@ imyp_pulse_pause (
  */
 void
 imyp_pulse_put_text (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const char * const text)
 #else
 	text)
@@ -202,13 +209,12 @@ imyp_pulse_put_text (
 
 /**
  * Initializes the PulseAudio library for use.
+ * \param dev_file The device to open.
  * \return 0 on success.
  */
 int
 imyp_pulse_init (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const char * const dev_file)
 #else
 	dev_file)
@@ -217,7 +223,7 @@ imyp_pulse_init (
 {
 	unsigned int i, j;
 	const int formats[] = {PA_SAMPLE_S16LE, PA_SAMPLE_S16BE, PA_SAMPLE_U8};
-	const int speeds[] = {44100, 22050, 11025};
+	const uint32_t speeds[] = {44100, 22050, 11025};
 
 	conf.channels = 1;
 	for ( i = 0; i < sizeof (formats) / sizeof (formats[0]); i++ )
@@ -245,9 +251,7 @@ imyp_pulse_init (
  */
 int
 imyp_pulse_close (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	void
 #endif
 )

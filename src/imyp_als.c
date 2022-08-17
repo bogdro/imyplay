@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- ALSA backend.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -51,13 +51,6 @@
 # define M_PI 3.14159265358979323846
 #endif
 
-#ifdef HAVE_STRING_H
-# if ((!defined STDC_HEADERS) || (!STDC_HEADERS)) && (defined HAVE_MEMORY_H)
-#  include <memory.h>
-# endif
-# include <string.h>
-#endif
-
 /* select() the old way */
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
@@ -95,9 +88,7 @@ static snd_pcm_hw_params_t * params;
  */
 int
 imyp_alsa_play_tune (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const double freq,
 	const int volume_level,
 	const int duration,
@@ -120,6 +111,8 @@ imyp_alsa_play_tune (
 	unsigned int sampfreq = 44100;
 	int is_le = 1;
 	int is_uns = 0;
+
+	if ( (buf == NULL) || (bufsize <= 0) ) return -1;
 
 	snd_pcm_hw_params_get_format (params, &format);
 	if ( (format == SND_PCM_FORMAT_S8) || (format == SND_PCM_FORMAT_U8) )
@@ -156,47 +149,64 @@ imyp_alsa_play_tune (
 		quality = 16;
 	}
 	snd_pcm_hw_params_get_rate (params, &sampfreq, &dir);
-	bufsize = MIN (bufsize, (duration * (int)sampfreq * ((int)quality/8)) / 1000);
+	bufsize = IMYP_MIN (bufsize, (duration * (int)sampfreq * ((int)quality/8)) / 1000);
 
-#define NSAMP (sampfreq/freq)
-	for ( i=0; i < bufsize; i++ )
+	if ( freq > 0.0 )
 	{
-		if ( sig_recvd != 0 )
+#define NSAMP ((sampfreq)/(freq))
+		for ( i=0; i < bufsize; i++ )
 		{
-			return -2;
-		}
+			if ( sig_recvd != 0 )
+			{
+				return -2;
+			}
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
-		samp = ((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-			/* The "/3" is required to have a full sine wave, not
-			   trapese-like wave */
-			IMYP_ROUND (((1<<(quality-1))-1)
-				* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3);
+			samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
+				/* The "/3" is required to have a full sine wave, not
+				trapese-like wave */
+				IMYP_ROUND (((1<<(quality-1))-1)
+					* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
 #else
-		samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-			(((1<<(quality-1))-1)/NSAMP));
+			samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
+				(((1<<(quality-1))-1)/NSAMP));
 #endif
-		if ( is_uns != 0 )
-		{
-			samp += (1<<(quality-1));
-		}
-		if ( quality == 16 )
-		{
-			if ( is_le != 0 )
+			if ( is_uns == 0 )
 			{
-				((char *)buf)[i] = ((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF;
-				i++;
-				((char *)buf)[i] = (((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF;
+				samp -= (1<<(quality-1));
 			}
-			else
+			if ( quality == 16 )
 			{
-				((char *)buf)[i] = (((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF;
-				i++;
-				((char *)buf)[i] = ((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF;
+				if ( i*2 >= bufsize ) break;
+				if ( is_le != 0 )
+				{
+					((char *)buf)[i*2] =
+						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
+					((char *)buf)[i*2+1] =
+						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
+				}
+				else
+				{
+					((char *)buf)[i*2] =
+						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
+					((char *)buf)[i*2+1] =
+						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
+				}
+			}
+			else if ( quality == 8 )
+			{
+				((char *)buf)[i] = (char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
 			}
 		}
-		else if ( quality == 8 )
+	}
+	else
+	{
+		for ( i=0; i < bufsize; i++ )
 		{
-			((char *)buf)[i] = (samp * volume_level) / IMYP_MAX_IMY_VOLUME;
+			if ( sig_recvd != 0 )
+			{
+				return -2;
+			}
+			((char *)buf)[i] = 0;
 		}
 	}
 	res = snd_pcm_writei (handle, buf, (snd_pcm_uframes_t)bufsize / (quality/8));
@@ -213,37 +223,24 @@ imyp_alsa_play_tune (
  */
 void
 imyp_alsa_pause (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
-	const int milliseconds
-# if ! (((defined HAVE_SYS_SELECT_H) || (((defined TIME_WITH_SYS_TIME)	\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))		\
- 		&& (defined HAVE_UNISTD_H)))				\
-	&& (defined HAVE_SELECT))
-		IMYP_ATTR ((unused))
-# endif
-	)
+#ifdef IMYP_ANSIC
+	const int milliseconds)
 #else
-	milliseconds
-# if ! (((defined HAVE_SYS_SELECT_H) || (((defined TIME_WITH_SYS_TIME)	\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))		\
- 		&& (defined HAVE_UNISTD_H)))				\
-	&& (defined HAVE_SELECT))
-		IMYP_ATTR ((unused))
-# endif
-	)
+	milliseconds)
 	const int milliseconds;
 #endif
 {
+	if ( milliseconds <= 0 ) return;
 #if (((defined HAVE_SYS_SELECT_H) || (((defined TIME_WITH_SYS_TIME)	\
 	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))		\
  		&& (defined HAVE_UNISTD_H)))				\
 	&& (defined HAVE_SELECT))
-	struct timeval tv;
-	tv.tv_sec = milliseconds / 1000;
-	tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
-	select ( 0, NULL, NULL, NULL, &tv );
+	{
+		struct timeval tv;
+		tv.tv_sec = milliseconds / 1000;
+		tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
+		select ( 0, NULL, NULL, NULL, &tv );
+	}
 #endif
 }
 
@@ -253,9 +250,7 @@ imyp_alsa_pause (
  */
 void
 imyp_alsa_put_text (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const char * const text)
 #else
 	text)
@@ -267,13 +262,12 @@ imyp_alsa_put_text (
 
 /**
  * Initializes the ALSA library for use.
+ * \param dev_file The device to open.
  * \return 0 on success.
  */
 int
 imyp_alsa_init (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const char * const dev_file)
 #else
 	dev_file)
@@ -281,7 +275,7 @@ imyp_alsa_init (
 #endif
 {
 	unsigned int val;
-	int dir;
+	int dir = 0;
 	int res;
 
 	/* http://www.linuxjournal.com/article/6735 */
@@ -341,14 +335,13 @@ imyp_alsa_init (
  */
 int
 imyp_alsa_close (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	void
 #endif
 )
 {
 	snd_pcm_drain (handle);
 	snd_pcm_close (handle);
+	snd_pcm_hw_params_free (params);
 	return 0;
 }

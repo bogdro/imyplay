@@ -3,7 +3,7 @@
  *	-- wrapper functions between the main program and the backends,
  *		header file.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -31,12 +31,12 @@
 
 # include "imyplay.h"
 
-extern void imyp_pause PARAMS((const int milliseconds, const CURR_LIB curr, const int is_note));
-extern void imyp_put_text PARAMS((const char * const text, const CURR_LIB curr));
+extern void imyp_pause PARAMS((const int milliseconds, const IMYP_CURR_LIB curr, const int is_note));
+extern void imyp_put_text PARAMS((const char * const text, const IMYP_CURR_LIB curr));
 extern int imyp_play_tune PARAMS((const double freq, const int volume_level,
-	const int duration, void * const buf, int bufsize, const CURR_LIB curr));
-extern int imyp_lib_init PARAMS((CURR_LIB * const curr, const int want_midi,
-	const char * const filename));
-extern int imyp_lib_close PARAMS((const CURR_LIB curr));
+	const int duration, void * const buf, int bufsize, const IMYP_CURR_LIB curr));
+extern int imyp_lib_init PARAMS((IMYP_CURR_LIB * const curr, const int want_midi,
+	const char * const filename, const int want_exec));
+extern int imyp_lib_close PARAMS((const IMYP_CURR_LIB curr));
 
 #endif /* IMYP_WRAPPERS */

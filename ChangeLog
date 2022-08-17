@@ -1,3 +1,50 @@
+2010-06-27	Bogdan Drozdowski <bogdandr@op.pl>
+
+	* IMYplay version 0.4
+	  Upgrade to newer autotools and gcc. Run flawfinder on the code and
+	  changed some parts according to the result. Upgrade to gettext-0.17.
+	  Corrected compiling for non-ANSI-C compilers.
+	* imyplay.spi: fixed warnings displayed by rpmlint.
+	* src/imyplay.h: renamed SAMPBUFSIZE, MIN, MAX, CURR_LIB, OCTAVES,
+	  NOTES_PER_OCTAVE, error_type, show_error, sig_unk, err_msg_signal,
+	  and notes to have the IMYP_/imyp_ prefix. Defined IMYP_ANSIC for
+	  function prototypes.
+	* configure.ac, configure: new command-line option --enable-MIDI to
+	  enable/disable MIDI output (which is almost unaltered and thus
+	  could cause problems with some compilers). New command-line option
+	  --enable-EXEC to enable/disable the backend that executes the given
+	  program instead of sound output.
+	* src/Makefile.am, src/imypwrap.c: MIDI support now conditional.
+	* src/imyp_jck.c: replaced free() with jack_free() and thus removed
+	  including the stdlib and malloc header files. Verified compiling
+	  against JACK2 header files. Verified working with JACK2 daemon.
+	* src/imyp_jck.c, src/imyp_sdl.c, src/imyp_por.c: zero-out static
+	  data structures on init. Decreasing the buffer index only when the
+	  tone frequency was greater than zero, setting it to zero otherwise.
+	  Synchronizing the callback functions to avoid zeroing the tone
+	  frequency inside the loops.
+	* src/imyp_mid.c: fixed the duration of notes and pauses.
+	* src/imyp_exe.c: a new backend that executes a given program instead
+	  of sound output.
+	* src/imypwrap.c, src/imyplay.c, src/imyp_sig.c: EXEC backend support.
+	* src/imyp_sdl.c: fixed signed/unsigned samples.
+	* src/imyp_por.c (imyp_portaudio_play_tune): corrected closing the
+	  audio stream.
+	* src/imyp_all.c (imyp_all_pause): use select() if available.
+	* src/imyp_als.c (imyp_alsa_play_tune): corrected filling the buffer.
+	* src/imyp_ao.c (imyp_ao_play_tune): corrected filling the buffer.
+	* src/imyp_oss.c (imyp_oss_play_tune): corrected filling the buffer.
+	  Fixed signed/unsigned samples.
+	* src/imyp_pul.c (imyp_pulse_play_tune): corrected filling the buffer.
+	* src/imyp_sdl.c (imyp_sdl_play_tune): corrected initializing.
+	* src/imyp_all.c (imyp_all_play_tune): corrected filling the buffer.
+	* src/imyp_als.c (imyp_alsa_close): releasing the parameters' buffer.
+	* src/imyp_mid.c (imyp_midi_init): making sure filename buffers are
+	  zero-terminated.
+	* src/imyp_als.c (imyp_alsa_init): fixed initializing the device.
+	* src/imyplay.c: MIDI & EXEC backend command-line options now compiled
+	  conditionally. Corrected parsing command-line options without getopt.
+
 2009-06-27	Bogdan Drozdowski <bogdandr@op.pl>
 
 	* IMYplay version 0.3

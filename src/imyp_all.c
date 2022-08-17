@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- Allegro backend.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -114,8 +114,14 @@ DIGI_DRIVER_BEOS
 END_DIGI_DRIVER_LIST
 #endif /* BEGIN_DIGI_DRIVER_LIST && END_DIGI_DRIVER_LIST */
 
+#ifndef IMYP_ANSIC
+static AUDIOSTREAM *
+imyp_all_audiostream_init PARAMS((const int number_of_samples, const int vol,
+	unsigned int * const quality, unsigned int * const sampling_frequency));
+#endif
+
 /**
- * Creates an AUDIOSTREAM for playing notes.
+ * Creates an AUDIOSTREAM for playing imyp_notes.
  * \param number_of_samples The number of samples for the buffer.
  * \param vol Volume of the tone (from 0 to 15).
  * \param quality Will get the audio stream's quality (16 or 8).
@@ -124,9 +130,7 @@ END_DIGI_DRIVER_LIST
  */
 static AUDIOSTREAM *
 imyp_all_audiostream_init (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const int number_of_samples,
 	const int vol,
 	unsigned int * const quality,
@@ -140,44 +144,44 @@ imyp_all_audiostream_init (
 #endif
 {
 	AUDIOSTREAM * as;
-#define IMYP_ALL_VOL (vol*255/IMYP_MAX_IMY_VOLUME)
+#define IMYP_ALL_VOL ((vol*255)/IMYP_MAX_IMY_VOLUME)
 
-	as = play_audio_stream (number_of_samples, 16, FALSE, 44100, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples, 16, 0 /* mono */, 44100, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
 		*quality = 16;
 		*sampling_frequency = 44100;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples, 16, FALSE, 22050, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples, 16, 0 /* mono */, 22050, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
 		*quality = 16;
 		*sampling_frequency = 22050;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples, 16, FALSE, 11025, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples, 16, 0 /* mono */, 11025, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
 		*quality = 16;
 		*sampling_frequency = 11025;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples, 8, FALSE, 44100, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples * 2, 8, 0 /* mono */, 44100, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
 		*quality = 8;
 		*sampling_frequency = 44100;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples, 8, FALSE, 22050, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples * 2, 8, 0 /* mono */, 22050, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
 		*quality = 8;
 		*sampling_frequency = 22050;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples, 8, FALSE, 11025, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples * 2, 8, 0 /* mono */, 11025, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
 		*quality = 8;
@@ -202,9 +206,7 @@ imyp_all_audiostream_init (
  */
 int
 imyp_all_play_tune (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const double freq,
 	const int volume_level,
 	const int duration,
@@ -226,44 +228,66 @@ imyp_all_play_tune (
 	unsigned int quality;
 	int samp;	/* better than float */
 
-	if ( buf == NULL ) return -1;
-
+	if ( (buf == NULL) || (bufsize <= 0) ) return -1;
 	as = imyp_all_audiostream_init (bufsize, volume_level, &quality, &sampfreq);
+
 	if ( as != NULL )
 	{
-#define NSAMP (sampfreq/freq)
-		for ( i=0; i < bufsize; i++ )
+		if ( freq > 0.0 )
 		{
-			if ( sig_recvd != 0 )
+#define NSAMP ((sampfreq)/(freq))
+			for ( i=0; i < bufsize; i++ )
 			{
-				stop_audio_stream (as);
-				return -2;
-			}
+				if ( sig_recvd != 0 )
+				{
+					stop_audio_stream (as);
+					return -2;
+				}
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
-			samp = ((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-				/* The "/3" is required to have a full sine wave, not
-				   trapese-like wave */
-				IMYP_ROUND (((1<<(quality-1))-1)
-					* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3);
+				samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
+					/* The "/3" is required to have a full sine wave, not
+					trapese-like wave */
+					IMYP_ROUND (((1<<(quality-1))-1)
+						* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
 #else
-			samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-				(((1<<(quality-1))-1)/NSAMP));
+				samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
+					(((1<<(quality-1))-1)/NSAMP));
 #endif
-			if ( quality == 16 )
-			{
-				((char *)buf)[i] = samp & 0x0FF;
-				i++;
-				((char *)buf)[i] = (samp >> 8) & 0x0FF;
+				if ( quality == 16 )
+				{
+					if ( i*2 >= bufsize ) break;
+					((char *)buf)[i*2] = (char)(samp & 0x0FF);
+					((char *)buf)[i*2+1] = (char)((samp >> 8) & 0x0FF);
+				}
+				else if ( quality == 8 )
+				{
+					((char *)buf)[i] = (char)(samp & 0x0FF);
+				}
 			}
-			else if ( quality == 8 )
+		}
+		else
+		{
+			for ( i=0; i < bufsize; i++ )
 			{
-				((char *)buf)[i] = samp;
+				if ( sig_recvd != 0 )
+				{
+					stop_audio_stream (as);
+					return -2;
+				}
+				((char *)buf)[i] = 0;
 			}
 		}
 		new_buf = get_audio_stream_buffer (as);
 		if ( new_buf != NULL )
 		{
-			memcpy (new_buf, buf, bufsize*(quality/8));
+#ifdef HAVE_MEMCPY
+			memcpy (new_buf, buf, (size_t)bufsize);
+#else
+			for ( i = 0; i < bufsize; i++ )
+			{
+				((char *)new_buf)[i] = ((char *)buf)[i];
+			}
+#endif
 			if ( sig_recvd != 0 )
 			{
 				stop_audio_stream (as);
@@ -288,16 +312,26 @@ imyp_all_play_tune (
  */
 void
 imyp_all_pause (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const int milliseconds)
 #else
 	milliseconds)
 	const int milliseconds;
 #endif
 {
-	rest (milliseconds);
+	if ( milliseconds <= 0 ) return;
+#if ((defined HAVE_SYS_SELECT_H) || (defined TIME_WITH_SYS_TIME)\
+	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))	\
+	&& (defined HAVE_SELECT)
+	{
+		struct timeval tv;
+		tv.tv_sec = milliseconds / 1000;
+		tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
+		select ( 0, NULL, NULL, NULL, &tv );
+	}
+#else
+	rest ((unsigned int)milliseconds);
+#endif
 }
 
 /**
@@ -306,9 +340,7 @@ imyp_all_pause (
  */
 void
 imyp_all_put_text (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const char * const text)
 #else
 	text)
@@ -324,9 +356,7 @@ imyp_all_put_text (
  */
 int
 imyp_all_init (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	void
 #endif
 )
@@ -359,9 +389,7 @@ imyp_all_init (
  */
 int
 imyp_all_close (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	void
 #endif
 )

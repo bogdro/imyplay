@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- signal handling.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -151,6 +151,10 @@ static const int signals[] =
 #  define RETSIGTYPE void
 # endif
 
+# ifndef IMYP_ANSIC
+static RETSIGTYPE term_signal_received PARAMS((const int signum));
+# endif
+
 /**
  * Signal handler - Sets a flag which will stop further program operations, when a
  * signal which would normally terminate the program is received.
@@ -158,16 +162,19 @@ static const int signals[] =
  */
 static RETSIGTYPE
 term_signal_received (
-# if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+# ifdef IMYP_ANSIC
 	const int signum)
 # else
 	signum)
 	const int signum;
 # endif
 {
-	sig_recvd = signum;
+# if (defined HAVE_STDLIB_H) && (defined HAVE_SYSTEM) && (defined SIGCHLD)
+	/* EXEC backend enabled - don't stop when the child finished working */
+	if ( signum != SIGCHLD )
+# endif
+		sig_recvd = signum;
+
 # define void 1
 # define int 2
 # if RETSIGTYPE != void
@@ -183,13 +190,11 @@ term_signal_received (
 
 void
 imyp_set_sigh (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
-	error_type * const error)
+#ifdef IMYP_ANSIC
+	imyp_error_type * const error)
 #else
 	error)
-	error_type * const error;
+	imyp_error_type * const error;
 #endif
 {
 #ifdef HAVE_SIGNAL_H
@@ -238,11 +243,11 @@ imyp_set_sigh (
 			}
 			if ( error != NULL )
 			{
-				show_error ( *error, err_msg_signal, (res>0)? tmp : _(sig_unk) );
+				imyp_show_error ( *error, imyp_err_msg_signal, (res>0)? tmp : _(imyp_sig_unk) );
 			}
 			else
 			{
-				show_error ( 1, err_msg_signal, (res>0)? tmp : _(sig_unk) );
+				imyp_show_error ( 1, imyp_err_msg_signal, (res>0)? tmp : _(imyp_sig_unk) );
 			}
 		}
 	}
@@ -288,11 +293,11 @@ imyp_set_sigh (
 			}
 			if ( error != NULL )
 			{
-				show_error ( *error, err_msg_signal, (res>0)? tmp : _(sig_unk) );
+				imyp_show_error ( *error, imyp_err_msg_signal, (res>0)? tmp : _(imyp_sig_unk) );
 			}
 			else
 			{
-				show_error ( 1, err_msg_signal, (res>0)? tmp : _(sig_unk) );
+				imyp_show_error ( 1, imyp_err_msg_signal, (res>0)? tmp : _(imyp_sig_unk) );
 			}
 		}
 	}

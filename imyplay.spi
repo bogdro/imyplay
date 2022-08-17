@@ -9,9 +9,9 @@ Version:	%{version}
 Release:	1
 URL:		http://rudy.mif.pg.gda.pl/~bogdro/soft/
 License:	GPL
-Group:		Multimedia
-Packager:	Bogdan Drozdowski <bogdandr@op.pl>
-Prefix:		/usr/local
+Group:		Applications/Multimedia
+#Packager:	Bogdan Drozdowski <bogdandr@op.pl>
+#Prefix:		/usr/local
 Source:		%{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-build
 BuildRequires:	gcc, glibc, glibc-devel, glibc-headers, make
@@ -21,14 +21,11 @@ BuildRequires:	gcc, glibc, glibc-devel, glibc-headers, make
 The imyplay is a program for playing iMelody ringtones (IMY files).
 
 %prep
-%{__rm} -rf $RPM_BUILD_ROOT
 %setup -q
 
 %build
 
-CFLAGS='-march=i386' ./configure --prefix=%{prefix}
-	#--mandir=$RPM_BUILD_ROOT/usr/local/man
-#prefix=$RPM_BUILD_ROOT/usr/local
+CFLAGS='-march=i386' ./configure --prefix=/usr/local --libdir=/usr/local/lib
 %{__make} 2>/dev/null
 
 %install
@@ -37,24 +34,23 @@ CFLAGS='-march=i386' ./configure --prefix=%{prefix}
 #prefix=$RPM_BUILD_ROOT/usr/local
 %{__make} DESTDIR="$RPM_BUILD_ROOT" install-strip
 #%{__mv} -f $RPM_BUILD_ROOT/usr/share/locale/pl/LC_MESSAGES/imyplay.mo \
-#	$RPM_BUILD_ROOT%{prefix}/share/locale/pl/LC_MESSAGES/imyplay.mo
+#	$RPM_BUILD_ROOT/usr/local/share/locale/pl/LC_MESSAGES/imyplay.mo
 %{__rm} -f $RPM_BUILD_ROOT/usr/bin/imyplay*
-%{__rm} -f $RPM_BUILD_ROOT%{prefix}/info/imyplay.info*
-%{__rm} -f $RPM_BUILD_ROOT%{prefix}/man/man1/imyplay.1*
-%{__rm} -f $RPM_BUILD_ROOT%{prefix}/share/info/imyplay.info*
-%{__rm} -f $RPM_BUILD_ROOT%{prefix}/share/man/man1/imyplay.1*
-#%{__rm} -f $RPM_BUILD_ROOT%{prefix}/share/locale/pl/LC_MESSAGES/imyplay.mo
+%{__rm} -f $RPM_BUILD_ROOT/usr/local/info/imyplay.info*
+%{__rm} -f $RPM_BUILD_ROOT/usr/local/man/man1/imyplay.1*
+%{__rm} -f $RPM_BUILD_ROOT/usr/local/share/info/imyplay.info*
+%{__rm} -f $RPM_BUILD_ROOT/usr/local/share/man/man1/imyplay.1*
+#%{__rm} -f $RPM_BUILD_ROOT/usr/local/share/locale/pl/LC_MESSAGES/imyplay.mo
 #%{makeinstall}
 
 %clean
-
 %{__rm} -rf $RPM_BUILD_ROOT
 
 %define _unpackaged_files_terminate_build 0
 %files
 
 %defattr(-,root,root)
-%{prefix}/bin/imyplay
+/usr/local/bin/imyplay
 %doc /usr/share/info/imyplay.info.gz
 %doc /usr/share/man/man1/imyplay.1.gz
-%{prefix}/share/locale/pl/LC_MESSAGES/imyplay.mo
+/usr/local/share/locale/pl/LC_MESSAGES/imyplay.mo

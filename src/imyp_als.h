@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- ALSA backend, header file.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or

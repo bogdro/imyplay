@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- wrapper functions between the main program and the backends.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -34,7 +34,6 @@
 
 #include "imyplay.h"
 #include "imypwrap.h"
-#include "imyp_mid.h"
 
 #ifdef IMYP_HAVE_ALLEGRO
 # include "imyp_all.h"
@@ -64,8 +63,16 @@
 # include "imyp_pul.h"
 #endif
 
-#ifdef IMYP_HAVE_JACK1
+#ifdef IMYP_HAVE_JACK
 # include "imyp_jck.h"
+#endif
+
+#ifdef IMYP_HAVE_MIDI
+# include "imyp_mid.h"
+#endif
+
+#ifdef IMYP_HAVE_EXEC
+# include "imyp_exe.h"
 #endif
 
 /**
@@ -76,15 +83,21 @@
  */
 void
 imyp_pause (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
-	const int milliseconds, const CURR_LIB curr, const int is_note)
+#ifdef IMYP_ANSIC
+	const int milliseconds, const IMYP_CURR_LIB curr, const int is_note
+# ifndef IMYP_HAVE_MIDI
+	IMYP_ATTR ((unused))
+# endif
+	)
 #else
 	milliseconds, curr, is_note)
 	const int milliseconds;
-	const CURR_LIB curr;
-	const int is_note;
+	const IMYP_CURR_LIB curr;
+	const int is_note
+# ifndef IMYP_HAVE_MIDI
+	IMYP_ATTR ((unused))
+# endif
+	;
 #endif
 {
 	if ( curr == CURR_ALLEGRO )
@@ -123,10 +136,10 @@ imyp_pause (
 		imyp_portaudio_pause (milliseconds);
 #endif
 	}
-	else if ( curr == CURR_JACK1 )
+	else if ( curr == CURR_JACK )
 	{
-#ifdef IMYP_HAVE_JACK1
-		imyp_jack1_pause (milliseconds);
+#ifdef IMYP_HAVE_JACK
+		imyp_jack_pause (milliseconds);
 #endif
 	}
 	else if ( curr == CURR_PULSEAUDIO )
@@ -137,7 +150,15 @@ imyp_pause (
 	}
 	else if ( curr == CURR_MIDI )
 	{
+#ifdef IMYP_HAVE_MIDI
 		imyp_midi_pause (milliseconds, is_note);
+#endif
+	}
+	else if ( curr == CURR_EXEC )
+	{
+#ifdef IMYP_HAVE_EXEC
+		imyp_exec_pause (milliseconds);
+#endif
 	}
 }
 
@@ -148,14 +169,12 @@ imyp_pause (
  */
 void
 imyp_put_text (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
-	const char * const text, const CURR_LIB curr)
+#ifdef IMYP_ANSIC
+	const char * const text, const IMYP_CURR_LIB curr)
 #else
 	text, curr)
 	const char * const text;
-	const CURR_LIB curr;
+	const IMYP_CURR_LIB curr;
 #endif
 {
 	if ( curr == CURR_ALLEGRO )
@@ -194,10 +213,10 @@ imyp_put_text (
 		imyp_portaudio_put_text (text);
 #endif
 	}
-	else if ( curr == CURR_JACK1 )
+	else if ( curr == CURR_JACK )
 	{
-#ifdef IMYP_HAVE_JACK1
-		imyp_jack1_put_text (text);
+#ifdef IMYP_HAVE_JACK
+		imyp_jack_put_text (text);
 #endif
 	}
 	else if ( curr == CURR_PULSEAUDIO )
@@ -208,7 +227,15 @@ imyp_put_text (
 	}
 	else if ( curr == CURR_MIDI )
 	{
+#ifdef IMYP_HAVE_MIDI
 		imyp_midi_put_text (text);
+#endif
+	}
+	else if ( curr == CURR_EXEC )
+	{
+#ifdef IMYP_HAVE_EXEC
+		imyp_exec_put_text (text);
+#endif
 	}
 }
 
@@ -224,15 +251,13 @@ imyp_put_text (
  */
 int
 imyp_play_tune (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
+#ifdef IMYP_ANSIC
 	const double freq,
 	const int volume_level,
 	const int duration,
 	void * const buf,
 	int bufsize,
-	const CURR_LIB curr)
+	const IMYP_CURR_LIB curr)
 #else
 	freq, volume_level, duration, buf, bufsize, curr)
 	const double freq;
@@ -240,7 +265,7 @@ imyp_play_tune (
 	const int duration;
 	void * const buf;
 	int bufsize;
-	const CURR_LIB curr;
+	const IMYP_CURR_LIB curr;
 #endif
 {
 	if ( curr == CURR_ALLEGRO )
@@ -279,10 +304,10 @@ imyp_play_tune (
 		return imyp_portaudio_play_tune (freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == CURR_JACK1 )
+	else if ( curr == CURR_JACK )
 	{
-#ifdef IMYP_HAVE_JACK1
-		return imyp_jack1_play_tune (freq, volume_level, duration, buf, bufsize);
+#ifdef IMYP_HAVE_JACK
+		return imyp_jack_play_tune (freq, volume_level, duration, buf, bufsize);
 #endif
 	}
 	else if ( curr == CURR_PULSEAUDIO )
@@ -293,7 +318,15 @@ imyp_play_tune (
 	}
 	else if ( curr == CURR_MIDI )
 	{
+#ifdef IMYP_HAVE_MIDI
 		return imyp_midi_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
+	}
+	else if ( curr == CURR_EXEC )
+	{
+#ifdef IMYP_HAVE_EXEC
+		return imyp_exec_play_tune (freq, volume_level, duration, buf, bufsize);
+#endif
 	}
 	return -1;
 }
@@ -306,40 +339,57 @@ imyp_play_tune (
  */
 int
 imyp_lib_init (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
-	CURR_LIB * const curr, const int want_midi, const char * const filename)
+#ifdef IMYP_ANSIC
+	IMYP_CURR_LIB * const curr, const int want_midi
+# ifndef IMYP_HAVE_MIDI
+	IMYP_ATTR ((unused))
+# endif
+	, const char * const filename, const int want_exec
+# ifndef IMYP_HAVE_EXEC
+	IMYP_ATTR ((unused))
+# endif
+	)
 #else
-	curr, want_midi, filename)
-	CURR_LIB * const curr;
-	const int want_midi;
+	curr, want_midi, filename, want_exec)
+	IMYP_CURR_LIB * const curr;
+	const int want_midi
+# ifndef IMYP_HAVE_MIDI
+	IMYP_ATTR ((unused))
+# endif
+	;
 	const char * const filename;
+	const int want_exec
+# ifndef IMYP_HAVE_EXEC
+	IMYP_ATTR ((unused))
+# endif
+	;
 #endif
 {
 	int res = -1;
 	if ( curr == NULL ) return res;
 	*curr = CURR_NONE;
+#ifdef IMYP_HAVE_MIDI
 	if ( want_midi != 0 )
 	{
 		res = imyp_midi_init (filename);
 		if ( res == 0 ) *curr = CURR_MIDI;
 		return res;
 	}
+#endif
+#ifdef IMYP_HAVE_EXEC
+	if ( want_exec != 0 )
+	{
+		res = imyp_exec_init (filename);
+		if ( res == 0 ) *curr = CURR_EXEC;
+		return res;
+	}
+#endif
 	/* first try the general, portable libraries */
 #ifdef IMYP_HAVE_ALLEGRO
 	res = imyp_all_init ();
 	if ( res == 0 )
 	{
 		*curr = CURR_ALLEGRO;
-		return res;
-	}
-#endif
-#ifdef IMYP_HAVE_SDL
-	res = imyp_sdl_init ();
-	if ( res == 0 )
-	{
-		*curr = CURR_SDL;
 		return res;
 	}
 #endif
@@ -359,11 +409,19 @@ imyp_lib_init (
 		return res;
 	}
 #endif
-#ifdef IMYP_HAVE_JACK1
-	res = imyp_jack1_init (filename);
+#ifdef IMYP_HAVE_SDL
+	res = imyp_sdl_init ();
 	if ( res == 0 )
 	{
-		*curr = CURR_JACK1;
+		*curr = CURR_SDL;
+		return res;
+	}
+#endif
+#ifdef IMYP_HAVE_JACK
+	res = imyp_jack_init (filename);
+	if ( res == 0 )
+	{
+		*curr = CURR_JACK;
 		return res;
 	}
 #endif
@@ -402,13 +460,11 @@ imyp_lib_init (
  */
 int
 imyp_lib_close (
-#if defined (__STDC__) || defined (_AIX) \
-	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
-	|| defined(WIN32) || defined(__cplusplus)
-	const CURR_LIB curr)
+#ifdef IMYP_ANSIC
+	const IMYP_CURR_LIB curr)
 #else
 	curr)
-	const CURR_LIB curr;
+	const IMYP_CURR_LIB curr;
 #endif
 {
 	if ( curr == CURR_ALLEGRO )
@@ -447,10 +503,10 @@ imyp_lib_close (
 		return imyp_portaudio_close ();
 #endif
 	}
-	else if ( curr == CURR_JACK1 )
+	else if ( curr == CURR_JACK )
 	{
-#ifdef IMYP_HAVE_JACK1
-		return imyp_jack1_close ();
+#ifdef IMYP_HAVE_JACK
+		return imyp_jack_close ();
 #endif
 	}
 	else if ( curr == CURR_PULSEAUDIO )
@@ -461,7 +517,15 @@ imyp_lib_close (
 	}
 	else if ( curr == CURR_MIDI )
 	{
+#ifdef IMYP_HAVE_MIDI
 		return imyp_midi_close ();
+#endif
+	}
+	else if ( curr == CURR_EXEC )
+	{
+#ifdef IMYP_HAVE_EXEC
+		return imyp_exec_close ();
+#endif
 	}
 	return -1;
 }

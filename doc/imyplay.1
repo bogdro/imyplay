@@ -14,21 +14,49 @@ imyplay \- A program for playing iMelody ringtones (IMY files).
 The imyplay program plays the given iMelody files or converts them to MIDI format.
 IMYplay can use the following libraries to produce sound: the Allegro game library,
 SDL (Simple DirectMedia Layer), ALSA (Advanced Linux Sound Architecture),
-OSS (Open Sound System), libao, PortAudiov19, PulseAudio, JACK1.
+OSS (Open Sound System), libao, PortAudiov19, PulseAudio, JACK1/JACK2.
 
-.SH OPTIONS
+.SH OPTIONS (for the full version)
 
 .IP "-d|--device <dev>"
 Try to use the given device (ALSA, OSS), driver ID (libao) or server name
 (JACK1, PulseAudio) for sound output.
+.IP "-e|--exec <program>"
+Execute the given program instead of normal sound output.
+
+You can pass the following expressions in the
+<program> argument and these will get substituted by the correct values when
+the program is about to be started:
+
+%i - the tone frequency as an integer (rounded), example: 523. Zero means a pause.
+
+%f - the tone frequency as a floating point number (accurate), example: 523.250916.
+Zero means a pause.
+
+%d - the tone/pause duration in seconds as an integer (rounded), example: 1.
+This equals to %m divided by 1000.
+
+%s - the tone/pause duration in seconds as a floating point number (accurate),
+example: 1.25. This equals to %l divided by 1000.
+
+%m - the tone/pause duration in milliseconds as an integer (rounded),
+example: 1250. This equals to %d (not rounded) times 1000.
+
+%l - the tone/pause duration in milliseconds as a floating point number
+(accurate), example: 1250,3. This equals to %s (not rounded) times 1000.
+
+%v - the tone's volume, form 0 to 15 inclusive.
+
+Any other %X expressions will NOT be altered.
+
 .IP -h|--help
-Print help
+Print help.
 .IP -l|--license
-Print license information
+Print license information.
 .IP --to-midi
-Convert the given files to MIDI format (if the target file exists, it is deleted)
+Convert the given files to MIDI format (if the target file exists, it is deleted).
 .IP -V|--version
-Print version number
+Print version number.
 
 .SH DIAGNOSTICS
 The program returns with 0 exit code if everything went fine. If there

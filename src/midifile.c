@@ -503,7 +503,10 @@ BOOL bNoChanges = TRUE;
 			{
 			ptr = _midiGetPtr(pMF, iTrack, DT_DEF);
 			if (!ptr)
+			{
+				free((void *)pEndPoints);
 				return FALSE;
+			}
 
 			num = pEndPoints[i].iIdx;		/* get 'LastNote' index */
 
@@ -520,6 +523,7 @@ BOOL bNoChanges = TRUE;
 
 			++i;
 			bNoChanges = FALSE;
+			if ( i >= mx_pts ) break;
 			}
 		}
 
@@ -626,8 +630,7 @@ BOOL	midiFileClose(MIDI_FILE *_pMF)
 
 		}
 
-	if (pMF->pFile)
-		return fclose(pMF->pFile)?FALSE:TRUE;
+	if (pMF->pFile) fclose(pMF->pFile);
 	free((void *)pMF);
 	return TRUE;
 }

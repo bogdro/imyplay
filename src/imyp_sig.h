@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- signal handling, header file.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -32,6 +32,6 @@
 
 extern volatile sig_atomic_t sig_recvd;		/* non-zero after signal received */
 
-extern void imyp_set_sigh PARAMS ((error_type * const error));
+extern void imyp_set_sigh PARAMS ((imyp_error_type * const error));
 
 #endif /* IMYP_SIGNAL */

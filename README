@@ -13,7 +13,7 @@ library (http://alleg.sf.net), SDL (Simple DirectMedia Layer;
 http://www.libsdl.org), ALSA (Advanced Linux Sound Architecture;
 http://alsa-project.org), OSS (Open Sound System), libao
 (http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/), PulseAudio
-(http://www.pulseaudio.org/), JACK1 (http://jackaudio.org/).
+(http://www.pulseaudio.org/), JACK1/JACK2 (http://jackaudio.org/).
 
 
 Author: Bogdan Drozdowski, bogdandr @ op . pl
@@ -31,9 +31,9 @@ Requirements for compiling the full version:
 - a working C compiler.
 
 - development package for the C library (like glibc-devel and glibc-headers)
-  The getopt.h header and the getopt_long() from it are required. The
-  signal.h header is used to catch signals, and is optional. The translation
-  headers (locale.h, libintl.h or other) are optional.
+  The getopt.h header and the getopt_long() from it are not required, but
+  useful. The signal.h header is used to catch signals, and is optional.
+  The translation headers (locale.h, libintl.h or other) are optional.
 
 - the 'make' program
 
@@ -47,7 +47,11 @@ Requirements for compiling the full version:
    	http://xiph.org/ao/		- for the AO library
    	http://www.portaudio.com/	- for the PortAudiov19 library
    	http://www.pulseaudio.org/	- for the PulseAudio library
-   	http://jackaudio.org/		- for the JACK1 library
+   	http://jackaudio.org/		- for the JACK1/JACK2 library
+
+- MIDI output requires the following functions from the standard C library:
+  malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),
+  fclose() and qsort().
 
 Type './configure' to configure the program for your system.
 
@@ -76,16 +80,39 @@ Syntax:
 
 	imyplay [options] file.imy [...]
 
-Command line options:
+Command line options (for the full version):
 
 -d|--device <dev>	Try to use the given device (ALSA, OSS), driver ID
 			(libao) or server name (JACK1, PulseAudio)
 			sound output.
+-e|--exec <program>	Execute the given program instead of normal sound
+			output. Read below for options.
 -h|--help		Print help
 -l|--license		Print license information
 --to-midi		Convert the given files to MIDI format
 			(if the target file exists, it is deleted)
 -V|--version		Print version number
+
+Executed program's options - you can pass the following expressions in the
+<prog> argument and these will get substituted by the correct values when
+the program is about to be started:
+
+%i - the tone frequency as an integer (rounded), example: 523.
+	Zero means a pause.
+%f - the tone frequency as a floating point number (accurate),
+	example: 523.250916. Zero means a pause.
+%d - the tone/pause duration in seconds as an integer (rounded), example: 1.
+	This equals to %m divided by 1000.
+%s - the tone/pause duration in seconds as a floating point number (accurate),
+	example: 1.25. This equals to %l divided by 1000.
+%m - the tone/pause duration in milliseconds as an integer (rounded),
+	example: 1250. This equals to %d (not rounded) times 1000.
+%l - the tone/pause duration in milliseconds as a floating point number
+	(accurate), example: 1250,3. This equals to %s (not rounded)
+	times 1000.
+%v - the tone's volume, form 0 to 15 inclusive.
+
+Any other %X expressions will NOT be altered.
 
 =======================================================
 
@@ -110,7 +137,7 @@ you wish.
 marked with capital letters in the header:
 
 # YOUR LANGUAGE translations for imyplay package.
-# Copyright (C) 2009 Bogdan 'bogdro' Drozdowski
+# Copyright (C) 2009-2010 Bogdan 'bogdro' Drozdowski
 # This file is distributed under the same license as
 # the imyplay package.
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.
@@ -119,7 +146,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-04-25 11:39+0200\n"
+"POT-Creation-Date: 2009-06-09 17:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAILADDRESS>\n"
 "Language-Team: LANGUAGE <EMAILADDRESS>\n"

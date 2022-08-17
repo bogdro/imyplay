@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(imyplay, 0.3, bogdandr@op.pl)
+AC_INIT(imyplay, 0.4, bogdandr@op.pl)
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \
@@ -84,6 +84,24 @@ AC_ARG_ENABLE(JACK,[[  --enable-JACK		Use the JACK library.]],
 	]
 	,feat_JACK=yes)
 
+AC_ARG_ENABLE(MIDI,[[  --enable-MIDI		Enable MIDI output.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_MIDI=no
+	 else
+		feat_MIDI=yes
+	 fi
+	]
+	,feat_MIDI=yes)
+
+AC_ARG_ENABLE(EXEC,[[  --enable-EXEC		Enable executing commands as output.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_EXEC=no
+	 else
+		feat_EXEC=yes
+	 fi
+	]
+	,feat_EXEC=yes)
+
 # ==================== Set of available languages (deprecated).
 #ALL_LINGUAS="pl"
 
@@ -151,6 +169,10 @@ if ( test "x$feat_JACK" = "xyes" ); then
 
 	libjack=yes
 	AC_CHECK_LIB([jack],[jack_client_open],,[libjack=no])
+	if ( test "x$libjack" = "xyes" ); then
+		AC_CHECK_LIB([jack],[jack_free],AC_DEFINE([HAVE_JACK_FREE],[1],
+			[Whether you have the jack_free() function in the JACK library.]))
+	fi
 fi
 
 libmath=yes
@@ -160,13 +182,34 @@ if (test "x$libmath" != "xyes" ); then
 	AC_CHECK_FUNCS([sin])
 fi
 
+if ( test "x$feat_EXEC" = "xyes" ); then
+
+	have_system=yes
+	AC_CHECK_FUNCS([system],AC_DEFINE([HAVE_SYSTEM],[1],
+		[Whether you have the system() function.]),[have_system=no])
+fi
+
 # ==================== Checks for header files.
 AC_HEADER_STDC
+AC_HEADER_SYS_WAIT()
+
+has_sys_wait_h=yes
+AC_CHECK_HEADER([sys/wait.h],AC_DEFINE([HAVE_SYS_WAIT_H],[1],
+	[Whether you have the sys/wait.h header.]),[AC_CHECK_HEADER([wait.h],
+		AC_DEFINE([HAVE_WAIT_H],[1],
+		[Whether you have the wait.h header.]),[has_wait_h=no])])
 
 AC_CHECK_HEADER([string.h],AC_DEFINE([HAVE_STRING_H],[1],[Whether you have the string.h header.]),
 	[AC_MSG_ERROR([[I need string.h to work.]])])
 
 AC_CHECK_HEADERS([getopt.h malloc.h sys/types.h stdlib.h locale.h math.h signal.h errno.h libgen.h])
+
+if ( test "x$feat_EXEC" = "xyes" || test "x$have_system" = "xyes" ); then
+
+	have_stdlib_h=yes
+	AC_CHECK_HEADER([stdlib.h],AC_DEFINE([HAVE_STDLIB_H],[1],
+		[Whether you have the stdlib.h header.]), have_stdlib_h=no)
+fi
 
 if ( test "x$liballeg" = "xyes" || test "x$alleg_ldflags" != "x" ); then
 
@@ -295,6 +338,26 @@ if ( test "x$libpulseaudio_simple" = "xyes" && test "x$libpulseaudio" = "xyes" )
 			have_pulseaudio_simple_h=no)])
 fi
 
+have_malloc=yes
+AC_CHECK_FUNCS([malloc],AC_DEFINE([HAVE_MALLOC],[1],
+	[Whether you have the malloc() function.]),[have_malloc=no])
+have_memset=yes
+AC_CHECK_FUNCS([memset],AC_DEFINE([HAVE_MEMSET],[1],
+	[Whether you have the memset() function.]),[have_memset=no])
+have_memcpy=yes
+AC_CHECK_FUNCS([memcpy],AC_DEFINE([HAVE_MEMCPY],[1],
+	[Whether you have the memcpy() function.]),[have_memcpy=no])
+
+if ( test "x$feat_MIDI" == "xyes" ); then
+	have_realloc=yes
+	AC_CHECK_FUNCS([realloc],AC_DEFINE([HAVE_REALLOC],[1],
+		[Whether you have the realloc() function.]),[have_realloc=no])
+	have_qsort=yes
+	AC_CHECK_FUNCS([qsort],AC_DEFINE([HAVE_QSORT],[1],
+		[Whether you have the qsort() function.]),[have_qsort=no])
+fi
+
+
 AM_CONDITIONAL(ALLEGRO, [(test "x$liballeg" = "xyes" || test "x$alleg_ldflags" != "x") && \
 	test "x$have_all_h" = "xyes"])
 
@@ -336,6 +399,13 @@ AM_CONDITIONAL(JACK, [test "x$libjack" = "xyes" && test "x$have_jack_h" = "xyes"
 		test "x$have_unistd_h" = "xyes")					\
 		)])
 
+AM_CONDITIONAL(MIDI, [test "x$feat_MIDI" = "xyes" && test "x$have_malloc" = "xyes"	\
+	&& test "x$have_realloc" = "xyes" && test "x$have_memset" = "xyes" \
+	&& test "x$have_memcpy" = "xyes" && test "x$have_qsort" = "xyes"])
+
+AM_CONDITIONAL(EXEC, [test "x$feat_EXEC" = "xyes" && test "x$have_stdlib_h" = "xyes" \
+	&& test "x$have_system" = "xyes"])
+
 # ===================== Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
@@ -358,9 +428,9 @@ AC_CHECK_TYPES([sig_atomic_t],,,
 AC_TYPE_SIGNAL
 AC_FUNC_MALLOC
 
-AC_CHECK_FUNCS([malloc memcpy setlocale sigaction fseeko ftello snprintf basename getopt_long])
+AC_CHECK_FUNCS([setlocale sigaction fseeko ftello snprintf basename getopt_long])
 
-AM_GNU_GETTEXT_VERSION([0.14.3])
+AM_GNU_GETTEXT_VERSION([0.17])
 AM_GNU_GETTEXT([external])
 
 # Can be /usr/local/include/libintl.h. Use --with-libintl-prefix=DIR then.
@@ -602,26 +672,70 @@ if (	test "x$libjack" = "xyes" && test "x$have_jack_h" = "xyes"	\
 		test "x$have_unistd_h" = "xyes")					\
 		) ); then
 
-	echo " *	JACK1: yes"
+	echo " *	JACK: yes"
 else
 	if (test "x$feat_JACK" != "xyes"); then
-		echo " *	JACK1: no (disabled by command line)"
+		echo " *	JACK: no (disabled by command line)"
 
 	elif ( test "x$libjack" != "xyes" ); then
-		echo " *	JACK1: no (library missing or unusable)"
+		echo " *	JACK: no (library missing or unusable)"
 
 	elif ( test "x$have_select" != "xyes" ); then
-		echo " *	JACK1: no (select() function missing)"
+		echo " *	JACK: no (select() function missing)"
 
 	elif ( ! ( test "x$have_sys_select_h" = "xyes" || (				\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
 		test "x$have_unistd_h" = "xyes")					\
 		) ); then
-		echo " *	JACK1: no (select() headers missing or unusable)"
+		echo " *	JACK: no (select() headers missing or unusable)"
 
 	else	#(test "x$have_jack_h" != "xyes"); then
-		echo " *	JACK1: no (jack.h header missing)"
+		echo " *	JACK: no (jack.h header missing)"
+	fi
+fi
+
+if (	test "x$feat_MIDI" = "xyes" && test "x$have_malloc" = "xyes"	\
+	&& test "x$have_realloc" = "xyes" && test "x$have_memset" = "xyes" \
+	&& test "x$have_memcpy" = "xyes" && test "x$have_qsort" = "xyes"); then
+
+	echo " *	MIDI: yes"
+else
+	if (test "x$feat_MIDI" != "xyes"); then
+		echo " *	MIDI: no (disabled by command line)"
+
+	elif ( test "x$have_malloc" != "xyes" ); then
+		echo " *	MIDI: no (malloc() function missing)"
+
+	elif ( test "x$have_realloc" != "xyes" ); then
+		echo " *	MIDI: no (realloc() function missing)"
+
+	elif ( test "x$have_memset" != "xyes" ); then
+		echo " *	MIDI: no (memset() function missing)"
+
+	elif ( test "x$have_memcpy" != "xyes" ); then
+		echo " *	MIDI: no (memcpy() function missing)"
+
+	else	#( test "x$have_qsort" != "xyes" ); then
+		echo " *	MIDI: no (qsort() function missing)"
+
+	fi
+fi
+
+if (	test "x$feat_EXEC" = "xyes" && test "x$have_stdlib_h" = "xyes" \
+	&& test "x$have_system" = "xyes" ); then
+
+	echo " *	EXEC: yes"
+else
+	if (test "x$feat_EXEC" != "xyes"); then
+		echo " *	EXEC: no (disabled by command line)"
+
+	elif ( test "x$have_stdlib_h" != "xyes" ); then
+		echo " *	EXEC: no (stdlib.h header missing)"
+
+	else	#( test "x$have_system" != "xyes" ); then
+		echo " *	EXEC: no (system() function missing)"
+
 	fi
 fi
 

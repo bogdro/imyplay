@@ -1,8 +1,8 @@
 /*
  * A program for playing iMelody ringtones (IMY files).
- *	-- JACK1 backend, header file.
+ *	-- JACK backend, header file.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -23,16 +23,16 @@
  *		USA
  */
 
-#ifndef IMYP_JACK1
-# define IMYP_JACK1 1
+#ifndef IMYP_JACK
+# define IMYP_JACK 1
 
 # include "imyplay.h"
 
-extern void imyp_jack1_pause PARAMS((const int milliseconds));
-extern void imyp_jack1_put_text PARAMS((const char * const text));
-extern int imyp_jack1_play_tune PARAMS((const double freq, const int volume_level,
+extern void imyp_jack_pause PARAMS((const int milliseconds));
+extern void imyp_jack_put_text PARAMS((const char * const text));
+extern int imyp_jack_play_tune PARAMS((const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_jack1_init PARAMS((const char * const dev_file));
-extern int imyp_jack1_close PARAMS((void));
+extern int imyp_jack_init PARAMS((const char * const dev_file));
+extern int imyp_jack_close PARAMS((void));
 
-#endif /* IMYP_JACK1 */
+#endif /* IMYP_JACK */

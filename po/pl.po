@@ -1,6 +1,6 @@
 # Polish translations for imyplay package
 # Polskie t³umaczenia dla pakietu imyplay.
-# Copyright (C) 2009 Bogdan bogdro Drozdowski
+# Copyright (C) 2009-2010 Bogdan bogdro Drozdowski
 # This file is distributed under the same license as the imyplay package.
 # Bogdan Drozdowski <bogdandr@op.pl>, 2009.
 #
@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 0.1\n"
 "Report-Msgid-Bugs-To: bogdandr@op.pl\n"
-"POT-Creation-Date: 2009-06-09 17:59+0200\n"
-"PO-Revision-Date: 2009-01-18 13:52+0100\n"
+"POT-Creation-Date: 2010-06-27 11:22+0200\n"
+"PO-Revision-Date: 2010-05-30 13:52+0100\n"
 "Last-Translator: Bogdan Drozdowski <bogdandr@op.pl>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -106,39 +106,43 @@ msgstr "B³±d podczas odtwarzania d¼wiêku"
 msgid "unknown"
 msgstr "nieznany"
 
-#: src/imyplay.c:374
+#: src/imyplay.c:393
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr "Program do odtwarzania dzwonków iMelody (plików IMY)"
 
-#: src/imyplay.c:375
+#: src/imyplay.c:394
 msgid "Syntax"
 msgstr "Sk³adnia"
 
-#: src/imyplay.c:377
+#: src/imyplay.c:396
 msgid " [options] "
 msgstr " [opcje] "
 
-#: src/imyplay.c:379
+#: src/imyplay.c:398
 msgid "Options"
 msgstr "Opcje"
 
-#: src/imyplay.c:380
+#: src/imyplay.c:399
 msgid "Try to use this device"
 msgstr "Spróbuj u¿yæ tego urz±dzenia"
 
-#: src/imyplay.c:381
+#: src/imyplay.c:401
+msgid "Execute this program instead of sound output"
+msgstr "Wykonaj ten program zamiast wyj¶cia d¼wiêkowego"
+
+#: src/imyplay.c:403
 msgid "Print help"
 msgstr "Wy¶wietl pomoc"
 
-#: src/imyplay.c:382
+#: src/imyplay.c:404
 msgid "Print license information"
 msgstr "Wy¶wietl informacje o licencji"
 
-#: src/imyplay.c:383
+#: src/imyplay.c:406
 msgid "Convert the given files to MIDI format"
 msgstr "Przekonwertuj podane pliki na format MIDI"
 
-#: src/imyplay.c:384
+#: src/imyplay.c:408
 msgid "Print version number"
 msgstr "Wy¶wietl numer wersji"
 

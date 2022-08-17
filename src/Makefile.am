@@ -1,7 +1,6 @@
 bin_PROGRAMS = imyplay
 datadir = @datadir@
-imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c imyp_sig.h  \
-	imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h midibase.h
+imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c imyp_sig.h
 
 imyplay_LDADD = $(INTLLIBS)
 localedir = $(datadir)/locale
@@ -38,5 +37,13 @@ endif
 
 if JACK
 imyplay_SOURCES += imyp_jck.c imyp_jck.h
+endif
+
+if MIDI
+imyplay_SOURCES += imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h midibase.h
+endif
+
+if EXEC
+imyplay_SOURCES += imyp_exe.c imyp_exe.h
 endif
 

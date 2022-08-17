@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- configuration header file.
  *
- * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -30,27 +30,37 @@
 #  include <config.h>
 # else
 
+#  define IMYP_HAVE_MIDI		1
+
 #  if (defined __MSDOS) || (defined __MSDOS__) || (defined MSDOS)
 #   define HAVE_LIBALLEG		1
 #   define HAVE_ALLEGRO_H		1
 #   undef ENABLE_NLS
 #   define HAVE_BASENAME		1
+#   define HAVE_CLOSE			1
 #   define HAVE_ERRNO_H			1
+#   define HAVE_FCNTL_H			1
 #   undef HAVE_FSEEKO
 #   undef HAVE_FTELLO
 #   undef HAVE_GETOPT_H
 #   undef HAVE_GETOPT_LONG
 #   undef HAVE_GETTEXT
+#   define HAVE_IOCTL			1
 #   undef HAVE_LIBGEN_H
 #   undef HAVE_LIBINTL_H
-#   undef HAVE_LIBINTL_H
+#   define HAVE_LIBM			1
 #   undef HAVE_LOCALE_H
 #   define HAVE_MALLOC			1
 #   define HAVE_MALLOC_H		1
 #   define HAVE_MATH_H			1
 #   define HAVE_MEMCPY			1
 #   define HAVE_MEMORY_H		1
+#   define HAVE_MEMSET			1
 #   define HAVE_OFF_T			1
+#   define HAVE_OPEN			1
+#   define HAVE_QSORT			1
+#   define HAVE_REALLOC			1
+#   define HAVE_SELECT			1
 #   undef HAVE_SETLOCALE
 #   define HAVE_SIG_ATOMIC_T		1
 #   define HAVE_SIGACTION		1
@@ -59,7 +69,16 @@
 #   undef HAVE_SNPRINTF
 #   define HAVE_STDLIB_H		1
 #   define HAVE_STRING_H		1
+#   define HAVE_SYSTEM			1
+#   define HAVE_SYS_IOCTL_H		1
+#   define HAVE_SYS_SELECT_H		1
+#   define HAVE_SYS_STAT_H		1
+#   define HAVE_SYS_TIME_H		1
 #   define HAVE_SYS_TYPES_H		1
+#   define HAVE_SYS_WAIT_H		1
+#   define HAVE_UNISTD_H		1
+#   define HAVE_WRITE			1
+#   define TIME_WITH_SYS_TIME		1
 
 #  else
 	/* be optimisitc - glibc has all of these */
@@ -84,8 +103,11 @@
 #   define HAVE_MATH_H			1
 #   define HAVE_MEMCPY			1
 #   define HAVE_MEMORY_H		1
+#   define HAVE_MEMSET			1
 #   define HAVE_OFF_T			1
 #   define HAVE_OPEN			1
+#   define HAVE_QSORT			1
+#   define HAVE_REALLOC			1
 #   define HAVE_SELECT			1
 #   define HAVE_SETLOCALE		1
 #   define HAVE_SIG_ATOMIC_T		1
@@ -95,11 +117,13 @@
 #   define HAVE_SNPRINTF		1
 #   define HAVE_STDLIB_H		1
 #   define HAVE_STRING_H		1
+#   define HAVE_SYSTEM			1
 #   define HAVE_SYS_IOCTL_H		1
 #   define HAVE_SYS_SELECT_H		1
 #   define HAVE_SYS_STAT_H		1
 #   define HAVE_SYS_TIME_H		1
 #   define HAVE_SYS_TYPES_H		1
+#   define HAVE_SYS_WAIT_H		1
 #   define HAVE_UNISTD_H		1
 #   define HAVE_WRITE			1
 #   define TIME_WITH_SYS_TIME		1

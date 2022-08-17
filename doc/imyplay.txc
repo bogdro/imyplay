@@ -33,6 +33,14 @@ This manual is for IMYplay, version @VERSION@
 
 @c ==================================================================
 
+    Copyright (c)  2009-2010 Bogdan Drozdowski
+
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled "GNU
+Free Documentation License" in the "Copying" chapter.
 
 @menu
 * What is IMYplay?::			About the program.
@@ -63,7 +71,7 @@ IMYplay can use the following libraries to produce sound: the Allegro game libra
 (http://alleg.sf.net), SDL (Simple DirectMedia Layer; http://www.libsdl.org), ALSA
 (Advanced Linux Sound Architecture; http://alsa-project.org), OSS (Open Sound System),
 libao (http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/),
-PulseAudio (http://www.pulseaudio.org/), JACK1 (http://jackaudio.org/).
+PulseAudio (http://www.pulseaudio.org/), JACK1/JACK2 (http://jackaudio.org/).
 
 IMYplay, of course, requires working sound hardware with drivers to produce
 any sound.
@@ -93,6 +101,9 @@ Requirements for compiling the full version of the program:@*
 @item a non-root account. Please, @strong{NEVER} compile or 'make' anything as root.
 @item a working C compiler
 @item development package for the C library (like glibc-devel and glibc-headers).
+The getopt.h header and the getopt_long() from it are not required, but
+useful. The signal.h header is used to catch signals, and is optional.
+The translation headers (locale.h, libintl.h or other) are optional.
 @item if you want sound, not just MIDI conversion, a development package for one of the
 supported libraries (except OSS, which requires only the C library and system support).
 If you don't have any of these installed or available (check twice), then go to@*
@@ -103,6 +114,9 @@ If you don't have any of these installed or available (check twice), then go to@
    	http://www.portaudio.com/@*
    	http://www.pulseaudio.org/@*
    	http://jackaudio.org/@*
+@item MIDI output requires the following functions from the standard C library:
+malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),
+fclose() and qsort().
 @end itemize
 @*@*
 
@@ -154,12 +168,61 @@ Basic syntax is:
 
 The 'ringtone.imy' part stands for a supported iMelody file.
 
-Options:
+Options for the full version:
 
 @noindent @option{-d <dev>}@*@option{--device <dev>}@*
 @quotation
-Try to use the given device (ALSA, OSS), driver ID (libao) or server name (JACK1, PulseAudio)
+Try to use the given device (ALSA, OSS), driver ID (libao) or server name (JACK1, JACK2, PulseAudio)
 for sound output.
+@end quotation
+
+@noindent @option{-e <program>}@*@option{--exec <program>}@*
+@quotation
+Execute the given program instead of normal sound output.@*
+You can pass the following expressions in the
+<program> argument and these will get substituted by the correct values when
+the program is about to be started:@*@*
+%i
+@quotation
+the tone frequency as an integer (rounded), example: 523. Zero means a pause.
+@end quotation
+
+%f
+@quotation
+the tone frequency as a floating point number (accurate), example: 523.250916.
+Zero means a pause.@*@*
+@end quotation
+
+%d
+@quotation
+the tone/pause duration in seconds as an integer (rounded), example: 1.
+This equals to %m divided by 1000.@*@*
+@end quotation
+
+%s
+@quotation
+the tone/pause duration in seconds as a floating point number (accurate),
+example: 1.25. This equals to %l divided by 1000.@*@*
+@end quotation
+
+%m
+@quotation
+the tone/pause duration in milliseconds as an integer (rounded),
+example: 1250. This equals to %d (not rounded) times 1000.@*@*
+@end quotation
+
+%l
+@quotation
+the tone/pause duration in milliseconds as a floating point number
+(accurate), example: 1250,3. This equals to %s (not rounded) times 1000.@*@*
+@end quotation
+
+%v
+@quotation
+the tone's volume, form 0 to 15 inclusive.@*@*
+@end quotation
+
+Any other %X expressions will NOT be altered.
 @end quotation
 
 @noindent @option{-h}@*@option{--help}@*
@@ -1480,7 +1543,7 @@ marked with capital letters in the header:
 
 @quotation
 # YOUR LANGUAGE translations for IMYplay package.@*
-# Copyright (C) 2007 Bogdan 'bogdro' Drozdowski@*
+# Copyright (C) 2009-2010 Bogdan 'bogdro' Drozdowski@*
 # This file is distributed under the same license as@*
 # the IMYplay package.@*
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.@*
@@ -1489,7 +1552,7 @@ msgid ""@*
 msgstr ""@*
 "Project-Id-Version: IMYplay VERSION\n"@*
 "Report-Msgid-Bugs-To: \n"@*
-"POT-Creation-Date: 2007-04-25 11:39+0200\n"@*
+"POT-Creation-Date: 2009-06-09 17:59+0200\n"@*
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"@*
 "Last-Translator: FULL NAME <EMAILADDRESS>\n"@*
 "Language-Team: LANGUAGE <EMAILADDRESS>\n"@*

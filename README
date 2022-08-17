@@ -85,19 +85,25 @@ Requirements for compiling the full version under Un*x:
 
 Type './configure' to configure the program for your system. If you do not
  with support for a particular output mechanism, configure the program with
+
 	./configure --enable-XXX=no
+
  where "XXX" is the output system you wish to disable (allegro, SDL, ALSA,
  OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE, SPKR).
 
 By default, a flex-based scanner will be generated to parse the input file,
 if flex is available. If the scanner does not compile for you or works
  incorrectly, disable it with
+
 	./configure --enable-FLEXPARSER=no
+
  and recompile imyplay.
 
 If you do NOT wish imyplay to use the network or get the computer's IP
  address, get LibHideIP>=0.2 and LibNetBlock and configure imyplay with
+
 	./configure --enable-LIBHIDEIP --enable-LIBNETBLOCK
+
 NOTE: this may cause network sound output to fail.
 
 Type 'make' to compile the program.
@@ -137,13 +143,13 @@ Requirements for automatic compiling the DOS version:
 - the 'upx' utility (upx.sf.net) is optional. The program is compiled
   correctly without it.
 
-- the 'tr' utility (comes with DJGPP coreutils) is optional. The program is
-  compiled correctly without it.
-
 To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT
  the standard one) and change the line
+
 	#include "syslimits.h"
+
 to
+
 	#include "syslimit.h"
 
 Then run the "dosdist.bat" file.
@@ -153,7 +159,9 @@ If you prefer to compile manually (like when you don't have all of the
  the current version number in the imyp_cfg.hin file and rename the file
  to imyp_cfg.h. Then compile all the files you wish to (the dosfiles.txt
  file is a good starting point), for example:
+
 	gcc -o imyplay.exe *.c -lalleg
+
 The resulting imyplay.exe is the program to use.
 
 
@@ -168,15 +176,16 @@ Syntax:
 Command line options (for the full version):
 
 -d|--device <dev>	Try to use the given device (ALSA, OSS, GStreamer,
-			PC-speaker), driver ID (libao) or server name
-			(JACK1, PulseAudio) for sound output.
+			PC-speaker), driver ID (libao), server name
+			(JACK1, PulseAudio) for sound output or the sampling
+			rate and samples' format (case-insensitive: s16le,
+			s16be, u16le, u16be, s8le, s8be, u8le, u8be), e.g.
+			"--dev 44100:s16le" for the FILE, Allegro, PortAudio
+			and SDL backends.
 -e|--exec <program>	Execute the given program instead of normal sound
 			output. Read below for options. Overrides --output.
 -f|--file <file>	Write raw samples to this file instead of normal
-			sound output. Overrides --output. Use --dev to specify
-			the sampling rate and samples' format
-			(case-insensitive: s16le, s16be, u16le, u16be, s8le,
-			s8be, u8le, u8be), e.g. "--dev 44100:s16le".
+			sound output. Overrides --output.
 -h|--help		Print help
 -l|--license		Print license information
 --midi-instr <number>	Use the given MIDI instrument number.
@@ -248,7 +257,7 @@ you wish.
 marked with capital letters in the header:
 
 # YOUR LANGUAGE translations for imyplay package.
-# Copyright (C) 2009-2012 Bogdan 'bogdro' Drozdowski
+# Copyright (C) 2009-2013 Bogdan 'bogdro' Drozdowski
 # This file is distributed under the same license as
 # the imyplay package.
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.

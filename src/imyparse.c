@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing file.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -256,7 +256,8 @@ imyp_read_line (
 	char * const buffer,
 	int * const buf_index,
 	const size_t bufsize,
-	FILE * const imyfile, const unsigned int min_current)
+	FILE * const imyfile,
+	const unsigned int min_current)
 #else
 	buffer, buf_index, bufsize, imyfile, min_current)
 	char * const buffer;
@@ -577,7 +578,7 @@ imyp_get_rest_time (
 
 #ifndef IMYP_ANSIC
 static void imyp_play_current_note PARAMS((FILE * const imy, int * const skipped_dur,
-	int * const note_duration, const int note_index, const IMYP_CURR_LIB curr,
+	int * const note_duration, const int note_index, imyp_backend_t * const curr,
 	int * const play_res));
 #endif
 
@@ -597,22 +598,27 @@ IMYP_ATTR((nonnull))
 imyp_play_current_note (
 #ifdef IMYP_ANSIC
 	FILE * const imy, int * const skipped_dur, int * const note_duration,
-	const int note_index, const IMYP_CURR_LIB curr, int * const play_res)
+	const int note_index, imyp_backend_t * const curr, int * const play_res)
 #else
 	imy, skipped_dur, note_duration, note_index, curr, play_res)
 	FILE * const imy;
 	int * const skipped_dur;
 	int * const note_duration;
 	const int note_index;
-	const IMYP_CURR_LIB curr;
+	imyp_backend_t * const curr;
 	int * const play_res;
 #endif
 {
 	if ( (imy == NULL) || (skipped_dur == NULL) || (note_duration == NULL)
-		|| (curr == IMYP_CURR_NONE) || (play_res == NULL) )
+		|| (curr == NULL) || (play_res == NULL) || (curr == NULL) )
 	{
 		return;
 	}
+	if ( curr->imyp_curr_lib == IMYP_CURR_NONE )
+	{
+		return;
+	}
+
 	melody_index++;
 	imyp_read_line (melody_line, &melody_index,
 		sizeof (melody_line) - 10, imy, 0);
@@ -751,11 +757,11 @@ IMYP_ATTR((nonnull))
 #endif
 imyp_play_file (
 #ifdef IMYP_ANSIC
-	const char * const file_name, const IMYP_CURR_LIB curr)
+	const char * const file_name, imyp_backend_t * const curr)
 #else
 	file_name, curr)
 	const char * const file_name;
-	const IMYP_CURR_LIB curr;
+	imyp_backend_t * const curr;
 #endif
 {
 	FILE * imy;
@@ -766,6 +772,11 @@ imyp_play_file (
 	int play_res;
 	int note_duration = 0;
 	size_t i;
+
+	if ( (file_name == NULL) || (curr == NULL) )
+	{
+		return -100;
+	}
 
 	for ( i = 0; i < sizeof (melody_line); i++ )
 	{
@@ -858,12 +869,21 @@ imyp_play_file (
 				melody_index = 7;
 				do
 				{
-					if (is_eof != 0) break;
+					if ( is_eof != 0 )
+					{
+						break;
+					}
 					/* get a line from the file and skip the whitespace */
 					imyp_read_line (melody_line, &melody_index,
 						sizeof (melody_line) - 10, imy, 0);
-					if ( sig_recvd != 0 ) is_eof = 1;
-					if ( is_eof != 0 ) break;
+					if ( sig_recvd != 0 )
+					{
+						is_eof = 1;
+					}
+					if ( is_eof != 0 )
+					{
+						break;
+					}
 					if ( strstr (melody_line, IMYP_MEL_END) == melody_line )
 					{
 						imyp_put_text (melody_line, curr);

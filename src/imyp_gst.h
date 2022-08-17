@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- GStreamer backend, header file.
  *
- * Copyright (C) 2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,12 +28,16 @@
 
 # include "imyplay.h"
 
-extern void imyp_gst_pause PARAMS ((const int milliseconds));
-extern void imyp_gst_put_text PARAMS ((const char * const text));
-extern int imyp_gst_play_tune PARAMS ((const double freq, const int volume_level,
+extern void imyp_gst_pause PARAMS ((imyp_backend_data_t * const imyp_data,
+	const int milliseconds));
+extern void imyp_gst_put_text PARAMS ((imyp_backend_data_t * const imyp_data,
+	const char * const text));
+extern int imyp_gst_play_tune PARAMS ((imyp_backend_data_t * const imyp_data,
+	const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_gst_init PARAMS ((const char * const dev_file));
-extern int imyp_gst_close PARAMS ((void));
-extern void imyp_gst_version PARAMS ((void));
+extern int imyp_gst_init PARAMS ((imyp_backend_data_t ** const imyp_data,
+	const char * const dev_file));
+extern int imyp_gst_close PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_gst_version PARAMS ((imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_GSTREAMER */

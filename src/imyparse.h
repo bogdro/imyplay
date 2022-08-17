@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing, header file.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,6 +28,6 @@
 
 # include "imyplay.h"	/* PARAMS() */
 
-extern int imyp_play_file PARAMS ((const char * const file_name, const IMYP_CURR_LIB curr));
+extern int imyp_play_file PARAMS ((const char * const file_name, imyp_backend_t * const curr));
 
 #endif /* IMYP_PARSE_H */

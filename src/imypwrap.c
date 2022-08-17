@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- wrapper functions between the main program and the backends.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -104,7 +104,7 @@
 void
 imyp_pause (
 #ifdef IMYP_ANSIC
-	const int milliseconds, const IMYP_CURR_LIB curr, const int is_note
+	const int milliseconds, imyp_backend_t * const curr, const int is_note
 # ifndef IMYP_HAVE_MIDI
 	IMYP_ATTR ((unused))
 # endif
@@ -120,7 +120,7 @@ imyp_pause (
 #else
 	milliseconds, curr, is_note, buf, bufsize)
 	const int milliseconds;
-	const IMYP_CURR_LIB curr;
+	imyp_backend_t * const curr;
 	const int is_note
 # ifndef IMYP_HAVE_MIDI
 	IMYP_ATTR ((unused))
@@ -130,82 +130,86 @@ imyp_pause (
 	int bufsize;
 #endif
 {
-	if ( curr == IMYP_CURR_ALLEGRO )
+	if ( curr == NULL )
+	{
+		return;
+	}
+	if ( curr->imyp_curr_lib == IMYP_CURR_ALLEGRO )
 	{
 #ifdef IMYP_HAVE_ALLEGRO
-		imyp_all_pause (milliseconds);
+		imyp_all_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_SDL )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
 #ifdef IMYP_HAVE_SDL
-		imyp_sdl_pause (milliseconds);
+		imyp_sdl_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_ALSA )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
 	{
 #ifdef IMYP_HAVE_ALSA
-		imyp_alsa_pause (milliseconds);
+		imyp_alsa_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_OSS )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_OSS )
 	{
 #ifdef IMYP_HAVE_OSS
-		imyp_oss_pause (milliseconds);
+		imyp_oss_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_LIBAO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_LIBAO )
 	{
 #ifdef IMYP_HAVE_LIBAO
-		imyp_ao_pause (milliseconds);
+		imyp_ao_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_PORTAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PORTAUDIO )
 	{
 #ifdef IMYP_HAVE_PORTAUDIO
-		imyp_portaudio_pause (milliseconds);
+		imyp_portaudio_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_JACK )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_JACK )
 	{
 #ifdef IMYP_HAVE_JACK
-		imyp_jack_pause (milliseconds);
+		imyp_jack_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_PULSEAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PULSEAUDIO )
 	{
 #ifdef IMYP_HAVE_PULSEAUDIO
-		imyp_pulse_pause (milliseconds);
+		imyp_pulse_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_MIDI )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_MIDI )
 	{
 #ifdef IMYP_HAVE_MIDI
-		imyp_midi_pause (milliseconds, is_note);
+		imyp_midi_pause (curr->imyp_data, milliseconds, is_note);
 #endif
 	}
-	else if ( curr == IMYP_CURR_EXEC )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_EXEC )
 	{
 #ifdef IMYP_HAVE_EXEC
-		imyp_exec_pause (milliseconds);
+		imyp_exec_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_GSTREAMER )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_GSTREAMER )
 	{
 #ifdef IMYP_HAVE_GST
-		imyp_gst_pause (milliseconds);
+		imyp_gst_pause (curr->imyp_data, milliseconds);
 #endif
 	}
-	else if ( curr == IMYP_CURR_FILE )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_FILE )
 	{
 #ifdef IMYP_HAVE_FILE
-		imyp_file_pause (milliseconds, buf, bufsize);
+		imyp_file_pause (curr->imyp_data, milliseconds, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_SPKR )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SPKR )
 	{
 #ifdef IMYP_HAVE_SPKR
-		imyp_spkr_pause (milliseconds);
+		imyp_spkr_pause (curr->imyp_data, milliseconds);
 #endif
 	}
 }
@@ -218,89 +222,93 @@ imyp_pause (
 void
 imyp_put_text (
 #ifdef IMYP_ANSIC
-	const char * const text, const IMYP_CURR_LIB curr)
+	const char * const text, imyp_backend_t * const curr)
 #else
 	text, curr)
 	const char * const text;
-	const IMYP_CURR_LIB curr;
+	imyp_backend_t * const curr;
 #endif
 {
-	if ( curr == IMYP_CURR_ALLEGRO )
+	if ( curr == NULL )
+	{
+		return;
+	}
+	if ( curr->imyp_curr_lib == IMYP_CURR_ALLEGRO )
 	{
 #ifdef IMYP_HAVE_ALLEGRO
-		imyp_all_put_text (text);
+		imyp_all_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_SDL )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
 #ifdef IMYP_HAVE_SDL
-		imyp_sdl_put_text (text);
+		imyp_sdl_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_ALSA )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
 	{
 #ifdef IMYP_HAVE_ALSA
-		imyp_alsa_put_text (text);
+		imyp_alsa_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_OSS )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_OSS )
 	{
 #ifdef IMYP_HAVE_OSS
-		imyp_oss_put_text (text);
+		imyp_oss_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_LIBAO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_LIBAO )
 	{
 #ifdef IMYP_HAVE_LIBAO
-		imyp_ao_put_text (text);
+		imyp_ao_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_PORTAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PORTAUDIO )
 	{
 #ifdef IMYP_HAVE_PORTAUDIO
-		imyp_portaudio_put_text (text);
+		imyp_portaudio_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_JACK )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_JACK )
 	{
 #ifdef IMYP_HAVE_JACK
-		imyp_jack_put_text (text);
+		imyp_jack_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_PULSEAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PULSEAUDIO )
 	{
 #ifdef IMYP_HAVE_PULSEAUDIO
-		imyp_pulse_put_text (text);
+		imyp_pulse_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_MIDI )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_MIDI )
 	{
 #ifdef IMYP_HAVE_MIDI
-		imyp_midi_put_text (text);
+		imyp_midi_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_EXEC )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_EXEC )
 	{
 #ifdef IMYP_HAVE_EXEC
-		imyp_exec_put_text (text);
+		imyp_exec_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_GSTREAMER )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_GSTREAMER )
 	{
 #ifdef IMYP_HAVE_GST
-		imyp_gst_put_text (text);
+		imyp_gst_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_FILE )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_FILE )
 	{
 #ifdef IMYP_HAVE_FILE
-		imyp_file_put_text (text);
+		imyp_file_put_text (curr->imyp_data, text);
 #endif
 	}
-	else if ( curr == IMYP_CURR_SPKR )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SPKR )
 	{
 #ifdef IMYP_HAVE_SPKR
-		imyp_spkr_put_text (text);
+		imyp_spkr_put_text (curr->imyp_data, text);
 #endif
 	}
 }
@@ -323,7 +331,7 @@ imyp_play_tune (
 	const int duration,
 	void * const buf,
 	int bufsize,
-	const IMYP_CURR_LIB curr)
+	imyp_backend_t * const curr)
 #else
 	freq, volume_level, duration, buf, bufsize, curr)
 	const double freq;
@@ -331,85 +339,102 @@ imyp_play_tune (
 	const int duration;
 	void * const buf;
 	int bufsize;
-	const IMYP_CURR_LIB curr;
+	imyp_backend_t * const curr;
 #endif
 {
-	if ( curr == IMYP_CURR_ALLEGRO )
+	if ( curr == NULL )
+	{
+		return -100;
+	}
+	if ( curr->imyp_curr_lib == IMYP_CURR_ALLEGRO )
 	{
 #ifdef IMYP_HAVE_ALLEGRO
-		return imyp_all_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_all_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_SDL )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
 #ifdef IMYP_HAVE_SDL
-		return imyp_sdl_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_sdl_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_ALSA )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
 	{
 #ifdef IMYP_HAVE_ALSA
-		return imyp_alsa_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_alsa_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_OSS )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_OSS )
 	{
 #ifdef IMYP_HAVE_OSS
-		return imyp_oss_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_oss_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_LIBAO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_LIBAO )
 	{
 #ifdef IMYP_HAVE_LIBAO
-		return imyp_ao_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_ao_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_PORTAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PORTAUDIO )
 	{
 #ifdef IMYP_HAVE_PORTAUDIO
-		return imyp_portaudio_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_portaudio_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_JACK )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_JACK )
 	{
 #ifdef IMYP_HAVE_JACK
-		return imyp_jack_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_jack_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_PULSEAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PULSEAUDIO )
 	{
 #ifdef IMYP_HAVE_PULSEAUDIO
-		return imyp_pulse_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_pulse_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_MIDI )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_MIDI )
 	{
 #ifdef IMYP_HAVE_MIDI
-		return imyp_midi_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_midi_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_EXEC )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_EXEC )
 	{
 #ifdef IMYP_HAVE_EXEC
-		return imyp_exec_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_exec_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_GSTREAMER )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_GSTREAMER )
 	{
 #ifdef IMYP_HAVE_GST
-		return imyp_gst_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_gst_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_FILE )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_FILE )
 	{
 #ifdef IMYP_HAVE_FILE
-		return imyp_file_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_file_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
-	else if ( curr == IMYP_CURR_SPKR )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SPKR )
 	{
 #ifdef IMYP_HAVE_SPKR
-		return imyp_spkr_play_tune (freq, volume_level, duration, buf, bufsize);
+		return imyp_spkr_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
 	return -1;
@@ -425,6 +450,7 @@ imyp_play_tune (
 int
 imyp_init_selected (
 #ifdef IMYP_ANSIC
+	imyp_backend_t * const curr,
 	const char output_system[], const char * const filename
 # ifndef IMYP_HAVE_FILE
 	IMYP_ATTR ((unused))
@@ -440,7 +466,8 @@ imyp_init_selected (
 # endif
 	)
 #else
-	output_system, filename, midi_instrument, out_file)
+	curr, output_system, filename, midi_instrument, out_file)
+	imyp_backend_t * const curr;
 	const char output_system[];
 	const char * const filename
 # ifdef IMYP_HAVE_FILE
@@ -460,125 +487,93 @@ imyp_init_selected (
 #endif
 {
 	int res = -1;
-	IMYP_CURR_LIB curr = IMYP_CURR_NONE;
 
-	if ( output_system == NULL ) return res;
-	curr = imyp_parse_system (output_system);
-
-	if ( curr == IMYP_CURR_NONE ) return res;
-#ifdef IMYP_HAVE_ALLEGRO
-	else if ( curr == IMYP_CURR_ALLEGRO )
+	if ( output_system == NULL )
 	{
-		res = imyp_all_init ();
-		if ( res == 0 )
-		{
-			return res;
-		}
+		return res;
+	}
+	curr->imyp_curr_lib = imyp_parse_system (output_system);
+
+	if ( curr->imyp_curr_lib == IMYP_CURR_NONE )
+	{
+		return res;
+	}
+#ifdef IMYP_HAVE_ALLEGRO
+	else if ( curr->imyp_curr_lib == IMYP_CURR_ALLEGRO )
+	{
+		res = imyp_all_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_MIDI
-	else if ( curr == IMYP_CURR_MIDI )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_MIDI )
 	{
-		res = imyp_midi_init (filename, midi_instrument);
-		if ( res == 0 ) return res;
+		res = imyp_midi_init (&(curr->imyp_data), filename, midi_instrument);
 	}
 #endif
 #ifdef IMYP_HAVE_SDL
-	else if ( curr == IMYP_CURR_SDL )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
-		res = imyp_sdl_init ();
-		if ( res == 0 )
-		{
-			return res;
-		}
+		res = imyp_sdl_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_ALSA
-	else if ( curr == IMYP_CURR_ALSA )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
 	{
-		res = imyp_alsa_init (filename);
-		if ( res == 0 )
-		{
-			return res;
-		}
+		res = imyp_alsa_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_OSS
-	else if ( curr == IMYP_CURR_OSS )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_OSS )
 	{
-		res = imyp_oss_init (filename);
-		if ( res == 0 )
-		{
-			return res;
-		}
+		res = imyp_oss_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_LIBAO
-	else if ( curr == IMYP_CURR_LIBAO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_LIBAO )
 	{
-		res = imyp_ao_init (filename);
-		if ( res == 0 )
-		{
-			return res;
-		}
+		res = imyp_ao_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_PORTAUDIO
-	else if ( curr == IMYP_CURR_PORTAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PORTAUDIO )
 	{
-		res = imyp_portaudio_init (filename);
-		if ( res == 0 )
-		{
-			return res;
-		}
+		res = imyp_portaudio_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_JACK
-	else if ( curr == IMYP_CURR_JACK )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_JACK )
 	{
-		res = imyp_jack_init (filename);
-		if ( res == 0 )
-		{
-			return res;
-		}
+		res = imyp_jack_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_PULSEAUDIO
-	else if ( curr == IMYP_CURR_PULSEAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PULSEAUDIO )
 	{
-		res = imyp_pulse_init (filename);
-		if ( res == 0 )
-		{
-			return res;
-		}
+		res = imyp_pulse_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_EXEC
-	else if ( curr == IMYP_CURR_EXEC )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_EXEC )
 	{
-		res = imyp_exec_init (filename);
-		if ( res == 0 ) return res;
+		res = imyp_exec_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_GST
-	else if ( curr == IMYP_CURR_GSTREAMER )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_GSTREAMER )
 	{
-		res = imyp_gst_init (filename);
-		if ( res == 0 ) return res;
+		res = imyp_gst_init (&(curr->imyp_data), filename);
 	}
 #endif
 #ifdef IMYP_HAVE_FILE
-	else if ( curr == IMYP_CURR_FILE )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_FILE )
 	{
-		res = imyp_file_init (filename, out_file);
-		if ( res == 0 ) return res;
+		res = imyp_file_init (&(curr->imyp_data), filename, out_file);
 	}
 #endif
 #ifdef IMYP_HAVE_SPKR
-	else if ( curr == IMYP_CURR_SPKR )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SPKR )
 	{
-		res = imyp_spkr_init (filename);
-		if ( res == 0 ) return res;
+		res = imyp_spkr_init (&(curr->imyp_data), filename);
 	}
 #endif
 	return res;
@@ -596,7 +591,7 @@ imyp_init_selected (
 int
 imyp_lib_init (
 #ifdef IMYP_ANSIC
-	IMYP_CURR_LIB * const curr, const int want_midi
+	imyp_backend_t * const curr, const int want_midi
 # ifndef IMYP_HAVE_MIDI
 	IMYP_ATTR ((unused))
 # endif
@@ -623,7 +618,7 @@ imyp_lib_init (
 	)
 #else
 	curr, want_midi, filename, want_exec, midi_instrument, want_file, out_file)
-	IMYP_CURR_LIB * const curr;
+	imyp_backend_t * const curr;
 	const int want_midi
 # ifndef IMYP_HAVE_MIDI
 	IMYP_ATTR ((unused))
@@ -661,110 +656,110 @@ imyp_lib_init (
 	{
 		return res;
 	}
-	*curr = IMYP_CURR_NONE;
+	curr->imyp_curr_lib = IMYP_CURR_NONE;
 #ifdef IMYP_HAVE_MIDI
 	if ( want_midi != 0 )
 	{
-		res = imyp_midi_init (filename, midi_instrument);
-		if ( res == 0 ) *curr = IMYP_CURR_MIDI;
+		res = imyp_midi_init (&(curr->imyp_data), filename, midi_instrument);
+		if ( res == 0 ) curr->imyp_curr_lib = IMYP_CURR_MIDI;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_EXEC
 	if ( want_exec != 0 )
 	{
-		res = imyp_exec_init (filename);
-		if ( res == 0 ) *curr = IMYP_CURR_EXEC;
+		res = imyp_exec_init (&(curr->imyp_data), filename);
+		if ( res == 0 ) curr->imyp_curr_lib = IMYP_CURR_EXEC;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_FILE
 	if ( want_file != 0 )
 	{
-		res = imyp_file_init (filename, out_file);
-		if ( res == 0 ) *curr = IMYP_CURR_FILE;
+		res = imyp_file_init (&(curr->imyp_data), filename, out_file);
+		if ( res == 0 ) curr->imyp_curr_lib = IMYP_CURR_FILE;
 		return res;
 	}
 #endif
 	/* first try the general, portable libraries */
 #ifdef IMYP_HAVE_ALLEGRO
-	res = imyp_all_init ();
+	res = imyp_all_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_ALLEGRO;
+		curr->imyp_curr_lib = IMYP_CURR_ALLEGRO;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_LIBAO
-	res = imyp_ao_init (filename);
+	res = imyp_ao_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_LIBAO;
+		curr->imyp_curr_lib = IMYP_CURR_LIBAO;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_PORTAUDIO
-	res = imyp_portaudio_init (filename);
+	res = imyp_portaudio_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_PORTAUDIO;
+		curr->imyp_curr_lib = IMYP_CURR_PORTAUDIO;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_GST
-	res = imyp_gst_init (filename);
+	res = imyp_gst_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_GSTREAMER;
+		curr->imyp_curr_lib = IMYP_CURR_GSTREAMER;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_SDL
-	res = imyp_sdl_init ();
+	res = imyp_sdl_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_SDL;
+		curr->imyp_curr_lib = IMYP_CURR_SDL;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_JACK
-	res = imyp_jack_init (filename);
+	res = imyp_jack_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_JACK;
+		curr->imyp_curr_lib = IMYP_CURR_JACK;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_PULSEAUDIO
-	res = imyp_pulse_init (filename);
+	res = imyp_pulse_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_PULSEAUDIO;
+		curr->imyp_curr_lib = IMYP_CURR_PULSEAUDIO;
 		return res;
 	}
 #endif
 	/* now try the less-portable sound systems */
 #ifdef IMYP_HAVE_ALSA
-	res = imyp_alsa_init (filename);
+	res = imyp_alsa_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_ALSA;
+		curr->imyp_curr_lib = IMYP_CURR_ALSA;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_OSS
-	res = imyp_oss_init (filename);
+	res = imyp_oss_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_OSS;
+		curr->imyp_curr_lib = IMYP_CURR_OSS;
 		return res;
 	}
 #endif
 #ifdef IMYP_HAVE_SPKR
-	res = imyp_spkr_init (filename);
+	res = imyp_spkr_init (&(curr->imyp_data), filename);
 	if ( res == 0 )
 	{
-		*curr = IMYP_CURR_SPKR;
+		curr->imyp_curr_lib = IMYP_CURR_SPKR;
 		return res;
 	}
 #endif
@@ -779,88 +774,92 @@ imyp_lib_init (
 int
 imyp_lib_close (
 #ifdef IMYP_ANSIC
-	const IMYP_CURR_LIB curr)
+	imyp_backend_t * const curr)
 #else
 	curr)
-	const IMYP_CURR_LIB curr;
+	imyp_backend_t * const curr;
 #endif
 {
-	if ( curr == IMYP_CURR_ALLEGRO )
+	if ( curr == NULL )
+	{
+		return -100;
+	}
+	if ( curr->imyp_curr_lib == IMYP_CURR_ALLEGRO )
 	{
 #ifdef IMYP_HAVE_ALLEGRO
-		return imyp_all_close ();
+		return imyp_all_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_SDL )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SDL )
 	{
 #ifdef IMYP_HAVE_SDL
-		return imyp_sdl_close ();
+		return imyp_sdl_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_ALSA )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_ALSA )
 	{
 #ifdef IMYP_HAVE_ALSA
-		return imyp_alsa_close ();
+		return imyp_alsa_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_OSS )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_OSS )
 	{
 #ifdef IMYP_HAVE_OSS
-		return imyp_oss_close ();
+		return imyp_oss_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_LIBAO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_LIBAO )
 	{
 #ifdef IMYP_HAVE_LIBAO
-		return imyp_ao_close ();
+		return imyp_ao_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_PORTAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PORTAUDIO )
 	{
 #ifdef IMYP_HAVE_PORTAUDIO
-		return imyp_portaudio_close ();
+		return imyp_portaudio_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_JACK )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_JACK )
 	{
 #ifdef IMYP_HAVE_JACK
-		return imyp_jack_close ();
+		return imyp_jack_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_PULSEAUDIO )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_PULSEAUDIO )
 	{
 #ifdef IMYP_HAVE_PULSEAUDIO
-		return imyp_pulse_close ();
+		return imyp_pulse_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_MIDI )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_MIDI )
 	{
 #ifdef IMYP_HAVE_MIDI
-		return imyp_midi_close ();
+		return imyp_midi_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_EXEC )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_EXEC )
 	{
 #ifdef IMYP_HAVE_EXEC
-		return imyp_exec_close ();
+		return imyp_exec_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_GSTREAMER )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_GSTREAMER )
 	{
 #ifdef IMYP_HAVE_GST
-		return imyp_gst_close ();
+		return imyp_gst_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_FILE )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_FILE )
 	{
 #ifdef IMYP_HAVE_FILE
-		return imyp_file_close ();
+		return imyp_file_close (curr->imyp_data);
 #endif
 	}
-	else if ( curr == IMYP_CURR_SPKR )
+	else if ( curr->imyp_curr_lib == IMYP_CURR_SPKR )
 	{
 #ifdef IMYP_HAVE_SPKR
-		return imyp_spkr_close ();
+		return imyp_spkr_close (curr->imyp_data);
 #endif
 	}
 	return -1;
@@ -872,47 +871,49 @@ imyp_lib_close (
 void
 imyp_report_versions (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_t * const curr)
+#else
+	curr)
+	imyp_backend_t * const curr;
 #endif
-)
 {
 #ifdef IMYP_HAVE_ALLEGRO
-	imyp_all_version ();
+	imyp_all_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_SDL
-	imyp_sdl_version ();
+	imyp_sdl_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_ALSA
-	imyp_alsa_version ();
+	imyp_alsa_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_OSS
-	imyp_oss_version ();
+	imyp_oss_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_LIBAO
-	imyp_ao_version ();
+	imyp_ao_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_PORTAUDIO
-	imyp_portaudio_version ();
+	imyp_portaudio_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_JACK
-	imyp_jack_version ();
+	imyp_jack_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_PULSEAUDIO
-	imyp_pulse_version ();
+	imyp_pulse_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_MIDI
-	imyp_midi_version ();
+	imyp_midi_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_EXEC
-	imyp_exec_version ();
+	imyp_exec_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_GST
-	imyp_gst_version ();
+	imyp_gst_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_FILE
-	imyp_file_version ();
+	imyp_file_version (curr->imyp_data);
 #endif
 #ifdef IMYP_HAVE_SPKR
-	imyp_spkr_version ();
+	imyp_spkr_version (curr->imyp_data);
 #endif
 }

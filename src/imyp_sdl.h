@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- SDL backend, header file.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,12 +28,16 @@
 
 # include "imyplay.h"
 
-extern void imyp_sdl_pause PARAMS ((const int milliseconds));
-extern void imyp_sdl_put_text PARAMS ((const char * const text));
-extern int imyp_sdl_play_tune PARAMS ((const double freq, const int volume_level,
+extern void imyp_sdl_pause PARAMS ((imyp_backend_data_t * const imyp_data,
+	const int milliseconds));
+extern void imyp_sdl_put_text PARAMS ((imyp_backend_data_t * const imyp_data,
+	const char * const text));
+extern int imyp_sdl_play_tune PARAMS ((imyp_backend_data_t * const imyp_data,
+	const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_sdl_init PARAMS ((void));
-extern int imyp_sdl_close PARAMS ((void));
-extern void imyp_sdl_version PARAMS ((void));
+extern int imyp_sdl_init PARAMS ((imyp_backend_data_t ** const imyp_data,
+	const char * const dev_file));
+extern int imyp_sdl_close PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_sdl_version PARAMS ((imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_SDL */

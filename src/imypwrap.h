@@ -3,7 +3,7 @@
  *	-- wrapper functions between the main program and the backends,
  *		header file.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -31,17 +31,18 @@
 
 # include "imyplay.h"
 
-extern void imyp_pause PARAMS ((const int milliseconds, const IMYP_CURR_LIB curr,
+extern void imyp_pause PARAMS ((const int milliseconds, imyp_backend_t * const curr,
 	const int is_note, void * const buf, int bufsize));
-extern void imyp_put_text PARAMS ((const char * const text, const IMYP_CURR_LIB curr));
+extern void imyp_put_text PARAMS ((const char * const text, imyp_backend_t * const curr));
 extern int imyp_play_tune PARAMS ((const double freq, const int volume_level,
-	const int duration, void * const buf, int bufsize, const IMYP_CURR_LIB curr));
-extern int imyp_lib_init PARAMS ((IMYP_CURR_LIB * const curr, const int want_midi,
+	const int duration, void * const buf, int bufsize, imyp_backend_t * const curr));
+extern int imyp_lib_init PARAMS ((imyp_backend_t * const curr, const int want_midi,
 	const char * const filename, const int want_exec, const int midi_instrument,
 	const int want_file, const char * const out_file));
-extern int imyp_init_selected PARAMS ((const char output_system[],
-	const char * const filename, const int midi_instrument, const char * const out_file));
-extern int imyp_lib_close PARAMS ((const IMYP_CURR_LIB curr));
-extern void imyp_report_versions PARAMS ((void));
+extern int imyp_init_selected PARAMS ((imyp_backend_t * const curr,
+	const char output_system[], const char * const filename,
+	const int midi_instrument, const char * const out_file));
+extern int imyp_lib_close PARAMS ((imyp_backend_t * const curr));
+extern void imyp_report_versions PARAMS ((imyp_backend_t * const curr));
 
 #endif /* IMYP_WRAPPERS */

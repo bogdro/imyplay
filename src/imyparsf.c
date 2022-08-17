@@ -1643,7 +1643,7 @@ char *yytext;
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing file.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -1858,7 +1858,7 @@ static int repeat_pos = 0;
 static int scanf_res;
 static int play_result;
 static int note_duration = 0;
-static IMYP_CURR_LIB curr;
+static imyp_backend_t * curr;
 
 #define IMYP_TOUPPER(c) ( (c) & 0x5f )
 #define IMYP_IS_DIGIT(c) ( ((c) >= '0') && ((c) <= '9') )
@@ -1954,7 +1954,7 @@ imyp_get_rest_time (
 
 #ifndef IMYP_ANSIC
 static void imyp_play_current_note PARAMS((const char melody[],
-	int * const duration, const IMYP_CURR_LIB curr_lib,
+	int * const duration, imyp_backend_t * const curr_lib,
 	int * const play_res, const int is_sharp,
 	const int is_flat, const int current_bpm));
 #endif
@@ -1978,13 +1978,13 @@ IMYP_ATTR((nonnull))
 imyp_play_current_note (
 #ifdef IMYP_ANSIC
 	const char melody[], int * const duration,
-	const IMYP_CURR_LIB curr_lib, int * const play_res,
+	imyp_backend_t * const curr_lib, int * const play_res,
 	const int is_sharp, const int is_flat, const int current_bpm)
 #else
 	melody, duration, curr_lib, play_res, is_sharp, is_flat, current_bpm)
 	const char melody[];
 	int * const duration;
-	const IMYP_CURR_LIB curr_lib;
+	imyp_backend_t * const curr_lib;
 	int * const play_res;
 	const int is_sharp;
 	const int is_flat;
@@ -2094,7 +2094,7 @@ imyp_play_current_note (
 
 #ifndef IMYP_ANSIC
 static void imyp_make_pause PARAMS((const char melody[],
-	const IMYP_CURR_LIB curr_lib, const int current_bpm));
+	imyp_backend_t * const curr_lib, const int current_bpm));
 #endif
 
 /**
@@ -2109,11 +2109,11 @@ IMYP_ATTR((nonnull))
 #endif
 imyp_make_pause (
 #ifdef IMYP_ANSIC
-	const char melody[], const IMYP_CURR_LIB curr_lib, const int current_bpm)
+	const char melody[], imyp_backend_t * const curr_lib, const int current_bpm)
 #else
 	melody, curr_lib, current_bpm)
 	const char melody[];
-	const IMYP_CURR_LIB curr_lib;
+	imyp_backend_t * const curr_lib;
 	const int current_bpm;
 #endif
 {
@@ -4220,14 +4220,19 @@ IMYP_ATTR((nonnull))
 #endif
 imyp_play_file (
 #ifdef IMYP_ANSIC
-	const char * const file_name, const IMYP_CURR_LIB curr_lib)
+	const char * const file_name, imyp_backend_t * const curr_lib)
 #else
 	file_name, curr_lib)
 	const char * const file_name;
-	const IMYP_CURR_LIB curr_lib;
+	imyp_backend_t * const curr_lib;
 #endif
 {
 	FILE * imy;
+	if ( (file_name == NULL) || (curr_lib == NULL) )
+	{
+		return -100;
+	}
+
 	if ( curr_lib != IMYP_CURR_NONE )
 	{
 		imy = fopen (file_name, "r");

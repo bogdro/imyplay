@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- FILE backend.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -39,12 +39,29 @@
 # include <string.h>
 #endif
 
-static FILE * raw_file = NULL;
-static enum IMYP_SAMPLE_FORMATS format = IMYP_SAMPLE_FORMAT_S16LE;
-static int samp_rate = 44100;
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
+#ifdef HAVE_MALLOC_H
+# include <malloc.h>
+#endif
+
+struct imyp_file_backend_data
+{
+	FILE * raw_file;
+	enum IMYP_SAMPLE_FORMATS format;
+	int samp_rate;
+};
+
+#ifndef HAVE_MALLOC
+struct imyp_file_backend_data imyp_file_backend_data_static;
+#endif
+
 
 /**
  * Play a specified tone.
+ * \param imyp_data pointer to the backend's private data.
  * \param freq The frequency of the tone (in Hz).
  * \param volume_level Volume of the tone (from 0 to 15).
  * \param duration The duration of the tone, in milliseconds.
@@ -55,13 +72,15 @@ static int samp_rate = 44100;
 int
 imyp_file_play_tune (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data,
 	const double freq,
 	const int volume_level,
 	const int duration,
 	void * const buf,
 	int bufsize)
 #else
-	freq, volume_level, duration, buf, bufsize)
+	imyp_data, freq, volume_level, duration, buf, bufsize)
+	imyp_backend_data_t * const imyp_data;
 	const double freq;
 	const int volume_level;
 	const int duration;
@@ -73,35 +92,40 @@ imyp_file_play_tune (
 	size_t fwrite_res;
 	int is_uns = 0;
 	int is_le = 1;
+	struct imyp_file_backend_data * data =
+		(struct imyp_file_backend_data *)imyp_data;
 
-	if ( (buf == NULL) || (bufsize <= 0) ) return -1;
+	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) )
+	{
+		return -1;
+	}
 
-	if ( (format == IMYP_SAMPLE_FORMAT_S8LE) || (format == IMYP_SAMPLE_FORMAT_S8BE) ||
-		 (format == IMYP_SAMPLE_FORMAT_U8LE) || (format == IMYP_SAMPLE_FORMAT_U8BE) )
+	if ( (data->format == IMYP_SAMPLE_FORMAT_S8LE) || (data->format == IMYP_SAMPLE_FORMAT_S8BE) ||
+		 (data->format == IMYP_SAMPLE_FORMAT_U8LE) || (data->format == IMYP_SAMPLE_FORMAT_U8BE) )
 	{
 		quality = 8;
 	}
 
-	if ( (format == IMYP_SAMPLE_FORMAT_U16LE) || (format == IMYP_SAMPLE_FORMAT_U16BE) ||
-		 (format == IMYP_SAMPLE_FORMAT_U8LE) || (format == IMYP_SAMPLE_FORMAT_U8BE) )
+	if ( (data->format == IMYP_SAMPLE_FORMAT_U16LE) || (data->format == IMYP_SAMPLE_FORMAT_U16BE) ||
+		 (data->format == IMYP_SAMPLE_FORMAT_U8LE) || (data->format == IMYP_SAMPLE_FORMAT_U8BE) )
 	{
 		is_uns = 1;
 	}
 
-	if ( (format == IMYP_SAMPLE_FORMAT_U16BE) || (format == IMYP_SAMPLE_FORMAT_S16BE) ||
-		 (format == IMYP_SAMPLE_FORMAT_U8BE) || (format == IMYP_SAMPLE_FORMAT_S8BE) )
+	if ( (data->format == IMYP_SAMPLE_FORMAT_U16BE) || (data->format == IMYP_SAMPLE_FORMAT_S16BE) ||
+		 (data->format == IMYP_SAMPLE_FORMAT_U8BE) || (data->format == IMYP_SAMPLE_FORMAT_S8BE) )
 	{
 		is_le = 0;
 	}
 
 	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
-		is_le, is_uns, quality, (unsigned int)samp_rate);
+		is_le, is_uns, quality, (unsigned int)data->samp_rate, NULL);
 	if ( sig_recvd != 0 )
 	{
 		return -2;
 	}
 	/* write raw samples to the file */
-	fwrite_res = fwrite (buf, 1, (size_t)bufsize, raw_file);
+	fwrite_res = fwrite (buf, 1, (size_t)bufsize, data->raw_file);
 	if ( fwrite_res == (size_t)bufsize )
 	{
 		return 0;
@@ -111,14 +135,17 @@ imyp_file_play_tune (
 
 /**
  * Pauses for the specified period of time.
+ * \param imyp_data pointer to the backend's private data.
  * \param milliseconds Number of milliseconds to pause.
  */
 void
 imyp_file_pause (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data,
 	const int milliseconds, void * const buf, int bufsize)
 #else
-	milliseconds, buf, bufsize)
+	imyp_data, milliseconds, buf, bufsize)
+	imyp_backend_data_t * const imyp_data;
 	const int milliseconds;
 	void * const buf;
 	int bufsize;
@@ -128,16 +155,21 @@ imyp_file_pause (
 	int i;
 #endif
 	int quality = 16;
+	struct imyp_file_backend_data * data =
+		(struct imyp_file_backend_data *)imyp_data;
 
-	if ( (buf == NULL) || (bufsize <= 0) || (milliseconds <= 0) ) return;
+	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) || (milliseconds <= 0) )
+	{
+		return;
+	}
 
-	if ( (format == IMYP_SAMPLE_FORMAT_S8LE) || (format == IMYP_SAMPLE_FORMAT_S8BE) ||
-		 (format == IMYP_SAMPLE_FORMAT_U8LE) || (format == IMYP_SAMPLE_FORMAT_U8BE) )
+	if ( (data->format == IMYP_SAMPLE_FORMAT_S8LE) || (data->format == IMYP_SAMPLE_FORMAT_S8BE) ||
+		 (data->format == IMYP_SAMPLE_FORMAT_U8LE) || (data->format == IMYP_SAMPLE_FORMAT_U8BE) )
 	{
 		quality = 8;
 	}
 
-	bufsize = IMYP_MIN (bufsize, (milliseconds * (int)samp_rate * ((int)quality/8)) / 1000);
+	bufsize = IMYP_MIN (bufsize, (milliseconds * (int)data->samp_rate * ((int)quality/8)) / 1000);
 #ifdef HAVE_MEMSET
 	memset (buf, 0, (size_t)bufsize);
 #else
@@ -147,27 +179,31 @@ imyp_file_pause (
 	}
 #endif
 	/* write silence to the file */
-	fwrite (buf, 1, (size_t)bufsize, raw_file);
+	fwrite (buf, 1, (size_t)bufsize, data->raw_file);
 }
 
 /**
  * Outputs the given text.
+ * \param imyp_data pointer to the backend's private data.
  * \param text The text to output.
  */
 void
 imyp_file_put_text (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
-	text)
+	imyp_data, text)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
-	if ( (text != NULL) && (stdout != NULL) ) printf ("%s", text);
+	imyp_put_text_stdout (text);
 }
 
 /**
  * Initializes the FILE backend for use.
+ * \param imyp_data pointer to storage for the backend's private data.
  * \param dev The format of the samples (passed in the
  *	--device option), e.g "44100:s16le".
  * \param file_out The output filename.
@@ -176,79 +212,116 @@ imyp_file_put_text (
 int
 imyp_file_init (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t ** const imyp_data,
 	const char * const dev, const char * const file_out)
 #else
-	dev, file_out)
+	imyp_data, dev, file_out)
+	imyp_backend_data_t ** const imyp_data;
 	const char * const dev;
 	const char * const file_out;
 #endif
 {
 	char * colon;
 	int scanf_res;
+	struct imyp_file_backend_data * data;
 
-	if ( file_out == NULL )
+	if ( (imyp_data == NULL) || (file_out == NULL) )
 	{
 		return -1;
 	}
-	raw_file = fopen (file_out, "wb");
-	if ( raw_file == NULL ) return -2;
+#ifdef HAVE_MALLOC
+	data = (struct imyp_file_backend_data *) malloc (sizeof (
+		struct imyp_file_backend_data));
+	if ( data == NULL )
+	{
+		return -7;
+	}
+#else
+	data = &imyp_file_backend_data_static;
+#endif
 
-	samp_rate = 44100;
-	format = IMYP_SAMPLE_FORMAT_S16LE;
+	data->raw_file = fopen (file_out, "wb");
+	if ( data->raw_file == NULL )
+	{
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+		return -2;
+	}
+
+	data->samp_rate = 44100;
+	data->format = IMYP_SAMPLE_FORMAT_S16LE;
 	if ( dev != NULL )
 	{
 		colon = strrchr (dev, (int)':');
 		if ( colon != NULL )
 		{
-			format = imyp_get_format (colon+1);
-			if ( format == IMYP_SAMPLE_FORMAT_UNKNOWN )
+			data->format = imyp_get_format (colon+1);
+			if ( data->format == IMYP_SAMPLE_FORMAT_UNKNOWN )
 			{
-				format = IMYP_SAMPLE_FORMAT_S16LE;
+				data->format = IMYP_SAMPLE_FORMAT_S16LE;
 			}
 			/* wipe the colon to read the sampling rate */
 			*colon = '\0';
 		}
 		/* get the sampling rate: */
-		scanf_res = sscanf (dev, "%d", &samp_rate);
+		scanf_res = sscanf (dev, "%d", &(data->samp_rate));
 		if ( scanf_res == 1 )
 		{
-			if ( samp_rate <= 0 )
+			if ( data->samp_rate <= 0 )
 			{
-				samp_rate = 44100;
+				data->samp_rate = 44100;
 			}
 		}
 	}
+	*imyp_data = (imyp_backend_data_t *)data;
 	return 0;
 }
 
 /**
  * Closes the FILE backend.
+ * \param imyp_data pointer to the backend's private data.
  * \return 0 on success.
  */
 int
 imyp_file_close (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data)
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data;
 #endif
-)
 {
-	if ( raw_file == NULL )
+	int res = 0;
+	struct imyp_file_backend_data * data =
+		(struct imyp_file_backend_data *)imyp_data;
+
+	if ( data != NULL )
 	{
-		return -1;
+		if ( data->raw_file == NULL )
+		{
+			res = -1;
+		}
+		fclose (data->raw_file);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 	}
-	fclose (raw_file);
-	return 0;
+	return res;
 }
 
 /**
  * Displays the version of the FILE backend.
+ * \param imyp_data pointer to the backend's private data.
  */
 void
 imyp_file_version (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
-)
 {
 	/* this is an internal backend */
 	printf ( "FILE\n" );

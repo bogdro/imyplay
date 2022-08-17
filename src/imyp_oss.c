@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- OSS backend.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -38,22 +38,8 @@
 # error OSS requested, but components not found.
 #endif
 
-/* select() the old way */
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  ifdef HAVE_TIME_H
-#   include <time.h>
-#  endif
-# endif
-#endif
-
 #ifdef HAVE_UNISTD_H
-# include <unistd.h>	/* select() (the old way), write(), close() */
+# include <unistd.h>	/* write(), close() */
 #endif
 
 #ifdef HAVE_FCNTL_H
@@ -64,21 +50,33 @@
 # include <sys/ioctl.h>
 #endif
 
-/* select () - the new way */
-#ifdef HAVE_SYS_SELECT_H
-# include <sys/select.h>
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
+#ifdef HAVE_MALLOC_H
+# include <malloc.h>
 #endif
 
 #ifndef O_WRONLY
 # define O_WRONLY 	1
 #endif
 
-static int pcm_fd;
-static int glob_format;
-static int glob_speed;
+struct imyp_oss_backend_data
+{
+	int pcm_fd;
+	int glob_format;
+	int glob_speed;
+};
+
+#ifndef HAVE_MALLOC
+struct imyp_oss_backend_data imyp_oss_backend_data_static;
+#endif
+
 
 /**
  * Play a specified tone.
+ * \param imyp_data pointer to the backend's private data.
  * \param freq The frequency of the tone (in Hz).
  * \param volume_level Volume of the tone (from 0 to 15).
  * \param duration The duration of the tone, in milliseconds.
@@ -89,13 +87,15 @@ static int glob_speed;
 int
 imyp_oss_play_tune (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data,
 	const double freq,
 	const int volume_level,
 	const int duration,
 	void * const buf,
 	int bufsize)
 #else
-	freq, volume_level, duration, buf, bufsize)
+	imyp_data, freq, volume_level, duration, buf, bufsize)
+	imyp_backend_data_t * const imyp_data;
 	const double freq;
 	const int volume_level;
 	const int duration;
@@ -107,12 +107,17 @@ imyp_oss_play_tune (
 	int res;
 	int is_le = 1;
 	int is_uns = 0;
+	struct imyp_oss_backend_data * data =
+		(struct imyp_oss_backend_data *)imyp_data;
 
-	if ( (buf == NULL) || (bufsize <= 0) ) return -1;
-
-	if ( (glob_format == AFMT_S8) || (glob_format == AFMT_U8) )
+	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) )
 	{
-		if ( glob_format == AFMT_U8 )
+		return -1;
+	}
+
+	if ( (data->glob_format == AFMT_S8) || (data->glob_format == AFMT_U8) )
+	{
+		if ( data->glob_format == AFMT_U8 )
 		{
 			is_uns = 1;
 		}
@@ -122,10 +127,10 @@ imyp_oss_play_tune (
 		}
 		quality = 8;
 	}
-	else if ( (glob_format == AFMT_S16_LE) || (glob_format == AFMT_S16_BE)
-		|| (glob_format == AFMT_U16_LE) || (glob_format == AFMT_U16_BE) )
+	else if ( (data->glob_format == AFMT_S16_LE) || (data->glob_format == AFMT_S16_BE)
+		|| (data->glob_format == AFMT_U16_LE) || (data->glob_format == AFMT_U16_BE) )
 	{
-		if ( (glob_format == AFMT_S16_BE) || (glob_format == AFMT_U16_BE) )
+		if ( (data->glob_format == AFMT_S16_BE) || (data->glob_format == AFMT_U16_BE) )
 		{
 			is_le = 0;
 		}
@@ -133,7 +138,7 @@ imyp_oss_play_tune (
 		{
 			is_le = 1;
 		}
-		if ( (glob_format == AFMT_U16_LE) || (glob_format == AFMT_U16_BE) )
+		if ( (data->glob_format == AFMT_U16_LE) || (data->glob_format == AFMT_U16_BE) )
 		{
 			is_uns = 1;
 		}
@@ -145,12 +150,12 @@ imyp_oss_play_tune (
 	}
 
 	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
-		is_le, is_uns, quality, (unsigned int)glob_speed);
+		is_le, is_uns, quality, (unsigned int)data->glob_speed, NULL);
 	if ( sig_recvd != 0 )
 	{
 		return -2;
 	}
-	res = write (pcm_fd, buf, (size_t)bufsize);
+	res = write (data->pcm_fd, buf, (size_t)bufsize);
 	if ( res == bufsize )
 	{
 		return 0;
@@ -160,57 +165,56 @@ imyp_oss_play_tune (
 
 /**
  * Pauses for the specified period of time.
+ * \param imyp_data pointer to the backend's private data.
  * \param milliseconds Number of milliseconds to pause.
  */
 void
 imyp_oss_pause (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const int milliseconds)
 #else
-	milliseconds)
+	imyp_data, milliseconds)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const int milliseconds;
 #endif
 {
-	if ( milliseconds <= 0 ) return;
-#if ((defined HAVE_SYS_SELECT_H) || (defined TIME_WITH_SYS_TIME)\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))	\
-	&& (defined HAVE_SELECT)
-	{
-		struct timeval tv;
-		tv.tv_sec = milliseconds / 1000;
-		tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
-		select ( 0, NULL, NULL, NULL, &tv );
-	}
-#endif
+	imyp_pause_select (milliseconds);
 }
 
 /**
  * Outputs the given text.
+ * \param imyp_data pointer to the backend's private data.
  * \param text The text to output.
  */
 void
 imyp_oss_put_text (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
-	text)
+	imyp_data, text)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
-	if ( (text != NULL) && (stdout != NULL) ) printf ("%s", text);
+	imyp_put_text_stdout (text);
 }
 
 /**
  * Initializes the OSS subsystem for use.
+ * \param imyp_data pointer to storage for the backend's private data.
  * \param dev_file The device to open.
  * \return 0 on success.
  */
 int
 imyp_oss_init (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t ** const imyp_data,
 	const char * const dev_file)
 #else
-	dev_file)
+	imyp_data, dev_file)
+	imyp_backend_data_t ** const imyp_data;
 	const char * const dev_file;
 #endif
 {
@@ -220,23 +224,45 @@ imyp_oss_init (
 		AFMT_S8, AFMT_U8};
 	const int speeds[] = {44100, 22050, 11025};
 	int format;
+	struct imyp_oss_backend_data * data;
+
+	if ( imyp_data == NULL )
+	{
+		return -100;
+	}
+#ifdef HAVE_MALLOC
+	data = (struct imyp_oss_backend_data *) malloc (sizeof (
+		struct imyp_oss_backend_data));
+	if ( data == NULL )
+	{
+		return -6;
+	}
+#else
+	data = &imyp_oss_backend_data_static;
+#endif
 
 	if ( dev_file == NULL )
 	{
-		pcm_fd = open ("/dev/dsp", O_WRONLY);
-		if ( pcm_fd < 0 )
+		data->pcm_fd = open ("/dev/dsp", O_WRONLY);
+		if ( data->pcm_fd < 0 )
 		{
+#ifdef HAVE_MALLOC
+			free (data);
+#endif
 			return -1;
 		}
 	}
 	else
 	{
-		pcm_fd = open (dev_file, O_WRONLY);
-		if ( pcm_fd < 0 )
+		data->pcm_fd = open (dev_file, O_WRONLY);
+		if ( data->pcm_fd < 0 )
 		{
-			pcm_fd = open ("/dev/dsp", O_WRONLY);
-			if ( pcm_fd < 0 )
+			data->pcm_fd = open ("/dev/dsp", O_WRONLY);
+			if ( data->pcm_fd < 0 )
 			{
+#ifdef HAVE_MALLOC
+				free (data);
+#endif
 				return -1;
 			}
 		}
@@ -245,88 +271,126 @@ imyp_oss_init (
 	for ( i = 0; i < sizeof (formats) / sizeof (formats[0]); i++ )
 	{
 		format = formats[i];
-		res = ioctl (pcm_fd, SNDCTL_DSP_SETFMT, &format);
+		res = ioctl (data->pcm_fd, SNDCTL_DSP_SETFMT, &format);
 		if ( res < 0 )
 		{
-			close (pcm_fd);
+			close (data->pcm_fd);
+#ifdef HAVE_MALLOC
+			free (data);
+#endif
 			return -2;
 		}
 
 		if ( format == formats[i] )
 		{
-			glob_format = format;
+			data->glob_format = format;
 			break;
 		}
 	}
 	if ( i == sizeof (formats) / sizeof (formats[0]) )
 	{
-		close (pcm_fd);
+		close (data->pcm_fd);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 		return -3;
 	}
 
 	format = 1;
-	res = ioctl (pcm_fd, SNDCTL_DSP_CHANNELS, &format);
+	res = ioctl (data->pcm_fd, SNDCTL_DSP_CHANNELS, &format);
 	if ( res < 0 )
 	{
-		close (pcm_fd);
+		close (data->pcm_fd);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 		return -4;
 	}
 
 	if ( format != 1 )
 	{
-		close (pcm_fd);
+		close (data->pcm_fd);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 		return -5;
 	}
 
 	for ( i = 0; i < sizeof (speeds) / sizeof (speeds[0]); i++ )
 	{
 		format = speeds[i];
-		res = ioctl (pcm_fd, SNDCTL_DSP_SPEED, &format);
+		res = ioctl (data->pcm_fd, SNDCTL_DSP_SPEED, &format);
 		if ( res < 0 )
 		{
-			close (pcm_fd);
+			close (data->pcm_fd);
+#ifdef HAVE_MALLOC
+			free (data);
+#endif
 			return -6;
 		}
 
 		if ( format == speeds[i] )
 		{
-			glob_speed = format;
+			data->glob_speed = format;
 			break;
 		}
 	}
 	if ( i == sizeof (speeds) / sizeof (speeds[0]) )
 	{
-		close (pcm_fd);
+		close (data->pcm_fd);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 		return -7;
 	}
+	*imyp_data = (imyp_backend_data_t *)data;
 
 	return 0;
 }
 
 /**
  * Closes the OSS subsystem.
+ * \param imyp_data pointer to the backend's private data.
  * \return 0 on success.
  */
 int
 imyp_oss_close (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data)
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data;
 #endif
-)
 {
-	if ( pcm_fd >= 0 ) return close (pcm_fd);
-	return 0;
+	struct imyp_oss_backend_data * data =
+		(struct imyp_oss_backend_data *)imyp_data;
+	int res = 0;
+
+	if ( data != NULL )
+	{
+		if ( data->pcm_fd >= 0 )
+		{
+			res = close (data->pcm_fd);
+		}
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+	}
+	return res;
 }
 
 /**
  * Displays the version of the OSS backend.
+ * \param imyp_data pointer to the backend's private data.
  */
 void
 imyp_oss_version (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
-)
 {
 #ifdef SOUND_VERSION
 # if SOUND_VERSION < 361

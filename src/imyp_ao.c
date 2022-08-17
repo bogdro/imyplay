@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- LIBAO backend.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 
 #include <stdio.h>
 
-#if (defined HAVE_LIBAO) && ((defined HAVE_AO_H) || (defined HAVE_AO_AO_H))
+#ifdef IMYP_HAVE_LIBAO
 # if (defined HAVE_AO_H)
 #  include <ao.h>
 # else
@@ -42,34 +42,28 @@
 # error AO requested, but components not found.
 #endif
 
-/* select() the old way */
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  ifdef HAVE_TIME_H
-#   include <time.h>
-#  endif
-# endif
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
 #endif
 
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>	/* select() (the old way) */
+#ifdef HAVE_MALLOC_H
+# include <malloc.h>
 #endif
 
-/* select () - the new way */
-#ifdef HAVE_SYS_SELECT_H
-# include <sys/select.h>
+struct imyp_ao_backend_data
+{
+	ao_device *device;
+	ao_sample_format format;
+};
+
+#ifndef HAVE_MALLOC
+struct imyp_ao_backend_data imyp_ao_backend_data_static;
 #endif
 
-static ao_device *device;
-static ao_sample_format format;
 
 /**
  * Play a specified tone.
+ * \param imyp_data pointer to the backend's private data.
  * \param freq The frequency of the tone (in Hz).
  * \param volume_level Volume of the tone (from 0 to 15).
  * \param duration The duration of the tone, in milliseconds.
@@ -80,13 +74,15 @@ static ao_sample_format format;
 int
 imyp_ao_play_tune (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data,
 	const double freq,
 	const int volume_level,
 	const int duration,
 	void * const buf,
 	int bufsize)
 #else
-	freq, volume_level, duration, buf, bufsize)
+	imyp_data, freq, volume_level, duration, buf, bufsize)
+	imyp_backend_data_t * const imyp_data;
 	const double freq;
 	const int volume_level;
 	const int duration;
@@ -95,20 +91,22 @@ imyp_ao_play_tune (
 #endif
 {
 	int res;
+	struct imyp_ao_backend_data * data =
+		(struct imyp_ao_backend_data *)imyp_data;
 
-	if ( (buf == NULL) || (bufsize <= 0) )
+	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) )
 	{
 		return -1;
 	}
 
 	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
-		(format.byte_format == AO_FMT_LITTLE)? 1 : 0, 1,
-		(unsigned int)format.bits, (unsigned int)format.rate);
+		(data->format.byte_format == AO_FMT_LITTLE)? 1 : 0, 1,
+		(unsigned int)data->format.bits, (unsigned int)data->format.rate, NULL);
 	if ( sig_recvd != 0 )
 	{
 		return -2;
 	}
-	res = ao_play (device, buf, (uint_32) bufsize);
+	res = ao_play (data->device, buf, (uint_32) bufsize);
 	if ( res > 0 )
 	{
 		return 0;
@@ -118,58 +116,56 @@ imyp_ao_play_tune (
 
 /**
  * Pauses for the specified period of time.
+ * \param imyp_data pointer to the backend's private data.
  * \param milliseconds Number of milliseconds to pause.
  */
 void
 imyp_ao_pause (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const int milliseconds)
 #else
-	milliseconds)
+	imyp_data, milliseconds)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const int milliseconds;
 #endif
 {
-	if ( milliseconds <= 0 ) return;
-#if (((defined HAVE_SYS_SELECT_H) || (((defined TIME_WITH_SYS_TIME)	\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))		\
- 		&& (defined HAVE_UNISTD_H)))				\
-	&& (defined HAVE_SELECT))
-	{
-		struct timeval tv;
-		tv.tv_sec = milliseconds / 1000;
-		tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
-		select ( 0, NULL, NULL, NULL, &tv );
-	}
-#endif
+	imyp_pause_select (milliseconds);
 }
 
 /**
  * Outputs the given text.
+ * \param imyp_data pointer to the backend's private data.
  * \param text The text to output.
  */
 void
 imyp_ao_put_text (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
-	text)
+	imyp_data, text)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
-	if ( (text != NULL) && (stdout != NULL) ) printf ("%s", text);
+	imyp_put_text_stdout (text);
 }
 
 /**
  * Initializes the AO library for use.
+ * \param imyp_data pointer to storage for the backend's private data.
  * \param dev_file The device to open.
  * \return 0 on success.
  */
 int
 imyp_ao_init (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t ** const imyp_data,
 	const char * const dev_file)
 #else
-	dev_file)
+	imyp_data, dev_file)
+	imyp_backend_data_t ** const imyp_data;
 	const char * const dev_file;
 #endif
 {
@@ -178,69 +174,120 @@ imyp_ao_init (
 	const int speeds[] = {44100, 22050, 11025};
 	const int endians[] = {AO_FMT_LITTLE, AO_FMT_BIG};
 	size_t i, j;
+	struct imyp_ao_backend_data * data;
+
+	if ( imyp_data == NULL )
+	{
+		return -6;
+	}
+#ifdef HAVE_MALLOC
+	data = (struct imyp_ao_backend_data *) malloc (sizeof (
+		struct imyp_ao_backend_data));
+	if ( data == NULL )
+	{
+		return -7;
+	}
+#else
+	data = &imyp_ao_backend_data_static;
+#endif
 
 	ao_initialize ();
 	if ( dev_file != NULL )
 	{
 		res = sscanf (dev_file, "%d", &driver);
-		if ( res == 1 ) driver = ao_default_driver_id ();
+		if ( res == 1 )
+		{
+			driver = ao_default_driver_id ();
+		}
 	}
-	else driver = ao_default_driver_id ();
+	else
+	{
+		driver = ao_default_driver_id ();
+	}
 
-	format.channels = 1;
+	data->format.channels = 1;
 
 	/* file:///usr/share/doc/libao-devel-X.Y.Z/ao_example.c */
 	for ( i = 0; i < sizeof (speeds) / sizeof (speeds[0]); i++ )
 	{
-		format.rate = speeds[i];
+		data->format.rate = speeds[i];
 		for ( j = 0; j < sizeof (endians) / sizeof (endians[0]); j++ )
 		{
-			format.byte_format = endians[j];
-			format.bits = 16;
-			device = ao_open_live (driver, &format, NULL /* no options */);
-			if (device != NULL)
+			data->format.byte_format = endians[j];
+			data->format.bits = 16;
+			data->device = ao_open_live (driver, &(data->format), NULL /* no options */);
+			if ( data->device != NULL )
 			{
 				break;
 			}
-			format.bits = 8;
-			device = ao_open_live (driver, &format, NULL /* no options */);
-			if (device != NULL)
+			data->format.bits = 8;
+			data->device = ao_open_live (driver, &(data->format), NULL /* no options */);
+			if ( data->device != NULL )
 			{
 				break;
 			}
 		}
-		if ( j < sizeof (endians) / sizeof (endians[0]) ) break;
+		if ( j < sizeof (endians) / sizeof (endians[0]) )
+		{
+			break;
+		}
 	}
-	if ( i == sizeof (speeds) / sizeof (speeds[0]) ) return -1;
+	if ( i == sizeof (speeds) / sizeof (speeds[0]) )
+	{
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+		ao_shutdown ();
+		return -1;
+	}
+	*imyp_data = (imyp_backend_data_t *)data;
 
 	return 0;
 }
 
 /**
  * Closes the AO library.
+ * \param imyp_data pointer to the backend's private data.
  * \return 0 on success.
  */
 int
 imyp_ao_close (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
-)
 {
-	if ( device != NULL ) ao_close (device);
+	struct imyp_ao_backend_data * data =
+		(struct imyp_ao_backend_data *)imyp_data;
+
+	if ( data != NULL )
+	{
+		if ( data->device != NULL )
+		{
+			ao_close (data->device);
+		}
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+	}
 	ao_shutdown ();
 	return 0;
 }
 
 /**
  * Displays the version of the AO library IMYplay was compiled with.
+ * \param imyp_data pointer to the backend's private data.
  */
 void
 imyp_ao_version (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
-)
 {
 	/* no version information currently available */
 	printf ( "AO: ?\n" );

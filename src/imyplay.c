@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- main file.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -82,7 +82,7 @@
 #define	PROGRAM_NAME	PACKAGE
 
 static const char ver_str[] = N_("version");
-static const char author_str[] = "Copyright (C) 2009-2012 Bogdan 'bogdro' Drozdowski, bogdandr@op.pl\n" \
+static const char author_str[] = "Copyright (C) 2009-2013 Bogdan 'bogdro' Drozdowski, bogdandr@op.pl\n" \
 	"MIDI code: Copyright 1998-2008, Steven Goodwin (StevenGoodwin@gmail.com)";
 static const char lic_str[] = N_(							\
 	"Program for playing iMelody ringtones (IMY files).\n"				\
@@ -163,7 +163,11 @@ static const struct option opts[] =
 };
 #endif
 
-static IMYP_CURR_LIB current_library = IMYP_CURR_NONE;
+static imyp_backend_t current_library =
+{
+	NULL,
+	IMYP_CURR_NONE
+};
 
 /**
  * Displays an error message.
@@ -365,7 +369,7 @@ main (
 		if ( (opt_char == (int)'V') || (opt_version == 1) )
 		{
 			printf ( "%s %s %s\n", imyp_progname, _(ver_str), VERSION );
-			imyp_report_versions ();
+			imyp_report_versions (&current_library);
 			return 1;
 		}
 
@@ -426,7 +430,7 @@ main (
 		if ( (strstr (argv[i], "-V") == argv[i]) || (strstr (argv[i], "--version") == argv[i]) )
 		{
 			printf ( "%s %s %s\n", imyp_progname, _(ver_str), VERSION );
-			imyp_report_versions ();
+			imyp_report_versions (&current_library);
 			return 1;
 		}
 		if ( (strstr (argv[i], "-l") == argv[i]) || (strstr (argv[i], "--license") == argv[i])
@@ -541,7 +545,7 @@ main (
 		}
 		if ( output_system != NULL )
 		{
-			IMYP_CURR_LIB sel = imyp_parse_system (output_system);
+			enum IMYP_CURR_LIB sel = imyp_parse_system (output_system);
 			if ( sel == IMYP_CURR_MIDI )
 			{
 #ifdef IMYP_HAVE_MIDI
@@ -552,7 +556,8 @@ main (
 				&& (sel != IMYP_CURR_EXEC) && (sel != IMYP_CURR_FILE) )
 			{
 				/* try to initialize the given output system */
-				if ( imyp_init_selected (output_system,
+				if ( imyp_init_selected (&current_library,
+					output_system,
 					device,
 #ifdef IMYP_HAVE_MIDI
 					midi_instrument,
@@ -570,7 +575,7 @@ main (
 					return -2;
 				}
 				/* initialized successfully - set the currently-used library */
-				current_library = sel;
+				current_library.imyp_curr_lib = sel;
 			}
 		}
 		else if ( imyp_lib_init (&current_library, 0, device, 0,
@@ -666,17 +671,23 @@ main (
 			}
 		}
 #endif
-		ret = imyp_play_file (argv[imyp_optind], current_library);
-		if ( sig_recvd != 0 ) break;
+		ret = imyp_play_file (argv[imyp_optind], &current_library);
+		if ( sig_recvd != 0 )
+		{
+			break;
+		}
 		imyp_optind++;
 	} /* while optind<argc && !signal */
 
-	if ( imyp_lib_close (current_library) != 0 )
+	if ( imyp_lib_close (&current_library) != 0 )
 	{
 		printf ("%s\n", _(err_lib_close));
 		ret = -3;
 	}
-	if ( sig_recvd != 0 ) ret = -100;
+	if ( sig_recvd != 0 )
+	{
+		ret = -100;
+	}
 
 	return ret;
 }

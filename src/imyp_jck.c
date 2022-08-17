@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- JACK backend.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,10 +28,11 @@
 #include "imyplay.h"
 #include "imyp_jck.h"
 #include "imyp_sig.h"
+#include "imyputil.h"
 
 #include <stdio.h>
 
-#if (defined HAVE_LIBJACK) && ((defined HAVE_JACK_H) || (defined HAVE_JACK_JACK_H))
+#ifdef IMYP_HAVE_JACK
 # if (defined HAVE_JACK_H)
 #  include <jack.h>
 # else
@@ -41,14 +42,11 @@
 # error JACK requested, but components not found.
 #endif
 
-#ifndef HAVE_JACK_FREE
- /* use standard free() */
-# ifdef HAVE_STDLIB_H
-#  include <stdlib.h>
-# endif
-# ifdef HAVE_MALLOC_H
-#  include <malloc.h>	/* malloc() is not used here, but free() is */
-# endif
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+#ifdef HAVE_MALLOC_H
+# include <malloc.h>
 #endif
 
 #ifdef HAVE_MATH_H
@@ -59,41 +57,21 @@
 # define M_PI 3.14159265358979323846
 #endif
 
-/* select() the old way */
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  ifdef HAVE_TIME_H
-#   include <time.h>
-#  endif
-# endif
-#endif
-
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>	/* select() (the old way) */
-#endif
-
-/* select () - the new way */
-#ifdef HAVE_SYS_SELECT_H
-# include <sys/select.h>
-#endif
-
-struct imyp_jack_sound_data
+struct imyp_jack_backend_data
 {
 	double tone_freq;
 	int volume_level;
 	int duration;
 	unsigned long int last_index;
 	volatile int inside_callback;
+	jack_port_t * joutput;
+	jack_client_t * jclient;
+	const char **ports;
 };
 
-static struct imyp_jack_sound_data sound_data = {0.0, 0, 0, 0, 0};
-static jack_port_t * joutput;
-static jack_client_t * jclient;
+#ifndef HAVE_MALLOC
+struct imyp_jack_backend_data imyp_jack_backend_data_static;
+#endif
 
 #ifndef IMYP_ANSIC
 static int imyp_jack_fill_buffer PARAMS((jack_nframes_t nframes, void * arg));
@@ -101,6 +79,9 @@ static int imyp_jack_fill_buffer PARAMS((jack_nframes_t nframes, void * arg));
 
 /**
  * The stream callback function.
+ * \param nframes the number of frames to fill.
+ * \param imyp_data pointer to the backend's private data.
+ * \return 0 in case of success.
  */
 static int imyp_jack_fill_buffer (
 #ifdef IMYP_ANSIC
@@ -117,13 +98,22 @@ static int imyp_jack_fill_buffer (
 	jack_nframes_t sampfreq;
 	double nperiods;
 
-	output = jack_port_get_buffer (joutput, nframes);
+	struct imyp_jack_backend_data * data =
+		(struct imyp_jack_backend_data *)arg;
 
-#define data ((struct imyp_jack_sound_data *) arg)
+	if ( data == NULL )
+	{
+		return -100;
+	}
 
-	if ( (data == NULL) || (output == NULL) ) return 0;
+	output = jack_port_get_buffer (data->joutput, nframes);
 
-	sampfreq = jack_get_sample_rate (jclient);
+	if ( output == NULL )
+	{
+		return 0;
+	}
+
+	sampfreq = jack_get_sample_rate (data->jclient);
 	if ( data->tone_freq > 0.0 )
 	{
 		data->inside_callback = 1;
@@ -186,6 +176,7 @@ static int imyp_jack_fill_buffer (
 
 /**
  * Play a specified tone.
+ * \param imyp_data pointer to the backend's private data.
  * \param freq The frequency of the tone (in Hz).
  * \param volume_level Volume of the tone (from 0 to 15).
  * \param duration The duration of the tone, in milliseconds.
@@ -196,13 +187,15 @@ static int imyp_jack_fill_buffer (
 int
 imyp_jack_play_tune (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data,
 	const double freq,
 	const int volume_level,
 	const int duration,
 	void * const buf IMYP_ATTR((unused)),
 	int bufsize IMYP_ATTR((unused)))
 #else
-	freq, volume_level, duration, buf, bufsize)
+	imyp_data, freq, volume_level, duration, buf, bufsize)
+	imyp_backend_data_t * const imyp_data;
 	const double freq;
 	const int volume_level;
 	const int duration;
@@ -210,179 +203,241 @@ imyp_jack_play_tune (
 	int bufsize IMYP_ATTR((unused));
 #endif
 {
-	sound_data.tone_freq = freq;
-	sound_data.volume_level = volume_level;
-	sound_data.duration = duration;
-	sound_data.last_index = 0;
+	struct imyp_jack_backend_data * data =
+		(struct imyp_jack_backend_data *)imyp_data;
 
-	imyp_jack_pause (duration);
+	if ( data == NULL )
+	{
+		return -100;
+	}
 
-	while ( sound_data.inside_callback != 0 ) {};
-	sound_data.tone_freq = 0.0;
-	sound_data.volume_level = 0;
-	sound_data.duration = 0;
-	sound_data.last_index = 0;
+	data->tone_freq = freq;
+	data->volume_level = volume_level;
+	data->duration = duration;
+	data->last_index = 0;
+
+	imyp_jack_pause (imyp_data, duration);
+
+	while ( data->inside_callback != 0 ) {};
+
+	data->tone_freq = 0.0;
+	data->volume_level = 0;
+	data->duration = 0;
+	data->last_index = 0;
 
 	return 0;
 }
 
 /**
  * Pauses for the specified period of time.
+ * \param imyp_data pointer to the backend's private data.
  * \param milliseconds Number of milliseconds to pause.
  */
 void
 imyp_jack_pause (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const int milliseconds)
 #else
-	milliseconds)
+	imyp_data, milliseconds)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const int milliseconds;
 #endif
 {
-	if ( milliseconds <= 0 ) return;
-#if (((defined HAVE_SYS_SELECT_H) || (((defined TIME_WITH_SYS_TIME)	\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))		\
- 		&& (defined HAVE_UNISTD_H)))				\
-	&& (defined HAVE_SELECT))
-	{
-		struct timeval tv;
-		tv.tv_sec = milliseconds / 1000;
-		tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
-		select ( 0, NULL, NULL, NULL, &tv );
-	}
-#endif
+	imyp_pause_select (milliseconds);
 }
 
 /**
  * Outputs the given text.
+ * \param imyp_data pointer to the backend's private data.
  * \param text The text to output.
  */
 void
 imyp_jack_put_text (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
-	text)
+	imyp_data, text)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
-	if ( (text != NULL) && (stdout != NULL) ) printf ("%s", text);
+	imyp_put_text_stdout (text);
 }
 
 /**
  * Initializes the JACK library for use.
+ * \param imyp_data pointer to storage for the backend's private data.
  * \param dev_file The server to connect to.
  * \return 0 on success.
  */
 int
 imyp_jack_init (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t ** const imyp_data,
 	const char * const dev_file)
 #else
-	dev_file)
+	imyp_data, dev_file)
+	imyp_backend_data_t ** const imyp_data;
 	const char * const dev_file;
 #endif
 {
 	int res;
 	jack_status_t jstatus;
-	const char **ports;
+	struct imyp_jack_backend_data * data;
 
-	sound_data.tone_freq = 0.0;
-	sound_data.volume_level = 0;
-	sound_data.duration = 0;
-	sound_data.last_index = 0;
-	sound_data.inside_callback = 0;
-
-	jclient = jack_client_open ("IMYplay", JackNullOption, &jstatus, dev_file);
-	if ( jclient == NULL )
+	if ( imyp_data == NULL )
 	{
+		return -100;
+	}
+#ifdef HAVE_MALLOC
+	data = (struct imyp_jack_backend_data *) malloc (sizeof (
+		struct imyp_jack_backend_data));
+	if ( data == NULL )
+	{
+		return -6;
+	}
+#else
+	data = &imyp_jack_backend_data_static;
+#endif
+
+	data->tone_freq = 0.0;
+	data->volume_level = 0;
+	data->duration = 0;
+	data->last_index = 0;
+	data->inside_callback = 0;
+
+	data->jclient = jack_client_open ("IMYplay", JackNullOption, &jstatus, dev_file);
+	if ( data->jclient == NULL )
+	{
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 		return -1;
 	}
 
-	jack_set_process_callback (jclient, imyp_jack_fill_buffer, &sound_data);
+	jack_set_process_callback (data->jclient, imyp_jack_fill_buffer, data);
 
-	joutput = jack_port_register (jclient, "output", JACK_DEFAULT_AUDIO_TYPE,
+	data->joutput = jack_port_register (data->jclient, "output", JACK_DEFAULT_AUDIO_TYPE,
 		JackPortIsOutput, 0);
 
-	if ( joutput == NULL )
+	if ( data->joutput == NULL )
 	{
-		jack_client_close (jclient);
+		jack_client_close (data->jclient);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 		return -2;
 	}
 
-	res = jack_activate (jclient);
+	res = jack_activate (data->jclient);
 	if ( res != 0 )
 	{
-		jack_port_unregister (jclient, joutput);
-		jack_client_close (jclient);
+		jack_port_unregister (data->jclient, data->joutput);
+		jack_client_close (data->jclient);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 		return -3;
 	}
 
-	ports = jack_get_ports (jclient, NULL, NULL, JackPortIsPhysical|JackPortIsInput);
-	if ( ports == NULL )
+	data->ports = jack_get_ports (data->jclient, NULL, NULL, JackPortIsPhysical|JackPortIsInput);
+	if ( data->ports == NULL )
 	{
 		/* no ports available */
-		jack_deactivate (jclient);
-		jack_port_unregister (jclient, joutput);
-		jack_client_close (jclient);
+		jack_deactivate (data->jclient);
+		jack_port_unregister (data->jclient, data->joutput);
+		jack_client_close (data->jclient);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 		return -4;
 	}
 
-	res = jack_connect (jclient, jack_port_name (joutput), ports[0]);
+	res = jack_connect (data->jclient, jack_port_name (data->joutput), data->ports[0]);
 	if ( res != 0 )
 	{
 #ifdef HAVE_JACK_FREE
-		jack_free (ports);
+		jack_free (data->ports);
 #else
-		free (ports);
+		free (data->ports);
 #endif
-		jack_deactivate (jclient);
-		jack_port_unregister (jclient, joutput);
-		jack_client_close (jclient);
+		jack_deactivate (data->jclient);
+		jack_port_unregister (data->jclient, data->joutput);
+		jack_client_close (data->jclient);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
 		return -5;
 	}
 
-#ifdef HAVE_JACK_FREE
-	jack_free (ports);
-#else
-	free (ports);
-#endif
+	*imyp_data = (imyp_backend_data_t *)data;
 
 	return 0;
 }
 
 /**
  * Closes the JACK library.
+ * \param imyp_data pointer to the backend's private data.
  * \return 0 on success.
  */
 int
 imyp_jack_close (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data)
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data;
 #endif
-)
 {
 	int res = 0, tempres;
+	struct imyp_jack_backend_data * data =
+		(struct imyp_jack_backend_data *)imyp_data;
 
-	tempres = jack_deactivate (jclient);
-	if ( res == 0 ) res = tempres;
-	tempres = jack_port_unregister (jclient, joutput);
-	if ( res == 0 ) res = tempres;
-	tempres = jack_client_close (jclient);
-	if ( res == 0 ) res = tempres;
+	if ( data != NULL )
+	{
+		jack_disconnect (data->jclient, jack_port_name (data->joutput), data->ports[0]);
+		tempres = jack_deactivate (data->jclient);
+		if ( res == 0 )
+		{
+			res = tempres;
+		}
+		tempres = jack_port_unregister (data->jclient, data->joutput);
+		if ( res == 0 )
+		{
+			res = tempres;
+		}
+		tempres = jack_client_close (data->jclient);
+		if ( res == 0 )
+		{
+			res = tempres;
+		}
+#ifdef HAVE_JACK_FREE
+		jack_free (data->ports);
+#else
+		free (data->ports);
+#endif
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+	}
 
 	return res;
 }
 
 /**
  * Displays the version of the JACK library IMYplay was compiled with.
+ * \param imyp_data pointer to the backend's private data.
  */
 void
 imyp_jack_version (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
-)
 {
 	/* no version information currently available */
 	printf ( "JACK: ?\n" );

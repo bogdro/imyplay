@@ -112,9 +112,6 @@ Requirements for automatic compiling the DOS version:
 - the 'upx' utility (upx.sf.net) is optional. The program is compiled
   correctly without it.
 
-- the 'tr' utility (comes with DJGPP coreutils) is optional. The program is
-  compiled correctly without it.
-
 To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT
  the standard one) and change the line
 	#include "syslimits.h"

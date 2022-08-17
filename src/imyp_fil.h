@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- FILE backend, header file.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,12 +28,16 @@
 
 # include "imyplay.h"
 
-extern void imyp_file_pause PARAMS ((const int milliseconds, void * const buf, int bufsize));
-extern void imyp_file_put_text PARAMS ((const char * const text));
-extern int imyp_file_play_tune PARAMS ((const double freq, const int volume_level,
+extern void imyp_file_pause PARAMS ((imyp_backend_data_t * const imyp_data,
+	const int milliseconds, void * const buf, int bufsize));
+extern void imyp_file_put_text PARAMS ((imyp_backend_data_t * const imyp_data,
+	const char * const text));
+extern int imyp_file_play_tune PARAMS ((imyp_backend_data_t * const imyp_data,
+	const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_file_init PARAMS ((const char * const dev, const char * const file_out));
-extern int imyp_file_close PARAMS ((void));
-extern void imyp_file_version PARAMS ((void));
+extern int imyp_file_init PARAMS ((imyp_backend_data_t ** const imyp_data,
+	const char * const dev, const char * const file_out));
+extern int imyp_file_close PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_file_version PARAMS ((imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_FILE */

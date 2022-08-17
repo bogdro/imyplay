@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: imyplay 0.7\n"
+"Project-Id-Version: imyplay 0.8\n"
 "Report-Msgid-Bugs-To: bogdandr@op.pl\n"
-"POT-Creation-Date: 2012-07-20 17:30+0200\n"
+"POT-Creation-Date: 2013-04-01 15:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,55 +55,55 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: src/imyplay.c:238
+#: src/imyplay.c:242
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr ""
 
-#: src/imyplay.c:239
+#: src/imyplay.c:243
 msgid "Syntax"
 msgstr ""
 
-#: src/imyplay.c:241
+#: src/imyplay.c:245
 msgid " [options] "
 msgstr ""
 
-#: src/imyplay.c:243
+#: src/imyplay.c:247
 msgid "Options"
 msgstr ""
 
-#: src/imyplay.c:244
+#: src/imyplay.c:248
 msgid "Try to use this device"
 msgstr ""
 
-#: src/imyplay.c:246
+#: src/imyplay.c:250
 msgid "Execute this program instead of sound output"
 msgstr ""
 
-#: src/imyplay.c:249
+#: src/imyplay.c:253
 msgid "Write raw samples to this file instead of sound output"
 msgstr ""
 
-#: src/imyplay.c:251
+#: src/imyplay.c:255
 msgid "Print help"
 msgstr ""
 
-#: src/imyplay.c:252
+#: src/imyplay.c:256
 msgid "Print license information"
 msgstr ""
 
-#: src/imyplay.c:254
+#: src/imyplay.c:258
 msgid "Select MIDI instrument number"
 msgstr ""
 
-#: src/imyplay.c:256
+#: src/imyplay.c:260
 msgid "Use the given output system"
 msgstr ""
 
-#: src/imyplay.c:258
+#: src/imyplay.c:262
 msgid "Convert the given files to MIDI format"
 msgstr ""
 
-#: src/imyplay.c:260
+#: src/imyplay.c:264
 msgid "Print version number"
 msgstr ""
 

@@ -1,3 +1,36 @@
+2013-04-02	Bogdan Drozdowski <bogdandr@op.pl>
+
+	* IMYplay version 0.8
+	  Made the backends thread-safe (using allocated control structures
+	  instead of static). Corrected PortAudio and SDL outputs.
+	* configure.ac: checking for the -O3 compiler option
+	* doc/imyplay.txc: added @dircategory and @direntry
+	* src/imyplay.h: corrected DOS dependency of the PC-speaker backend
+	* src/imyp_spk.c (imyp_spkr_close): disabling sound on close in DOS
+	* src/imyp_mid.c (imyp_midi_init): updated the website address
+	* src/imyputil.{c,h} (imyp_pause_select, imyp_put_text_stdout):
+	  common general pause & text printing functions.
+	* src/imyp_sdl.c: shortened the pauses between sound by opening the
+	  audio just once, not for each note. Allow controlling the sample
+	  rate and format.
+	* src/imyp_ao.c (imyp_ao_init): shutting down in case of error
+	* src/imyp_als.c (imyp_alsa_init): freeing resources in case of error
+	* src/imyp_por.c: corrected sound generating by using a lower sampling
+	  frequency, smaller buffer and managing the buffer properly. Allow
+	  controlling the sample rate and format.
+	* src/imyputil.{c,h} (imyp_generate_samples): made the general sample
+	  generating function support a starting offset (for SDL and PortAudio)
+	* src/imyp_por.c (imyp_portaudio_fill_buffer): converted to use the
+	  general sampling generating function
+	* src/imyp_sdl.c (imyp_sdl_fill_buffer): converted to use the
+	  general sampling generating function
+	* src/imyp_all.c: allow controlling the sample rate and format.
+	* dosdist.bat: using sed to translate line endings, using a variable
+	  for the version number, manually setting the timezone for ZIP (and
+	  restoring the previous after compressing), using more optimization,
+	  not including technical files in the "doc" subdirectory
+	* README, doc/imyplay.txc, INSTALL, doc/imyplay.1: documentation update
+
 2012-07-14	Bogdan Drozdowski <bogdandr@op.pl>
 
 	* IMYplay version 0.7

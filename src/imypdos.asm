@@ -2,7 +2,7 @@
 ; A program for playing iMelody ringtones (IMY files).
 ;	-- DOS routines (currently for the PC-speaker backend).
 ;
-; Copyright (C) 2012 Bogdan Drozdowski, bogdandr (at) op.pl
+; Copyright (C) 2012-2013 Bogdan Drozdowski, bogdandr (at) op.pl
 ; License: GNU General Public License, v3+
 ;
 ; This program is free software; you can redistribute it and/or
@@ -23,7 +23,9 @@
 ;		USA
 ;;
 
+%ifdef IMYPLAY_32BIT
 cpu 386
+%endif
 
 ; this is required, otherwise the symbols are undefined:
 section .text
@@ -40,6 +42,7 @@ imyp_spkr_dos_tone:
 %define timer_port	40h	; PIC port
 %define keyboard_port	60h	; keyboard controller port
 
+%ifdef IMYPLAY_32BIT
 	push	ebp
 	mov	ebp, esp
 	pushfd
@@ -49,10 +52,25 @@ imyp_spkr_dos_tone:
 ; [ebp] = old EBP
 ; [ebp+4] = return address
 ; [ebp+8] = the parameter (the frequency quotient)
-%define	param ebp+8
+ %define	param ebp+8
 
 	mov	edx, [param]
 	cmp	edx, 19
+%else
+	push	bp
+	mov	bp, sp
+	pushf
+	push	ax
+	push	dx
+
+; [ebp] = old EBP
+; [ebp+4] = return address
+; [ebp+8] = the parameter (the frequency quotient)
+ %define	param bp+8
+
+	mov	dx, [param]
+	cmp	dx, 19
+%endif
 	jb	.turn_off
 
 	in	al, keyboard_port+1	; port B of the keyboard controller
@@ -79,12 +97,21 @@ imyp_spkr_dos_tone:
 
 	; sound is now enabled. Return to caller.
 
+%ifdef IMYPLAY_32BIT
 	pop	edx
 	pop	eax
 	xor	eax, eax		; return the value 0
 	popfd
 	pop	ebp
 	ret
+%else
+	pop	dx
+	pop	ax
+	xor	ax, ax			; return the value 0
+	popf
+	pop	bp
+	retf
+%endif
 
 .turn_off:
 
@@ -97,10 +124,19 @@ imyp_spkr_dos_tone:
 
 	; sound is now disabled. Return to caller.
 
+%ifdef IMYPLAY_32BIT
 	pop	edx
 	pop	eax
 	xor	eax, eax		; return the value 0
 	popfd
 	pop	ebp
 	ret
+%else
+	pop	dx
+	pop	ax
+	xor	ax, ax			; return the value 0
+	popf
+	pop	bp
+	retf
+%endif
 

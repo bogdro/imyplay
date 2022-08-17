@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- Allegro backend.
  *
- * Copyright (C) 2009-2012 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 
 #include <stdio.h>
 
-#if IMYP_HAVE_ALLEGRO
+#ifdef IMYP_HAVE_ALLEGRO
 # include <allegro.h>
 #else
 # error Allegro requested, but components not found.
@@ -43,6 +43,14 @@
 #  include <memory.h>
 # endif
 # include <string.h>
+#endif
+
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
+#ifdef HAVE_MALLOC_H
+# include <malloc.h>
 #endif
 
 /* DOS: manually set all the drivers to use (no gfx, no midi,
@@ -107,10 +115,20 @@ DIGI_DRIVER_BEOS
 END_DIGI_DRIVER_LIST
 #endif /* BEGIN_DIGI_DRIVER_LIST && END_DIGI_DRIVER_LIST */
 
+struct imyp_allegro_backend_data
+{
+	int quality;
+	int sampfreq;
+};
+
+#ifndef HAVE_MALLOC
+struct imyp_allegro_backend_data imyp_allegro_backend_data_static;
+#endif
+
 #ifndef IMYP_ANSIC
 static AUDIOSTREAM *
 imyp_all_audiostream_init PARAMS((const int number_of_samples, const int vol,
-	unsigned int * const quality, unsigned int * const sampling_frequency));
+	imyp_backend_data_t * const imyp_data));
 #endif
 
 /**
@@ -126,70 +144,80 @@ imyp_all_audiostream_init (
 #ifdef IMYP_ANSIC
 	const int number_of_samples,
 	const int vol,
-	unsigned int * const quality,
-	unsigned int * const sampling_frequency)
+	imyp_backend_data_t * const imyp_data)
 #else
-	number_of_samples, vol, quality, sampling_frequency)
+	number_of_samples, vol, imyp_data)
 	const int number_of_samples;
 	const int vol;
-	unsigned int * const quality;
-	unsigned int * const sampling_frequency;
+	imyp_backend_data_t * const imyp_data;
 #endif
 {
-	AUDIOSTREAM * as;
 #define IMYP_ALL_VOL ((vol*255)/IMYP_MAX_IMY_VOLUME)
+	AUDIOSTREAM * as;
+	struct imyp_allegro_backend_data * data =
+		(struct imyp_allegro_backend_data *)imyp_data;
 
-	as = play_audio_stream (number_of_samples, 16, 0 /* mono */, 44100, IMYP_ALL_VOL, 128);
+	if ( (data->quality == 8 || data->quality == 16) && (data->sampfreq > 0) )
+	{
+		as = play_audio_stream (number_of_samples/(data->quality/8), data->quality,
+			0 /* mono */, data->sampfreq, IMYP_ALL_VOL, 128);
+		if ( as != NULL )
+		{
+			return as;
+		}
+	}
+
+	as = play_audio_stream (number_of_samples/2, 16, 0 /* mono */, 44100, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
-		*quality = 16;
-		*sampling_frequency = 44100;
+		data->quality = 16;
+		data->sampfreq = 44100;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples, 16, 0 /* mono */, 22050, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples/2, 16, 0 /* mono */, 22050, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
-		*quality = 16;
-		*sampling_frequency = 22050;
+		data->quality = 16;
+		data->sampfreq = 22050;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples, 16, 0 /* mono */, 11025, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples/2, 16, 0 /* mono */, 11025, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
-		*quality = 16;
-		*sampling_frequency = 11025;
+		data->quality = 16;
+		data->sampfreq = 11025;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples * 2, 8, 0 /* mono */, 44100, IMYP_ALL_VOL, 128);
+
+	as = play_audio_stream (number_of_samples, 8, 0 /* mono */, 44100, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
-		*quality = 8;
-		*sampling_frequency = 44100;
+		data->quality = 8;
+		data->sampfreq = 44100;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples * 2, 8, 0 /* mono */, 22050, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples, 8, 0 /* mono */, 22050, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
-		*quality = 8;
-		*sampling_frequency = 22050;
+		data->quality = 8;
+		data->sampfreq = 22050;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples * 2, 8, 0 /* mono */, 11025, IMYP_ALL_VOL, 128);
+	as = play_audio_stream (number_of_samples, 8, 0 /* mono */, 11025, IMYP_ALL_VOL, 128);
 	if ( as != NULL )
 	{
-		*quality = 8;
-		*sampling_frequency = 11025;
+		data->quality = 8;
+		data->sampfreq = 11025;
 		return as;
 	}
 #undef IMYP_ALL_VOL
 
-	*quality = 0;
-	*sampling_frequency = 0;
 	return NULL;
 }
 
 /**
  * Play a specified tone.
+ * \param imyp_data pointer to the backend's private data.
  * \param freq The frequency of the tone (in Hz).
  * \param volume_level Volume of the tone (from 0 to 15).
  * \param duration The duration of the tone, in milliseconds.
@@ -200,13 +228,15 @@ imyp_all_audiostream_init (
 int
 imyp_all_play_tune (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data,
 	const double freq,
 	const int volume_level,
 	const int duration,
 	void * const buf,
 	int bufsize)
 #else
-	freq, volume_level, duration, buf, bufsize)
+	imyp_data, freq, volume_level, duration, buf, bufsize)
+	imyp_backend_data_t * const imyp_data;
 	const double freq;
 	const int volume_level;
 	const int duration;
@@ -219,19 +249,19 @@ imyp_all_play_tune (
 #ifndef HAVE_MEMCPY
 	int i;
 #endif
-	unsigned int sampfreq;
-	unsigned int quality;
+	struct imyp_allegro_backend_data * data =
+		(struct imyp_allegro_backend_data *)imyp_data;
 
-	if ( (buf == NULL) || (bufsize <= 0) )
+	if ( (buf == NULL) || (bufsize <= 0) || (imyp_data == NULL) )
 	{
 		return -1;
 	}
-	as = imyp_all_audiostream_init (bufsize, volume_level, &quality, &sampfreq);
+	as = imyp_all_audiostream_init (bufsize, volume_level, imyp_data);
 
 	if ( as != NULL )
 	{
 		imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
-			1, 1, quality, sampfreq);
+			1, 1, (unsigned int)data->quality, (unsigned int)data->sampfreq, NULL);
 		if ( sig_recvd != 0 )
 		{
 			stop_audio_stream (as);
@@ -255,40 +285,39 @@ imyp_all_play_tune (
 			}
 			free_audio_stream_buffer (as);
 		}
-		imyp_all_pause (duration);
+		imyp_all_pause (imyp_data, duration);
 		stop_audio_stream (as);
 		return 0;
 	}
-	else
-	{
-		return -3;
-	}
-#undef NSAMP
+	return -3;
 }
 
 /**
  * Pauses for the specified period of time.
+ * \param imyp_data pointer to the backend's private data.
  * \param milliseconds Number of milliseconds to pause.
  */
 void
 imyp_all_pause (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const int milliseconds)
 #else
-	milliseconds)
+	imyp_data, milliseconds)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const int milliseconds;
 #endif
 {
-	if ( milliseconds <= 0 ) return;
+	if ( milliseconds <= 0 )
+	{
+		return;
+	}
 #if ((defined HAVE_SYS_SELECT_H) || (defined TIME_WITH_SYS_TIME)\
 	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))	\
 	&& (defined HAVE_SELECT)
-	{
-		struct timeval tv;
-		tv.tv_sec = milliseconds / 1000;
-		tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
-		select ( 0, NULL, NULL, NULL, &tv );
-	}
+
+	imyp_pause_select (milliseconds);
+
 #else
 	rest ((unsigned int)milliseconds);
 #endif
@@ -296,34 +325,65 @@ imyp_all_pause (
 
 /**
  * Outputs the given text.
+ * \param imyp_data pointer to the backend's private data.
  * \param text The text to output.
  */
 void
 imyp_all_put_text (
 #ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
-	text)
+	imyp_data, text)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
-	if ( (text != NULL) && (stdout != NULL) ) printf ("%s", text);
+	imyp_put_text_stdout (text);
 }
 
 /**
  * Initializes the Allegro library for use.
+ * \param imyp_data pointer to storage for the backend's private data.
  * \return 0 on success.
  */
 int
 imyp_all_init (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t ** const imyp_data,
+	const char * const dev_file)
+#else
+	imyp_data, dev_file)
+	imyp_backend_data_t ** const imyp_data;
+	const char * const dev_file;
 #endif
-)
 {
 	int res;
+	struct imyp_allegro_backend_data * data;
+	enum IMYP_SAMPLE_FORMATS format;
+	char * colon;
+	int scanf_res;
+
 	res = allegro_init ();
-	if ( res != 0 ) return res;
+	if ( res != 0 )
+	{
+		return res;
+	}
+
+	if ( imyp_data == NULL )
+	{
+		return -100;
+	}
+#ifdef HAVE_MALLOC
+	data = (struct imyp_allegro_backend_data *) malloc (sizeof (
+		struct imyp_allegro_backend_data));
+	if ( data == NULL )
+	{
+		return -6;
+	}
+#else
+	data = &imyp_allegro_backend_data_static;
+#endif
 
 	install_keyboard ();
 	/* 2 voices, so they can be interchanged, instead of constantly
@@ -340,34 +400,84 @@ imyp_all_init (
 			return res;
 		}
 	}
+
+	data->quality = 0;
+	data->sampfreq = 0;
+	if ( dev_file != NULL )
+	{
+		colon = strrchr (dev_file, (int)':');
+		if ( colon != NULL )
+		{
+			format = imyp_get_format (colon+1);
+			if ( format == IMYP_SAMPLE_FORMAT_UNKNOWN )
+			{
+				format = IMYP_SAMPLE_FORMAT_S16LE;
+			}
+
+			if ( (format == IMYP_SAMPLE_FORMAT_S8LE)
+				|| (format == IMYP_SAMPLE_FORMAT_S8BE)
+				|| (format == IMYP_SAMPLE_FORMAT_U8LE)
+				|| (format == IMYP_SAMPLE_FORMAT_U8BE))
+			{
+				data->quality = 8;
+			}
+			else
+			{
+				data->quality = 16;
+			}
+			/* wipe the colon to read the sampling rate */
+			*colon = '\0';
+		}
+		/* get the sampling rate: */
+		scanf_res = sscanf (dev_file, "%d", &(data->sampfreq));
+		if ( scanf_res == 1 )
+		{
+			if ( data->sampfreq <= 0 )
+			{
+				data->sampfreq = 44100;
+			}
+		}
+	}
+
+	*imyp_data = (imyp_backend_data_t *)data;
 	return 0;
 }
 
 /**
  * Closes the Allegro library.
+ * \param imyp_data pointer to the backend's private data.
  * \return 0 on success.
  */
 int
 imyp_all_close (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data)
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data;
 #endif
-)
 {
 	remove_sound ();
 	allegro_exit ();
+	if ( imyp_data != NULL )
+	{
+		free (imyp_data);
+	}
 	return 0;
 }
 
 /**
  * Displays the version of the Allegro library IMYplay was compiled with.
+ * \param imyp_data pointer to the backend's private data.
  */
 void
 imyp_all_version (
 #ifdef IMYP_ANSIC
-	void
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
-)
 {
 #ifdef ALLEGRO_VERSION_STR
 	printf ( "Allegro: %s\n", ALLEGRO_VERSION_STR );

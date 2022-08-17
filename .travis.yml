@@ -15,5 +15,5 @@ branches:
         - master
         - dev
 
-script: ./configure --enable-public-interface && make
+script: ./configure && make
 

@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- unit test.
  *
- * Copyright (C) 2018-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2018-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -163,6 +163,7 @@ START_TEST(test_imyp_generate_filename_no_ext_mid)
 	printf("test_imyp_generate_filename_no_ext_mid\n");
 	res = imyp_generate_filename("test", ".mid");
 	ck_assert_str_eq(res, "test.mid");
+	free (res);
 }
 END_TEST
 
@@ -173,6 +174,7 @@ START_TEST(test_imyp_generate_filename_no_ext_raw)
 	printf("test_imyp_generate_filename_no_ext_raw\n");
 	res = imyp_generate_filename("test", ".raw");
 	ck_assert_str_eq(res, "test.raw");
+	free (res);
 }
 END_TEST
 
@@ -183,6 +185,7 @@ START_TEST(test_imyp_generate_filename_mid_mid)
 	printf("test_imyp_generate_filename_mid_mid\n");
 	res = imyp_generate_filename("test.mid", ".mid");
 	ck_assert_str_eq(res, "test.mid");
+	free (res);
 }
 END_TEST
 
@@ -193,6 +196,7 @@ START_TEST(test_imyp_generate_filename_raw_raw)
 	printf("test_imyp_generate_filename_raw_raw\n");
 	res = imyp_generate_filename("test.raw", ".raw");
 	ck_assert_str_eq(res, "test.raw");
+	free (res);
 }
 END_TEST
 
@@ -203,6 +207,7 @@ START_TEST(test_imyp_generate_filename_one_ext_mid)
 	printf("test_imyp_generate_filename_one_ext_mid\n");
 	res = imyp_generate_filename("test.imy", ".mid");
 	ck_assert_str_eq(res, "test.mid");
+	free (res);
 }
 END_TEST
 
@@ -213,6 +218,7 @@ START_TEST(test_imyp_generate_filename_one_ext_raw)
 	printf("test_imyp_generate_filename_one_ext\n");
 	res = imyp_generate_filename("test.imy", ".raw");
 	ck_assert_str_eq(res, "test.raw");
+	free (res);
 }
 END_TEST
 
@@ -223,6 +229,7 @@ START_TEST(test_imyp_generate_filename_two_ext_mid)
 	printf("test_imyp_generate_filename_two_ext_mid\n");
 	res = imyp_generate_filename("test.mid.imy", ".mid");
 	ck_assert_str_eq(res, "test.mid.mid");
+	free (res);
 }
 END_TEST
 
@@ -233,6 +240,7 @@ START_TEST(test_imyp_generate_filename_two_ext_raw)
 	printf("test_imyp_generate_filename_two_ext\n");
 	res = imyp_generate_filename("test.raw.imy", ".raw");
 	ck_assert_str_eq(res, "test.raw.raw");
+	free (res);
 }
 END_TEST
 

@@ -1,43 +1,43 @@
 # Special names here like {__make} come from /usr/lib/rpm/macros, /usr/lib/rpm/macros.rpmbuild
 
-%define version @VERSION@
-%define name imyplay
+%define imyp_version @VERSION@
+%define imyp_release 1
+%define imyp_name imyplay
+%define imyp_url https://imyplay.sourceforge.io
+%define imyp_descr The imyplay is a program for playing iMelody ringtones (IMY files). \
+IMYplay can use the following libraries to produce sound: the Allegro game \
+library, SDL, ALSA, OSS, libao, PortAudiov19, PulseAudio, JACK1/JACK2, \
+GStreamer (gstreamer-plugin-base required). \
+It can also write raw samples to an output file, use the PC-speaker or \
+call an external program on each note.
 
-Summary:	Program for playing iMelody ringtones (IMY files)
-Name:		%{name}
-Version:	%{version}
-Release:	1%{?dist}
-URL:		http://imyplay.sf.net
-License:	GPL
+%define imyp_lic GPLv3
+%define imyp_summary Program for playing iMelody ringtones (IMY files)
+
+Summary:	%{imyp_summary}
+Name:		%{imyp_name}
+Version:	%{imyp_version}
+Release:	%{imyp_release}
+URL:		%{imyp_url}
+BugURL:		%{imyp_url}
+License:	%{imyp_lic}
 # group must be one of the listed in /usr/share/doc/rpm-.../GROUPS or /usr/share/rpmlint/config.d/distro.conf
 Group:		Sound
 #Group:		Applications/Multimedia
-#Packager:	Bogdan Drozdowski <bogdandr@op.pl>
-#Prefix:	/usr/local
-Source:		%{name}-%{version}.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-build
+Source:		%{imyp_name}-%{imyp_version}.tar.gz
+BuildRoot:	%{_tmppath}/%{imyp_name}-build
 BuildRequires:	gcc, glibc, glibc-devel, make
 
 %description
-
-The imyplay is a program for playing iMelody ringtones (IMY files).
-IMYplay can use the following libraries to produce sound: the Allegro game
-library, SDL, ALSA, OSS, libao, PortAudiov19, PulseAudio, JACK1/JACK2,
-GStreamer (gstreamer-plugin-base required).
-It can also write raw samples to an output file, use the PC-speaker or
-call an external program on each note.
+%{imyp_descr}
 
 %prep
 %setup -q
 %configure
 
 %build
-
-#CFLAGS='-march=i386' ./configure --prefix=/usr/local --libdir=/usr/local/lib \
-#	--infodir=/usr/share/info --mandir=/usr/share/man
-#{__make} 2>/dev/null
-
-%make
+#make
+%make_build
 
 %post
 #install-info
@@ -46,21 +46,8 @@ call an external program on each note.
 #install-info
 
 %install
-
-%makeinstall_std
-
-#{__mkdir_p} $RPM_BUILD_ROOT/usr/share/info
-##prefix=$RPM_BUILD_ROOT/usr/local
-#{__make} DESTDIR="$RPM_BUILD_ROOT" install-strip
-##{__mv} -f $RPM_BUILD_ROOT/usr/share/locale/pl/LC_MESSAGES/imyplay.mo \
-##	$RPM_BUILD_ROOT/usr/local/share/locale/pl/LC_MESSAGES/imyplay.mo
-#{__rm} -f $RPM_BUILD_ROOT/usr/bin/imyplay*
-#{__rm} -f $RPM_BUILD_ROOT/usr/local/info/imyplay.info*
-#{__rm} -f $RPM_BUILD_ROOT/usr/local/man/man1/imyplay.1*
-# {__rm} -f $RPM_BUILD_ROOT/usr/local/share/info/imyplay.info*
-# {__rm} -f $RPM_BUILD_ROOT/usr/local/share/man/man1/imyplay.1*
-# #{__rm} -f $RPM_BUILD_ROOT/usr/local/share/locale/pl/LC_MESSAGES/imyplay.mo
-# #{makeinstall}
+#makeinstall_std
+%make_install
 
 %clean
 %{__rm} -rf $RPM_BUILD_ROOT
@@ -79,3 +66,5 @@ call an external program on each note.
 %doc COPYING
 %doc AUTHORS
 %doc ChangeLog
+
+%changelog

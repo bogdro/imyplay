@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- SDL backend.
  *
- * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -33,12 +33,12 @@
 #include <stdio.h>
 
 #ifdef IMYP_HAVE_SDL
-# if (defined HAVE_SDL_H)
-#  include <SDL.h>
-#  include <SDL_version.h>
-# else
+# if (defined HAVE_SDL_SDL_H)
 #  include <SDL/SDL.h>
 #  include <SDL/SDL_version.h>
+# else
+#  include <SDL.h>
+#  include <SDL_version.h>
 # endif
 #else
 # error SDL requested, but components not found.
@@ -70,6 +70,13 @@ struct imyp_sdl_backend_data
 	volatile unsigned long int last_index;
 	volatile long int samples_remain;
 };
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 #ifndef HAVE_MALLOC
 static struct imyp_sdl_backend_data imyp_sdl_backend_data_static;

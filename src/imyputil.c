@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- utility functions.
  *
- * Copyright (C) 2012-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -75,6 +75,13 @@
 #include "imyplay.h"
 #include "imyputil.h"
 #include "imyp_sig.h"
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 /**
  * Comapres the give strings case-insensitively.
@@ -523,6 +530,7 @@ imyp_generate_filename (
 	const char * const ext;
 #endif
 {
+#ifdef HAVE_MALLOC
 	char * imy;
 	char * new_filename;
 	size_t fnlen;
@@ -530,41 +538,41 @@ imyp_generate_filename (
 	size_t imy_index;
 	size_t i;
 	size_t target_fname_len;
+#endif
 
 	if ( (filename == NULL) || (ext == NULL) )
 	{
 		return NULL;
 	}
 
+#ifdef HAVE_MALLOC
 	fnlen = strlen (filename);
 	elen = strlen (ext);
 	imy = strstr (filename, ".imy");
-#ifdef HAVE_MALLOC
 	if ( imy != NULL )
 	{
 		imy_index = (size_t)(imy - filename);
-		new_filename = (char *) malloc (fnlen + 1);
 		target_fname_len = fnlen + 1;
 	}
 	else
 	{
 		imy_index = fnlen;
-		new_filename = (char *) malloc (fnlen + elen + 1);
 		target_fname_len = fnlen + elen + 1;
 	}
+	new_filename = (char *) malloc (target_fname_len);
 	if ( new_filename == NULL )
 	{
 		return NULL;
 	}
-#ifdef HAVE_MEMSET
+# ifdef HAVE_MEMSET
 	memset (new_filename, 0, (size_t)target_fname_len);
-#else
+# else
 	for (i = 0; i < target_fname_len; i++ )
 	{
 		((char *)new_filename)[i] = '\0';
 	}
-#endif
-	strncpy (new_filename, filename, fnlen);
+# endif
+	strncpy (new_filename, filename, fnlen+1);
 	/* If ".imy" extension is present, change it to the provided one.
 	   Else, append the requested extension. */
 	for (i = imy_index; i < fnlen; i++ )
@@ -582,7 +590,7 @@ imyp_generate_filename (
 	new_filename[fnlen + elen] = '\0';
 
 	return new_filename;
-#else
+#else	/* ! HAVE_MALLOC */
 	return NULL;
-#endif
+#endif /* HAVE_MALLOC */
 }

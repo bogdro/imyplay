@@ -6,7 +6,7 @@
  *  AUTHOR: Steven Goodwin (StevenGoodwin@gmail.com)
  *          Copyright 1998-2008, Steven Goodwin
  *
- * Changes: Bogdan Drozdowski <bogdandr@op.pl>:
+ * Changes: Bogdan Drozdowski <bogdro@users.sourceforge.net>:
  *	2009-02-18: adapt to IMYplay, use Autoconf, _CVAR_CAST, fix warnings
  *
  *  This program is free software; you can redistribute it and/or
@@ -19,9 +19,12 @@
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
  *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foudation:
+ *		Free Software Foundation
+ *		51 Franklin Street, Fifth Floor
+ *		Boston, MA 02110-1301
+ *		USA
  */
 #define _CRT_SECURE_NO_DEPRECATE
 

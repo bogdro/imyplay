@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- main file.
  *
- * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -82,7 +82,7 @@
 #define	PROGRAM_NAME	PACKAGE
 
 static const char ver_str[] = N_("version");
-static const char author_str[] = "Copyright (C) 2009-2019 Bogdan 'bogdro' Drozdowski, bogdandr@op.pl\n" \
+static const char author_str[] = "Copyright (C) 2009-2021 Bogdan 'bogdro' Drozdowski, bogdro@users.sourceforge.net\n" \
 	"MIDI code: Copyright 1998-2008, Steven Goodwin (StevenGoodwin@gmail.com)";
 static const char lic_str[] = N_(							\
 	"Program for playing iMelody ringtones (IMY files).\n"				\
@@ -98,7 +98,9 @@ static const char lic_str[] = N_(							\
 const char * const err_msg                = N_("error");
 const char * const imyp_err_msg_signal    = N_("Error while trying to set a signal handler for");
 static const char * const err_lib_init    = N_("Error during library init.");
+#if (defined IMYP_HAVE_MIDI) || (defined IMYP_HAVE_EXEC)
 static const char * const err_lib_close   = N_("Error during library closing.");
+#endif
 /*static const char * const err_snd_init    = N_("Error during sound init.");*/
 
 /* Messages displayed when verbose mode is on */
@@ -170,6 +172,14 @@ static imyp_backend_t current_library =
 	NULL,
 	IMYP_CURR_NONE
 };
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
+
 /* ======================================================================== */
 
 /**

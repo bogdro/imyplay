@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- GStreamer backend.
  *
- * Copyright (C) 2012-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -63,6 +63,13 @@ struct imyp_gst_backend_data
 	GValue g_vol;
 	GValue g_freq;
 };
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 #ifndef HAVE_MALLOC
 static struct imyp_gst_backend_data imyp_gst_backend_data_static;
@@ -138,7 +145,7 @@ imyp_gst_play_tune (
 
 	data->gclock_ID = gst_clock_new_single_shot_id (data->gclock,
 		gst_clock_get_time (data->gclock)
-		+ duration * GST_MSECOND /* warning inside GST_MSECOND */);
+		+ (unsigned int)duration * GST_MSECOND /* warning inside GST_MSECOND */);
 
 	if ( gst_element_set_state (data->binpipe, GST_STATE_PLAYING) != 0 )
 	{
@@ -252,6 +259,7 @@ imyp_gst_init (
 	data->binpipe = gst_pipeline_new ("imyplay");
 	if ( data->binpipe == NULL )
 	{
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -262,6 +270,7 @@ imyp_gst_init (
 	if ( data->gclock == NULL )
 	{
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -273,6 +282,7 @@ imyp_gst_init (
 	{
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -300,6 +310,7 @@ imyp_gst_init (
 		/*g_object_unref (G_OBJECT (src));*/
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -314,6 +325,7 @@ imyp_gst_init (
 		g_object_unref (G_OBJECT (src));*/
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -328,6 +340,7 @@ imyp_gst_init (
 		g_object_unref (G_OBJECT (src));*/
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -344,6 +357,7 @@ imyp_gst_init (
 		g_object_unref (G_OBJECT (src));*/
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -360,6 +374,7 @@ imyp_gst_init (
 		g_object_unref (G_OBJECT (src));*/
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -376,6 +391,7 @@ imyp_gst_init (
 		g_object_unref (G_OBJECT (src));*/
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -392,6 +408,7 @@ imyp_gst_init (
 		g_object_unref (G_OBJECT (src));*/
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -409,6 +426,7 @@ imyp_gst_init (
 		g_object_unref (G_OBJECT (src));*/
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -426,6 +444,7 @@ imyp_gst_init (
 		g_object_unref (G_OBJECT (src));*/
 		g_object_unref (G_OBJECT (data->gclock));
 		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
@@ -504,6 +523,7 @@ imyp_gst_close (
 		*/
 		/*if ( data->sink != NULL ) g_object_unref (G_OBJECT (data->sink));
 		if ( data->src != NULL ) g_object_unref (G_OBJECT (data->src));*/
+		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);
 #endif

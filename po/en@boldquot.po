@@ -1,7 +1,7 @@
 # English translations for imyplay package.
-# Copyright (C) 2019 Bogdan bogdro Drozdowski
+# Copyright (C) 2021 Bogdan bogdro Drozdowski
 # This file is distributed under the same license as the imyplay package.
-# Automatically generated, 2019.
+# Automatically generated, 2021.
 #
 # All this catalog "translates" are quotation characters.
 # The msgids must be ASCII and therefore cannot contain real quotation
@@ -30,10 +30,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: imyplay 1.2\n"
-"Report-Msgid-Bugs-To: bogdandr@op.pl\n"
-"POT-Creation-Date: 2019-10-31 22:25+0100\n"
-"PO-Revision-Date: 2019-10-31 22:25+0100\n"
+"Project-Id-Version: imyplay 1.2.1\n"
+"Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
+"POT-Creation-Date: 2021-08-29 16:26+0200\n"
+"PO-Revision-Date: 2021-08-29 16:26+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en\n"
@@ -84,62 +84,62 @@ msgstr "Error while trying to set a signal handler for"
 msgid "Error during library init."
 msgstr "Error during library init."
 
-#: src/imyplay.c:101
+#: src/imyplay.c:102
 msgid "Error during library closing."
 msgstr "Error during library closing."
 
-#: src/imyplay.c:109
+#: src/imyplay.c:111
 msgid "unknown"
 msgstr "unknown"
 
-#: src/imyplay.c:248
+#: src/imyplay.c:258
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr "A program for playing iMelody ringtones (IMY files)"
 
-#: src/imyplay.c:249
+#: src/imyplay.c:259
 msgid "Syntax"
 msgstr "Syntax"
 
-#: src/imyplay.c:251
+#: src/imyplay.c:261
 msgid " [options] "
 msgstr " [options] "
 
-#: src/imyplay.c:253
+#: src/imyplay.c:263
 msgid "Options"
 msgstr "Options"
 
-#: src/imyplay.c:254
+#: src/imyplay.c:264
 msgid "Try to use this device"
 msgstr "Try to use this device"
 
-#: src/imyplay.c:256
+#: src/imyplay.c:266
 msgid "Execute this program instead of sound output"
 msgstr "Execute this program instead of sound output"
 
-#: src/imyplay.c:259
+#: src/imyplay.c:269
 msgid "Write raw samples to this file instead of sound output"
 msgstr "Write raw samples to this file instead of sound output"
 
-#: src/imyplay.c:261
+#: src/imyplay.c:271
 msgid "Print help"
 msgstr "Print help"
 
-#: src/imyplay.c:262
+#: src/imyplay.c:272
 msgid "Print license information"
 msgstr "Print license information"
 
-#: src/imyplay.c:264
+#: src/imyplay.c:274
 msgid "Select MIDI instrument number"
 msgstr "Select MIDI instrument number"
 
-#: src/imyplay.c:266
+#: src/imyplay.c:276
 msgid "Use the given output system"
 msgstr "Use the given output system"
 
-#: src/imyplay.c:268
+#: src/imyplay.c:278
 msgid "Convert the given files to MIDI format"
 msgstr "Convert the given files to MIDI format"
 
-#: src/imyplay.c:270
+#: src/imyplay.c:280
 msgid "Print version number"
 msgstr "Print version number"

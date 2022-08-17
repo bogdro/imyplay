@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(imyplay, 1.2, bogdandr@op.pl)
+AC_INIT(imyplay, 1.2.1, bogdro@users.sourceforge.net)
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \
@@ -102,7 +102,7 @@ AC_ARG_ENABLE(EXEC,[[  --enable-EXEC		Enable executing commands as output.]],
 	]
 	,feat_EXEC=yes)
 
-AC_ARG_ENABLE(GSTREAMER,[[  --enable-GSTREAMER	Enable GStreamer output.]],
+AC_ARG_ENABLE(GSTREAMER,[[  --enable-GSTREAMER	Enable GStreamer-0.10 output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_GST=no
 	 else
@@ -263,11 +263,15 @@ if ( test "x$feat_GST" = "xyes" ); then
 	PKG_PROG_PKG_CONFIG([])
 	if ( test "x$PKG_CONFIG" != "x" ); then
 
-		PKG_CHECK_MODULES([GST], [gstreamer-controller-0.10], [
-			libgstreamer=yes
-			AC_DEFINE([HAVE_GST_GST_H],[1],
-				[Whether you have the gst/gst.h header.])
-			], [libgstreamer=no]);
+		libgstreamer=no
+		if ( test "x$libgstreamer" = "xno" ); then
+
+			PKG_CHECK_MODULES([GST], [gstreamer-controller-0.10], [
+				libgstreamer=yes
+				AC_DEFINE([HAVE_GST_GST_H],[1],
+					[Whether you have the gst/gst.h header.])
+				], [libgstreamer=no]);
+		fi
 		if ( test "x$libgstreamer" = "xno" ); then
 
 			PKG_CHECK_MODULES([GST], [gstreamer-controller >= 0.10], [
@@ -364,52 +368,52 @@ fi
 if ( test "x$libsdl" = "xyes" ); then
 
 	have_sdl_h=yes
-	AC_CHECK_HEADER([SDL.h],AC_DEFINE([HAVE_SDL_H],[1],
-		[Whether you have the SDL.h header.]),
-			[AC_CHECK_HEADER([SDL/SDL.h],AC_DEFINE([HAVE_SDL_SDL_H],[1],
-				[Whether you have the SDL/SDL.h header.]),
+	AC_CHECK_HEADER([SDL/SDL.h],AC_DEFINE([HAVE_SDL_SDL_H],[1],
+		[Whether you have the SDL/SDL.h header.]),
+			[AC_CHECK_HEADER([SDL.h],AC_DEFINE([HAVE_SDL_H],[1],
+				[Whether you have the SDL.h header.]),
 			have_sdl_h=no)])
 fi
 
 if ( test "x$libalsa" = "xyes" ); then
 
 	have_asoundlib_h=yes
-	AC_CHECK_HEADER([asoundlib.h],AC_DEFINE([HAVE_ASOUNDLIB_H],[1],
-		[Whether you have the asoundlib.h header.]),
-			[AC_CHECK_HEADER([alsa/asoundlib.h],AC_DEFINE([HAVE_ALSA_ASOUNDLIB_H],[1],
-				[Whether you have the alsa/asoundlib.h header.]),
+	AC_CHECK_HEADER([alsa/asoundlib.h],AC_DEFINE([HAVE_ALSA_ASOUNDLIB_H],[1],
+		[Whether you have the alsa/asoundlib.h header.]),
+			[AC_CHECK_HEADER([asoundlib.h],AC_DEFINE([HAVE_ASOUNDLIB_H],[1],
+				[Whether you have the asoundlib.h header.]),
 			have_asoundlib_h=no)])
 fi
 
 if ( test "x$libao" = "xyes" ); then
 
 	have_ao_h=yes
-	AC_CHECK_HEADER([ao.h],AC_DEFINE([HAVE_AO_H],[1],
-		[Whether you have the ao.h header.]),
-			[AC_CHECK_HEADER([ao/ao.h],AC_DEFINE([HAVE_AO_AO_H],[1],
-				[Whether you have the ao/ao.h header.]),
+	AC_CHECK_HEADER([ao/ao.h],AC_DEFINE([HAVE_AO_AO_H],[1],
+		[Whether you have the ao/ao.h header.]),
+			[AC_CHECK_HEADER([ao.h],AC_DEFINE([HAVE_AO_H],[1],
+				[Whether you have the ao.h header.]),
 			have_ao_h=no)])
 fi
 
 if ( test "x$libportaudio" = "xyes" ); then
 
 	have_portaudio_h=yes
-	AC_CHECK_HEADER([portaudio.h],AC_DEFINE([HAVE_PORTAUDIO_H],[1],
-		[Whether you have the portaudio.h header.]),
-			[AC_CHECK_HEADER([portaudio/portaudio.h],
-				AC_DEFINE([HAVE_PORTAUDIO_PORTAUDIO_H],[1],
-				[Whether you have the portaudio/portaudio.h header.]),
+	AC_CHECK_HEADER([portaudio/portaudio.h],AC_DEFINE([HAVE_PORTAUDIO_PORTAUDIO_H],[1],
+		[Whether you have the portaudio/portaudio.h header.]),
+			[AC_CHECK_HEADER([portaudio.h],
+				AC_DEFINE([HAVE_PORTAUDIO_H],[1],
+				[Whether you have the portaudio.h header.]),
 			have_portaudio_h=no)])
 fi
 
 if ( test "x$libjack" = "xyes" ); then
 
 	have_jack_h=yes
-	AC_CHECK_HEADER([jack.h],AC_DEFINE([HAVE_JACK_H],[1],
-		[Whether you have the jack.h header.]),
-			[AC_CHECK_HEADER([jack/jack.h],
-				AC_DEFINE([HAVE_JACK_JACK_H],[1],
-				[Whether you have the jack/jack.h header.]),
+	AC_CHECK_HEADER([jack/jack.h],AC_DEFINE([HAVE_JACK_JACK_H],[1],
+		[Whether you have the jack/jack.h header.]),
+			[AC_CHECK_HEADER([jack.h],
+				AC_DEFINE([HAVE_JACK_H],[1],
+				[Whether you have the jack.h header.]),
 			have_jack_h=no)])
 fi
 
@@ -487,11 +491,11 @@ fi
 if ( test "x$libpulseaudio_simple" = "xyes" && test "x$libpulseaudio" = "xyes" ); then
 
 	have_pulseaudio_simple_h=yes
-	AC_CHECK_HEADER([simple.h],AC_DEFINE([HAVE_SIMPLE_H],[1],
-		[Whether you have the simple.h header.]),
-			[AC_CHECK_HEADER([pulse/simple.h],
-				AC_DEFINE([HAVE_PULSE_SIMPLE_H],[1],
-				[Whether you have the pulse/simple.h header.]),
+	AC_CHECK_HEADER([pulse/simple.h],AC_DEFINE([HAVE_PULSE_SIMPLE_H],[1],
+		[Whether you have the pulse/simple.h header.]),
+			[AC_CHECK_HEADER([simple.h],
+				AC_DEFINE([HAVE_SIMPLE_H],[1],
+				[Whether you have the simple.h header.]),
 			have_pulseaudio_simple_h=no)])
 fi
 
@@ -707,6 +711,9 @@ if (test "x$GCC" = "xyes" ); then
         AX_C_CHECK_FLAG([-Wrestrict], [CFLAGS="$CFLAGS -Wrestrict"], [CFLAGS="$CFLAGS"])
         AX_C_CHECK_FLAG([-Woverlength-strings], [CFLAGS="$CFLAGS -Woverlength-strings"], [CFLAGS="$CFLAGS"])
         AX_C_CHECK_FLAG([-Wno-nonnull-compare], [CFLAGS="$CFLAGS -Wno-nonnull-compare"], [CFLAGS="$CFLAGS"])
+        AX_C_CHECK_FLAG([-Wstringop-truncation], [CFLAGS="$CFLAGS -Wstringop-truncation"], [CFLAGS="$CFLAGS"])
+        AX_C_CHECK_FLAG([-Wduplicated-branches], [CFLAGS="$CFLAGS -Wduplicated-branches"], [CFLAGS="$CFLAGS"])
+        AX_C_CHECK_FLAG([-fstack-check], [CFLAGS="$CFLAGS -fstack-check"], [CFLAGS="$CFLAGS"])
         AX_C_CHECK_FLAG([-g], [CFLAGS="$CFLAGS -g"], [CFLAGS="$CFLAGS"])	# needed for the 'debuginfo' rpm package
 
 #	if (test "x$have_ll" = "xyes"); then
@@ -984,16 +991,16 @@ fi
 
 if (	test "x$feat_GST" = "xyes" && test "x$libgstreamer" = "xyes" ); then
 
-	echo " *	GStreamer: yes"
+	echo " *	GStreamer-0.10: yes"
 else
 	if (test "x$feat_GST" != "xyes"); then
-		echo " *	GStreamer: no (disabled by command line)"
+		echo " *	GStreamer-0.10: no (disabled by command line)"
 
 	elif ( test "x$PKG_CONFIG" != "xyes" ); then
-		echo " *	GStreamer: no (pkg-config missing)"
+		echo " *	GStreamer-0.10: no (pkg-config missing)"
 
 	else	#( test "x$libgstreamer" != "xyes" ); then
-		echo " *	GStreamer: no (library or headers missing)"
+		echo " *	GStreamer-0.10: no (library or headers missing)"
 
 	fi
 fi

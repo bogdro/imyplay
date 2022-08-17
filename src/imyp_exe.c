@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- EXEC backend.
  *
- * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -77,6 +77,13 @@ struct imyp_exec_backend_data
 	char exename[IMYP_MAX_PROG_LEN];
 	char to_execute[IMYP_MAX_PROG_LEN];
 };
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 #ifndef HAVE_MALLOC
 static struct imyp_exec_backend_data imyp_exec_backend_data_static;
@@ -223,6 +230,10 @@ static int launch_program (
 	for ( j = 0; j < i; j++ )
 	{
 		exe_index = strlen (data->to_execute);
+		if ( exe_index >= sizeof (data->to_execute) - 1 )
+		{
+			break;
+		}
 		if ( data->exename[j] != '%' )
 		{
 			data->to_execute[exe_index] = data->exename[j];
@@ -444,7 +455,7 @@ imyp_exec_init (
 		data->exename[j] = '\0';
 		data->to_execute[j] = '\0';
 	}
-	strncpy (data->exename, program, IMYP_MIN (i, IMYP_MAX_PROG_LEN-1));
+	strncpy (data->exename, program, IMYP_MIN (i+1, IMYP_MAX_PROG_LEN-1));
 	data->exename[IMYP_MAX_PROG_LEN-1] = '\0';
 	*imyp_data = (imyp_backend_data_t *)data;
 	return 0;

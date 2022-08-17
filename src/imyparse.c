@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing file.
  *
- * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -74,6 +74,13 @@ static long int repeat_start_pos;
 static int is_eof;
 
 static const char IMYP_MEL_END[] = "END:IMELODY"; /* a #define produces warnings */
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 /* ======================================================================== */
 
@@ -176,7 +183,7 @@ imyp_read_line (
 				   if we're at the end of the melody, or we're just
 				   starting another 'E'-note, for example
 				*/
-				strncpy (tmpbuf, buffer, IMYP_MIN (curr_buflen, sizeof (tmpbuf)-1) );
+				strncpy (tmpbuf, buffer, IMYP_MIN (curr_buflen+1, sizeof (tmpbuf)-1) );
 #if (defined HAVE_FSEEKO) && (defined HAVE_FTELLO)
 				curr_pos = ftello (imyfile)
 					/* substract the already-read line */

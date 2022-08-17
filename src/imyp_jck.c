@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- JACK backend.
  *
- * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -33,10 +33,10 @@
 #include <stdio.h>
 
 #ifdef IMYP_HAVE_JACK
-# if (defined HAVE_JACK_H)
-#  include <jack.h>
-# else
+# if (defined HAVE_JACK_JACK_H)
 #  include <jack/jack.h>
+# else
+#  include <jack.h>
 # endif
 #else
 # error JACK requested, but components not found.
@@ -74,6 +74,13 @@ struct imyp_jack_backend_data
 	volatile jack_nframes_t samples_remain;
 	void * buf;
 };
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 #ifndef HAVE_MALLOC
 static struct imyp_jack_backend_data imyp_jack_backend_data_static;
@@ -323,7 +330,7 @@ imyp_jack_init (
 	}
 	data->last_index = 0;
 
-	jack_set_process_callback (data->jclient, imyp_jack_fill_buffer, data);
+	jack_set_process_callback (data->jclient, &imyp_jack_fill_buffer, data);
 
 	data->joutput = jack_port_register (data->jclient, "output", JACK_DEFAULT_AUDIO_TYPE,
 		JackPortIsOutput, 0);

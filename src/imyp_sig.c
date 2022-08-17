@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- signal handling.
  *
- * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -148,6 +148,13 @@ static const int signals[] =
 # ifndef RETSIGTYPE
 #  define RETSIGTYPE void
 # endif
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 # ifndef IMYP_ANSIC
 static RETSIGTYPE term_signal_received IMYP_PARAMS ((const int signum));

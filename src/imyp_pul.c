@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PulseAudio backend.
  *
- * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -33,16 +33,16 @@
 #include <stdio.h>
 
 #ifdef IMYP_HAVE_PULSEAUDIO
-# if (defined HAVE_SIMPLE_H)
-#  include <simple.h>
-#  include <sample.h>
-#  include <util.h>
-#  include <version.h>
-# else
+# if (defined HAVE_PULSE_SIMPLE_H)
 #  include <pulse/simple.h>
 #  include <pulse/sample.h>
 #  include <pulse/util.h>
 #  include <pulse/version.h>
+# else
+#  include <simple.h>
+#  include <sample.h>
+#  include <util.h>
+#  include <version.h>
 # endif
 #else
 # error PulseAudio requested, but components not found.
@@ -61,6 +61,13 @@ struct imyp_pulse_backend_data
 	pa_simple * stream;
 	pa_sample_spec conf;
 };
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 #ifndef HAVE_MALLOC
 static struct imyp_pulse_backend_data imyp_pulse_backend_data_static;
@@ -99,6 +106,7 @@ imyp_pulse_play_tune (
 	unsigned int quality = 16;
 	int res;
 	int is_le = 1;
+	int is_unsigned = 0;
 	struct imyp_pulse_backend_data * data =
 		(struct imyp_pulse_backend_data *)imyp_data;
 
@@ -110,6 +118,7 @@ imyp_pulse_play_tune (
 	if ( data->conf.format == PA_SAMPLE_U8 )
 	{
 		quality = 8;
+		is_unsigned = 1;
 	}
 	else if ( (data->conf.format == PA_SAMPLE_S16LE) || (data->conf.format == PA_SAMPLE_S16BE) )
 	{
@@ -125,7 +134,7 @@ imyp_pulse_play_tune (
 	}
 
 	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
-		is_le, 1, quality, data->conf.rate, NULL);
+		is_le, is_unsigned, quality, data->conf.rate, NULL);
 	if ( imyp_sig_recvd != 0 )
 	{
 		return -2;

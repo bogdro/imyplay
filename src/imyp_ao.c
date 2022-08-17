@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- LIBAO backend.
  *
- * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -33,13 +33,20 @@
 #include <stdio.h>
 
 #ifdef IMYP_HAVE_LIBAO
-# if (defined HAVE_AO_H)
-#  include <ao.h>
-# else
+# if (defined HAVE_AO_AO_H)
 #  include <ao/ao.h>
+# else
+#  include <ao.h>
 # endif
 #else
 # error AO requested, but components not found.
+#endif
+
+#ifdef HAVE_STRING_H
+# if ((!defined STDC_HEADERS) || (!STDC_HEADERS)) && (defined HAVE_MEMORY_H)
+#  include <memory.h>
+# endif
+# include <string.h>
 #endif
 
 #ifdef HAVE_STDLIB_H
@@ -55,6 +62,13 @@ struct imyp_ao_backend_data
 	ao_device *device;
 	ao_sample_format format;
 };
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 #ifndef HAVE_MALLOC
 static struct imyp_ao_backend_data imyp_ao_backend_data_static;
@@ -206,6 +220,14 @@ imyp_ao_init (
 	}
 
 	data->format.channels = 1;
+#ifdef HAVE_MEMSET
+	memset (&(data->format.matrix), 0, sizeof (data->format.matrix));
+#else
+	for (i = 0; i < sizeof (data->format.matrix); i++ )
+	{
+		((char *)&(data->format.matrix))[i] = '\0';
+	}
+#endif
 
 	/* file:///usr/share/doc/libao-devel-X.Y.Z/ao_example.c */
 	for ( i = 0; i < sizeof (samp_freqs) / sizeof (samp_freqs[0]); i++ )

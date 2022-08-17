@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- wrapper functions between the main program and the backends.
  *
- * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -112,6 +112,13 @@
 # define IMYP_ONLY_IF_EXEC IMYP_ATTR ((unused))
 #endif
 
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
 
 /**
  * Pause for the specified amount of time.

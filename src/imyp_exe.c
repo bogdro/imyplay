@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- EXEC backend.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -56,12 +56,16 @@
 #  include <wait.h>
 # endif
 #endif
-# ifndef WIFEXITED
-#  define WIFEXITED(stat_val) (((stat_val) & 255) == 0)
-# endif
+
+/* these three should be defined in wait.h or sys/wait.h: */
+#ifndef WIFEXITED
+# define WIFEXITED(stat_val) (((stat_val) & 255) == 0)
+#endif
+
 #ifndef WEXITSTATUS
 # define WEXITSTATUS(stat_val) ((unsigned)(stat_val) >> 8)
 #endif
+
 #ifndef WIFSIGNALED
 # define WIFSIGNALED(status) (((signed char) (((status) & 0x7f) + 1) >> 1) > 0)
 #endif
@@ -75,12 +79,12 @@ struct imyp_exec_backend_data
 };
 
 #ifndef HAVE_MALLOC
-struct imyp_exec_backend_data imyp_exec_backend_data_static;
+static struct imyp_exec_backend_data imyp_exec_backend_data_static;
 #endif
 
 
 #ifndef IMYP_ANSIC
-static int launch_program PARAMS((imyp_backend_data_t * const imyp_data,
+static int launch_program IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level, const int duration));
 #endif
 
@@ -117,11 +121,13 @@ static int launch_program (
 	}
 
 	i = strlen (data->exename);
+	i = IMYP_MIN (i, IMYP_MAX_PROG_LEN-1);
+
 	for ( j = 0; j < IMYP_MAX_PROG_LEN; j++ )
 	{
 		data->to_execute[j] = '\0';
 	}
-	for ( j = 0; j < IMYP_MIN (i, IMYP_MAX_PROG_LEN-1); j++ )
+	for ( j = 0; j < i; j++ )
 	{
 		if ( data->exename[j] != '%' )
 		{

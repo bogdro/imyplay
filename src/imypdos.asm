@@ -2,7 +2,7 @@
 ; A program for playing iMelody ringtones (IMY files).
 ;	-- DOS routines (currently for the PC-speaker backend).
 ;
-; Copyright (C) 2012-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+; Copyright (C) 2012-2014 Bogdan Drozdowski, bogdandr (at) op.pl
 ; License: GNU General Public License, v3+
 ;
 ; This program is free software; you can redistribute it and/or
@@ -35,12 +35,32 @@ global _imyp_spkr_dos_tone
 global imyp_spkr_dos_tone_
 global imyp_spkr_dos_tone
 
+%define timer_port	40h	; PIC port
+%define keyboard_port	60h	; keyboard controller port
+
+%imacro IMYPLAY_RETURN_SUCCESS 0
+ %ifdef IMYPLAY_32BIT
+	pop	edx
+	pop	eax
+	xor	eax, eax		; return the value 0
+	popfd
+	pop	ebp
+	ret
+ %else
+	pop	dx
+	pop	ax
+	xor	ax, ax			; return the value 0
+	popf
+	pop	bp
+	retf
+ %endif
+%endmacro
+
+; =========================================================
+
 _imyp_spkr_dos_tone:
 imyp_spkr_dos_tone_:
 imyp_spkr_dos_tone:
-
-%define timer_port	40h	; PIC port
-%define keyboard_port	60h	; keyboard controller port
 
 %ifdef IMYPLAY_32BIT
 	push	ebp
@@ -63,9 +83,9 @@ imyp_spkr_dos_tone:
 	push	ax
 	push	dx
 
-; [ebp] = old EBP
-; [ebp+4] = return address
-; [ebp+8] = the parameter (the frequency quotient)
+; [bp] = old BP
+; [bp+4] = return address
+; [bp+8] = the parameter (the frequency quotient)
  %define	param bp+8
 
 	mov	dx, [param]
@@ -96,22 +116,7 @@ imyp_spkr_dos_tone:
 	out	timer_port+2, al	; bits 8-15 of the frequency quotient
 
 	; sound is now enabled. Return to caller.
-
-%ifdef IMYPLAY_32BIT
-	pop	edx
-	pop	eax
-	xor	eax, eax		; return the value 0
-	popfd
-	pop	ebp
-	ret
-%else
-	pop	dx
-	pop	ax
-	xor	ax, ax			; return the value 0
-	popf
-	pop	bp
-	retf
-%endif
+	IMYPLAY_RETURN_SUCCESS
 
 .turn_off:
 
@@ -123,20 +128,5 @@ imyp_spkr_dos_tone:
 
 
 	; sound is now disabled. Return to caller.
-
-%ifdef IMYPLAY_32BIT
-	pop	edx
-	pop	eax
-	xor	eax, eax		; return the value 0
-	popfd
-	pop	ebp
-	ret
-%else
-	pop	dx
-	pop	ax
-	xor	ax, ax			; return the value 0
-	popf
-	pop	bp
-	retf
-%endif
+	IMYPLAY_RETURN_SUCCESS
 

@@ -2,8 +2,14 @@ SUBDIRS = doc src po
 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST = config.rpath mkinstalldirs imyplay.spi m4/ax_cflag.m4 m4/ax_unus.m4 \
-	doc/imelody.txt imy THANKS dosdist.bat dosfiles.txt
+EXTRA_DIST = config.rpath mkinstalldirs imyplay.spi m4/ax_cflag.m4 \
+	m4/ax_unus.m4 imy THANKS dosdist.bat dosfiles.txt
+
+# The 'pack' target is a hack that removes unnecessary files from the
+# distribution that are generated during building and could not be
+# removed by built-in automake features:
+# - doc/imyplay.txi
+# - src/imyparsf.c
 
 pack:	doc/imyplay.info
 	make dist-gzip
@@ -15,6 +21,7 @@ pack:	doc/imyplay.info
 	gunzip -f imyplay-@VERSION@.tar.gz
 	tar --delete -f imyplay-@VERSION@.tar imyplay-@VERSION@/doc/imyplay.txi
 	tar -rf imyplay-@VERSION@.tar imyplay-@VERSION@/doc/imyplay.txi
+	tar --delete -f imyplay-@VERSION@.tar imyplay-@VERSION@/src/imyparsf.c
 	gzip -9 -f imyplay-@VERSION@.tar
 	rm -fr imyplay-@VERSION@
 

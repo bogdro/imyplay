@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- FILE backend.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -30,6 +30,10 @@
 #include "imyp_sig.h"
 #include "imyputil.h"
 
+#ifndef IMYP_HAVE_FILE
+# error FILE output requested, but components not found.
+#endif
+
 #include <stdio.h>
 
 #ifdef HAVE_STRING_H
@@ -55,7 +59,7 @@ struct imyp_file_backend_data
 };
 
 #ifndef HAVE_MALLOC
-struct imyp_file_backend_data imyp_file_backend_data_static;
+static struct imyp_file_backend_data imyp_file_backend_data_static;
 #endif
 
 
@@ -223,6 +227,8 @@ imyp_file_init (
 {
 	char * colon;
 	int scanf_res;
+	char * imy;
+	size_t len;
 	struct imyp_file_backend_data * data;
 
 	if ( (imyp_data == NULL) || (file_out == NULL) )
@@ -240,6 +246,46 @@ imyp_file_init (
 	data = &imyp_file_backend_data_static;
 #endif
 
+	len = strlen (file_out);
+	imy = strstr (file_out, ".imy");
+	if ( imy != NULL )
+	{
+		strncpy (imy, ".raw", 4);
+		imy[4] = '\0';
+		data->raw_file = fopen (file_out, "wb");
+		strncpy (imy, ".imy", 4);
+		imy[4] = '\0';
+		if ( data->raw_file == NULL )
+		{
+# ifdef HAVE_MALLOC
+			free (data);
+# endif
+			return -2;
+		}
+	}
+	else
+	{
+#ifdef HAVE_MALLOC
+		imy = (char *) malloc (len + 4+1);
+		if ( imy == NULL )
+		{
+			return -3;
+		}
+		strncpy (imy, file_out, len);
+		strncpy (&imy[len], ".raw", 4+1);
+		imy[len+4] = '\0';
+		data->raw_file = fopen (file_out, "wb");
+		free (imy);
+		if ( data->raw_file == NULL )
+		{
+			free (data);
+			return -4;
+		}
+#else
+		return -5;
+#endif
+	}
+	/*
 	data->raw_file = fopen (file_out, "wb");
 	if ( data->raw_file == NULL )
 	{
@@ -248,6 +294,7 @@ imyp_file_init (
 #endif
 		return -2;
 	}
+	*/
 
 	data->samp_rate = 44100;
 	data->format = IMYP_SAMPLE_FORMAT_S16LE;
@@ -302,7 +349,10 @@ imyp_file_close (
 		{
 			res = -1;
 		}
-		fclose (data->raw_file);
+		else
+		{
+			fclose (data->raw_file);
+		}
 #ifdef HAVE_MALLOC
 		free (data);
 #endif

@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- JACK backend.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -70,11 +70,11 @@ struct imyp_jack_backend_data
 };
 
 #ifndef HAVE_MALLOC
-struct imyp_jack_backend_data imyp_jack_backend_data_static;
+static struct imyp_jack_backend_data imyp_jack_backend_data_static;
 #endif
 
 #ifndef IMYP_ANSIC
-static int imyp_jack_fill_buffer PARAMS((jack_nframes_t nframes, void * arg));
+static int imyp_jack_fill_buffer IMYP_PARAMS ((jack_nframes_t nframes, void * arg));
 #endif
 
 /**
@@ -154,6 +154,7 @@ static int imyp_jack_fill_buffer (
 		{
 			data->last_index -= (unsigned long int)NSAMP;
 		}*/
+		/*data->last_index %= (unsigned long int)nperiods;*/
 		data->inside_callback = 0;
 	}
 	else
@@ -218,7 +219,7 @@ imyp_jack_play_tune (
 
 	imyp_jack_pause (imyp_data, duration);
 
-	while ( data->inside_callback != 0 ) {};
+	while ( data->inside_callback != 0 ) {}
 
 	data->tone_freq = 0.0;
 	data->volume_level = 0;

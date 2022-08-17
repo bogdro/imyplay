@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing file.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -46,196 +46,39 @@
 #include "imyp_sig.h"
 #include "imypwrap.h"
 #include "imyparse.h"
+#include "iparsers.h"
 
 # ifdef __GNUC__
 #  pragma GCC poison strcpy strcat
 # endif
 
-/* internationalized error messages: */
-static const char * const err_unkn_token  = N_("Unknown token");
-static const char * const err_at_pos      = N_("at position");
-static const char * const err_unex_token  = N_("Unexpected token");
-static const char * const err_file_open   = N_("Can't open file");
-static const char * const err_parse_beat  = N_("Problem parsing beat");
-static const char * const err_parse_style = N_("Problem parsing style");
-static const char * const err_parse_vol   = N_("Problem parsing volume");
-static const char * const err_bad_file    = N_("Not iMelody file");
-static const char * const err_play_tune   = N_("Error playing tune");
-
-/* The frequency multiplication coefficient between each two closest notes: 2^(1/12) */
-#define IMYP_C (1.05946309435929531f)
-
-#define IMYP_A0 (55.0f)
-#define IMYP_A1 (IMYP_A0*2.0f)
-#define IMYP_A2 (IMYP_A1*2.0f)
-#define IMYP_A3 (IMYP_A2*2.0f)
-#define IMYP_A4 (IMYP_A3*2.0f)
-#define IMYP_A5 (IMYP_A4*2.0f)
-#define IMYP_A6 (IMYP_A5*2.0f)
-#define IMYP_A7 (IMYP_A6*2.0f)
-#define IMYP_A8 (IMYP_A7*2.0f)
-
-const float imyp_notes[IMYP_OCTAVES][IMYP_NOTES_PER_OCTAVE] =
-{
-	{
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C),
-		(float) IMYP_A0/IMYP_C,
-		(float) IMYP_A0,
-		(float) IMYP_A0*IMYP_C,
-		(float) IMYP_A0*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C),
-		(float) IMYP_A1/IMYP_C,
-		(float) IMYP_A1,
-		(float) IMYP_A1*IMYP_C,
-		(float) IMYP_A1*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C),
-		(float) IMYP_A2/IMYP_C,
-		(float) IMYP_A2,
-		(float) IMYP_A2*IMYP_C,
-		(float) IMYP_A2*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C),
-		(float) IMYP_A3/IMYP_C,
-		(float) IMYP_A3,
-		(float) IMYP_A3*IMYP_C,
-		(float) IMYP_A3*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C),
-		(float) IMYP_A4/IMYP_C,
-		(float) IMYP_A4,
-		(float) IMYP_A4*IMYP_C,
-		(float) IMYP_A4*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C),
-		(float) IMYP_A5/IMYP_C,
-		(float) IMYP_A5,
-		(float) IMYP_A5*IMYP_C,
-		(float) IMYP_A5*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C),
-		(float) IMYP_A6/IMYP_C,
-		(float) IMYP_A6,
-		(float) IMYP_A6*IMYP_C,
-		(float) IMYP_A6*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C),
-		(float) IMYP_A7/IMYP_C,
-		(float) IMYP_A7,
-		(float) IMYP_A7*IMYP_C,
-		(float) IMYP_A7*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C),
-		(float) IMYP_A8/IMYP_C,
-		(float) IMYP_A8,
-		(float) IMYP_A8*IMYP_C,
-		(float) IMYP_A8*IMYP_C*IMYP_C
-	}
-};
-
-#define IMYP_DEF_BPM 120
-
 static unsigned short int buf16[IMYP_SAMPBUFSIZE];
 
-static int volume = 7;
-static int style = 0;
-static int bpm = IMYP_DEF_BPM;
-static int octave = 4;
+static int volume;
+static int style;
+static int bpm;
+static int octave;
 static char melody_line[1024+10];	/* the 10 extra to avoid overflows */
-static int melody_index = 0;
-static int is_sharp = 0;
-static int is_flat = 0;
+static int melody_index;
+static int is_sharp;
+static int is_flat;
 
-static int is_repeat = 0;
-static int repeat_count = 0;
-static unsigned int is_repeat_forever = 0;
+static int is_repeat;
+static int repeat_count;
+static unsigned int is_repeat_forever;
 #if (defined HAVE_FSEEKO) && (defined HAVE_FTELLO)
-static off_t repeat_start_pos = 0;
+static off_t repeat_start_pos;
 #else
-static long int repeat_start_pos = 0;
+static long int repeat_start_pos;
 #endif
-static int is_eof = 0;
+static int is_eof;
 
-#define IMYP_TOUPPER(c) ( (c) & 0x5f )
-#define IMYP_IS_DIGIT(c) ( ((c) >= '0') && ((c) <= '9') )
 static const char IMYP_MEL_END[] = "END:IMELODY"; /* a #define produces warnings */
 
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static void imyp_read_line PARAMS((char * const buffer, int * const buf_index,
+static void imyp_read_line IMYP_PARAMS ((char * const buffer, int * const buf_index,
 	const size_t bufsize, FILE * const imyfile, const unsigned int min_current));
 #endif
 
@@ -278,8 +121,14 @@ imyp_read_line (
 	size_t curr_buflen;
 	int remainder;
 
-	if ( (buffer == NULL) || (buf_index == NULL) || (imyfile == NULL) || (bufsize == 0) ) return;
-	if ( feof (imyfile) ) is_eof = 1;
+	if ( (buffer == NULL) || (buf_index == NULL) || (imyfile == NULL) || (bufsize == 0) )
+	{
+		return;
+	}
+	if ( feof (imyfile) )
+	{
+		is_eof = 1;
+	}
 	while ( (sig_recvd == 0) && (is_eof == 0) )
 	{
 		while ( (((*buf_index) < 0) || (unsigned int)(*buf_index) + min_current >= strlen (buffer))
@@ -307,7 +156,10 @@ imyp_read_line (
 				is_eof = 1;
 				break;
 			}
-			if ( feof (imyfile) ) is_eof = 1;
+			if ( feof (imyfile) )
+			{
+				is_eof = 1;
+			}
 			*buf_index = 0;
 			curr_buflen = strlen (buffer);
 			if ( (curr_buflen >= strlen (IMYP_MEL_END))
@@ -334,7 +186,7 @@ imyp_read_line (
 #else
 				curr_pos = ftell (imyfile)
 					/* substract the already-read line */
-					- curr_buflen
+					- (long int)curr_buflen
 					/* add the offset of the current char: */
 					+ *buf_index;
 #endif
@@ -360,7 +212,10 @@ imyp_read_line (
 				}
 			}
 		}
-		if ( is_eof != 0 ) break;
+		if ( is_eof != 0 )
+		{
+			break;
+		}
 		if (
 			   (buffer[*buf_index] == ' ' )
 			|| (buffer[*buf_index] == '\t')
@@ -379,7 +234,7 @@ imyp_read_line (
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static int imyp_read_number PARAMS((char * const buffer, int * const buf_index,
+static int imyp_read_number IMYP_PARAMS ((char * const buffer, int * const buf_index,
 	const size_t bufsize, FILE * const imyfile));
 #endif
 
@@ -423,27 +278,84 @@ imyp_read_number (
 		if ( scanf_res == 1 )
 		{
 			/* skip the correct number of characters */
-			if ( ret >= 1000000000 ) (*buf_index)++;
-			if ( ret >= 100000000  ) (*buf_index)++;
-			if ( ret >= 10000000   ) (*buf_index)++;
-			if ( ret >= 1000000    ) (*buf_index)++;
-			if ( ret >= 100000     ) (*buf_index)++;
-			if ( ret >= 10000      ) (*buf_index)++;
-			if ( ret >= 1000       ) (*buf_index)++;
-			if ( ret >= 100        ) (*buf_index)++;
-			if ( ret >= 10         ) (*buf_index)++;
+			if ( ret >= 1000000000 )
+			{
+				(*buf_index)++;
+			}
+			if ( ret >= 100000000 )
+			{
+				(*buf_index)++;
+			}
+			if ( ret >= 10000000 )
+			{
+				(*buf_index)++;
+			}
+			if ( ret >= 1000000 )
+			{
+				(*buf_index)++;
+			}
+			if ( ret >= 100000 )
+			{
+				(*buf_index)++;
+			}
+			if ( ret >= 10000 )
+			{
+				(*buf_index)++;
+			}
+			if ( ret >= 1000 )
+			{
+				(*buf_index)++;
+			}
+			if ( ret >= 100 )
+			{
+				(*buf_index)++;
+			}
+			if ( ret >= 10 )
+			{
+				(*buf_index)++;
+			}
 			/* always skip at least one */
 			(*buf_index)++;
-			if      ( ret >= 1000000000 ) ret = /*prev_ret * 10000000000 +*/ ret;
-			else if ( ret >= 100000000  ) ret = prev_ret * 1000000000  + ret;
-			else if ( ret >= 10000000   ) ret = prev_ret * 100000000   + ret;
-			else if ( ret >= 1000000    ) ret = prev_ret * 10000000    + ret;
-			else if ( ret >= 100000     ) ret = prev_ret * 1000000     + ret;
-			else if ( ret >= 10000      ) ret = prev_ret * 100000      + ret;
-			else if ( ret >= 1000       ) ret = prev_ret * 10000       + ret;
-			else if ( ret >= 100        ) ret = prev_ret * 1000        + ret;
-			else if ( ret >= 10         ) ret = prev_ret * 100         + ret;
-			else			      ret = prev_ret * 10          + ret;
+			if ( ret >= 1000000000 )
+			{
+				ret = /*prev_ret * 10000000000 +*/ ret;
+			}
+			else if ( ret >= 100000000 )
+			{
+				ret = prev_ret * 1000000000 + ret;
+			}
+			else if ( ret >= 10000000 )
+			{
+				ret = prev_ret * 100000000 + ret;
+			}
+			else if ( ret >= 1000000 )
+			{
+				ret = prev_ret * 10000000 + ret;
+			}
+			else if ( ret >= 100000 )
+			{
+				ret = prev_ret * 1000000 + ret;
+			}
+			else if ( ret >= 10000 )
+			{
+				ret = prev_ret * 100000 + ret;
+			}
+			else if ( ret >= 1000 )
+			{
+				ret = prev_ret * 10000 + ret;
+			}
+			else if ( ret >= 100 )
+			{
+				ret = prev_ret * 1000 + ret;
+			}
+			else if ( ret >= 10 )
+			{
+				ret = prev_ret * 100 + ret;
+			}
+			else
+			{
+				ret = prev_ret * 10 + ret;
+			}
 		}
 		prev_ret = ret;
 		imyp_read_line (buffer, buf_index, bufsize, imyfile, 0);
@@ -455,13 +367,13 @@ imyp_read_number (
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static int imyp_get_duration PARAMS((char * const note_buffer, int * const how_many_skipped,
+static int imyp_get_duration IMYP_PARAMS ((char * const note_buffer, int * const how_many_skipped,
 	int current_bpm, FILE * const imyfile));
 #endif
 
 /**
- * Gets the duration of the note pointed to by buf.
- * \param buf A character buffer with the note's description.
+ * Gets the duration of the note pointed to by note_buffer.
+ * \param note_buffer A character buffer with the note's description.
  * \param how_many_skipped Will get the number of characters used from the buffer.
  * \param current_bpm The current BPM value.
  * \param imyfile The file to read additional data from if necessary.
@@ -488,10 +400,14 @@ imyp_get_duration (
 	int imyp_index = 0;
 	float duration = 0.0f;
 	unsigned int dur_shift = 0;
+	size_t note_buf_len;
 
 	if ( (note_buffer == NULL) || (imyfile == NULL) )
 	{
-		if ( how_many_skipped != NULL ) *how_many_skipped = 0;
+		if ( how_many_skipped != NULL )
+		{
+			*how_many_skipped = 0;
+		}
 		return 0;
 	}
 	imyp_read_line (note_buffer, &imyp_index, strlen (note_buffer), imyfile, 0);
@@ -511,19 +427,32 @@ imyp_get_duration (
 		imyp_index++;
 		imyp_read_line (note_buffer, &imyp_index, strlen (note_buffer), imyfile, 0);
 	}
-	if ( (sig_recvd != 0) || (is_eof != 0) ) return 0;
+	if ( (sig_recvd != 0) || (is_eof != 0) )
+	{
+		return 0;
+	}
 	if ( ! IMYP_IS_DIGIT (note_buffer[imyp_index]) )
 	{
-		if ( how_many_skipped != NULL ) *how_many_skipped = imyp_index;
+		if ( how_many_skipped != NULL )
+		{
+			*how_many_skipped = imyp_index;
+		}
 		/* not a note */
 		return 0;
 	}
 
 	sscanf (&note_buffer[imyp_index], "%1u", &dur_shift);
 	imyp_index++;
-	imyp_read_line (note_buffer, &imyp_index, strlen (note_buffer), imyfile, 0);
-	if ( dur_shift == 0 ) duration = 1000.0f;
-	else duration = 1000.0f/(float)(1<<dur_shift);
+	note_buf_len = strlen (note_buffer);
+	imyp_read_line (note_buffer, &imyp_index, note_buf_len, imyfile, 0);
+	if ( dur_shift == 0 )
+	{
+		duration = 1000.0f;
+	}
+	else
+	{
+		duration = 1000.0f/(float)(1<<dur_shift);
+	}
 	if ( note_buffer[imyp_index] == '.' )
 	{
 		duration *= 1.5f;
@@ -539,45 +468,22 @@ imyp_get_duration (
 		duration = (duration*2.0f)/3.0f;
 		imyp_index++;
 	}
-	imyp_read_line (note_buffer, &imyp_index, strlen (note_buffer), imyfile, 0);
-	if ( how_many_skipped != NULL ) *how_many_skipped = imyp_index;
-	if ( current_bpm == 0 ) current_bpm = IMYP_DEF_BPM;
+	imyp_read_line (note_buffer, &imyp_index, note_buf_len, imyfile, 0);
+	if ( how_many_skipped != NULL )
+	{
+		*how_many_skipped = imyp_index;
+	}
+	if ( current_bpm == 0 )
+	{
+		current_bpm = IMYP_DEF_BPM;
+	}
 	return (int)IMYP_ROUND (duration * ((1.0f*IMYP_DEF_BPM)/(1.0f*(double)current_bpm)));
 }
 
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static int imyp_get_rest_time PARAMS((const int last_note_duration, const int current_style));
-#endif
-
-/**
- * Gets the pause time after the last note.
- * \param last_note_duration The duration of the last note played, in milliseconds.
- * \param current_style Playing style.
- * \return a duration for the pause between imyp_notes, in milliseconds.
- */
-static int
-imyp_get_rest_time (
-#ifdef IMYP_ANSIC
-	const int last_note_duration,
-	const int current_style)
-#else
-	last_note_duration, current_style)
-	const int last_note_duration;
-	const int current_style;
-#endif
-{
-	if      ( current_style == 0 ) return last_note_duration/20;
-	else if ( current_style == 1 ) return 0;
-	else if ( current_style == 2 ) return last_note_duration;
-	else return 0;
-}
-
-/* ======================================================================== */
-
-#ifndef IMYP_ANSIC
-static void imyp_play_current_note PARAMS((FILE * const imy, int * const skipped_dur,
+static void imyp_play_current_note IMYP_PARAMS ((FILE * const imy, int * const skipped_dur,
 	int * const note_duration, const int note_index, imyp_backend_t * const curr,
 	int * const play_res));
 #endif
@@ -702,7 +608,7 @@ imyp_play_current_note (
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static int imyp_check_string PARAMS((const char string[]));
+static int imyp_check_string IMYP_PARAMS ((const char string[]));
 #endif
 
 /**
@@ -771,17 +677,36 @@ imyp_play_file (
 	int skipped_dur;	/* has to be signed */
 	int play_res;
 	int note_duration = 0;
+#ifndef HAVE_MEMSET
 	size_t i;
+#endif
 
 	if ( (file_name == NULL) || (curr == NULL) )
 	{
 		return -100;
 	}
-
+#ifdef HAVE_MEMSET
+	memset (melody_line, 0, sizeof (melody_line));
+#else
 	for ( i = 0; i < sizeof (melody_line); i++ )
 	{
 		melody_line[i] = '\0';
 	}
+#endif
+	/* re-initialize the parser for each file: */
+	volume = 7;
+	style = 0;
+	bpm = IMYP_DEF_BPM;
+	octave = 4;
+	melody_index = 0;
+	is_sharp = 0;
+	is_flat = 0;
+
+	is_repeat = 0;
+	repeat_count = 0;
+	is_repeat_forever = 0;
+	repeat_start_pos = 0;
+	is_eof = 0;
 
 	imy = fopen (file_name, "r");
 	if ( imy != NULL )
@@ -932,7 +857,7 @@ imyp_play_file (
 										printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
 											_(err_unkn_token),
 											melody_line[melody_index],
-											melody_line[melody_index],
+											(unsigned int)melody_line[melody_index],
 											_(err_at_pos),
 											melody_index,
 											melody_line);
@@ -969,9 +894,14 @@ imyp_play_file (
 								}
 								imyp_read_line (melody_line, &melody_index,
 									sizeof (melody_line) - 10, imy, 0);
-								if ( volume < 0 ) volume = 0;
+								if ( volume < 0 )
+								{
+									volume = 0;
+								}
 								else if ( volume > IMYP_MAX_IMY_VOLUME )
+								{
 									volume = IMYP_MAX_IMY_VOLUME;
+								}
 							}
 							is_sharp = 0;
 							is_flat = 0;
@@ -1044,7 +974,7 @@ imyp_play_file (
 										printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
 											_(err_unkn_token),
 											melody_line[melody_index],
-											melody_line[melody_index],
+											(unsigned int)melody_line[melody_index],
 											_(err_at_pos),
 											melody_index,
 											melody_line);
@@ -1087,8 +1017,14 @@ imyp_play_file (
 							melody_index++;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy, 0);
-							if ( octave < 0 ) octave = 0;
-							else if ( octave > 8 ) octave = 8;
+							if ( octave < 0 )
+							{
+								octave = 0;
+							}
+							else if ( octave > 8 )
+							{
+								octave = 8;
+							}
 							is_sharp = 0;
 							is_flat = 0;
 							break;
@@ -1141,7 +1077,7 @@ imyp_play_file (
 									printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
 										_(err_unkn_token),
 										melody_line[melody_index],
-										melody_line[melody_index],
+										(unsigned int)melody_line[melody_index],
 										_(err_at_pos),
 										melody_index,
 										melody_line);
@@ -1161,7 +1097,7 @@ imyp_play_file (
 								printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
 									_(err_unex_token),
 									melody_line[melody_index],
-									melody_line[melody_index],
+									(unsigned int)melody_line[melody_index],
 									_(err_at_pos),
 									melody_index,
 									melody_line);
@@ -1180,9 +1116,9 @@ imyp_play_file (
 #else
 								repeat_start_pos = ftell (imy)
 									/* substract the already-read line */
-									- strlen (melody_line)
+									- (long int)strlen (melody_line)
 									/* add the offset of '(': */
-									+ melody_index
+									+ (long int)melody_index
 									/* skip the '(' itself: */
 									+ 1;
 #endif
@@ -1209,7 +1145,10 @@ imyp_play_file (
 									is_eof = 1;
 									break;
 								}
-								if ( is_eof != 0 ) break;
+								if ( is_eof != 0 )
+								{
+									break;
+								}
 								melody_index++; /* skip the '@' */
 								repeat_count = imyp_read_number (
 									melody_line,
@@ -1276,7 +1215,7 @@ imyp_play_file (
 								printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
 									_(err_unex_token),
 									melody_line[melody_index],
-									melody_line[melody_index],
+									(unsigned int)melody_line[melody_index],
 									_(err_at_pos),
 									melody_index,
 									melody_line);
@@ -1286,9 +1225,9 @@ imyp_play_file (
 									sizeof (melody_line) - 10,
 									imy, 0);
 							}
-							else
+							else if ( repeat_count == 0 )
 							{
-								if ( repeat_count == 0 ) is_repeat = 0;
+								is_repeat = 0;
 							}
 							is_sharp = 0;
 							is_flat = 0;
@@ -1299,7 +1238,7 @@ imyp_play_file (
 								printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
 									_(err_unex_token),
 									melody_line[melody_index],
-									melody_line[melody_index],
+									(unsigned int)melody_line[melody_index],
 									_(err_at_pos),
 									melody_index,
 									melody_line);
@@ -1373,7 +1312,7 @@ imyp_play_file (
 								printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
 									_(err_unkn_token),
 									melody_line[melody_index],
-									melody_line[melody_index],
+									(unsigned int)melody_line[melody_index],
 									_(err_at_pos),
 									melody_index,
 									melody_line);

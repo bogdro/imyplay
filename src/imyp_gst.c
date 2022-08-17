@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- GStreamer backend.
  *
- * Copyright (C) 2012-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -65,7 +65,7 @@ struct imyp_gst_backend_data
 };
 
 #ifndef HAVE_MALLOC
-struct imyp_gst_backend_data imyp_gst_backend_data_static;
+static struct imyp_gst_backend_data imyp_gst_backend_data_static;
 #endif
 
 

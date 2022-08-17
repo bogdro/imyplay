@@ -2,10 +2,8 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- signal handling.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
- *
- * Syntax example: imyplay ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -152,7 +150,7 @@ static const int signals[] =
 # endif
 
 # ifndef IMYP_ANSIC
-static RETSIGTYPE term_signal_received PARAMS((const int signum));
+static RETSIGTYPE term_signal_received IMYP_PARAMS ((const int signum));
 # endif
 
 /**
@@ -173,7 +171,9 @@ term_signal_received (
 	/* EXEC backend enabled - don't stop when the child finished working */
 	if ( signum != SIGCHLD )
 # endif
+	{
 		sig_recvd = signum;
+	}
 
 # define void 1
 # define int 2
@@ -227,9 +227,15 @@ imyp_set_sigh (
 		   )
 		{
 #  ifdef HAVE_ERRNO_H
-			if ( error != NULL ) *error = errno;
+			if ( error != NULL )
+			{
+				*error = errno;
+			}
 #  else
-			if ( error != NULL ) *error = 1L;
+			if ( error != NULL )
+			{
+				*error = 1L;
+			}
 #  endif
 #  ifdef HAVE_SNPRINTF
 			res = snprintf (tmp, TMPSIZE-1, "%.*d", TMPSIZE-1, signals[s] );
@@ -239,7 +245,10 @@ imyp_set_sigh (
 			tmp[TMPSIZE-1] = '\0';
 			if ( error != NULL )
 			{
-				if ( *error == 0 ) *error = 1L;
+				if ( *error == 0 )
+				{
+					*error = 1L;
+				}
 			}
 			if ( error != NULL )
 			{
@@ -276,9 +285,15 @@ imyp_set_sigh (
 		   )
 		{
 #  ifdef HAVE_ERRNO_H
-			if ( error != NULL ) *error = errno;
+			if ( error != NULL )
+			{
+				*error = errno;
+			}
 #  else
-			if ( error != NULL ) *error = 1L;
+			if ( error != NULL )
+			{
+				*error = 1L;
+			}
 #  endif
 
 #  ifdef HAVE_SNPRINTF
@@ -289,7 +304,10 @@ imyp_set_sigh (
 			tmp[TMPSIZE-1] = '\0';
 			if ( error != NULL )
 			{
-				if ( *error == 0 ) *error = 1L;
+				if ( *error == 0 )
+				{
+					*error = 1L;
+				}
 			}
 			if ( error != NULL )
 			{

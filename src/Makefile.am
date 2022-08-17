@@ -1,7 +1,8 @@
 bin_PROGRAMS = imyplay
 datadir = @datadir@
 imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h \
-	imyp_sig.c imyp_sig.h imyparse.h imyputil.c imyputil.h
+	imyp_sig.c imyp_sig.h imyparse.h imyputil.c imyputil.h \
+	iparsers.c iparsers.h
 
 imyplay_LDADD = $(INTLLIBS)
 localedir = $(datadir)/locale
@@ -41,7 +42,8 @@ imyplay_SOURCES += imyp_jck.c imyp_jck.h
 endif
 
 if MIDI
-imyplay_SOURCES += imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h midibase.h
+imyplay_SOURCES += imyp_mid.c imyp_mid.h midifile.c midifile.h \
+	midiinfo.h midibase.h
 endif
 
 if EXEC
@@ -62,6 +64,13 @@ endif
 
 if FLEX
 imyplay_SOURCES += imyparsf.l
+BUILT_SOURCES = imyparsf.c
+
+# WARNING: enabling nodist_imyplay_SOURCES in this form makes
+# the program fail to link:
+#nodist_imyplay_SOURCES = imyparsf.c
+
+imyplay_DISTCLEANFILES = imyparsf.c
 else
 imyplay_SOURCES += imyparse.c
 endif

@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PulseAudio backend.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -63,7 +63,7 @@ struct imyp_pulse_backend_data
 };
 
 #ifndef HAVE_MALLOC
-struct imyp_pulse_backend_data imyp_pulse_backend_data_static;
+static struct imyp_pulse_backend_data imyp_pulse_backend_data_static;
 #endif
 
 
@@ -102,7 +102,10 @@ imyp_pulse_play_tune (
 	struct imyp_pulse_backend_data * data =
 		(struct imyp_pulse_backend_data *)imyp_data;
 
-	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) ) return -1;
+	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) )
+	{
+		return -1;
+	}
 
 	if ( data->conf.format == PA_SAMPLE_U8 )
 	{

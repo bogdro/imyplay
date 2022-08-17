@@ -7,7 +7,7 @@ Summary:	Program for playing iMelody ringtones (IMY files).
 Name:		%{name}
 Version:	%{version}
 Release:	1
-URL:		http://rudy.mif.pg.gda.pl/~bogdro/soft/
+URL:		http://imyplay.sf.net
 License:	GPL
 Group:		Applications/Multimedia
 #Packager:	Bogdan Drozdowski <bogdandr@op.pl>

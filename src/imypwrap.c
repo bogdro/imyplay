@@ -2,10 +2,8 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- wrapper functions between the main program and the backends.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
- *
- * Syntax example: imyplay ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -95,6 +93,26 @@
 # include "imyp_spk.h"
 #endif
 
+
+#ifdef IMYP_HAVE_MIDI
+# define IMYP_ONLY_IF_MIDI
+#else
+# define IMYP_ONLY_IF_MIDI IMYP_ATTR ((unused))
+#endif
+
+#ifdef IMYP_HAVE_FILE
+# define IMYP_ONLY_IF_FILE
+#else
+# define IMYP_ONLY_IF_FILE IMYP_ATTR ((unused))
+#endif
+
+#ifdef IMYP_HAVE_EXEC
+# define IMYP_ONLY_IF_EXEC
+#else
+# define IMYP_ONLY_IF_EXEC IMYP_ATTR ((unused))
+#endif
+
+
 /**
  * Pause for the specified amount of time.
  * \param milliseconds Number of milliseconds to pause.
@@ -104,30 +122,17 @@
 void
 imyp_pause (
 #ifdef IMYP_ANSIC
-	const int milliseconds, imyp_backend_t * const curr, const int is_note
-# ifndef IMYP_HAVE_MIDI
-	IMYP_ATTR ((unused))
-# endif
-	, void * const buf
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
-	, int bufsize
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
+	const int milliseconds, imyp_backend_t * const curr,
+	const int is_note IMYP_ONLY_IF_MIDI, void * const buf IMYP_ONLY_IF_FILE,
+	int bufsize IMYP_ONLY_IF_FILE
 	)
 #else
 	milliseconds, curr, is_note, buf, bufsize)
 	const int milliseconds;
 	imyp_backend_t * const curr;
-	const int is_note
-# ifndef IMYP_HAVE_MIDI
-	IMYP_ATTR ((unused))
-# endif
-	;
-	void * const buf;
-	int bufsize;
+	const int is_note IMYP_ONLY_IF_MIDI;
+	void * const buf IMYP_ONLY_IF_FILE;
+	int bufsize IMYP_ONLY_IF_FILE;
 #endif
 {
 	if ( curr == NULL )
@@ -451,39 +456,18 @@ int
 imyp_init_selected (
 #ifdef IMYP_ANSIC
 	imyp_backend_t * const curr,
-	const char output_system[], const char * const filename
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
-	,
-	const int midi_instrument
-# ifndef IMYP_HAVE_MIDI
-	IMYP_ATTR ((unused))
-# endif
-	, const char * const out_file
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
+	const char output_system[],
+	const char * const filename IMYP_ONLY_IF_FILE,
+	const int midi_instrument IMYP_ONLY_IF_MIDI,
+	const char * const out_file IMYP_ONLY_IF_FILE
 	)
 #else
 	curr, output_system, filename, midi_instrument, out_file)
 	imyp_backend_t * const curr;
 	const char output_system[];
-	const char * const filename
-# ifdef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
-	;
-	const int midi_instrument
-# ifndef IMYP_HAVE_MIDI
-	IMYP_ATTR ((unused))
-# endif
-	;
-	const char * const out_file
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
-	;
+	const char * const filename IMYP_ONLY_IF_FILE;
+	const int midi_instrument IMYP_ONLY_IF_MIDI;
+	const char * const out_file IMYP_ONLY_IF_FILE;
 #endif
 {
 	int res = -1;
@@ -591,64 +575,22 @@ imyp_init_selected (
 int
 imyp_lib_init (
 #ifdef IMYP_ANSIC
-	imyp_backend_t * const curr, const int want_midi
-# ifndef IMYP_HAVE_MIDI
-	IMYP_ATTR ((unused))
-# endif
-	, const char * const filename
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
-	, const int want_exec
-# ifndef IMYP_HAVE_EXEC
-	IMYP_ATTR ((unused))
-# endif
-	, const int midi_instrument
-# ifndef IMYP_HAVE_MIDI
-	IMYP_ATTR ((unused))
-# endif
-	, const int want_file
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
-	, const char * const out_file
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
+	imyp_backend_t * const curr, const int want_midi IMYP_ONLY_IF_MIDI,
+	const char * const filename IMYP_ONLY_IF_FILE,
+	const int want_exec IMYP_ONLY_IF_EXEC,
+	const int midi_instrument IMYP_ONLY_IF_MIDI,
+	const int want_file IMYP_ONLY_IF_FILE,
+	const char * const out_file IMYP_ONLY_IF_FILE
 	)
 #else
 	curr, want_midi, filename, want_exec, midi_instrument, want_file, out_file)
 	imyp_backend_t * const curr;
-	const int want_midi
-# ifndef IMYP_HAVE_MIDI
-	IMYP_ATTR ((unused))
-# endif
-	;
-	const char * const filename
-# ifdef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
-	;
-	const int want_exec
-# ifndef IMYP_HAVE_EXEC
-	IMYP_ATTR ((unused))
-# endif
-	;
-	const int midi_instrument
-# ifndef IMYP_HAVE_MIDI
-	IMYP_ATTR ((unused))
-# endif
-	;
-	const int want_file
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
-	;
-	const char * const out_file
-# ifndef IMYP_HAVE_FILE
-	IMYP_ATTR ((unused))
-# endif
-	;
+	const int want_midi IMYP_ONLY_IF_MIDI;
+	const char * const filename IMYP_ONLY_IF_FILE;
+	const int want_exec IMYP_ONLY_IF_EXEC;
+	const int midi_instrument IMYP_ONLY_IF_MIDI;
+	const int want_file IMYP_ONLY_IF_FILE;
+	const char * const out_file IMYP_ONLY_IF_FILE;
 #endif
 {
 	int res = -1;
@@ -661,7 +603,10 @@ imyp_lib_init (
 	if ( want_midi != 0 )
 	{
 		res = imyp_midi_init (&(curr->imyp_data), filename, midi_instrument);
-		if ( res == 0 ) curr->imyp_curr_lib = IMYP_CURR_MIDI;
+		if ( res == 0 )
+		{
+			curr->imyp_curr_lib = IMYP_CURR_MIDI;
+		}
 		return res;
 	}
 #endif
@@ -669,7 +614,10 @@ imyp_lib_init (
 	if ( want_exec != 0 )
 	{
 		res = imyp_exec_init (&(curr->imyp_data), filename);
-		if ( res == 0 ) curr->imyp_curr_lib = IMYP_CURR_EXEC;
+		if ( res == 0 )
+		{
+			curr->imyp_curr_lib = IMYP_CURR_EXEC;
+		}
 		return res;
 	}
 #endif
@@ -677,7 +625,10 @@ imyp_lib_init (
 	if ( want_file != 0 )
 	{
 		res = imyp_file_init (&(curr->imyp_data), filename, out_file);
-		if ( res == 0 ) curr->imyp_curr_lib = IMYP_CURR_FILE;
+		if ( res == 0 )
+		{
+			curr->imyp_curr_lib = IMYP_CURR_FILE;
+		}
 		return res;
 	}
 #endif

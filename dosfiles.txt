@@ -1,1 +1,1 @@
-imyp_all.c imyplay.c imyparse.c imyp_mid.c imyp_sig.c imyp_exe.c imypwrap.c midifile.c imyputil.c imyp_fil.c imyp_spk.c imypdos.obj -lalleg
+imyplay.c imyparse.c iparsers.c imyp_sig.c imypwrap.c imyputil.c imyp_all.c imyp_mid.c imyp_exe.c midifile.c imyp_fil.c imyp_spk.c imypdos.obj -lalleg

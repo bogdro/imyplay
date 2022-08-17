@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- MIDI writer backend, header file.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,16 +28,16 @@
 
 # include "imyplay.h"
 
-extern void imyp_midi_pause PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_midi_pause IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const int milliseconds, const int is_note));
-extern void imyp_midi_put_text PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_midi_put_text IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const char * const text));
-extern int imyp_midi_play_tune PARAMS ((imyp_backend_data_t * const imyp_data,
+extern int imyp_midi_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_midi_init PARAMS ((imyp_backend_data_t ** const imyp_data,
+extern int imyp_midi_init IMYP_PARAMS ((imyp_backend_data_t ** const imyp_data,
 	const char * const filename, const int instrument));
-extern int imyp_midi_close PARAMS ((imyp_backend_data_t * const imyp_data));
-extern void imyp_midi_version PARAMS ((imyp_backend_data_t * const imyp_data));
+extern int imyp_midi_close IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_midi_version IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_MIDIW */

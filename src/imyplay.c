@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- main file.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -82,7 +82,7 @@
 #define	PROGRAM_NAME	PACKAGE
 
 static const char ver_str[] = N_("version");
-static const char author_str[] = "Copyright (C) 2009-2013 Bogdan 'bogdro' Drozdowski, bogdandr@op.pl\n" \
+static const char author_str[] = "Copyright (C) 2009-2014 Bogdan 'bogdro' Drozdowski, bogdandr@op.pl\n" \
 	"MIDI code: Copyright 1998-2008, Steven Goodwin (StevenGoodwin@gmail.com)";
 static const char lic_str[] = N_(							\
 	"Program for playing iMelody ringtones (IMY files).\n"				\
@@ -168,6 +168,7 @@ static imyp_backend_t current_library =
 	NULL,
 	IMYP_CURR_NONE
 };
+/* ======================================================================== */
 
 /**
  * Displays an error message.
@@ -192,7 +193,10 @@ imyp_show_error (
 	const char * const	extra;
 #endif
 {
-	if ( msg == NULL ) return;
+	if ( msg == NULL )
+	{
+		return;
+	}
 
 	fprintf ( stderr, "%s: %s: %d (%s) %s", imyp_progname,
 		_(err_msg),
@@ -204,7 +208,7 @@ imyp_show_error (
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static void print_help PARAMS(( const char * const my_name ));
+static void print_help IMYP_PARAMS ((const char * const my_name));
 #endif
 
 /**
@@ -272,7 +276,7 @@ int _mangled_main (int argc, char * argv[]);
 #endif
 
 #ifndef IMYP_ANSIC
-int main PARAMS ((int argc, char* argv[]));
+int main IMYP_PARAMS ((int argc, char* argv[]));
 #endif
 
 /* SDL: */
@@ -345,7 +349,10 @@ main (
 		prog_name_output_system[sizeof (prog_name_output_system)-1] = '\0';
 		/* if dot present, remove it and the rest of the string with it: */
 		dash = strchr (prog_name_output_system, (int)'.');
-		if ( dash != NULL ) *dash = '\0';
+		if ( dash != NULL )
+		{
+			*dash = '\0';
+		}
 	}
 
 	/* Parsing the command line */
@@ -419,7 +426,10 @@ main (
 #else
 	for ( i = 1 ; i < (unsigned int)argc; i++ )	/* argv[0] is the program name */
 	{
-		if ( argv[i] == NULL ) continue;
+		if ( argv[i] == NULL )
+		{
+			continue;
+		}
 		/* NOTE: these shouldn't be a sequence of else-ifs */
 		if ( (strstr (argv[i], "-h") == argv[i]) || (strstr (argv[i], "-?") == argv[i])
 			|| (strstr (argv[i], "--help") == argv[i]) )
@@ -552,6 +562,13 @@ main (
 				opt_tomidi = 1;
 #endif
 			}
+			else if ( sel == IMYP_CURR_FILE )
+			{
+#ifdef IMYP_HAVE_FILE
+				/* mark it here and use a default output filename below */
+				opt_file = 1;
+#endif
+			}
 			else if ( (sel != IMYP_CURR_MIDI)
 				&& (sel != IMYP_CURR_EXEC) && (sel != IMYP_CURR_FILE) )
 			{
@@ -616,11 +633,11 @@ main (
 		{
 			if ( imyp_lib_init (&current_library, 1, argv[imyp_optind],
 				0, midi_instrument, 0,
-#ifdef IMYP_HAVE_FILE
+# ifdef IMYP_HAVE_FILE
 				out_file
-#else
+# else
 				NULL
-#endif
+# endif
 				) != 0 )
 			{
 				printf ("%s\n", _(err_lib_init));
@@ -640,11 +657,11 @@ main (
 				0,
 # endif
 				0,
-#ifdef IMYP_HAVE_FILE
+# ifdef IMYP_HAVE_FILE
 				out_file
-#else
+# else
 				NULL
-#endif
+# endif
 				) != 0 )
 			{
 				printf ("%s\n", _(err_lib_init));
@@ -654,8 +671,12 @@ main (
 		}
 #endif
 #ifdef IMYP_HAVE_FILE
-		if ( out_file != NULL )
+		if ( (out_file != NULL) || (opt_file != 0) )
 		{
+			if ( out_file == NULL )
+			{
+				out_file = argv[imyp_optind];
+			}
 			if ( imyp_lib_init (&current_library, 0, device,
 				0,
 # ifdef IMYP_HAVE_MIDI
@@ -669,9 +690,44 @@ main (
 				imyp_optind++;
 				continue;
 			}
+			/* restore the empty value, if it was empty before: */
+			if ( out_file == argv[imyp_optind] )
+			{
+				out_file = NULL;
+			}
 		}
 #endif
 		ret = imyp_play_file (argv[imyp_optind], &current_library);
+
+
+#if (defined IMYP_HAVE_MIDI) || (defined IMYP_HAVE_EXEC)
+		if (
+# ifdef IMYP_HAVE_MIDI
+			(opt_tomidi == 1)
+#  if (defined IMYP_HAVE_EXEC) || (defined IMYP_HAVE_FILE)
+			||
+#  endif
+# endif
+# ifdef IMYP_HAVE_EXEC
+			(exec_program != NULL)
+#  if (defined IMYP_HAVE_FILE)
+			||
+#  endif
+# endif
+# ifdef IMYP_HAVE_FILE
+			(out_file != NULL)
+			|| (opt_file != 0)
+# endif
+		)
+		{
+			/* have to close the MIDI backend, along with its file */
+			if ( imyp_lib_close (&current_library) != 0 )
+			{
+				printf ("%s\n", _(err_lib_close));
+				ret = -3;
+			}
+		}
+#endif
 		if ( sig_recvd != 0 )
 		{
 			break;
@@ -679,11 +735,35 @@ main (
 		imyp_optind++;
 	} /* while optind<argc && !signal */
 
-	if ( imyp_lib_close (&current_library) != 0 )
+
+#if (defined IMYP_HAVE_MIDI) || (defined IMYP_HAVE_EXEC)
+	if (
+# ifdef IMYP_HAVE_MIDI
+		(opt_tomidi == 0)
+#  if (defined IMYP_HAVE_EXEC) || (defined IMYP_HAVE_FILE)
+		&&
+#  endif
+# endif
+# ifdef IMYP_HAVE_EXEC
+		(exec_program == NULL)
+#  if (defined IMYP_HAVE_FILE)
+		&&
+#  endif
+# endif
+# ifdef IMYP_HAVE_FILE
+		(out_file == NULL)
+		&& (opt_file == 0)
+# endif
+		)
 	{
-		printf ("%s\n", _(err_lib_close));
-		ret = -3;
+		/* MIDI backend closed, close other backend types: */
+		if ( imyp_lib_close (&current_library) != 0 )
+		{
+			printf ("%s\n", _(err_lib_close));
+			ret = -3;
+		}
 	}
+#endif
 	if ( sig_recvd != 0 )
 	{
 		ret = -100;

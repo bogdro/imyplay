@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PortAudio backend.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -49,14 +49,6 @@
 # include <string.h>
 #endif
 
-#ifdef HAVE_MATH_H
-# include <math.h>	/* sin() */
-#endif
-
-#ifndef M_PI
-# define M_PI 3.14159265358979323846
-#endif
-
 #ifdef HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
@@ -78,12 +70,14 @@ struct imyp_portaudio_backend_data
 };
 
 #ifndef HAVE_MALLOC
-struct imyp_portaudio_backend_data imyp_portaudio_backend_data_static;
+static struct imyp_portaudio_backend_data imyp_portaudio_backend_data_static;
 #endif
 
 
 #ifndef IMYP_ANSIC
-static int imyp_portaudio_fill_buffer PARAMS((const void * input IMYP_ATTR((unused)), void * output,
+static int imyp_portaudio_fill_buffer IMYP_PARAMS ((
+	const void * input IMYP_ATTR((unused)),
+	void * output,
 	unsigned long int frameCount,
 	const PaStreamCallbackTimeInfo * timeInfo IMYP_ATTR((unused)),
 	PaStreamCallbackFlags statusFlags IMYP_ATTR((unused)),
@@ -253,7 +247,7 @@ imyp_portaudio_play_tune (
 	Pa_StopStream (data->stream);
 	Pa_CloseStream (data->stream);
 
-	while ( data->inside_callback != 0 ) {};
+	while ( data->inside_callback != 0 ) {}
 
 	data->tone_freq = 0.0;
 	data->volume_level = 0;
@@ -283,16 +277,15 @@ imyp_portaudio_pause (
 	{
 		return;
 	}
-#if (((defined HAVE_SYS_SELECT_H) || (((defined TIME_WITH_SYS_TIME)	\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))		\
- 		&& (defined HAVE_UNISTD_H)))				\
-	&& (defined HAVE_SELECT))
 
+	Pa_Sleep (milliseconds);
+/*
+#ifdef IMYP_HAVE_SELECT
 	imyp_pause_select (milliseconds);
-
 #else
 	Pa_Sleep (milliseconds);
 #endif
+*/
 }
 
 /**

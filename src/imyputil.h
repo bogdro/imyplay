@@ -2,10 +2,8 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- utility functions, header file.
  *
- * Copyright (C) 2012-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
- *
- * Syntax example: imyplay ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,14 +41,14 @@ enum IMYP_SAMPLE_FORMATS
 	IMYP_SAMPLE_FORMAT_U8BE
 };
 
-extern int imyp_compare PARAMS ((const char string1[], const char string2[]));
-extern enum IMYP_CURR_LIB imyp_parse_system PARAMS ((const char system_name[]));
-extern enum IMYP_SAMPLE_FORMATS imyp_get_format PARAMS ((const char string[]));
-extern int imyp_generate_samples PARAMS ((const double freq, const int volume_level,
+extern int imyp_compare IMYP_PARAMS ((const char string1[], const char string2[]));
+extern enum IMYP_CURR_LIB imyp_parse_system IMYP_PARAMS ((const char system_name[]));
+extern enum IMYP_SAMPLE_FORMATS imyp_get_format IMYP_PARAMS ((const char string[]));
+extern int imyp_generate_samples IMYP_PARAMS ((const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize, const int is_le,
 	const int is_uns, unsigned int quality, const unsigned int samp_rate,
 	unsigned long int * const start_index));
-extern void imyp_pause_select PARAMS ((const int milliseconds));
-extern void imyp_put_text_stdout PARAMS ((const char * const text));
+extern void imyp_pause_select IMYP_PARAMS ((const int milliseconds));
+extern void imyp_put_text_stdout IMYP_PARAMS ((const char * const text));
 
 #endif /* IMYP_UTILS */

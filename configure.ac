@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(imyplay, 0.8, bogdandr@op.pl)
+AC_INIT(imyplay, 0.9, bogdandr@op.pl)
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \
@@ -165,14 +165,16 @@ AC_PROG_RANLIB
 AM_CONDITIONAL(ISGCC, [test "x$GCC" = "xyes"])
 
 have_flex=no
-if ( test "x$feat_FLEX" = "xyes" ); then
+# flex should be searched for unconditionally, because it is
+# used in 'make dist'
+#if ( test "x$feat_FLEX" = "xyes" ); then
 
 	AM_PROG_LEX
 	if ( test "x$LEX" = "xflex" ); then
 
 		have_flex=yes
 	fi
-fi
+#fi
 
 # ==================== Checks for libraries.
 
@@ -408,9 +410,9 @@ if ( test "x$libjack" = "xyes" ); then
 			have_jack_h=no)])
 fi
 
-if ( test "x$have_asoundlib_h" = "xyes" || test "x$feat_OSS" = "xyes"		\
-	|| test "x$have_ao_h" = "xyes" || test "x$have_portaudio_h" = "xyes"	\
-	|| test "x$have_jack_h" = "xyes" || test "x$feat_SPKR" = "xyes"); then
+#if ( test "x$have_asoundlib_h" = "xyes" || test "x$feat_OSS" = "xyes"		\
+#	|| test "x$have_ao_h" = "xyes" || test "x$have_portaudio_h" = "xyes"	\
+#	|| test "x$have_jack_h" = "xyes" || test "x$feat_SPKR" = "xyes"); then
 
 	have_select=yes
 	AC_CHECK_FUNCS([select],AC_DEFINE([HAVE_SELECT],[1],
@@ -428,7 +430,7 @@ if ( test "x$have_asoundlib_h" = "xyes" || test "x$feat_OSS" = "xyes"		\
 		AC_CHECK_HEADERS([sys/types.h], AC_DEFINE([HAVE_SYS_TYPES_H],[1],
 			[Whether you have the sys/types.h header.]), have_sys_types_h=no)
 	fi
-fi
+#fi
 
 
 if ( test "x$feat_SPKR" = "xyes" ); then
@@ -606,10 +608,17 @@ AM_CONDITIONAL(SPKR, [test "x$feat_SPKR" = "xyes" && test "x$have_ioctl" = "xyes
 		test "x$have_sys_types_h" = "xyes")						\
 		)])
 
-AM_CONDITIONAL(FLEX, [test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"	\
+imyp_flex_enabled=no
+if (       test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"	\
 	&& test "x$have_unistd_h" = "xyes" &&  test "x$have_errno_h" = "xyes"		\
 	&& test "x$have_stdlib_h" = "xyes" &&  test "x$have_inttypes_h" = "xyes"	\
-	&& test "x$have_malloc" = "xyes" && test "x$have_realloc" = "xyes" ])
+	&& test "x$have_malloc" = "xyes" && test "x$have_realloc" = "xyes"); then
+
+        imyp_flex_enabled=yes
+fi
+
+
+AM_CONDITIONAL(FLEX, [test "x$imyp_flex_enabled" = "xyes" ])
 
 # ===================== Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -634,7 +643,7 @@ AC_TYPE_SIGNAL
 AC_FUNC_MALLOC
 
 AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long])
-if ( test "x$have_flex" != "xyes" ); then
+if ( test "x$imyp_flex_enabled" != "xyes" ); then
 
 	AC_CHECK_FUNCS([fseeko ftello])
 fi

@@ -43,7 +43,9 @@ bin_PROGRAMS = imyplay$(EXEEXT)
 @PORTAUDIO_TRUE@am__append_6 = imyp_por.c imyp_por.h
 @PULSEAUDIO_TRUE@am__append_7 = imyp_pul.c imyp_pul.h
 @JACK_TRUE@am__append_8 = imyp_jck.c imyp_jck.h
-@MIDI_TRUE@am__append_9 = imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h midibase.h
+@MIDI_TRUE@am__append_9 = imyp_mid.c imyp_mid.h midifile.c midifile.h \
+@MIDI_TRUE@	midiinfo.h midibase.h
+
 @EXEC_TRUE@am__append_10 = imyp_exe.c imyp_exe.h
 @GSTREAMER_TRUE@am__append_11 = imyp_gst.c imyp_gst.h
 @FILE_TRUE@am__append_12 = imyp_fil.c imyp_fil.h
@@ -70,13 +72,13 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 	imyp_sig.c imyp_sig.h imyparse.h imyputil.c imyputil.h \
-	imyp_all.c imyp_all.h imyp_sdl.c imyp_sdl.h imyp_als.c \
-	imyp_als.h imyp_oss.c imyp_oss.h imyp_ao.c imyp_ao.h \
-	imyp_por.c imyp_por.h imyp_pul.c imyp_pul.h imyp_jck.c \
-	imyp_jck.h imyp_mid.c imyp_mid.h midifile.c midifile.h \
-	midiinfo.h midibase.h imyp_exe.c imyp_exe.h imyp_gst.c \
-	imyp_gst.h imyp_fil.c imyp_fil.h imyp_spk.c imyp_spk.h \
-	imyparsf.l imyparse.c
+	iparsers.c iparsers.h imyp_all.c imyp_all.h imyp_sdl.c \
+	imyp_sdl.h imyp_als.c imyp_als.h imyp_oss.c imyp_oss.h \
+	imyp_ao.c imyp_ao.h imyp_por.c imyp_por.h imyp_pul.c \
+	imyp_pul.h imyp_jck.c imyp_jck.h imyp_mid.c imyp_mid.h \
+	midifile.c midifile.h midiinfo.h midibase.h imyp_exe.c \
+	imyp_exe.h imyp_gst.c imyp_gst.h imyp_fil.c imyp_fil.h \
+	imyp_spk.c imyp_spk.h imyparsf.l imyparse.c
 @ALLEGRO_TRUE@am__objects_1 = imyp_all.$(OBJEXT)
 @SDL_TRUE@am__objects_2 = imyp_sdl.$(OBJEXT)
 @ALSA_TRUE@am__objects_3 = imyp_als.$(OBJEXT)
@@ -93,12 +95,12 @@ am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 @FLEX_TRUE@am__objects_14 = imyparsf.$(OBJEXT)
 @FLEX_FALSE@am__objects_15 = imyparse.$(OBJEXT)
 am_imyplay_OBJECTS = imyplay.$(OBJEXT) imypwrap.$(OBJEXT) \
-	imyp_sig.$(OBJEXT) imyputil.$(OBJEXT) $(am__objects_1) \
-	$(am__objects_2) $(am__objects_3) $(am__objects_4) \
-	$(am__objects_5) $(am__objects_6) $(am__objects_7) \
-	$(am__objects_8) $(am__objects_9) $(am__objects_10) \
-	$(am__objects_11) $(am__objects_12) $(am__objects_13) \
-	$(am__objects_14) $(am__objects_15)
+	imyp_sig.$(OBJEXT) imyputil.$(OBJEXT) iparsers.$(OBJEXT) \
+	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
+	$(am__objects_4) $(am__objects_5) $(am__objects_6) \
+	$(am__objects_7) $(am__objects_8) $(am__objects_9) \
+	$(am__objects_10) $(am__objects_11) $(am__objects_12) \
+	$(am__objects_13) $(am__objects_14) $(am__objects_15)
 imyplay_OBJECTS = $(am_imyplay_OBJECTS)
 am__DEPENDENCIES_1 =
 imyplay_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -240,16 +242,23 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c \
-	imyp_sig.h imyparse.h imyputil.c imyputil.h $(am__append_1) \
-	$(am__append_2) $(am__append_3) $(am__append_4) \
-	$(am__append_5) $(am__append_6) $(am__append_7) \
-	$(am__append_8) $(am__append_9) $(am__append_10) \
-	$(am__append_11) $(am__append_12) $(am__append_13) \
-	$(am__append_14) $(am__append_15)
+	imyp_sig.h imyparse.h imyputil.c imyputil.h iparsers.c \
+	iparsers.h $(am__append_1) $(am__append_2) $(am__append_3) \
+	$(am__append_4) $(am__append_5) $(am__append_6) \
+	$(am__append_7) $(am__append_8) $(am__append_9) \
+	$(am__append_10) $(am__append_11) $(am__append_12) \
+	$(am__append_13) $(am__append_14) $(am__append_15)
 imyplay_LDADD = $(INTLLIBS)
 INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\"
 EXTRA_DIST = imyp_cfg.hin imypdos.asm
-all: all-am
+@FLEX_TRUE@BUILT_SOURCES = imyparsf.c
+
+# WARNING: enabling nodist_imyplay_SOURCES in this form makes
+# the program fail to link:
+#nodist_imyplay_SOURCES = imyparsf.c
+@FLEX_TRUE@imyplay_DISTCLEANFILES = imyparsf.c
+all: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .l .o .obj
@@ -351,6 +360,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyplay.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyputil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imypwrap.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iparsers.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/midifile.Po@am__quote@
 
 .c.o:
@@ -453,13 +463,15 @@ distdir: $(DISTFILES)
 	  fi; \
 	done
 check-am: all-am
-check: check-am
+check: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) check-am
 all-am: Makefile $(PROGRAMS)
 installdirs:
 	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
+install: $(BUILT_SOURCES)
+	$(MAKE) $(AM_MAKEFLAGS) install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
@@ -485,6 +497,7 @@ maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
 	-rm -f imyparsf.c
+	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
@@ -554,7 +567,7 @@ ps-am:
 
 uninstall-am: uninstall-binPROGRAMS
 
-.MAKE: install-am install-strip
+.MAKE: all check install install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
 	clean-generic ctags distclean distclean-compile \

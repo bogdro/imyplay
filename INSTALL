@@ -112,8 +112,8 @@ Requirements for automatic compiling the DOS version:
 - the 'upx' utility (upx.sf.net) is optional. The program is compiled
   correctly without it.
 
-To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT
- the standard one) and change the line
+To compile under DOS using DJGPP, either enable LFN support or find your
+ GCC's "limits.h" file (NOT the standard one) and change the line
 	#include "syslimits.h"
 to
 	#include "syslimit.h"

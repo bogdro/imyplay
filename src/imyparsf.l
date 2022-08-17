@@ -3,7 +3,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing file.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -47,188 +47,30 @@
 #include "imyp_sig.h"
 #include "imypwrap.h"
 #include "imyparse.h"
-
-/* internationalized error messages: */
-static const char * const err_unkn_token  = N_("Unknown token");
-static const char * const err_at_pos      = N_("at position");
-static const char * const err_unex_token  = N_("Unexpected token");
-static const char * const err_file_open   = N_("Can't open file");
-static const char * const err_parse_beat  = N_("Problem parsing beat");
-static const char * const err_parse_style = N_("Problem parsing style");
-static const char * const err_parse_vol   = N_("Problem parsing volume");
-static const char * const err_bad_file    = N_("Not iMelody file");
-static const char * const err_play_tune   = N_("Error playing tune");
-
-/* The frequency multiplication coefficient between each two closest notes: 2^(1/12) */
-#define IMYP_C (1.05946309435929531f)
-
-#define IMYP_A0 (55.0f)
-#define IMYP_A1 (IMYP_A0*2.0f)
-#define IMYP_A2 (IMYP_A1*2.0f)
-#define IMYP_A3 (IMYP_A2*2.0f)
-#define IMYP_A4 (IMYP_A3*2.0f)
-#define IMYP_A5 (IMYP_A4*2.0f)
-#define IMYP_A6 (IMYP_A5*2.0f)
-#define IMYP_A7 (IMYP_A6*2.0f)
-#define IMYP_A8 (IMYP_A7*2.0f)
-
-const float imyp_notes[IMYP_OCTAVES][IMYP_NOTES_PER_OCTAVE] =
-{
-	{
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A0/(IMYP_C*IMYP_C),
-		(float) IMYP_A0/IMYP_C,
-		(float) IMYP_A0,
-		(float) IMYP_A0*IMYP_C,
-		(float) IMYP_A0*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A1/(IMYP_C*IMYP_C),
-		(float) IMYP_A1/IMYP_C,
-		(float) IMYP_A1,
-		(float) IMYP_A1*IMYP_C,
-		(float) IMYP_A1*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A2/(IMYP_C*IMYP_C),
-		(float) IMYP_A2/IMYP_C,
-		(float) IMYP_A2,
-		(float) IMYP_A2*IMYP_C,
-		(float) IMYP_A2*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A3/(IMYP_C*IMYP_C),
-		(float) IMYP_A3/IMYP_C,
-		(float) IMYP_A3,
-		(float) IMYP_A3*IMYP_C,
-		(float) IMYP_A3*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A4/(IMYP_C*IMYP_C),
-		(float) IMYP_A4/IMYP_C,
-		(float) IMYP_A4,
-		(float) IMYP_A4*IMYP_C,
-		(float) IMYP_A4*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A5/(IMYP_C*IMYP_C),
-		(float) IMYP_A5/IMYP_C,
-		(float) IMYP_A5,
-		(float) IMYP_A5*IMYP_C,
-		(float) IMYP_A5*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A6/(IMYP_C*IMYP_C),
-		(float) IMYP_A6/IMYP_C,
-		(float) IMYP_A6,
-		(float) IMYP_A6*IMYP_C,
-		(float) IMYP_A6*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A7/(IMYP_C*IMYP_C),
-		(float) IMYP_A7/IMYP_C,
-		(float) IMYP_A7,
-		(float) IMYP_A7*IMYP_C,
-		(float) IMYP_A7*IMYP_C*IMYP_C
-	},
-	{
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C*IMYP_C),
-		(float) IMYP_A8/(IMYP_C*IMYP_C),
-		(float) IMYP_A8/IMYP_C,
-		(float) IMYP_A8,
-		(float) IMYP_A8*IMYP_C,
-		(float) IMYP_A8*IMYP_C*IMYP_C
-	}
-};
-
-#define IMYP_DEF_BPM 120
+#include "iparsers.h"
 
 static unsigned short int buf16[IMYP_SAMPBUFSIZE];
 
-static int volume = 7;
-static int style = 0;
-static int bpm = IMYP_DEF_BPM;
-static int octave = 4;
+static int volume;
+static int style;
+static int bpm;
+static int octave;
 
-static int pos = 0;
-static int repeat_count = 0;
-static int repeat_pos = 0;
+static int pos;
+static int repeat_count;
+static int repeat_pos;
 
 static int scanf_res;
 static int play_result;
-static int note_duration = 0;
+static int note_duration;
 static imyp_backend_t * curr;
-
-#define IMYP_TOUPPER(c) ( (c) & 0x5f )
-#define IMYP_IS_DIGIT(c) ( ((c) >= '0') && ((c) <= '9') )
 
 #define ECHO do { imyp_put_text (yytext, curr); } while (0)
 
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static int imyp_get_duration PARAMS((const char * const note_buffer, int current_bpm));
+static int imyp_get_duration IMYP_PARAMS ((const char * const note_buffer, int current_bpm));
 #endif
 
 /**
@@ -263,8 +105,14 @@ imyp_get_duration (
 	{
 		return 0;
 	}
-	if ( dur_shift == 0 ) duration = 1000.0f;
-	else duration = 1000.0f/(float)(1<<dur_shift);
+	if ( dur_shift == 0 )
+	{
+		duration = 1000.0f;
+	}
+	else
+	{
+		duration = 1000.0f/(float)(1<<dur_shift);
+	}
 	if ( note_buffer[2] == '.' )
 	{
 		duration *= 1.5f;
@@ -277,43 +125,17 @@ imyp_get_duration (
 	{
 		duration = (duration*2.0f)/3.0f;
 	}
-	if ( current_bpm == 0 ) current_bpm = IMYP_DEF_BPM;
+	if ( current_bpm == 0 )
+	{
+		current_bpm = IMYP_DEF_BPM;
+	}
 	return (int)IMYP_ROUND (duration * ((1.0f*IMYP_DEF_BPM)/(1.0f*(double)current_bpm)));
 }
 
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static int imyp_get_rest_time PARAMS((const int last_note_duration, const int current_style));
-#endif
-
-/**
- * Gets the pause time after the last note.
- * \param last_note_duration The duration of the last note played, in milliseconds.
- * \param current_style Playing style.
- * \return a duration for the pause between imyp_notes, in milliseconds.
- */
-static int
-imyp_get_rest_time (
-#ifdef IMYP_ANSIC
-	const int last_note_duration,
-	const int current_style)
-#else
-	last_note_duration, current_style)
-	const int last_note_duration;
-	const int current_style;
-#endif
-{
-	if      ( current_style == 0 ) return last_note_duration/20;
-	else if ( current_style == 1 ) return 0;
-	else if ( current_style == 2 ) return last_note_duration;
-	else return 0;
-}
-
-/* ======================================================================== */
-
-#ifndef IMYP_ANSIC
-static void imyp_play_current_note PARAMS((const char melody[],
+static void imyp_play_current_note IMYP_PARAMS ((const char melody[],
 	int * const duration, imyp_backend_t * const curr_lib,
 	int * const play_res, const int is_sharp,
 	const int is_flat, const int current_bpm));
@@ -453,7 +275,7 @@ imyp_play_current_note (
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static void imyp_make_pause PARAMS((const char melody[],
+static void imyp_make_pause IMYP_PARAMS ((const char melody[],
 	imyp_backend_t * const curr_lib, const int current_bpm));
 #endif
 
@@ -490,7 +312,7 @@ imyp_make_pause (
 
 %option batch
 %option case-insensitive
-%option fast
+/*%option fast - disables 8-bit, not needed */
 %option never-interactive
  /*%option outfile="imyparsf.c" -- is taken care of by autoconf/automake */
 %option nounput
@@ -1220,8 +1042,10 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-.|\n					{
+.|[\x00-\x1F]				{
+/* NOTE: using just ".|\x00" is NOT enough */
 
+	fflush(stdout);
 	/* eat up everything before "BEGIN:IMELODY" or after "END:IMELODY" */
 	if ( sig_recvd != 0 )
 	{
@@ -1256,6 +1080,18 @@ imyp_play_file (
 	{
 		return -100;
 	}
+
+	/* re-initialize the parser for each file: */
+	volume = 7;
+	style = 0;
+	bpm = IMYP_DEF_BPM;
+	octave = 4;
+
+	pos = 0;
+	repeat_count = 0;
+	repeat_pos = 0;
+
+	note_duration = 0;
 
 	if ( curr_lib != IMYP_CURR_NONE )
 	{

@@ -38,7 +38,7 @@ This manual is for IMYplay, version @VERSION@
 
 @c ==================================================================
 
-    Copyright (c)  2009-2013 Bogdan Drozdowski
+    Copyright (c)  2009-2014 Bogdan Drozdowski
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -156,7 +156,8 @@ OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE, SPKR).
 
 By default, a flex-based scanner will be generated to parse the input file,
 if flex is available.
-If the scanner does not compile for you or works incorrectly, disable it with
+If the scanner does not compile for you or works incorrectly
+(it hangs on binary files, for example), disable it with
 
 	@command{./configure --enable-FLEXPARSER=no}
 
@@ -238,8 +239,8 @@ correctly without it.
 
 @end itemize
 
-To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT
-the standard one) and change the line
+To compile under DOS using DJGPP, either enable LFN support or find your
+GCC's "limits.h" file (NOT the standard one) and change the line
 
 	#include "syslimits.h"
 
@@ -458,6 +459,7 @@ bogdro (at) rudy . mif . pg . gda . pl
 
 
 or look at my website:@*
+[EN] http://imyplay.sf.net@*
 [EN] http://rudy.mif.pg.gda.pl/~bogdro/soft/@*
 [EN] http://rudy.mif.pg.gda.pl/~bogdro/inne/@*
 [PL] http://rudy.mif.pg.gda.pl/~bogdro/@*
@@ -1684,7 +1686,7 @@ marked with capital letters in the header:
 
 @quotation
 # YOUR LANGUAGE translations for IMYplay package.@*
-# Copyright (C) 2009-2013 Bogdan 'bogdro' Drozdowski@*
+# Copyright (C) 2009-2014 Bogdan 'bogdro' Drozdowski@*
 # This file is distributed under the same license as@*
 # the IMYplay package.@*
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.@*

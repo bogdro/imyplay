@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- SDL backend.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -72,12 +72,12 @@ struct imyp_sdl_backend_data
 };
 
 #ifndef HAVE_MALLOC
-struct imyp_sdl_backend_data imyp_sdl_backend_data_static;
+static struct imyp_sdl_backend_data imyp_sdl_backend_data_static;
 #endif
 
 
 #ifndef IMYP_ANSIC
-static void SDLCALL imyp_sdl_fill_buffer PARAMS((void * userdata, Uint8 * stream, int len));
+static void SDLCALL imyp_sdl_fill_buffer IMYP_PARAMS ((void * userdata, Uint8 * stream, int len));
 #endif
 
 /**
@@ -197,12 +197,12 @@ imyp_sdl_play_tune (
 	data->called = 0;
 
 	SDL_PauseAudio (0);	/* start playing */
-	while ( (data->called == 0) && (sig_recvd == 0) ) {};
+	while ( (data->called == 0) && (sig_recvd == 0) ) {}
 
 	/*imyp_sdl_pause (duration);*/
 	SDL_PauseAudio (1);
 
-	while ( data->inside_callback != 0 ) {};
+	while ( data->inside_callback != 0 ) {}
 
 	data->tone_freq = 0.0;
 	data->volume_level = 0;
@@ -232,15 +232,15 @@ imyp_sdl_pause (
 	{
 		return;
 	}
-#if ((defined HAVE_SYS_SELECT_H) || (defined TIME_WITH_SYS_TIME)\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))	\
-	&& (defined HAVE_SELECT)
 
+	SDL_Delay ((Uint32)milliseconds);
+/*
+#ifdef IMYP_HAVE_SELECT
 	imyp_pause_select (milliseconds);
-
 #else
 	SDL_Delay ((Uint32)milliseconds);
 #endif
+*/
 }
 
 /**

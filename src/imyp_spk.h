@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PC-speaker backend, header file.
  *
- * Copyright (C) 2012-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,16 +28,16 @@
 
 # include "imyplay.h"
 
-extern void imyp_spkr_pause PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_spkr_pause IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const int milliseconds));
-extern void imyp_spkr_put_text PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_spkr_put_text IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const char * const text));
-extern int imyp_spkr_play_tune PARAMS ((imyp_backend_data_t * const imyp_data,
+extern int imyp_spkr_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_spkr_init PARAMS ((imyp_backend_data_t ** const imyp_data,
+extern int imyp_spkr_init IMYP_PARAMS ((imyp_backend_data_t ** const imyp_data,
 	const char * const dev));
-extern int imyp_spkr_close PARAMS ((imyp_backend_data_t * const imyp_data));
-extern void imyp_spkr_version PARAMS ((imyp_backend_data_t * const imyp_data));
+extern int imyp_spkr_close IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_spkr_version IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_PCSPEAKER */

@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- Allegro backend.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -122,12 +122,12 @@ struct imyp_allegro_backend_data
 };
 
 #ifndef HAVE_MALLOC
-struct imyp_allegro_backend_data imyp_allegro_backend_data_static;
+static struct imyp_allegro_backend_data imyp_allegro_backend_data_static;
 #endif
 
 #ifndef IMYP_ANSIC
 static AUDIOSTREAM *
-imyp_all_audiostream_init PARAMS((const int number_of_samples, const int vol,
+imyp_all_audiostream_init IMYP_PARAMS ((const int number_of_samples, const int vol,
 	imyp_backend_data_t * const imyp_data));
 #endif
 
@@ -312,15 +312,15 @@ imyp_all_pause (
 	{
 		return;
 	}
-#if ((defined HAVE_SYS_SELECT_H) || (defined TIME_WITH_SYS_TIME)\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))	\
-	&& (defined HAVE_SELECT)
 
+	/* for Allegro, a default wait function must be used, because
+	   rest() seems not to work as expected */
+#ifdef IMYP_HAVE_SELECT
 	imyp_pause_select (milliseconds);
-
 #else
 	rest ((unsigned int)milliseconds);
 #endif
+
 }
 
 /**
@@ -397,6 +397,9 @@ imyp_all_init (
 		if ( res != 0 )
 		{
 			allegro_exit ();
+#ifdef HAVE_MALLOC
+			free (data);
+#endif
 			return res;
 		}
 	}

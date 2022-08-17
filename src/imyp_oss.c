@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- OSS backend.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -70,7 +70,7 @@ struct imyp_oss_backend_data
 };
 
 #ifndef HAVE_MALLOC
-struct imyp_oss_backend_data imyp_oss_backend_data_static;
+static struct imyp_oss_backend_data imyp_oss_backend_data_static;
 #endif
 
 
@@ -219,7 +219,7 @@ imyp_oss_init (
 #endif
 {
 	int res;
-	unsigned int i;
+	unsigned int i, j;
 	const int formats[] = {AFMT_S16_LE, AFMT_U16_LE, AFMT_S16_BE, AFMT_U16_LE,
 		AFMT_S8, AFMT_U8};
 	const int speeds[] = {44100, 22050, 11025};
@@ -274,16 +274,53 @@ imyp_oss_init (
 		res = ioctl (data->pcm_fd, SNDCTL_DSP_SETFMT, &format);
 		if ( res < 0 )
 		{
-			close (data->pcm_fd);
-#ifdef HAVE_MALLOC
-			free (data);
-#endif
-			return -2;
+			continue;
 		}
 
 		if ( format == formats[i] )
 		{
 			data->glob_format = format;
+		}
+		else
+		{
+			continue;
+		}
+
+		format = 1;
+		res = ioctl (data->pcm_fd, SNDCTL_DSP_CHANNELS, &format);
+		if ( res < 0 )
+		{
+			continue;
+		}
+
+		if ( format != 1 )
+		{
+			continue;
+		}
+
+		for ( j = 0; j < sizeof (speeds) / sizeof (speeds[0]); j++ )
+		{
+			format = speeds[j];
+			res = ioctl (data->pcm_fd, SNDCTL_DSP_SPEED, &format);
+			if ( res < 0 )
+			{
+				continue;
+			}
+
+			if ( format == speeds[j] )
+			{
+				data->glob_speed = format;
+				break;
+			}
+		}
+		if ( j == sizeof (speeds) / sizeof (speeds[0]) )
+		{
+			/* if none of the sampling frequencies can be set, try next */
+			continue;
+		}
+		else
+		{
+			/* all parameters set, backend initialized */
 			break;
 		}
 	}
@@ -293,56 +330,9 @@ imyp_oss_init (
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
-		return -3;
+		return -2;
 	}
 
-	format = 1;
-	res = ioctl (data->pcm_fd, SNDCTL_DSP_CHANNELS, &format);
-	if ( res < 0 )
-	{
-		close (data->pcm_fd);
-#ifdef HAVE_MALLOC
-		free (data);
-#endif
-		return -4;
-	}
-
-	if ( format != 1 )
-	{
-		close (data->pcm_fd);
-#ifdef HAVE_MALLOC
-		free (data);
-#endif
-		return -5;
-	}
-
-	for ( i = 0; i < sizeof (speeds) / sizeof (speeds[0]); i++ )
-	{
-		format = speeds[i];
-		res = ioctl (data->pcm_fd, SNDCTL_DSP_SPEED, &format);
-		if ( res < 0 )
-		{
-			close (data->pcm_fd);
-#ifdef HAVE_MALLOC
-			free (data);
-#endif
-			return -6;
-		}
-
-		if ( format == speeds[i] )
-		{
-			data->glob_speed = format;
-			break;
-		}
-	}
-	if ( i == sizeof (speeds) / sizeof (speeds[0]) )
-	{
-		close (data->pcm_fd);
-#ifdef HAVE_MALLOC
-		free (data);
-#endif
-		return -7;
-	}
 	*imyp_data = (imyp_backend_data_t *)data;
 
 	return 0;

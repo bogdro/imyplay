@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PortAudio backend, header file.
  *
- * Copyright (C) 2009-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,16 +28,16 @@
 
 # include "imyplay.h"
 
-extern void imyp_portaudio_pause PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_portaudio_pause IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const int milliseconds));
-extern void imyp_portaudio_put_text PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_portaudio_put_text IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const char * const text));
-extern int imyp_portaudio_play_tune PARAMS ((imyp_backend_data_t * const imyp_data,
+extern int imyp_portaudio_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_portaudio_init PARAMS ((imyp_backend_data_t ** const imyp_data,
+extern int imyp_portaudio_init IMYP_PARAMS ((imyp_backend_data_t ** const imyp_data,
 	const char * const dev_file));
-extern int imyp_portaudio_close PARAMS ((imyp_backend_data_t * const imyp_data));
-extern void imyp_portaudio_version PARAMS ((imyp_backend_data_t * const imyp_data));
+extern int imyp_portaudio_close IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_portaudio_version IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_PORTAUDIO */

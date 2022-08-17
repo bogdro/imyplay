@@ -2,10 +2,8 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- utility functions.
  *
- * Copyright (C) 2012-2013 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2014 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
- *
- * Syntax example: imyplay ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -73,8 +71,6 @@
 #include "imyplay.h"
 #include "imyputil.h"
 #include "imyp_sig.h"
-
-#define IMYP_TOUPPER(c) ((char)( ((c) >= 'a' && (c) <= 'z')? ((c) & 0x5F) : (c) ))
 
 /**
  * Comapres the give strings case-insensitively.
@@ -341,7 +337,8 @@ imyp_generate_samples (
 		last_index = *start_index;
 	}
 
-	imyp_bufsize = (unsigned int)IMYP_MIN (bufsize, (duration * (int)samp_rate * ((int)quality/8)) / 1000);
+	imyp_bufsize = (unsigned int)(duration * (int)samp_rate * ((int)quality/8)) / 1000;
+	imyp_bufsize = (unsigned int)IMYP_MIN ((unsigned int)bufsize, imyp_bufsize);
 	if ( freq > 0.0 )
 	{
 		nperiods = samp_rate/freq;
@@ -457,9 +454,7 @@ imyp_pause_select (
 	{
 		return;
 	}
-#if ((defined HAVE_SYS_SELECT_H) || (defined TIME_WITH_SYS_TIME)\
-	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))	\
-	&& (defined HAVE_SELECT)
+#ifdef IMYP_HAVE_SELECT
 	{
 		struct timeval tv;
 		tv.tv_sec = milliseconds / 1000;

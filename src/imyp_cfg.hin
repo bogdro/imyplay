@@ -29,37 +29,76 @@
 # ifdef HAVE_CONFIG_H
 #  include <config.h>
 # else
+
+#  if (defined __MSDOS) || (defined __MSDOS__) || (defined MSDOS)
+#   define HAVE_LIBALLEG		1
+#   define HAVE_ALLEGRO_H		1
+#   undef ENABLE_NLS
+#   define HAVE_BASENAME		1
+#   define HAVE_ERRNO_H			1
+#   undef HAVE_FSEEKO
+#   undef HAVE_FTELLO
+#   undef HAVE_GETOPT_H
+#   undef HAVE_GETOPT_LONG
+#   undef HAVE_GETTEXT
+#   undef HAVE_LIBGEN_H
+#   undef HAVE_LIBINTL_H
+#   undef HAVE_LIBINTL_H
+#   undef HAVE_LOCALE_H
+#   define HAVE_MALLOC			1
+#   define HAVE_MALLOC_H		1
+#   define HAVE_MATH_H			1
+#   define HAVE_MEMCPY			1
+#   define HAVE_MEMORY_H		1
+#   define HAVE_OFF_T			1
+#   undef HAVE_SETLOCALE
+#   define HAVE_SIG_ATOMIC_T		1
+#   define HAVE_SIGACTION		1
+#   define HAVE_SIGNAL_H		1
+#   define HAVE_SIZE_T			1
+#   undef HAVE_SNPRINTF
+#   define HAVE_STDLIB_H		1
+#   define HAVE_STRING_H		1
+#   define HAVE_SYS_TYPES_H		1
+
+#  else
 	/* be optimisitc - glibc has all of these */
-#  define ENABLE_NLS		1
-#  define HAVE_BASENAME		1
-#  define HAVE_ERRNO_H		1
-#  define HAVE_FSEEKO		1
-#  define HAVE_FTELLO		1
-#  define HAVE_GETOPT_H		1
-#  define HAVE_GETOPT_LONG	1
-#  define HAVE_GETTEXT		1
-#  define HAVE_LIBGEN_H		1
-#  define HAVE_LIBINTL_H	1
-#  define HAVE_LOCALE_H		1
-#  define HAVE_LONG_LONG	1
-#  define HAVE_MATH_H		1
-#  define HAVE_MEMCPY		1
-#  define HAVE_MEMORY_H		1
-#  define HAVE_SETLOCALE	1
-#  define HAVE_SIG_ATOMIC_T	1
-#  define HAVE_SIGACTION	1
-#  define HAVE_SIGNAL_H		1
-#  define HAVE_SIZE_T		1
-#  define HAVE_SLEEP		1
-#  define HAVE_SNPRINTF		1
-#  define HAVE_STRING_H		1
-#  define HAVE_SYS_TYPES_H	1
+
+#   define ENABLE_NLS			1
+#   define HAVE_BASENAME		1
+#   define HAVE_ERRNO_H			1
+#   define HAVE_FSEEKO			1
+#   define HAVE_FTELLO			1
+#   define HAVE_GETOPT_H		1
+#   define HAVE_GETOPT_LONG		1
+#   define HAVE_GETTEXT			1
+#   define HAVE_LIBGEN_H		1
+#   define HAVE_LIBINTL_H		1
+#   define HAVE_LOCALE_H		1
+#   define HAVE_MALLOC			1
+#   define HAVE_MALLOC_H		1
+#   define HAVE_MATH_H			1
+#   define HAVE_MEMCPY			1
+#   define HAVE_MEMORY_H		1
+#   define HAVE_OFF_T			1
+#   define HAVE_SETLOCALE		1
+#   define HAVE_SIG_ATOMIC_T		1
+#   define HAVE_SIGACTION		1
+#   define HAVE_SIGNAL_H		1
+#   define HAVE_SIZE_T			1
+#   define HAVE_SNPRINTF		1
+#   define HAVE_STDLIB_H		1
+#   define HAVE_STRING_H		1
+#   define HAVE_SYS_TYPES_H		1
+#  endif /* DOS / not DOS */
 
 #  undef size_t
+#  undef const
+#  undef volatile
 
 #  define STDC_HEADERS		1
 
-#  define PACKAGE_NAME "imyplayer"
+#  define PACKAGE_NAME "imyplay"
 #  define PACKAGE PACKAGE_NAME
 #  define PACKAGE_VERSION "@VERSION@"
 #  define VERSION PACKAGE_VERSION

@@ -57,4 +57,4 @@ CFLAGS='-march=i386' ./configure --prefix=%{prefix}
 %{prefix}/bin/imyplay
 %doc /usr/share/info/imyplay.info.gz
 %doc /usr/share/man/man1/imyplay.1.gz
-%{prefix}/share/locale/pl/LC_MESSAGES/imyplar.mo
+%{prefix}/share/locale/pl/LC_MESSAGES/imyplay.mo

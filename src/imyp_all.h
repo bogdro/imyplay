@@ -28,9 +28,10 @@
 
 # include "imyplay.h"
 
+extern void imyp_all_pause PARAMS((const int milliseconds));
+extern void imyp_all_put_text PARAMS((const char * const text));
 extern int imyp_all_play_tune PARAMS((const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern void imyp_all_pause PARAMS((const int milliseconds));
 extern int imyp_all_init PARAMS((void));
 extern int imyp_all_close PARAMS((void));
 

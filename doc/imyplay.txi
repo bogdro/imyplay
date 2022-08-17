@@ -1,11 +1,11 @@
 \input texinfo   @c -*-texinfo-*-
 @c %**start of header
 @setfilename imyplay.info
-@settitle IMYplay manual 0.1
+@settitle IMYplay manual 0.2
 @c %**end of header
 
 @copying
-This manual is for IMYplay, version 0.1
+This manual is for IMYplay, version 0.2
 @end copying
 
 @titlepage
@@ -41,6 +41,7 @@ This manual is for IMYplay, version 0.1
 * Return values::			Program's return values.
 * Signals::				Behaviour upon receiving signals.
 * Author::				How to contact me.
+* Thanks::				Who I'd like to thank.
 * Copying::				License - your rights and freedoms.
 * Translating::				How to translate the program.
 @end menu
@@ -89,6 +90,19 @@ like this installed or available (check twice), then go to@*
 Type './configure' to configure the program for your system.
 
 Type 'make' to compile the program.
+
+To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT
+the standard one) and change the line@*
+	#include "syslimits.h"@*
+to@*
+	#include "syslimit.h"@*
+Then go to the src directory. Change VERSION with the at- and quotation marks
+in the imyp_cfg.hin file to the current version number, so the line reads:@*
+	#  define PACKAGE_VERSION "0.2"@*
+and rename the file to imyp_cfg.h. Then run@*
+	gcc -o imyplay.exe *.c -lalleg@*
+The resulting imyplay.exe is the program to use.
+
 Documentation is compiled, but may be recompiled, if you have the 'makeinfo'
 program ('texinfo' package).
 Translations will be compiled, if you have the 'gettext' package.
@@ -131,6 +145,11 @@ Print help and exit.
 @noindent @option{-l}@*@option{--license}@*@option{--licence}@*
 @quotation
 Print license information and exit.
+@end quotation
+
+@noindent @option{--to-midi}@*
+@quotation
+Convert the given files to MIDI format (if the target file exists, it is deleted).
 @end quotation
 
 @noindent @option{-V}@*@option{--version}@*
@@ -198,7 +217,7 @@ data type. If you are using GCC, no worries.
 
 
 
-@node Author, Copying, Signals, Top
+@node Author, Thanks, Signals, Top
 @comment  node-name, next,      previous,  up
 @chapter Author
 
@@ -218,8 +237,16 @@ or look at my website:@*
 
 @c ==================================================================
 
+@node Thanks, Copying, Author, Top
+@chapter Thanks
 
-@node Copying, Translating, Author, Top
+@enumerate
+@item Steven Goodwin (StevenGoodwin (at) gmail.com) for MIDI writing code.
+@end enumerate
+
+@c ==================================================================
+
+@node Copying, Translating, Thanks, Top
 @comment  node-name, next,      previous,  up
 @chapter Copying
 

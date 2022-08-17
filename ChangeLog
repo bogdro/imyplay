@@ -1,3 +1,16 @@
+2009-02-21	Bogdan Drozdowski <bogdandr@op.pl>
+
+	* IMYplay version 0.2
+	  Added converting IMY files to MIDI format 1, with the command-line
+	  option '--to-midi' (affects all the files on the command line).
+	  Added thanks. Moved text displaying to library-dependent code.
+	* configure.ac: The Allegro library is required only for playing.
+	  IMYplay will compile without it. Added a check for the 'volatile'
+	  type. Removed some unused tests. The string.h header is required,
+	  getopt.h is not.
+	* src/imyp_cfg.hin: portability corrections.
+	* src/imyp_sig.c: using only defined signals. Fixed displaying.
+
 2009-01-20	Bogdan Drozdowski <bogdandr@op.pl>
 
 	* IMYplay version 0.1

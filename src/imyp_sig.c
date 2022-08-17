@@ -66,9 +66,67 @@ static struct sigaction sa/* = { .sa_handler = &term_signal_received }*/;
 /* Handled signals which will cause the program to exit cleanly. */
 static const int signals[] =
 {
-	SIGINT, SIGQUIT, SIGILL, SIGABRT, SIGFPE, SIGSEGV, SIGPIPE,
-	SIGALRM, SIGTERM, SIGUSR1, SIGUSR2, SIGTTIN, SIGTTOU, SIGBUS, SIGPROF,
-	SIGSYS, SIGTRAP, SIGXCPU, SIGXFSZ, SIGVTALRM, SIGCHLD
+	SIGINT
+#ifdef SIGQUIT
+	, SIGQUIT
+#endif
+#ifdef SIGILL
+	, SIGILL
+#endif
+#ifdef SIGABRT
+	, SIGABRT
+#endif
+#ifdef SIGFPE
+	, SIGFPE
+#endif
+#ifdef SIGSEGV
+	, SIGSEGV
+#endif
+#ifdef SIGPIPE
+	, SIGPIPE
+#endif
+#ifdef SIGALRM
+	, SIGALRM
+#endif
+#ifdef SIGTERM
+	, SIGTERM
+#endif
+#ifdef SIGUSR1
+	, SIGUSR1
+#endif
+#ifdef SIGUSR2
+	, SIGUSR2
+#endif
+#ifdef SIGTTIN
+	, SIGTTIN
+#endif
+#ifdef SIGTTOU
+	, SIGTTOU
+#endif
+#ifdef SIGBUS
+	, SIGBUS
+#endif
+#ifdef SIGPROF
+	, SIGPROF
+#endif
+#ifdef SIGSYS
+	, SIGSYS
+#endif
+#ifdef SIGTRAP
+	, SIGTRAP
+#endif
+#ifdef SIGXCPU
+	, SIGXCPU
+#endif
+#ifdef SIGXFSZ
+	, SIGXFSZ
+#endif
+#ifdef SIGVTALRM
+	, SIGVTALRM
+#endif
+#ifdef SIGCHLD
+	, SIGCHLD
+#endif
 # ifdef SIGPOLL
 	, SIGPOLL
 # endif
@@ -78,13 +136,13 @@ static const int signals[] =
 # ifdef SIGUNUSED
 	, SIGUNUSED
 # endif
-# if defined SIGEMT
+# ifdef SIGEMT
 	, SIGEMT
 # endif
-# if defined SIGLOST
+# ifdef SIGLOST
 	, SIGLOST
 # endif
-# if defined SIGIO
+# ifdef SIGIO
 	, SIGIO
 # endif
 };
@@ -221,7 +279,7 @@ imyp_set_sigh (
 #  ifdef HAVE_SNPRINTF
 			res = snprintf (tmp, TMPSIZE-1, "%.*d", TMPSIZE-1, signals[s] );
 #  else
-			res = sprintf (tmp, "%.*d", TMPSIZE-1, SIGCHLD );
+			res = sprintf (tmp, "%.*d", TMPSIZE-1, signals[s] );
 #  endif
 			tmp[TMPSIZE-1] = '\0';
 			if ( error != NULL )

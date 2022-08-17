@@ -58,7 +58,8 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_imyplay_OBJECTS = imyplay.$(OBJEXT) imypwrap.$(OBJEXT) \
-	imyp_sig.$(OBJEXT) imyp_all.$(OBJEXT)
+	imyp_sig.$(OBJEXT) imyp_all.$(OBJEXT) imyp_mid.$(OBJEXT) \
+	midifile.$(OBJEXT)
 imyplay_OBJECTS = $(am_imyplay_OBJECTS)
 am__DEPENDENCIES_1 =
 imyplay_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -175,7 +176,8 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h	\
-	imyp_sig.c imyp_sig.h imyp_all.c imyp_all.h
+	imyp_sig.c imyp_sig.h imyp_all.c imyp_all.h \
+	imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h midibase.h
 
 imyplay_LDADD = $(INTLLIBS)
 localedir = $(datadir)/locale
@@ -250,9 +252,11 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_all.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_mid.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_sig.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyplay.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imypwrap.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/midifile.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \

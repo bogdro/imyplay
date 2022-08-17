@@ -41,8 +41,6 @@
 #if (defined HAVE_GETOPT_H) && (defined HAVE_GETOPT_LONG)
 # define _GNU_SOURCE	1	/* getopt_long() */
 # include <getopt.h>
-#else
-# error Getopt missing.
 #endif
 
 #ifdef HAVE_LIBINTL_H
@@ -69,13 +67,14 @@
 # endif
 
 #ifdef HAVE_LIBALLEG
-# include <allegro.h>
+# include <allegro.h>	/* END_OF_MAIN() */
 #endif
 
 #define	PROGRAM_NAME	PACKAGE
 
 static const char ver_str[] = N_("version");
-static const char author_str[] = "Copyright (C) 2009 Bogdan 'bogdro' Drozdowski, bogdandr@op.pl\n";
+static const char author_str[] = "Copyright (C) 2009 Bogdan 'bogdro' Drozdowski, bogdandr@op.pl\n" \
+	"MIDI code: Copyright 1998-2008, Steven Goodwin (StevenGoodwin@gmail.com)";
 static const char lic_str[] = N_(							\
 	"Program for playing iMelody ringtones (IMY files).\n"				\
 	"\nThis program is Free Software; you can redistribute it and/or"		\
@@ -113,27 +112,28 @@ const char * const sig_unk = N_("unknown");
 static char *imyp_progname;	/* The name of the program */
 
 /* Command-line options. */
+/* These two unconditionally: */
+static int opt_tomidi  = 0;
+static int imyp_optind  = 0;
+#ifdef HAVE_GETOPT_H
 static int opt_help    = 0;
 static int opt_license = 0;
-
 static int opt_version = 0;
 
 static int opt_char    = 0;
-static int imyp_optind  = 0;
 
 static const struct option opts[] =
 {
 	{ "help",       no_argument,       &opt_help,    1 },
 	{ "licence",    no_argument,       &opt_license, 1 },
 	{ "license",    no_argument,       &opt_license, 1 },
+	{ "to-midi",    no_argument,       &opt_tomidi,  1 },
 	{ "version",    no_argument,       &opt_version, 1 },
 	{ NULL, 0, NULL, 0 }
 };
+#endif
 
-/*
- The frequency multiplication coefficient between each two closest notes:
- 2^(1/12)
- */
+/* The frequency multiplication coefficient between each two closest notes: 2^(1/12) */
 #define IMYP_C (1.05946309435929531f)
 
 #define IMYP_A0 (55.0f)
@@ -146,7 +146,7 @@ static const struct option opts[] =
 #define IMYP_A7 (IMYP_A6*2.0f)
 #define IMYP_A8 (IMYP_A7*2.0f)
 
-static const float notes[9][12] =
+const float notes[9][12] =
 {
 	{
 		(float) IMYP_A0/(IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C*IMYP_C),
@@ -277,10 +277,12 @@ static const float notes[9][12] =
 };
 
 #define SAMPBUFSIZE (128*1024)
+#define IMYP_DEF_BPM 120
 
 static unsigned short buf16[SAMPBUFSIZE];
 
-#define IMYP_DEF_BPM 120
+static CURR_LIB current_library = CURR_NONE;
+
 static int volume = 7;
 static int style = 0;
 static int bpm = IMYP_DEF_BPM;
@@ -376,6 +378,7 @@ print_help (
 	printf ( "%s:", _("Options") );
 	printf ( "\n-h|--help\t\t%s", _("Print help") );
 	printf ( "\n-l|--license\t\t%s", _("Print license information") );
+	printf ( "\n--to-midi\t\t%s", _("Convert the given files to MIDI format") );
 	printf ( "\n-V|--version\t\t%s\n", _("Print version number") );
 }
 
@@ -550,7 +553,7 @@ imyp_read_number (
 			if ( ret >= 10         ) (*buf_index)++;
 			/* always skip at least one */
 			(*buf_index)++;
-			if      ( ret >= 1000000000 ) ret = prev_ret * 10000000000 + ret;
+			if      ( ret >= 1000000000 ) ret = /*prev_ret * 10000000000 +*/ ret;
 			else if ( ret >= 100000000  ) ret = prev_ret * 1000000000  + ret;
 			else if ( ret >= 10000000   ) ret = prev_ret * 100000000   + ret;
 			else if ( ret >= 1000000    ) ret = prev_ret * 10000000    + ret;
@@ -688,10 +691,11 @@ imyp_play_file (
 #if defined (__STDC__) || defined (_AIX) \
 	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
 	|| defined(WIN32) || defined(__cplusplus)
-	const char * const file_name)
+	const char * const file_name, const CURR_LIB curr)
 #else
-	file_name)
+	file_name, curr)
 	const char * const file_name;
+	const CURR_LIB curr;
 #endif
 {
 	FILE * imy;
@@ -731,19 +735,19 @@ imyp_play_file (
 			}
 			else if ( strstr (melody_line, "VERSION:") != NULL )
 			{
-				printf ("%s", melody_line);
+				imyp_put_text (melody_line, curr);
 			}
 			else if ( strstr (melody_line, "FORMAT:") != NULL )
 			{
-				printf ("%s", melody_line);
+				imyp_put_text (melody_line, curr);
 			}
 			else if ( strstr (melody_line, "NAME:") != NULL )
 			{
-				printf ("%s", melody_line);
+				imyp_put_text (melody_line, curr);
 			}
 			else if ( strstr (melody_line, "BEAT:") != NULL )
 			{
-				printf("%s", melody_line);
+				imyp_put_text (melody_line, curr);
 				/* parse beat */
 				scanf_res = sscanf (&melody_line[5], "%d", &bpm);
 				if ( scanf_res != 1 )
@@ -758,7 +762,7 @@ imyp_play_file (
 			}
 			else if ( strstr (melody_line, "STYLE:") != NULL )
 			{
-				printf ("%s", melody_line);
+				imyp_put_text (melody_line, curr);
 				/* parse style */
 				scanf_res = sscanf (&melody_line[7] /* "STYLE:S" */, "%d", &style);
 				if ( scanf_res != 1 )
@@ -773,7 +777,7 @@ imyp_play_file (
 			}
 			else if ( strstr (melody_line, "VOLUME:") != NULL )
 			{
-				printf ("%s", melody_line);
+				imyp_put_text (melody_line, curr);
 				/* parse volume */
 				scanf_res = sscanf (&melody_line[8], "%d", &volume);
 				if ( scanf_res != 1 )
@@ -795,7 +799,7 @@ imyp_play_file (
 					if ( is_eof != 0 ) break;
 					if ( strstr (melody_line, IMYP_MEL_END) == melody_line )
 					{
-						printf ("%s", melody_line);
+						imyp_put_text (melody_line, curr);
 						is_eof = 1;
 						break;
 					}
@@ -919,7 +923,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave-1][11],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -930,7 +934,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][1],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -941,7 +945,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][0],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -949,7 +953,7 @@ imyp_play_file (
 								}
 							}
 							imyp_pause (imyp_get_rest_time (note_duration,
-								style));
+								style), curr, 1);
 							melody_index += skipped_dur;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy);
@@ -970,7 +974,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][1],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -981,7 +985,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][3],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -992,7 +996,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][2],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1000,7 +1004,7 @@ imyp_play_file (
 								}
 							}
 							imyp_pause (imyp_get_rest_time (note_duration,
-								style));
+								style), curr, 1);
 							melody_index += skipped_dur;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy);
@@ -1021,7 +1025,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][3],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1032,7 +1036,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][5],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1043,7 +1047,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][4],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1051,7 +1055,7 @@ imyp_play_file (
 								}
 							}
 							imyp_pause (imyp_get_rest_time (note_duration,
-								style));
+								style), curr, 1);
 							melody_index += skipped_dur;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy);
@@ -1072,7 +1076,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][4],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1083,7 +1087,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][6],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1094,7 +1098,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][5],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1102,7 +1106,7 @@ imyp_play_file (
 								}
 							}
 							imyp_pause (imyp_get_rest_time (note_duration,
-								style));
+								style), curr, 1);
 							melody_index += skipped_dur;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy);
@@ -1123,7 +1127,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][6],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1134,7 +1138,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][8],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1145,7 +1149,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][7],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1153,7 +1157,7 @@ imyp_play_file (
 								}
 							}
 							imyp_pause (imyp_get_rest_time (note_duration,
-								style));
+								style), curr, 1);
 							melody_index += skipped_dur;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy);
@@ -1174,7 +1178,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][8],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1185,7 +1189,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][10],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1196,7 +1200,7 @@ imyp_play_file (
 							{
 								play_res = imyp_play_tune (notes[octave][9],
 									volume, note_duration,
-									buf16, SAMPBUFSIZE);
+									buf16, SAMPBUFSIZE, curr);
 								if ( (play_res != 0) && (sig_recvd == 0) )
 								{
 									printf ("%s\n",
@@ -1204,7 +1208,7 @@ imyp_play_file (
 								}
 							}
 							imyp_pause (imyp_get_rest_time (note_duration,
-								style));
+								style), curr, 1);
 							melody_index += skipped_dur;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy);
@@ -1297,7 +1301,7 @@ imyp_play_file (
 								{
 									play_res = imyp_play_tune (notes[octave][10],
 										volume, note_duration,
-										buf16, SAMPBUFSIZE);
+										buf16, SAMPBUFSIZE, curr);
 									if ( (play_res != 0) && (sig_recvd == 0) )
 									{
 										printf ("%s\n",
@@ -1308,7 +1312,7 @@ imyp_play_file (
 								{
 									play_res = imyp_play_tune (notes[octave+1][0],
 										volume, note_duration,
-										buf16, SAMPBUFSIZE);
+										buf16, SAMPBUFSIZE, curr);
 									if ( (play_res != 0) && (sig_recvd == 0) )
 									{
 										printf ("%s\n",
@@ -1319,7 +1323,7 @@ imyp_play_file (
 								{
 									play_res = imyp_play_tune (notes[octave][11],
 										volume, note_duration,
-										buf16, SAMPBUFSIZE);
+										buf16, SAMPBUFSIZE, curr);
 									if ( (play_res != 0) && (sig_recvd == 0) )
 									{
 										printf ("%s\n",
@@ -1327,7 +1331,7 @@ imyp_play_file (
 									}
 								}
 								imyp_pause (imyp_get_rest_time (
-									note_duration, style));
+									note_duration, style), curr, 1);
 								melody_index += skipped_dur;
 								imyp_read_line (melody_line, &melody_index,
 									sizeof (melody_line) - 10, imy);
@@ -1370,7 +1374,7 @@ imyp_play_file (
 							imyp_pause (imyp_get_duration (
 									&melody_line[melody_index],
 									&skipped_dur,
-									bpm, imy));
+									bpm, imy), curr, 0);
 							melody_index += skipped_dur;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy);
@@ -1693,6 +1697,7 @@ imyp_play_file (
 #ifdef END_OF_MAIN
 int _mangled_main (int argc, char * argv[]);
 #endif
+
 int
 main (
 #if defined (__STDC__) || defined (_AIX) \
@@ -1745,6 +1750,7 @@ main (
 	}
 
 	/* Parsing the command line */
+#ifdef HAVE_GETOPT_H
 	optind = 0;
 	while (1==1)
 	{
@@ -1775,17 +1781,48 @@ main (
 		}
 	}
 	imyp_optind = optind;
-
-	if ( (imyp_optind >= argc) || (argv[imyp_optind] == NULL) )
+#else
+	for ( i = 1 ; i < (unsigned)argc; i++ )	/* argv[0] is the program name */
+	{
+		if ( argv[i] == NULL ) continue;
+		/* NOTE: these shouldn't be a sequence of else-ifs */
+		if ( (strstr (argv[i], "-h") == argv[i]) || (strstr (argv[i], "-?") == argv[i]) )
+		{
+			print_help (imyp_progname);
+			return 1;
+		}
+		if ( strstr (argv[i], "-V") == argv[i] )
+		{
+			printf ( "%s %s %s\n", imyp_progname, _(ver_str), VERSION );
+			return 1;
+		}
+		if ( strstr (argv[i], "-l") == argv[i] )
+		{
+			puts ( _(lic_str) );
+			puts ( author_str );
+			return 1;
+		}
+		if ( strstr (argv[i], "--to-midi") == argv[i] )
+		{
+			opt_tomidi = 1;
+			argv[i] = NULL;
+		}
+	}
+	imyp_optind = 1;
+#endif
+	if ( imyp_optind >= argc )
 	{
 		print_help (imyp_progname);
 		return -1;
 	}
 
-	if ( imyp_lib_init () != 0 )
+	if ( opt_tomidi == 0 )
 	{
-		printf ("%s\n", _(err_lib_init));
-		return -2;
+		if ( imyp_lib_init (&current_library, 0, NULL) != 0 )
+		{
+			printf ("%s\n", _(err_lib_init));
+			return -2;
+		}
 	}
 
 #ifdef HAVE_SIGNAL_H
@@ -1807,12 +1844,21 @@ main (
 			imyp_optind++;
 			continue;
 		}
-		ret = imyp_play_file (argv[imyp_optind]);
+		if ( opt_tomidi == 1 )
+		{
+			if ( imyp_lib_init (&current_library, 1, argv[imyp_optind]) != 0 )
+			{
+				printf ("%s\n", _(err_lib_init));
+				imyp_optind++;
+				continue;
+			}
+		}
+		ret = imyp_play_file (argv[imyp_optind], current_library);
 		if ( sig_recvd != 0 ) break;
 		imyp_optind++;
 	} /* while optind<argc && !signal */
 
-	if ( imyp_lib_close () != 0 )
+	if ( imyp_lib_close (current_library) != 0 )
 	{
 		printf ("%s\n", _(err_lib_close));
 		ret = -3;

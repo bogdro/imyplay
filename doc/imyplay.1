@@ -1,6 +1,6 @@
 .\"	Process this file with groff -man -Tascii foo.1
 .\"
-.TH imyplayer 1 Linux "User's Manual"
+.TH imyplay 1 Linux "User's Manual"
 
 .SH NAME
 imyplay \- A program for playing iMelody ringtones (IMY files).
@@ -19,6 +19,8 @@ The imyplay program plays the given iMelody file.
 Print help
 .IP -l|--license
 Print license information
+.IP --to-midi
+Convert the given files to MIDI format (if the target file exists, it is deleted)
 .IP -V|--version
 Print version number
 
@@ -54,9 +56,12 @@ bogdro /AT/ rudy . mif . pg . gda . pl
 
 [PL] http://rudy.mif.pg.gda.pl/~bogdro/
 
+.SH THANKS
+Steven Goodwin (StevenGoodwin@gmail.com) for MIDI writing code.
+
 .SH "SEE ALSO"
 The 'info' documentation is more descriptive and is the main one. Type
 
-.B 	info imyplayer
+.B 	info imyplay
 
 to read it.

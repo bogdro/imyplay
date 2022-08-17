@@ -1,12 +1,9 @@
 /*
  * A program for playing iMelody ringtones (IMY files).
- *	-- wrapper functions between the main program and the backends,
- *		header file.
+ *	-- MIDI writer backend, header file.
  *
  * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
- *
- * Syntax example: imyplayer ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,17 +23,16 @@
  *		USA
  */
 
-#ifndef IMYP_WRAPPERS
-# define IMYP_WRAPPERS 1
+#ifndef IMYP_MIDIW
+# define IMYP_MIDIW 1
 
 # include "imyplay.h"
 
-extern void imyp_pause PARAMS((const int milliseconds, const CURR_LIB curr, const int is_note));
-extern void imyp_put_text PARAMS((const char * const text, const CURR_LIB curr));
-extern int imyp_play_tune PARAMS((const double freq, const int volume_level,
-	const int duration, void * const buf, int bufsize, const CURR_LIB curr));
-extern int imyp_lib_init PARAMS((CURR_LIB * const curr, const int want_midi,
-	const char * const filename));
-extern int imyp_lib_close PARAMS((const CURR_LIB curr));
+extern void imyp_midi_pause PARAMS((const int milliseconds, const int is_note));
+extern void imyp_midi_put_text PARAMS((const char * const text));
+extern int imyp_midi_play_tune PARAMS((const double freq, const int volume_level,
+	const int duration, void * const buf, int bufsize));
+extern int imyp_midi_init PARAMS((const char * const filename));
+extern int imyp_midi_close PARAMS((void));
 
-#endif /* IMYP_WRAPPERS */
+#endif /* IMYP_MIDIW */

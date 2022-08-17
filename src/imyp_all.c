@@ -29,6 +29,8 @@
 #include "imyp_all.h"
 #include "imyp_sig.h"
 
+#include <stdio.h>
+
 #if (defined HAVE_LIBALLEG) && (defined HAVE_ALLEGRO_H)
 # include <allegro.h>
 #else
@@ -75,6 +77,7 @@ END_MIDI_DRIVER_LIST
 #if (defined BEGIN_DIGI_DRIVER_LIST) && (defined END_DIGI_DRIVER_LIST)
 /* required, because we include the midi list */
 BEGIN_DIGI_DRIVER_LIST
+
 /* Unix: */
 # ifdef DIGI_DRIVER_ALSA
 DIGI_DRIVER_ALSA
@@ -88,7 +91,11 @@ DIGI_DRIVER_ESD
 # ifdef DIGI_DRIVER_ARTS
 DIGI_DRIVER_ARTS
 # endif
+
 /* DOS/Windows: */
+# ifdef DIGI_DRIVER_SB
+DIGI_DRIVER_SB
+# endif
 # ifdef DIGI_DRIVER_SOUNDSCAPE
 DIGI_DRIVER_SOUNDSCAPE
 # endif
@@ -98,13 +105,12 @@ DIGI_DRIVER_AUDIODRIVE
 # ifdef DIGI_DRIVER_WINSOUNDSYS
 DIGI_DRIVER_WINSOUNDSYS
 # endif
-# ifdef DIGI_DRIVER_SB
-DIGI_DRIVER_SB
-# endif
+
 /* BeOS: */
 # ifdef DIGI_DRIVER_BEOS
 DIGI_DRIVER_BEOS
 # endif
+
 END_DIGI_DRIVER_LIST
 #endif /* BEGIN_DIGI_DRIVER_LIST && END_DIGI_DRIVER_LIST */
 
@@ -291,6 +297,24 @@ imyp_all_pause (
 #endif
 {
 	rest (milliseconds);
+}
+
+/**
+ * Outputs the given text.
+ * \param text The text to output.
+ */
+void
+imyp_all_put_text (
+#if defined (__STDC__) || defined (_AIX) \
+	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
+	|| defined(WIN32) || defined(__cplusplus)
+	const char * const text)
+#else
+	text)
+	const char * const text;
+#endif
+{
+	if ( text != NULL ) printf ("%s", text);
 }
 
 /**

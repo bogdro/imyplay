@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(imyplay, 0.1, bogdandr@op.pl)
+AC_INIT(imyplay, 0.2, bogdandr@op.pl)
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \
@@ -45,11 +45,11 @@ AM_CONDITIONAL(ISGCC, [test "x$GCC" = "xyes"])
 
 alleg_ldflags=`allegro-config --libs`
 
-if (test "x$liballeg" != "xyes" && test "x$alleg_ldflags" = "x" ); then
-	AC_MSG_ERROR([[I need the Allegro library to work. See http://alleg.sf.net.]])
-else
+if (test "x$liballeg" == "xyes" || test "x$alleg_ldflags" != "x" ); then
 	liballeg=yes
 	AC_DEFINE([HAVE_LIBALLEG],[1],[Whether you have the Allegro library.])
+#else
+#	AC_MSG_ERROR([[I need the Allegro library to work. See http://alleg.sf.net.]])
 fi
 
 if ( test "x$alleg_ldflags" != "x" ); then
@@ -68,16 +68,17 @@ fi
 # ==================== Checks for header files.
 AC_HEADER_STDC
 
-AC_CHECK_HEADER([getopt.h],AC_DEFINE([HAVE_GETOPT_H],[1],[Whether you have the getopt.h header.]),
-	[AC_MSG_ERROR([[I need getopt.h to work.]])]
+AC_CHECK_HEADER([string.h],AC_DEFINE([HAVE_STRING_H],[1],[Whether you have the string.h header.]),
+	[AC_MSG_ERROR([[I need string.h to work.]])]
 	)
 
-AC_CHECK_HEADERS([sys/types.h locale.h string.h math.h signal.h errno.h libgen.h allegro.h])
+AC_CHECK_HEADERS([getopt.h malloc.h sys/types.h stdlib.h locale.h math.h\
+	signal.h errno.h libgen.h allegro.h])
 
 # ===================== Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
-#AC_C_VOLATILE
+AC_C_VOLATILE
 AC_CHECK_TYPES([off_t size_t],,,
 	[
 	#ifdef HAVE_SYS_TYPES_H
@@ -92,14 +93,15 @@ AC_CHECK_TYPES([sig_atomic_t],,,
 	#endif
 	])
 
-have_ll=yes
-AC_CHECK_TYPE([long long],AC_DEFINE([HAVE_LONG_LONG],[1],[Whether you have the long long type.]),
-	[have_ll=no])
+#have_ll=yes
+#AC_CHECK_TYPE([long long],AC_DEFINE([HAVE_LONG_LONG],[1],[Whether you have the long long type.]),
+#	[have_ll=no])
 
 # Checks for library functions.
 AC_TYPE_SIGNAL
+AC_FUNC_MALLOC
 
-AC_CHECK_FUNCS([memcpy setlocale sigaction fseeko ftello snprintf basename])
+AC_CHECK_FUNCS([malloc memcpy setlocale sigaction fseeko ftello snprintf basename])
 
 has_getopt=yes
 AC_CHECK_FUNC([getopt_long],
@@ -148,11 +150,11 @@ if (test "x$GCC" = "xyes" ); then
 	AX_C_CHECK_FLAG([-fstack-protector-all], [CFLAGS="$CFLAGS -fstack-protector-all"], [CFLAGS="$CFLAGS"])
 	AX_C_CHECK_FLAG([-O2], [CFLAGS="$CFLAGS -O2"], [CFLAGS="$CFLAGS"])
 
-	if (test "x$have_ll" = "xyes"); then
-
-		AX_C_CHECK_FLAG([-std=gnu99], [CFLAGS="$CFLAGS -std=gnu99"], [CFLAGS="$CFLAGS"])
-		AX_C_CHECK_FLAG([-Wno-long-long], [CFLAGS="$CFLAGS -Wno-long-long"], [CFLAGS="$CFLAGS"])
-	fi
+#	if (test "x$have_ll" = "xyes"); then
+#
+#		AX_C_CHECK_FLAG([-std=gnu99], [CFLAGS="$CFLAGS -std=gnu99"], [CFLAGS="$CFLAGS"])
+#		AX_C_CHECK_FLAG([-Wno-long-long], [CFLAGS="$CFLAGS -Wno-long-long"], [CFLAGS="$CFLAGS"])
+#	fi
 fi
 
 AC_SUBST(AM_CFLAGS,$CFLAGS)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: bogdandr@op.pl\n"
-"POT-Creation-Date: 2009-02-01 16:43+0100\n"
+"POT-Creation-Date: 2009-02-21 11:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/imyplay.c:77
+#: src/imyplay.c:75
 msgid "version"
 msgstr ""
 
-#: src/imyplay.c:80
+#: src/imyplay.c:79
 msgid ""
 "Program for playing iMelody ringtones (IMY files).\n"
 "\n"
@@ -35,86 +35,90 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/imyplay.c:90
+#: src/imyplay.c:89
 msgid "error"
 msgstr ""
 
-#: src/imyplay.c:91
+#: src/imyplay.c:90
 msgid "Error while trying to set a signal handler for"
 msgstr ""
 
-#: src/imyplay.c:92
+#: src/imyplay.c:91
 msgid "Error during library init."
 msgstr ""
 
-#: src/imyplay.c:93
+#: src/imyplay.c:92
 msgid "Error during library closing."
 msgstr ""
 
-#: src/imyplay.c:95
+#: src/imyplay.c:94
 msgid "Unknown token"
 msgstr ""
 
-#: src/imyplay.c:96
+#: src/imyplay.c:95
 msgid "at position"
 msgstr ""
 
-#: src/imyplay.c:97
+#: src/imyplay.c:96
 msgid "Unexpected token"
 msgstr ""
 
-#: src/imyplay.c:98
+#: src/imyplay.c:97
 msgid "Can't open file"
 msgstr ""
 
-#: src/imyplay.c:99
+#: src/imyplay.c:98
 msgid "Problem parsing beat"
 msgstr ""
 
-#: src/imyplay.c:100
+#: src/imyplay.c:99
 msgid "Problem parsing style"
 msgstr ""
 
-#: src/imyplay.c:101
+#: src/imyplay.c:100
 msgid "Problem parsing volume"
 msgstr ""
 
-#: src/imyplay.c:102
+#: src/imyplay.c:101
 msgid "Not iMelody file"
 msgstr ""
 
-#: src/imyplay.c:103
+#: src/imyplay.c:102
 msgid "Error playing tune"
 msgstr ""
 
-#: src/imyplay.c:110
+#: src/imyplay.c:109
 msgid "unknown"
 msgstr ""
 
-#: src/imyplay.c:371
+#: src/imyplay.c:373
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr ""
 
-#: src/imyplay.c:372
+#: src/imyplay.c:374
 msgid "Syntax"
 msgstr ""
 
-#: src/imyplay.c:374
+#: src/imyplay.c:376
 msgid " [options] "
 msgstr ""
 
-#: src/imyplay.c:376
+#: src/imyplay.c:378
 msgid "Options"
 msgstr ""
 
-#: src/imyplay.c:377
+#: src/imyplay.c:379
 msgid "Print help"
 msgstr ""
 
-#: src/imyplay.c:378
+#: src/imyplay.c:380
 msgid "Print license information"
 msgstr ""
 
-#: src/imyplay.c:379
+#: src/imyplay.c:381
+msgid "Convert the given files to MIDI format"
+msgstr ""
+
+#: src/imyplay.c:382
 msgid "Print version number"
 msgstr ""

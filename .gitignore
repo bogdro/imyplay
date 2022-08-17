@@ -19,6 +19,7 @@ imyplay.spc
 imyp_cfg.h
 
 po/POTFILES
+po/Makefile.in
 
 utiltest
 *.log

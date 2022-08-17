@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- LIBAO backend.
  *
- * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -100,8 +100,8 @@ imyp_ao_play_tune (
 	}
 
 	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
-		(data->format.byte_format == AO_FMT_LITTLE)? 1 : 0, 1,
-		(unsigned int)data->format.bits, (unsigned int)data->format.rate, NULL);
+		(data->format.byte_format == AO_FMT_LITTLE)? 1 : 0, 0,
+		(unsigned int)(data->format.bits), (unsigned int)(data->format.rate), NULL);
 	if ( sig_recvd != 0 )
 	{
 		return -2;

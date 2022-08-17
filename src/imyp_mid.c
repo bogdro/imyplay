@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- MIDI writer backend.
  *
- * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@
 #include "imyp_mid.h"
 #include "imyp_sig.h"
 #include "iparsers.h"
+#include "imyputil.h"
 
 #include <stdio.h>
 
@@ -279,8 +280,7 @@ imyp_midi_init (
 	const int instrument;
 #endif
 {
-	char * imy;
-	size_t len;
+	char * file_out;
 	struct imyp_midi_backend_data * data;
 
 	if ( (imyp_data == NULL) || (filename == NULL) )
@@ -297,14 +297,33 @@ imyp_midi_init (
 #else
 	data = &imyp_midi_backend_data_static;
 #endif
+	file_out = imyp_generate_filename (filename, ".mid");
 
-	len = strlen (filename);
+	if ( file_out == NULL )
+	{
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+		return -3;
+	}
+
+	data->midi = midiFileCreate (file_out, TRUE);
+	free (file_out);
+	if ( data->midi == NULL )
+	{
+# ifdef HAVE_MALLOC
+		free (data);
+# endif
+		return -2;
+	}
+/*
+len = strlen (filename);
 	imy = strstr (filename, ".imy");
 	if ( imy != NULL )
 	{
 		strncpy (imy, ".mid", 4);
 		imy[4] = '\0';
-		data->midi = midiFileCreate (filename, TRUE);
+		data->midi = midiFileCreate (file_out, TRUE);
 		strncpy (imy, ".imy", 4);
 		imy[4] = '\0';
 		if ( data->midi == NULL )
@@ -337,6 +356,7 @@ imyp_midi_init (
 		return -5;
 #endif
 	}
+	*/
 	midiFileSetTracksDefaultChannel (data->midi, 1, MIDI_CHANNEL_1);
 	if ( instrument == -1 )
 	{

@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- FILE backend.
  *
- * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -104,20 +104,26 @@ imyp_file_play_tune (
 		return -1;
 	}
 
-	if ( (data->format == IMYP_SAMPLE_FORMAT_S8LE) || (data->format == IMYP_SAMPLE_FORMAT_S8BE) ||
-		 (data->format == IMYP_SAMPLE_FORMAT_U8LE) || (data->format == IMYP_SAMPLE_FORMAT_U8BE) )
+	if (       (data->format == IMYP_SAMPLE_FORMAT_S8LE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_S8BE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_U8LE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_U8BE) )
 	{
 		quality = 8;
 	}
 
-	if ( (data->format == IMYP_SAMPLE_FORMAT_U16LE) || (data->format == IMYP_SAMPLE_FORMAT_U16BE) ||
-		 (data->format == IMYP_SAMPLE_FORMAT_U8LE) || (data->format == IMYP_SAMPLE_FORMAT_U8BE) )
+	if (       (data->format == IMYP_SAMPLE_FORMAT_U16LE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_U16BE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_U8LE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_U8BE) )
 	{
 		is_uns = 1;
 	}
 
-	if ( (data->format == IMYP_SAMPLE_FORMAT_U16BE) || (data->format == IMYP_SAMPLE_FORMAT_S16BE) ||
-		 (data->format == IMYP_SAMPLE_FORMAT_U8BE) || (data->format == IMYP_SAMPLE_FORMAT_S8BE) )
+	if (       (data->format == IMYP_SAMPLE_FORMAT_U16BE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_S16BE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_U8BE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_S8BE) )
 	{
 		is_le = 0;
 	}
@@ -167,8 +173,10 @@ imyp_file_pause (
 		return;
 	}
 
-	if ( (data->format == IMYP_SAMPLE_FORMAT_S8LE) || (data->format == IMYP_SAMPLE_FORMAT_S8BE) ||
-		 (data->format == IMYP_SAMPLE_FORMAT_U8LE) || (data->format == IMYP_SAMPLE_FORMAT_U8BE) )
+	if (       (data->format == IMYP_SAMPLE_FORMAT_S8LE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_S8BE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_U8LE)
+		|| (data->format == IMYP_SAMPLE_FORMAT_U8BE) )
 	{
 		quality = 8;
 	}
@@ -227,8 +235,7 @@ imyp_file_init (
 {
 	char * colon;
 	int scanf_res;
-	char * imy;
-	size_t len;
+	char * filename;
 	struct imyp_file_backend_data * data;
 
 	if ( (imyp_data == NULL) || (file_out == NULL) )
@@ -240,61 +247,30 @@ imyp_file_init (
 		struct imyp_file_backend_data));
 	if ( data == NULL )
 	{
-		return -7;
+		return -2;
 	}
 #else
 	data = &imyp_file_backend_data_static;
 #endif
+	filename = imyp_generate_filename (file_out, ".raw");
 
-	len = strlen (file_out);
-	imy = strstr (file_out, ".imy");
-	if ( imy != NULL )
-	{
-		strncpy (imy, ".raw", 4);
-		imy[4] = '\0';
-		data->raw_file = fopen (file_out, "wb");
-		strncpy (imy, ".imy", 4);
-		imy[4] = '\0';
-		if ( data->raw_file == NULL )
-		{
-# ifdef HAVE_MALLOC
-			free (data);
-# endif
-			return -2;
-		}
-	}
-	else
+	if ( filename == NULL )
 	{
 #ifdef HAVE_MALLOC
-		imy = (char *) malloc (len + 4+1);
-		if ( imy == NULL )
-		{
-			return -3;
-		}
-		strncpy (imy, file_out, len);
-		strncpy (&imy[len], ".raw", 4+1);
-		imy[len+4] = '\0';
-		data->raw_file = fopen (file_out, "wb");
-		free (imy);
-		if ( data->raw_file == NULL )
-		{
-			free (data);
-			return -4;
-		}
-#else
-		return -5;
+		free (data);
 #endif
+		return -3;
 	}
-	/*
-	data->raw_file = fopen (file_out, "wb");
+
+	data->raw_file = fopen (filename, "wb");
+	free (filename);
 	if ( data->raw_file == NULL )
 	{
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
-		return -2;
+		return -4;
 	}
-	*/
 
 	data->samp_rate = 44100;
 	data->format = IMYP_SAMPLE_FORMAT_S16LE;

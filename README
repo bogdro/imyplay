@@ -183,9 +183,11 @@ Command line options (for the full version):
 			"--dev 44100:s16le" for the FILE, Allegro, PortAudio
 			and SDL backends.
 -e|--exec <program>	Execute the given program instead of normal sound
-			output. Read below for options. Overrides --output.
+			output. Read below for options. Overrides --output
+			and -f.
 -f|--file <file>	Write raw samples to this file instead of normal
-			sound output. Overrides --output.
+			sound output. Overrides --output. Changes any ".imy"
+			file extenstion to ".raw".
 -h|--help		Print help
 -l|--license		Print license information
 --midi-instr <number>	Use the given MIDI instrument number.
@@ -196,7 +198,8 @@ Command line options (for the full version):
 			the "snd-pcsp" kernel module to be loaded and
 			permissions to access "/dev/console".
 --to-midi		Convert the given files to MIDI format (if the target
-			file exists, it is deleted). Overrides --output.
+			file exists, it is deleted). Overrides --output, -f
+			and -e. Changes any ".imy" file extenstion to ".mid".
 -V|--version		Print version number
 
 Alternatively to using the --output option, you can launch the program as
@@ -257,7 +260,7 @@ you wish.
 marked with capital letters in the header:
 
 # YOUR LANGUAGE translations for imyplay package.
-# Copyright (C) 2009-2014 Bogdan 'bogdro' Drozdowski
+# Copyright (C) 2009-2016 Bogdan 'bogdro' Drozdowski
 # This file is distributed under the same license as
 # the imyplay package.
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.

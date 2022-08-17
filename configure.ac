@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(imyplay, 0.9, bogdandr@op.pl)
+AC_INIT(imyplay, 1.0, bogdandr@op.pl)
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \

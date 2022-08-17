@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- utility functions.
  *
- * Copyright (C) 2012-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -35,6 +35,10 @@
 #  include <memory.h>
 # endif
 # include <string.h>
+#endif
+
+#ifdef HAVE_MALLOC_H
+# include <malloc.h>
 #endif
 
 #ifdef HAVE_MATH_H
@@ -287,7 +291,8 @@ imyp_get_format (
  * \param is_uns if not zero, samples will be in unsigned format.
  * \param quality the numer of bits per sample (8 or 16).
  * \param samp_rate sampling rate of the samples.
- * \return the buffer size used
+ * \param start_index pointer to the starting index (last used index) if continuing filling a buffer.
+ * \return the buffer size used, in bytes
  */
 int
 imyp_generate_samples (
@@ -296,23 +301,23 @@ imyp_generate_samples (
 	const int volume_level,
 	const int duration,
 	void * const buf,
-	int bufsize,
+	const int bufsize,
 	const int is_le,
 	const int is_uns,
-	unsigned int quality,
+	const unsigned int samp_quality,
 	const unsigned int samp_rate,
 	unsigned long int * const start_index)
 #else
 	freq, volume_level, duration, buf, bufsize, is_le,
-	is_uns, quality, samp_rate, start_index)
+	is_uns, samp_quality, samp_rate, start_index)
 	const double freq;
 	const int volume_level;
 	const int duration;
 	void * const buf;
-	int bufsize;
+	const int bufsize;
 	const int is_le;
 	const int is_uns;
-	unsigned int quality;
+	const unsigned int samp_quality;
 	const unsigned int samp_rate;
 	unsigned long int * const start_index;
 #endif
@@ -322,119 +327,137 @@ imyp_generate_samples (
 	unsigned long int i;
 	unsigned long int last_index = 0;
 	unsigned int imyp_bufsize;
+	int max_val;
+	int samp_with_volume;
+	unsigned long int nperiods_rounded;
+	double periods_in_full;
+	unsigned int qual_bits = samp_quality;
+	unsigned int qual_bytes;
 
 	if ( (buf == NULL) || (bufsize <= 0) || (samp_rate <= 0) || (duration <= 0) )
 	{
 		return 0;
 	}
 
-	if ( (quality != 8) && (quality != 16) )
+	if ( (qual_bits != 8) && (qual_bits != 16) )
 	{
-		quality = 16;
+		qual_bits = 16;
 	}
 	if ( start_index != NULL )
 	{
-		last_index = *start_index;
+		last_index = (*start_index) + 1;
 	}
 
-	imyp_bufsize = (unsigned int)(duration * (int)samp_rate * ((int)quality/8)) / 1000;
-	imyp_bufsize = (unsigned int)IMYP_MIN ((unsigned int)bufsize, imyp_bufsize);
+	qual_bytes = qual_bits/8;
+	imyp_bufsize = (unsigned int)(duration * (int)samp_rate * ((int)qual_bytes)) / 1000; /* bytes */
+	imyp_bufsize = (unsigned int)IMYP_MIN ((unsigned int)bufsize, imyp_bufsize); /* bytes */
+	imyp_bufsize /= qual_bytes; /* samples */
+	max_val = (1 << (qual_bits - 1)) - 1;
 	if ( freq > 0.0 )
 	{
 		nperiods = samp_rate/freq;
+		/* round down, else we may think that a period fits while it doesn't: */
+		/* nperiods_rounded = (unsigned long int)IMYP_ROUND(nperiods); */
+		nperiods_rounded = (unsigned long int)nperiods;
+
+		periods_in_full = 2 * M_PI / nperiods;
 		for ( i = last_index; i < last_index + imyp_bufsize; i++ )
 		{
 			if ( sig_recvd != 0 )
 			{
-				if ( quality == 16 )
+				if ( qual_bits == 16 )
 				{
-					return (int)(i - last_index)*2;
+					return (int)(i - last_index) * 2;
 				}
 				else
 				{
 					return (int)(i - last_index);
 				}
 			}
-			if ( (int)IMYP_ROUND(nperiods) == 0 )
+			if ( nperiods_rounded == 0 )
 			{
 				/* not a single full period fits in the buffer */
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
-				samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-					/* The "/3" is required to have a full sine wave, not
-					trapese-like wave */
-					IMYP_ROUND (((1<<(quality-1))-1)
-						* sin (i*(2*M_PI/nperiods))/3));
+				samp = (int)(max_val /* disable to get rectangular wave */ +
+					IMYP_ROUND (max_val
+						/* * sin (i * periods_in_full)/3)); */
+						* sin (i * periods_in_full)));
 #else
-				samp = (int) IMYP_ROUND (i*
-					(((1<<(quality-1))-1)/nperiods));
+				samp = (int) IMYP_ROUND (i *
+					(max_val / nperiods));
 #endif
 			}
 			else
 			{
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
-				samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-					/* The "/3" is required to have a full sine wave, not
-					trapese-like wave */
-					IMYP_ROUND (((1<<(quality-1))-1)
-						* sin ((i%((unsigned long int)IMYP_ROUND(nperiods)))*(2*M_PI/nperiods))/3));
+				samp = (int)(max_val /* disable to get rectangular wave */ +
+					IMYP_ROUND (max_val
+						/* * sin ((i % nperiods_rounded) * periods_in_full)/3)); */
+						* sin (i * periods_in_full)));
 #else
-				samp = (int) IMYP_ROUND ((i%((unsigned long int)IMYP_ROUND(nperiods)))*
-					(((1<<(quality-1))-1)/nperiods));
+				samp = (int) IMYP_ROUND ((i % nperiods_rounded) *
+					(max_val / nperiods));
 #endif
 			}
 			if ( is_uns == 0 )
 			{
-				samp -= (1<<(quality-1))-1;
+				samp -= max_val;
 			}
-			if ( quality == 16 )
+			samp_with_volume = (samp * volume_level) / IMYP_MAX_IMY_VOLUME;
+			if ( qual_bits == 16 )
 			{
-				if ( (i-last_index)*2 >= imyp_bufsize )
+				/* "i" iterates over samples now, so this is not needed: */
+				/*if ( (i-last_index)*2 >= imyp_bufsize )
 				{
 					break;
-				}
+				}*/
 				if ( is_le != 0 )
 				{
-					((char *)buf)[(i - last_index)*2] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-					((char *)buf)[(i - last_index)*2+1] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
+
+					((char *)buf)[(i - last_index) * 2] =
+						(char)(samp_with_volume & 0x0FF);
+					((char *)buf)[(i - last_index) * 2 + 1] =
+						(char)((samp_with_volume >> 8) & 0x0FF);
 				}
 				else
 				{
-					((char *)buf)[(i - last_index)*2] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
-					((char *)buf)[(i - last_index)*2+1] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
+					((char *)buf)[(i - last_index) * 2] =
+						(char)((samp_with_volume >> 8) & 0x0FF);
+					((char *)buf)[(i - last_index) * 2 + 1] =
+						(char)(samp_with_volume & 0x0FF);
 				}
 			}
-			else if ( quality == 8 )
+			else if ( qual_bits == 8 )
 			{
 				((char *)buf)[i - last_index] =
-					(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
+					(char)(samp_with_volume & 0x0FF);
 			}
-		}
-		if ( start_index != NULL )
-		{
-			*start_index += imyp_bufsize/(quality/8);
 		}
 	}
 	else
 	{
-		last_index = 0;
-		if ( start_index != NULL )
-		{
-			*start_index = last_index;
-		}
-		for ( i = 0; i < imyp_bufsize; i++ )
+		for ( i = last_index; i < last_index + imyp_bufsize; i++ )
 		{
 			if ( sig_recvd != 0 )
 			{
-				return (int)i;
+				return (int)(i - last_index);
 			}
-			((char *)buf)[i] = 0;
+			if ( qual_bits == 16 )
+			{
+				((char *)buf)[(i - last_index) * 2] = 0;
+				((char *)buf)[(i - last_index) * 2 + 1] = 0;
+			}
+			else if ( qual_bits == 8 )
+			{
+				((char *)buf)[(i - last_index)] = 0;
+			}
 		}
 	}
-	return (int)imyp_bufsize;
+	if ( start_index != NULL )
+	{
+		*start_index += imyp_bufsize;
+	}
+	return (int)(imyp_bufsize * qual_bytes);
 }
 
 /**
@@ -481,5 +504,81 @@ imyp_put_text_stdout (
 	{
 		printf ("%s", text);
 	}
+}
+
+/**
+ * Generates a filename with the given extension from the given filename.
+ * \param filename The base filename.
+ * \param ext The extension to add.
+ * \return The new filename (should be free()d after use).
+ */
+char *
+imyp_generate_filename (
+#ifdef IMYP_ANSIC
+	const char * const filename,
+	const char * const ext)
+#else
+	filename, ext)
+	const char * const filename;
+	const char * const ext;
+#endif
+{
+	char * imy;
+	size_t fnlen;
+	size_t elen;
+	int imy_index;
+	size_t i;
+	size_t target_fname_len;
+
+	if ( (filename == NULL) || (ext == NULL) )
+	{
+		return NULL;
+	}
+
+	fnlen = strlen (filename);
+	elen = strlen (ext);
+	imy = strstr (filename, ".imy");
+#ifdef HAVE_MALLOC
+	if ( imy != NULL )
+	{
+		imy_index = imy - filename;
+		imy = (char *) malloc (fnlen + 1);
+		target_fname_len = fnlen + 1;
+	}
+	else
+	{
+		imy_index = -1;
+		imy = (char *) malloc (fnlen + elen + 1);
+		target_fname_len = fnlen + elen + 1;
+	}
+	if ( imy == NULL )
+	{
+		return NULL;
+	}
+#ifdef HAVE_MEMSET
+	memset (imy, 0, (size_t)target_fname_len);
+#else
+	for (i = 0; i < target_fname_len; i++ )
+	{
+		((char *)imy)[i] = '\0';
+	}
+#endif
+	strncpy (imy, filename, fnlen);
+	/* If ".imy" extension is present, change it to the provided one.
+	   Else, leave whatever the filename was requested. */
+	if ( imy_index >= 0 )
+	{
+		for (i = (size_t)imy_index; i < fnlen; i++ )
+		{
+			imy[i] = '\0';
+		}
+		fnlen = (size_t)imy_index;
+		strncpy (&imy[fnlen], ext, elen + 1);
+		imy[fnlen + elen] = '\0';
+	}
+	return imy;
+#else
+	return NULL;
+#endif
 }
 

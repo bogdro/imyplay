@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PortAudio backend.
  *
- * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -132,9 +132,11 @@ static int imyp_portaudio_fill_buffer (
 	}
 
 	data->inside_callback = 1;
+
 	imyp_generate_samples (data->tone_freq, data->volume_level, data->duration,
-		output, (int)frameCount*2, 1 /* little-endian */, is_uns, quality,
-		(unsigned int)data->sampfreq, &(data->last_index));
+		output, (int)(frameCount * (quality / 8)), 1 /* little-endian */,
+		is_uns, quality, (unsigned int)(data->sampfreq), &(data->last_index));
+
 	data->inside_callback = 0;
 	if ( sig_recvd != 0 )
 	{
@@ -182,6 +184,11 @@ imyp_portaudio_play_tune (
 	struct imyp_portaudio_backend_data * data =
 		(struct imyp_portaudio_backend_data *)imyp_data;
 
+	if ( data == NULL )
+	{
+		return -1;
+	}
+
 	if ( data->sampfreq > 0 )
 	{
 		error = Pa_OpenDefaultStream (
@@ -199,6 +206,7 @@ imyp_portaudio_play_tune (
 			was_set = 1;
 		}
 	}
+
 	if ( was_set == 0 )
 	{
 		for ( i = 0; i < sizeof (formats) / sizeof (formats[0]); i++ )
@@ -243,7 +251,9 @@ imyp_portaudio_play_tune (
 	{
 		return -1;
 	}
+
 	imyp_portaudio_pause (imyp_data, duration);
+
 	Pa_StopStream (data->stream);
 	Pa_CloseStream (data->stream);
 
@@ -357,6 +367,7 @@ imyp_portaudio_init (
 	data->last_index = 0;
 	data->inside_callback = 0;
 	data->sampfreq = 0;
+	data->stream = NULL;
 
 	if ( dev_file != NULL )
 	{

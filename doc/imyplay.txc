@@ -38,7 +38,7 @@ This manual is for IMYplay, version @VERSION@
 
 @c ==================================================================
 
-    Copyright (c)  2009-2014 Bogdan Drozdowski
+    Copyright (c)  2009-2016 Bogdan Drozdowski
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -291,7 +291,7 @@ and SDL backends.
 @noindent @option{-e <program>}@*@option{--exec <program>}@*
 @quotation
 Execute the given program instead of normal sound output.
-Overrides @option{--output}.@*
+Overrides @option{--output} and @option{-f}.@*
 You can pass the following expressions in the
 <program> argument and these will get substituted by the correct values when
 the program is about to be started:@*@*
@@ -341,6 +341,7 @@ Any other %X expressions will NOT be altered.
 @noindent @option{-f <file>}@*@option{--file <file>}@*
 @quotation
 Write raw samples to this file instead of normal sound output. Overrides @option{--output}.
+Changes any ".imy" file extenstion to ".raw".
 Use @option{--dev} to specify the sampling rate and samples' format.
 @end quotation
 
@@ -373,7 +374,8 @@ permissions to access "/dev/console".
 @noindent @option{--to-midi}@*
 @quotation
 Convert the given files to MIDI format (if the target file exists, it is deleted).
-Overrides @option{--output}.
+Overrides @option{--output}, @option{-f} and @option{-e}. Changes any ".imy"
+file extenstion to ".mid".
 @end quotation
 
 @noindent @option{-V}@*@option{--version}@*
@@ -1686,7 +1688,7 @@ marked with capital letters in the header:
 
 @quotation
 # YOUR LANGUAGE translations for IMYplay package.@*
-# Copyright (C) 2009-2014 Bogdan 'bogdro' Drozdowski@*
+# Copyright (C) 2009-2016 Bogdan 'bogdro' Drozdowski@*
 # This file is distributed under the same license as@*
 # the IMYplay package.@*
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.@*

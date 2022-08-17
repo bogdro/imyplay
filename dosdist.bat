@@ -1,6 +1,6 @@
 cd src
 
-sed 's/[@]VERSION[@]/0.9/' imyp_cfg.hin > imyp_cfg.h
+sed 's/[@]VERSION[@]/1.0/' imyp_cfg.hin > imyp_cfg.h
 if not "%errorlevel%"=="0" goto end
 nasm -O999 -f coff -DIMYPLAY_32BIT=1 -o imypdos.obj imypdos.asm
 if not "%errorlevel%"=="0" goto end
@@ -10,7 +10,7 @@ upx -9 imyplay.exe
 
 cd ..
 
-set imyver=09
+set imyver=10
 
 mkdir imy-%imyver%
 mkdir imy-%imyver%\doc

@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- Allegro backend.
  *
- * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -127,61 +127,67 @@ static struct imyp_allegro_backend_data imyp_allegro_backend_data_static;
 
 #ifndef IMYP_ANSIC
 static AUDIOSTREAM *
-imyp_all_audiostream_init IMYP_PARAMS ((const int number_of_samples, const int vol,
+imyp_all_audiostream_init IMYP_PARAMS ((const int duration, const int vol,
 	imyp_backend_data_t * const imyp_data));
 #endif
 
 /**
  * Creates an AUDIOSTREAM for playing notes.
- * \param number_of_samples The number of samples for the buffer.
+ * \param duration The duration of the sound to generate, in milliseconds (defines the number of samples).
  * \param vol Volume of the tone (from 0 to 15).
- * \param quality Will get the audio stream's quality (16 or 8).
- * \param sampling_frequency Will get the audio stream's sampling frequency (44100, 22050 or 11025).
+ * \param imyp_data The driver's data structure.
  * \return an allocated AUDIOSTREAM or NULL in case of error.
  */
 static AUDIOSTREAM *
 imyp_all_audiostream_init (
 #ifdef IMYP_ANSIC
-	const int number_of_samples,
+	const int duration,
 	const int vol,
 	imyp_backend_data_t * const imyp_data)
 #else
-	number_of_samples, vol, imyp_data)
-	const int number_of_samples;
+	duration, vol, imyp_data)
+	const int duration;
 	const int vol;
 	imyp_backend_data_t * const imyp_data;
 #endif
 {
-#define IMYP_ALL_VOL ((vol*255)/IMYP_MAX_IMY_VOLUME)
+#define IMYP_ALL_VOL ((vol * 255)/IMYP_MAX_IMY_VOLUME)
+#define IMYP_ALL_MONO 0
+#define IMYP_ALL_PAN_MIDDLE 128
+
 	AUDIOSTREAM * as;
 	struct imyp_allegro_backend_data * data =
 		(struct imyp_allegro_backend_data *)imyp_data;
 
 	if ( (data->quality == 8 || data->quality == 16) && (data->sampfreq > 0) )
 	{
-		as = play_audio_stream (number_of_samples/(data->quality/8), data->quality,
-			0 /* mono */, data->sampfreq, IMYP_ALL_VOL, 128);
+		as = play_audio_stream ((duration * data->sampfreq) / 1000,
+			data->quality, IMYP_ALL_MONO, data->sampfreq,
+			IMYP_ALL_VOL, IMYP_ALL_PAN_MIDDLE);
 		if ( as != NULL )
 		{
 			return as;
 		}
 	}
 
-	as = play_audio_stream (number_of_samples/2, 16, 0 /* mono */, 44100, IMYP_ALL_VOL, 128);
+	as = play_audio_stream ((duration * 44100) / 1000, 16,
+		IMYP_ALL_MONO, 44100, IMYP_ALL_VOL, IMYP_ALL_PAN_MIDDLE);
 	if ( as != NULL )
 	{
 		data->quality = 16;
 		data->sampfreq = 44100;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples/2, 16, 0 /* mono */, 22050, IMYP_ALL_VOL, 128);
+	as = play_audio_stream ((duration * 22050) / 1000, 16,
+		IMYP_ALL_MONO, 22050, IMYP_ALL_VOL, IMYP_ALL_PAN_MIDDLE);
 	if ( as != NULL )
 	{
 		data->quality = 16;
 		data->sampfreq = 22050;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples/2, 16, 0 /* mono */, 11025, IMYP_ALL_VOL, 128);
+	as = play_audio_stream ((duration * 11025) / 1000, 16,
+		IMYP_ALL_MONO, 11025, IMYP_ALL_VOL, IMYP_ALL_PAN_MIDDLE);
 	if ( as != NULL )
 	{
 		data->quality = 16;
@@ -189,21 +195,24 @@ imyp_all_audiostream_init (
 		return as;
 	}
 
-	as = play_audio_stream (number_of_samples, 8, 0 /* mono */, 44100, IMYP_ALL_VOL, 128);
+	as = play_audio_stream ((duration * 44100) / 1000, 8,
+		IMYP_ALL_MONO, 44100, IMYP_ALL_VOL, IMYP_ALL_PAN_MIDDLE);
 	if ( as != NULL )
 	{
 		data->quality = 8;
 		data->sampfreq = 44100;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples, 8, 0 /* mono */, 22050, IMYP_ALL_VOL, 128);
+	as = play_audio_stream ((duration * 22050) / 1000, 8,
+		IMYP_ALL_MONO, 22050, IMYP_ALL_VOL, IMYP_ALL_PAN_MIDDLE);
 	if ( as != NULL )
 	{
 		data->quality = 8;
 		data->sampfreq = 22050;
 		return as;
 	}
-	as = play_audio_stream (number_of_samples, 8, 0 /* mono */, 11025, IMYP_ALL_VOL, 128);
+	as = play_audio_stream ((duration * 11025) / 1000, 8,
+		IMYP_ALL_MONO, 11025, IMYP_ALL_VOL, IMYP_ALL_PAN_MIDDLE);
 	if ( as != NULL )
 	{
 		data->quality = 8;
@@ -211,6 +220,8 @@ imyp_all_audiostream_init (
 		return as;
 	}
 #undef IMYP_ALL_VOL
+#undef IMYP_ALL_MONO
+#undef IMYP_ALL_PAN_MIDDLE
 
 	return NULL;
 }
@@ -252,15 +263,16 @@ imyp_all_play_tune (
 	struct imyp_allegro_backend_data * data =
 		(struct imyp_allegro_backend_data *)imyp_data;
 
-	if ( (buf == NULL) || (bufsize <= 0) || (imyp_data == NULL) )
+	if ( (buf == NULL) || (bufsize <= 0) || (imyp_data == NULL) || (duration <= 0) )
 	{
 		return -1;
 	}
-	as = imyp_all_audiostream_init (bufsize, volume_level, imyp_data);
+	/*as = imyp_all_audiostream_init (bufsize, volume_level, imyp_data);*/
+	as = imyp_all_audiostream_init (duration, volume_level, imyp_data);
 
 	if ( as != NULL )
 	{
-		imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
+		bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
 			1, 1, (unsigned int)data->quality, (unsigned int)data->sampfreq, NULL);
 		if ( sig_recvd != 0 )
 		{
@@ -268,7 +280,7 @@ imyp_all_play_tune (
 			return -2;
 		}
 		new_buf = get_audio_stream_buffer (as);
-		if ( new_buf != NULL )
+		while ( new_buf != NULL )
 		{
 #ifdef HAVE_MEMCPY
 			memcpy (new_buf, buf, (size_t)bufsize);
@@ -284,7 +296,9 @@ imyp_all_play_tune (
 				return -2;
 			}
 			free_audio_stream_buffer (as);
+			new_buf = get_audio_stream_buffer (as);
 		}
+		/* wait for the sound to play for the required period of time: */
 		imyp_all_pause (imyp_data, duration);
 		stop_audio_stream (as);
 		return 0;
@@ -404,6 +418,7 @@ imyp_all_init (
 		}
 	}
 
+	set_volume(255, -1);
 	data->quality = 0;
 	data->sampfreq = 0;
 	if ( dev_file != NULL )

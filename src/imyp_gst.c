@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- GStreamer backend.
  *
- * Copyright (C) 2012-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -228,6 +228,8 @@ imyp_gst_init (
 	size_t i;
 #endif
 	struct imyp_gst_backend_data * data;
+	char name_volume[] = "volume";
+	char name_freq[] = "freq";
 
 	if ( imyp_data == NULL )
 	{
@@ -342,7 +344,7 @@ imyp_gst_init (
 		return -7;
 	}
 
-	if ( gst_controller_set_control_source (data->ctl, "volume",
+	if ( gst_controller_set_control_source (data->ctl, name_volume,
 		GST_CONTROL_SOURCE (data->volctl)) == FALSE )
 	{
 		g_object_unref (data->volctl);
@@ -390,7 +392,7 @@ imyp_gst_init (
 		return -10;
 	}
 
-	if ( gst_controller_set_control_source (data->ctl, "freq",
+	if ( gst_controller_set_control_source (data->ctl, name_freq,
 		GST_CONTROL_SOURCE (data->freqctl)) == FALSE )
 	{
 		g_object_unref (data->freqctl);

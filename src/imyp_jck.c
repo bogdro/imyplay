@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- JACK backend.
  *
- * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -97,6 +97,8 @@ static int imyp_jack_fill_buffer (
 	jack_default_audio_sample_t *output;
 	jack_nframes_t sampfreq;
 	double nperiods;
+	unsigned long int nperiods_rounded;
+	double periods_in_full;
 
 	struct imyp_jack_backend_data * data =
 		(struct imyp_jack_backend_data *)arg;
@@ -113,39 +115,43 @@ static int imyp_jack_fill_buffer (
 		return 0;
 	}
 
-	sampfreq = jack_get_sample_rate (data->jclient);
+	data->inside_callback = 1;
 	if ( data->tone_freq > 0.0 )
 	{
-		data->inside_callback = 1;
-		nperiods = sampfreq/data->tone_freq;
-		for ( i=data->last_index; i < data->last_index+nframes; i++ )
+		sampfreq = jack_get_sample_rate (data->jclient);
+		nperiods = sampfreq / data->tone_freq;
+		/* round down, else we may think that a period fits while it doesn't: */
+		/* nperiods_rounded = (unsigned long int)IMYP_ROUND(nperiods); */
+		nperiods_rounded = (unsigned long int)nperiods;
+		periods_in_full = 2 * M_PI / nperiods;
+		for ( i = data->last_index; i < data->last_index + nframes; i++ )
 		{
 			if ( sig_recvd != 0 )
 			{
 				data->inside_callback = 0;
 				return -2;
 			}
-			if ( (int)IMYP_ROUND(nperiods) == 0 )
+			if ( nperiods_rounded == 0 )
 			{
 				/* not a single full period fits in the buffer */
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
 				samp = (jack_default_audio_sample_t)
-					sin (i*(2*M_PI/nperiods));
+					sin (i * periods_in_full);
 #else
-				samp = (jack_default_audio_sample_t)i/nperiods;
+				samp = (jack_default_audio_sample_t) i / nperiods;
 #endif
 			}
 			else
 			{
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
 				samp = (jack_default_audio_sample_t)
-					sin ((i%((jack_nframes_t)IMYP_ROUND(nperiods)))*(2*M_PI/nperiods));
+					sin (i * periods_in_full);
 #else
 				samp = (jack_default_audio_sample_t)
-					(i%((jack_nframes_t)IMYP_ROUND(nperiods)))/nperiods;
+					(i % nperiods_rounded) / nperiods;
 #endif
 			}
-			output[i-data->last_index] = (jack_default_audio_sample_t)
+			output[i - data->last_index] = (jack_default_audio_sample_t)
 				((samp * (jack_default_audio_sample_t)data->volume_level) / IMYP_MAX_IMY_VOLUME);
 		}
 		data->last_index += i - data->last_index;
@@ -155,23 +161,21 @@ static int imyp_jack_fill_buffer (
 			data->last_index -= (unsigned long int)NSAMP;
 		}*/
 		/*data->last_index %= (unsigned long int)nperiods;*/
-		data->inside_callback = 0;
 	}
 	else
 	{
-		data->inside_callback = 1;
-		data->last_index = 0;
-		for ( i=data->last_index; i < data->last_index+nframes; i++ )
+		/*data->last_index = 0;*/
+		for ( i = data->last_index; i < data->last_index + nframes; i++ )
 		{
 			if ( sig_recvd != 0 )
 			{
 				data->inside_callback = 0;
 				return -2;
 			}
-			output[i-data->last_index] = 0;
+			output[i - data->last_index] = 0;
 		}
-		data->inside_callback = 0;
 	}
+	data->inside_callback = 0;
 	return 0;
 }
 

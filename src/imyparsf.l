@@ -1,9 +1,9 @@
 %{
 /*
  * A program for playing iMelody ringtones (IMY files).
- *	-- melody parsing file.
+ *	-- melody parsing file using (f)lex.
  *
- * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -512,7 +512,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		printf ("%s: '%c' (0x%x) %s %d:%d\n",
 			_(err_unkn_token),
 			*yytext,
-			*yytext,
+			(unsigned int)*yytext,
 			_(err_at_pos),
 			yylineno,
 			pos+1);
@@ -739,7 +739,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 			printf ("%s: '%c' (0x%x) %s %d:%d\n",
 				_(err_unkn_token),
 				*yytext,
-				*yytext,
+				(unsigned int)*yytext,
 				_(err_at_pos),
 				yylineno,
 				repeat_pos+1);
@@ -831,7 +831,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 			printf ("%s: '%c' (0x%x) %s %d:%d\n",
 				_(err_unkn_token),
 				*yytext,
-				*yytext,
+				(unsigned int)*yytext,
 				_(err_at_pos),
 				yylineno,
 				repeat_pos+1);
@@ -856,7 +856,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 			printf ("%s: '%c' (0x%x) %s %d:%d\n",
 				_(err_unkn_token),
 				*yytext,
-				*yytext,
+				(unsigned int)*yytext,
 				_(err_at_pos),
 				yylineno,
 				repeat_pos+1);
@@ -988,7 +988,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	printf ("%s: '%c' (0x%x) %s %d:%d\n",
 		_(err_unkn_token),
 		*yytext,
-		*yytext,
+		(unsigned int)*yytext,
 		_(err_at_pos),
 		yylineno,
 		pos+1);
@@ -1006,7 +1006,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	printf ("%s: '%c' (0x%x) %s %d:%d\n",
 		_(err_unkn_token),
 		*yytext,
-		*yytext,
+		(unsigned int)*yytext,
 		_(err_at_pos),
 		yylineno,
 		repeat_pos+1);

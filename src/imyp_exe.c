@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- EXEC backend.
  *
- * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -84,6 +84,99 @@ static struct imyp_exec_backend_data imyp_exec_backend_data_static;
 
 
 #ifndef IMYP_ANSIC
+static void imyp_put_value_as_int IMYP_PARAMS ((
+	char buffer[], size_t buf_index,
+	size_t total_buflen, double value));
+#endif
+
+/**
+ * Puts the given value in the buffer as an integer (rounded).
+ * \param buffer buffer to put the value in.
+ * \param buf_index current location to put the value at.
+ * \param total_buflen total size of the buffer.
+ * \param value The value to put in the buffer.
+ */
+static void imyp_put_value_as_int (
+#ifdef IMYP_ANSIC
+	char buffer[],
+	size_t buf_index,
+	size_t total_buflen,
+	double value)
+#else
+	buffer, buf_index, total_buflen, value)
+	char buffer[];
+	size_t buf_index;
+	size_t total_buflen;
+	double value;
+#endif
+{
+	if ( (buffer == NULL) || (total_buflen == 0) )
+	{
+		return;
+	}
+#ifdef HAVE_SNPRINTF
+	snprintf (&(buffer[buf_index]),
+		total_buflen - buf_index - 1,
+		"%d", (int)IMYP_ROUND (value));
+#else
+	if ( total_buflen - buf_index - 1 >= 10 )
+	{
+		sprintf (&(buffer[buf_index]),
+			"%d", (int)IMYP_ROUND (value));
+	}
+#endif
+	buffer[total_buflen-1] = '\0';
+}
+
+
+
+#ifndef IMYP_ANSIC
+static void imyp_put_value_as_float IMYP_PARAMS ((
+	char buffer[], size_t buf_index,
+	size_t total_buflen, double value));
+#endif
+
+/**
+ * Puts the given value in the buffer as a flotin-point value.
+ * \param buffer buffer to put the value in.
+ * \param buf_index current location to put the value at.
+ * \param total_buflen total size of the buffer.
+ * \param value The value to put in the buffer.
+ */
+static void imyp_put_value_as_float (
+#ifdef IMYP_ANSIC
+	char buffer[],
+	size_t buf_index,
+	size_t total_buflen,
+	double value)
+#else
+	buffer, buf_index, total_buflen, value)
+	char buffer[];
+	size_t buf_index;
+	size_t total_buflen;
+	double value;
+#endif
+{
+	if ( (buffer == NULL) || (total_buflen == 0) )
+	{
+		return;
+	}
+#ifdef HAVE_SNPRINTF
+	snprintf (&(buffer[buf_index]),
+		total_buflen - buf_index - 1,
+		"%-.6f", value);
+#else
+	if ( total_buflen - buf_index - 1 >= 12 )
+	{
+		sprintf (&(buffer[buf_index]),
+			"%-.6f", value);
+	}
+#endif
+	buffer[total_buflen-1] = '\0';
+}
+
+
+#ifndef IMYP_ANSIC
 static int launch_program IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level, const int duration));
 #endif
@@ -129,131 +222,69 @@ static int launch_program (
 	}
 	for ( j = 0; j < i; j++ )
 	{
+		exe_index = strlen (data->to_execute);
 		if ( data->exename[j] != '%' )
 		{
 			data->to_execute[exe_index] = data->exename[j];
-			exe_index++;
 			continue;
 		}
 		j++;
 		switch (data->exename[j])
 		{
 			case 'i':	/* integer frequency */
-#ifdef HAVE_SNPRINTF
-				snprintf (&data->to_execute[exe_index],
-					sizeof (data->to_execute) - exe_index - 1,
-					"%d", (int)IMYP_ROUND (freq));
-#else
-				if ( sizeof (data->to_execute) - exe_index - 1 >= 10 )
-				{
-					sprintf (&data->to_execute[exe_index],
-						"%d", (int)IMYP_ROUND (freq));
-				}
-#endif
-				data->to_execute[IMYP_MAX_PROG_LEN-1] = '\0';
-				exe_index = strlen (data->to_execute);
+				imyp_put_value_as_int (data->to_execute,
+					exe_index, sizeof (data->to_execute),
+					freq);
 				break;
 
 			case 'f':	/* float frequency */
-#ifdef HAVE_SNPRINTF
-				snprintf (&data->to_execute[exe_index],
-					sizeof (data->to_execute) - exe_index - 1,
-					"%-.6f", IMYP_ROUND (freq));
-#else
-				if ( sizeof (data->to_execute) - exe_index - 1 >= 12 )
-				{
-					sprintf (&data->to_execute[exe_index], "%-.6f", freq);
-				}
-#endif
-				data->to_execute[IMYP_MAX_PROG_LEN-1] = '\0';
-				exe_index = strlen (data->to_execute);
+				imyp_put_value_as_float (data->to_execute,
+					exe_index, sizeof (data->to_execute),
+					freq);
 				break;
 
 			case 'd':	/* integer duration in seconds */
-#ifdef HAVE_SNPRINTF
-				snprintf (&data->to_execute[exe_index],
-					sizeof (data->to_execute) - exe_index - 1,
-					"%d", (int)IMYP_ROUND (duration/1000.0));
-#else
-				if ( sizeof (data->to_execute) - exe_index - 1 >= 10 )
-				{
-					sprintf (&data->to_execute[exe_index], "%d",
-						(int)IMYP_ROUND (duration/1000.0));
-				}
-#endif
-				data->to_execute[IMYP_MAX_PROG_LEN-1] = '\0';
-				exe_index = strlen (data->to_execute);
+				imyp_put_value_as_int (data->to_execute,
+					exe_index, sizeof (data->to_execute),
+					duration/1000.0);
 				break;
 
 			case 's':	/* float duration in seconds */
-#ifdef HAVE_SNPRINTF
-				snprintf (&data->to_execute[exe_index],
-					sizeof (data->to_execute) - exe_index - 1,
-					"%-.6f", duration/1000.0);
-#else
-				if ( sizeof (data->to_execute) - exe_index - 1 >= 12 )
-				{
-					sprintf (&data->to_execute[exe_index],
-						"%-.6f", duration/1000.0);
-				}
-#endif
-				data->to_execute[IMYP_MAX_PROG_LEN-1] = '\0';
-				exe_index = strlen (data->to_execute);
+				imyp_put_value_as_float (data->to_execute,
+					exe_index, sizeof (data->to_execute),
+					duration/1000.0);
 				break;
 
 			case 'm':	/* integer duration in milliseconds */
-#ifdef HAVE_SNPRINTF
-				snprintf (&data->to_execute[exe_index],
-					sizeof (data->to_execute) - exe_index - 1,
-					"%d", duration);
-#else
-				if ( sizeof (data->to_execute) - exe_index - 1 >= 10 )
-				{
-					sprintf (&data->to_execute[exe_index],
-						"%d", duration);
-				}
-#endif
-				data->to_execute[IMYP_MAX_PROG_LEN-1] = '\0';
-				exe_index = strlen (data->to_execute);
+				imyp_put_value_as_int (data->to_execute,
+					exe_index, sizeof (data->to_execute),
+					1.0 * duration);
 				break;
 
 			case 'l':	/* float duration in milliseconds */
-#ifdef HAVE_SNPRINTF
-				snprintf (&data->to_execute[exe_index],
-					sizeof (data->to_execute) - exe_index - 1,
-					"%-.6f", duration*1.0);
-#else
-				if ( sizeof (data->to_execute) - exe_index - 1 >= 12 )
-				{
-					sprintf (&data->to_execute[exe_index],
-						"%-.6f", duration*1.0);
-				}
-#endif
-				data->to_execute[IMYP_MAX_PROG_LEN-1] = '\0';
-				exe_index = strlen (data->to_execute);
+				imyp_put_value_as_float (data->to_execute,
+					exe_index, sizeof (data->to_execute),
+					1.0 * duration);
 				break;
 
 			case 'v':	/* volume level 0-15 */
-#ifdef HAVE_SNPRINTF
-				snprintf (&data->to_execute[exe_index],
-					sizeof (data->to_execute) - exe_index - 1,
-					"%d", volume_level);
-#else
-				if ( sizeof (data->to_execute) - exe_index - 1 >= 10 )
-				{
-					sprintf (&data->to_execute[exe_index],
-						"%d", volume_level);
-				}
-#endif
-				data->to_execute[IMYP_MAX_PROG_LEN-1] = '\0';
-				exe_index = strlen (data->to_execute);
+				imyp_put_value_as_int (data->to_execute,
+					exe_index, sizeof (data->to_execute),
+					1.0 * volume_level);
 				break;
 
 			default:
-				data->to_execute[exe_index] = '%';	/* copy */
-				exe_index++;
-				data->to_execute[exe_index] = data->exename[j];
-				exe_index++;
+				if ( exe_index < sizeof (data->to_execute) )
+				{
+					data->to_execute[exe_index] = '%';	/* copy */
+					exe_index++;
+					if ( exe_index < sizeof (data->to_execute) )
+					{
+						data->to_execute[exe_index] = data->exename[j];
+						exe_index++;
+					}
+				}
+				data->to_execute[IMYP_MAX_PROG_LEN-1] = '\0';
 				break;
 		}
 	}
@@ -261,11 +292,18 @@ static int launch_program (
 	sys_ret = system (data->to_execute);
 	if ( sys_ret >= 0 )
 	{
+#ifdef WEXITSTATUS
 		sys_ret = WEXITSTATUS (sys_ret);
+# ifdef WIFSIGNALED
 		if ( WIFSIGNALED (sys_ret) )
 		{
 			sig_recvd = 1; /* anything not zero */
 		}
+# endif /* WIFSIGNALED */
+#else /* ! WEXITSTATUS */
+		/* can't check, assuming success */
+		sys_ret = 0;
+#endif /* WEXITSTATUS */
 	}
 	return sys_ret;
 }

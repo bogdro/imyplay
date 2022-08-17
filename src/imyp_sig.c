@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- signal handling.
  *
- * Copyright (C) 2009-2014 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -184,6 +184,39 @@ term_signal_received (
 # undef void
 }
 
+/* =============================================================== */
+
+# ifndef IMYP_ANSIC
+static void print_signal_error IMYP_PARAMS ((int err, const int signum));
+# endif
+
+static void print_signal_error (
+# ifdef IMYP_ANSIC
+	int err, const int signum)
+# else
+	err, signum)
+	int err;
+	const int signum;
+# endif
+{
+# define 	TMPSIZE	12
+	char tmp[TMPSIZE];		/* Place for a signal number. */
+	int res;
+
+# ifdef HAVE_SNPRINTF
+	res = snprintf (tmp, TMPSIZE-1, "%.*d", TMPSIZE-1, signum);
+# else
+	res = sprintf (tmp, "%.*d", TMPSIZE-1, signum);
+# endif
+	tmp[TMPSIZE-1] = '\0';
+	if ( err == 0 )
+	{
+		err = 1;
+	}
+	imyp_show_error ( err, imyp_err_msg_signal,
+		(res>0)? tmp : _(imyp_sig_unk) );
+}
+
 #endif /* HAVE_SIGNAL_H */
 
 /* =============================================================== */
@@ -198,14 +231,15 @@ imyp_set_sigh (
 #endif
 {
 #ifdef HAVE_SIGNAL_H
-# define 	TMPSIZE	12
-	char tmp[TMPSIZE];		/* Place for a signal number in case of error. */
-	int res;			/* s(n)printf result */
 	size_t s;			/* sizeof(signals) */
-# if (defined __STRICT_ANSI__) && (defined HAVE_SIGNAL_H)
+
+# ifdef __STRICT_ANSI__
 	typedef void (*sighandler_t) (int);
 	sighandler_t shndlr;
+# else
+	int res;			/* sigaction() result */
 # endif
+	int err;
 
 	/*
 	 * Setting signal handlers. We need to catch signals in order to close
@@ -214,7 +248,7 @@ imyp_set_sigh (
 
 # if (!defined HAVE_SIGACTION) || (defined __STRICT_ANSI__)
 	/* ANSI C */
-	for ( s=0; s < sizeof (signals) / sizeof (signals[0]); s++ )
+	for ( s = 0; s < sizeof (signals) / sizeof (signals[0]); s++ )
 	{
 #  ifdef HAVE_ERRNO_H
 		errno = 0;
@@ -227,36 +261,14 @@ imyp_set_sigh (
 		   )
 		{
 #  ifdef HAVE_ERRNO_H
-			if ( error != NULL )
-			{
-				*error = errno;
-			}
+			err = errno;
 #  else
-			if ( error != NULL )
-			{
-				*error = 1L;
-			}
+			err = 1;
 #  endif
-#  ifdef HAVE_SNPRINTF
-			res = snprintf (tmp, TMPSIZE-1, "%.*d", TMPSIZE-1, signals[s] );
-#  else
-			res = sprintf (tmp, "%.*d", TMPSIZE-1, signals[s] );
-#  endif
-			tmp[TMPSIZE-1] = '\0';
+			print_signal_error (err, signals[s]);
 			if ( error != NULL )
 			{
-				if ( *error == 0 )
-				{
-					*error = 1L;
-				}
-			}
-			if ( error != NULL )
-			{
-				imyp_show_error ( *error, imyp_err_msg_signal, (res>0)? tmp : _(imyp_sig_unk) );
-			}
-			else
-			{
-				imyp_show_error ( 1, imyp_err_msg_signal, (res>0)? tmp : _(imyp_sig_unk) );
+				*error = err;
 			}
 		}
 	}
@@ -266,13 +278,13 @@ imyp_set_sigh (
 #  ifdef HAVE_MEMSET
 	memset (&sa, 0, sizeof (struct sigaction));
 #  else
-	for ( s=0; s < sizeof (struct sigaction); s++ )
+	for ( s = 0; s < sizeof (struct sigaction); s++ )
 	{
 		((char *)&sa)[s] = '\0';
 	}
 #  endif
 	sa.sa_handler = &term_signal_received;
-	for ( s=0; s < sizeof (signals) / sizeof (signals[0]); s++ )
+	for ( s = 0; s < sizeof (signals) / sizeof (signals[0]); s++ )
 	{
 #  ifdef HAVE_ERRNO_H
 		errno = 0;
@@ -285,37 +297,14 @@ imyp_set_sigh (
 		   )
 		{
 #  ifdef HAVE_ERRNO_H
-			if ( error != NULL )
-			{
-				*error = errno;
-			}
+			err = errno;
 #  else
-			if ( error != NULL )
-			{
-				*error = 1L;
-			}
+			err = 1;
 #  endif
-
-#  ifdef HAVE_SNPRINTF
-			res = snprintf (tmp, TMPSIZE-1, "%.*d", TMPSIZE-1, signals[s] );
-#  else
-			res = sprintf (tmp, "%.*d", TMPSIZE-1, signals[s] );
-#  endif
-			tmp[TMPSIZE-1] = '\0';
+			print_signal_error (err, signals[s]);
 			if ( error != NULL )
 			{
-				if ( *error == 0 )
-				{
-					*error = 1L;
-				}
-			}
-			if ( error != NULL )
-			{
-				imyp_show_error ( *error, imyp_err_msg_signal, (res>0)? tmp : _(imyp_sig_unk) );
-			}
-			else
-			{
-				imyp_show_error ( 1, imyp_err_msg_signal, (res>0)? tmp : _(imyp_sig_unk) );
+				*error = err;
 			}
 		}
 	}

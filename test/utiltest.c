@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- unit test.
  *
- * Copyright (C) 2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2018-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -156,39 +156,83 @@ END_TEST
 
 /* ======================================================= */
 
-START_TEST(test_imyp_generate_filename_no_ext)
+START_TEST(test_imyp_generate_filename_no_ext_mid)
 {
 	char * res;
-	int comp;
 
-	printf("test_imyp_generate_filename_no_ext\n");
+	printf("test_imyp_generate_filename_no_ext_mid\n");
 	res = imyp_generate_filename("test", ".mid");
-	comp = strcmp(res, "test.mid");
-	ck_assert_int_eq(comp, 0);
+	ck_assert_str_eq(res, "test.mid");
 }
 END_TEST
 
-START_TEST(test_imyp_generate_filename_one_ext)
+START_TEST(test_imyp_generate_filename_no_ext_raw)
 {
 	char * res;
-	int comp;
+
+	printf("test_imyp_generate_filename_no_ext_raw\n");
+	res = imyp_generate_filename("test", ".raw");
+	ck_assert_str_eq(res, "test.raw");
+}
+END_TEST
+
+START_TEST(test_imyp_generate_filename_mid_mid)
+{
+	char * res;
+
+	printf("test_imyp_generate_filename_mid_mid\n");
+	res = imyp_generate_filename("test.mid", ".mid");
+	ck_assert_str_eq(res, "test.mid");
+}
+END_TEST
+
+START_TEST(test_imyp_generate_filename_raw_raw)
+{
+	char * res;
+
+	printf("test_imyp_generate_filename_raw_raw\n");
+	res = imyp_generate_filename("test.raw", ".raw");
+	ck_assert_str_eq(res, "test.raw");
+}
+END_TEST
+
+START_TEST(test_imyp_generate_filename_one_ext_mid)
+{
+	char * res;
+
+	printf("test_imyp_generate_filename_one_ext_mid\n");
+	res = imyp_generate_filename("test.imy", ".mid");
+	ck_assert_str_eq(res, "test.mid");
+}
+END_TEST
+
+START_TEST(test_imyp_generate_filename_one_ext_raw)
+{
+	char * res;
 
 	printf("test_imyp_generate_filename_one_ext\n");
-	res = imyp_generate_filename("test.imy", ".mid");
-	comp = strcmp(res, "test.mid");
-	ck_assert_int_eq(comp, 0);
+	res = imyp_generate_filename("test.imy", ".raw");
+	ck_assert_str_eq(res, "test.raw");
 }
 END_TEST
 
-START_TEST(test_imyp_generate_filename_two_ext)
+START_TEST(test_imyp_generate_filename_two_ext_mid)
 {
 	char * res;
-	int comp;
+
+	printf("test_imyp_generate_filename_two_ext_mid\n");
+	res = imyp_generate_filename("test.mid.imy", ".mid");
+	ck_assert_str_eq(res, "test.mid.mid");
+}
+END_TEST
+
+START_TEST(test_imyp_generate_filename_two_ext_raw)
+{
+	char * res;
 
 	printf("test_imyp_generate_filename_two_ext\n");
-	res = imyp_generate_filename("test.mid.imy", ".mid");
-	comp = strcmp(res, "test.mid.mid");
-	ck_assert_int_eq(comp, 0);
+	res = imyp_generate_filename("test.raw.imy", ".raw");
+	ck_assert_str_eq(res, "test.raw.raw");
 }
 END_TEST
 
@@ -209,9 +253,14 @@ static Suite * imy_create_suite(void)
 	tcase_add_test(tests_imyp_compare, test_imyp_compare_equal_diff_len);
 	tcase_add_test(tests_imyp_compare, test_imyp_compare_nonequal);
 
-	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_no_ext);
-	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_one_ext);
-	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_two_ext);
+	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_no_ext_mid);
+	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_mid_mid);
+	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_no_ext_raw);
+	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_raw_raw);
+	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_one_ext_mid);
+	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_one_ext_raw);
+	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_two_ext_mid);
+	tcase_add_test(tests_imyp_generate_filename, test_imyp_generate_filename_two_ext_raw);
 
 	suite_add_tcase(s, tests_imyp_compare);
 	suite_add_tcase(s, tests_imyp_generate_filename);

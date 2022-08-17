@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PC-speaker backend.
  *
- * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -165,7 +165,6 @@ imyp_spkr_play_tune (
 	{
 		imyp_spkr_pause (imyp_data, duration);
 	}
-
 	return ioctl_res;
 }
 
@@ -250,7 +249,7 @@ imyp_spkr_init (
 # ifdef HAVE_MALLOC
 			free (data);
 # endif
-			return -1;
+			return -4;
 		}
 	}
 	else
@@ -264,7 +263,7 @@ imyp_spkr_init (
 # ifdef HAVE_MALLOC
 				free (data);
 # endif
-				return -1;
+				return -5;
 			}
 		}
 	}

@@ -12,14 +12,11 @@ EXTRA_DIST = config.rpath mkinstalldirs imyplay.spi m4/ax_cflag.m4 \
 # - src/imyparsf.c (flex-generated files are always packaged by default)
 
 pack:	doc/imyplay.info dist-gzip
-	mkdir -p imyplay-@VERSION@/doc
-	echo '\input texinfo'                    > imyplay-@VERSION@/doc/imyplay.txi
-	echo '@setfilename imyplay.info'        >> imyplay-@VERSION@/doc/imyplay.txi
-	echo '@settitle imyplay manual'         >> imyplay-@VERSION@/doc/imyplay.txi
-	echo '@bye'                             >> imyplay-@VERSION@/doc/imyplay.txi
-	gunzip -f imyplay-@VERSION@.tar.gz
-	tar --delete -f imyplay-@VERSION@.tar imyplay-@VERSION@/doc/imyplay.txi
-	tar -rf imyplay-@VERSION@.tar imyplay-@VERSION@/doc/imyplay.txi
-	tar --delete -f imyplay-@VERSION@.tar imyplay-@VERSION@/src/imyparsf.c
-	gzip -9 -f imyplay-@VERSION@.tar
+	tar zxf imyplay-@VERSION@.tar.gz
+	echo '\input texinfo'			 > imyplay-@VERSION@/doc/imyplay.txi
+	echo '@setfilename imyplay.info'	>> imyplay-@VERSION@/doc/imyplay.txi
+	echo '@settitle imyplay manual'		>> imyplay-@VERSION@/doc/imyplay.txi
+	echo '@bye'				>> imyplay-@VERSION@/doc/imyplay.txi
+	rm -f imyplay-@VERSION@/src/imyparsf.c
+	tar zcf imyplay-@VERSION@.tar.gz imyplay-@VERSION@
 	rm -fr imyplay-@VERSION@

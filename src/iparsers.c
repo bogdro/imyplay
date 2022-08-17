@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- parsers' utility functions.
  *
- * Copyright (C) 2014-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2014-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or

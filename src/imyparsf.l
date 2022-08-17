@@ -3,7 +3,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing file using (f)lex.
  *
- * Copyright (C) 2009-2016 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -1093,7 +1093,7 @@ imyp_play_file (
 
 	note_duration = 0;
 
-	if ( curr_lib != IMYP_CURR_NONE )
+	if ( curr_lib->imyp_curr_lib != IMYP_CURR_NONE )
 	{
 		imy = fopen (file_name, "r");
 		if ( imy != NULL )
@@ -1105,6 +1105,11 @@ imyp_play_file (
 			yylex_destroy ();
 			fclose (imy);
 			return 0;
+		}
+		else
+		{
+			printf ("%s %s.\n", _(err_file_open), file_name);
+			return -2;
 		}
 	}
 	return -1;

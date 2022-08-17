@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- SDL backend.
  *
- * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -65,11 +65,10 @@ struct imyp_sdl_backend_data
 	double tone_freq;
 	int volume_level;
 	int duration;
-	unsigned long int last_index;
 	SDL_AudioSpec received;
-	volatile int inside_callback;
-	volatile int called;
-	long int samples_remain;
+	/* modified in the callback: */
+	volatile unsigned long int last_index;
+	volatile long int samples_remain;
 };
 
 #ifndef HAVE_MALLOC
@@ -101,6 +100,7 @@ static void SDLCALL imyp_sdl_fill_buffer (
 	unsigned int quality = 16;
 	int is_le = 1;
 	int is_uns = 0;
+	int nsamp;
 	struct imyp_sdl_backend_data * data =
 		(struct imyp_sdl_backend_data *)userdata;
 
@@ -109,7 +109,6 @@ static void SDLCALL imyp_sdl_fill_buffer (
 		return;
 	}
 
-	data->called = 1;
 	if ( (data->received.format == AUDIO_U8) || (data->received.format == AUDIO_S8) )
 	{
 		if ( data->received.format == AUDIO_U8 )
@@ -145,24 +144,25 @@ static void SDLCALL imyp_sdl_fill_buffer (
 	}
 	for ( i = data->last_index; i < data->last_index + (unsigned long int)len; i++ )
 	{
-		((char *)stream)[i-data->last_index] = 0;
+		((char *)stream)[i - data->last_index] = 0;
 	}
 
 	if ( data->samples_remain > 0 )
 	{
-		data->inside_callback = 1;
-		len = imyp_generate_samples (data->tone_freq, data->volume_level,
-			data->duration, stream,
-			(int)(IMYP_MIN(len, data->samples_remain) * ((int)quality / 8)),
+		/* the number of samples to put in the buffer: */
+		nsamp = (int)IMYP_MIN(len / ((int)quality / 8), data->samples_remain);
+		i = data->last_index;
+		imyp_generate_samples (data->tone_freq, data->volume_level,
+			data->duration, stream, nsamp,
 			is_le, is_uns, quality, (unsigned int)data->received.freq,
-			&(data->last_index));
-		data->samples_remain -= (long int)len;
+			&i);
+		data->last_index = i;
+		data->samples_remain -= nsamp;
 		if ( data->samples_remain <= 0 )
 		{
 			data->samples_remain = 0;
 		}
 	}
-	data->inside_callback = 0;
 }
 
 /**
@@ -208,7 +208,6 @@ imyp_sdl_play_tune (
 	data->volume_level = volume_level;
 	data->duration = duration;
 	data->last_index = 0;
-	data->called = 0;
 
 	/* set the number of remaining samples to the initial duration of the tone */
 	if ( (data->received.format == AUDIO_U8) || (data->received.format == AUDIO_S8) )
@@ -221,12 +220,13 @@ imyp_sdl_play_tune (
 	data->samples_remain /= qual_bytes; /* samples */
 
 	SDL_PauseAudio (0);	/* start playing */
-	while ( (data->called == 0) && (imyp_sig_recvd == 0) ) {}
+	SDL_UnlockAudio ();
 
-	/*imyp_sdl_pause (duration);*/
+	while ( (data->samples_remain > 0) && (imyp_sig_recvd == 0) ) {}
+
+	/*imyp_sdl_pause (imyp_data, duration); */
 	SDL_PauseAudio (1);
-
-	while ( data->inside_callback != 0 ) {}
+	SDL_LockAudio ();
 
 	data->tone_freq = 0.0;
 	data->volume_level = 0;
@@ -305,29 +305,28 @@ imyp_sdl_init (
 {
 	int res;
 	struct imyp_sdl_backend_data * data;
-	SDL_AudioSpec desired = {44100, AUDIO_S16LSB, 1, 0, 32768 /* do NOT set to less */,
+	SDL_AudioSpec desired = {44100, AUDIO_S16LSB, 1, 0, 44100 /* do NOT set to less than 32768 */,
 		0, 0, &imyp_sdl_fill_buffer, NULL};
 	enum IMYP_SAMPLE_FORMATS format;
 	char * colon;
 	int scanf_res;
 
-	res = SDL_Init (SDL_INIT_AUDIO);
+	if ( imyp_data == NULL )
+	{
+		return -100;
+	}
+
+	res = SDL_Init (SDL_INIT_AUDIO | SDL_INIT_TIMER);
 	if ( res != 0 )
 	{
 		return res;
 	}
 
-	if ( imyp_data == NULL )
-	{
-		SDL_Quit ();
-		return -100;
-	}
 #ifdef HAVE_MALLOC
 	data = (struct imyp_sdl_backend_data *) malloc (sizeof (
 		struct imyp_sdl_backend_data));
 	if ( data == NULL )
 	{
-		SDL_Quit ();
 		return -1;
 	}
 #else
@@ -338,7 +337,6 @@ imyp_sdl_init (
 	data->volume_level = 0;
 	data->duration = 0;
 	data->last_index = 0;
-	data->inside_callback = 0;
 
 	if ( dev_file != NULL )
 	{
@@ -404,10 +402,10 @@ imyp_sdl_init (
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
-		SDL_CloseAudio ();
 		SDL_Quit ();
 		return res;
 	}
+	SDL_LockAudio ();
 
 	*imyp_data = (imyp_backend_data_t *)data;
 
@@ -428,6 +426,7 @@ imyp_sdl_close (
 	imyp_backend_data_t * const imyp_data;
 #endif
 {
+	SDL_UnlockAudio ();
 	SDL_CloseAudio ();
 	SDL_Quit ();
 	if ( imyp_data != NULL )

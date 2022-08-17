@@ -1,7 +1,7 @@
 cd src
 
 set imymajor=1
-set imyminor=1
+set imyminor=2
 
 sed 's/[@]VERSION[@]/%imymajor%.%imyminor%/' imyp_cfg.hin > imyp_cfg.h
 if not "%errorlevel%"=="0" goto end

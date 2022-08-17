@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- LIBAO backend.
  *
- * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -171,7 +171,7 @@ imyp_ao_init (
 {
 	int driver;
 	int res;
-	const int speeds[] = {44100, 22050, 11025};
+	const int samp_freqs[] = {44100, 22050, 11025};
 	const int endians[] = {AO_FMT_LITTLE, AO_FMT_BIG};
 	size_t i, j;
 	struct imyp_ao_backend_data * data;
@@ -195,7 +195,7 @@ imyp_ao_init (
 	if ( dev_file != NULL )
 	{
 		res = sscanf (dev_file, "%d", &driver);
-		if ( res == 1 )
+		if ( res != 1 )
 		{
 			driver = ao_default_driver_id ();
 		}
@@ -208,9 +208,9 @@ imyp_ao_init (
 	data->format.channels = 1;
 
 	/* file:///usr/share/doc/libao-devel-X.Y.Z/ao_example.c */
-	for ( i = 0; i < sizeof (speeds) / sizeof (speeds[0]); i++ )
+	for ( i = 0; i < sizeof (samp_freqs) / sizeof (samp_freqs[0]); i++ )
 	{
-		data->format.rate = speeds[i];
+		data->format.rate = samp_freqs[i];
 		for ( j = 0; j < sizeof (endians) / sizeof (endians[0]); j++ )
 		{
 			data->format.byte_format = endians[j];
@@ -232,7 +232,7 @@ imyp_ao_init (
 			break;
 		}
 	}
-	if ( i == sizeof (speeds) / sizeof (speeds[0]) )
+	if ( i == sizeof (samp_freqs) / sizeof (samp_freqs[0]) )
 	{
 #ifdef HAVE_MALLOC
 		free (data);

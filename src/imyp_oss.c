@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- OSS backend.
  *
- * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -104,7 +104,7 @@ imyp_oss_play_tune (
 #endif
 {
 	unsigned int quality = 16;
-	int res;
+	ssize_t res;
 	int is_le = 1;
 	int is_uns = 0;
 	struct imyp_oss_backend_data * data =
@@ -160,7 +160,7 @@ imyp_oss_play_tune (
 	{
 		return 0;
 	}
-	return res;
+	return -3;
 }
 
 /**
@@ -222,7 +222,7 @@ imyp_oss_init (
 	unsigned int i, j;
 	const int formats[] = {AFMT_S16_LE, AFMT_U16_LE, AFMT_S16_BE, AFMT_U16_LE,
 		AFMT_S8, AFMT_U8};
-	const int speeds[] = {44100, 22050, 11025};
+	const int samp_freqs[] = {44100, 22050, 11025};
 	int format;
 	struct imyp_oss_backend_data * data;
 
@@ -298,22 +298,22 @@ imyp_oss_init (
 			continue;
 		}
 
-		for ( j = 0; j < sizeof (speeds) / sizeof (speeds[0]); j++ )
+		for ( j = 0; j < sizeof (samp_freqs) / sizeof (samp_freqs[0]); j++ )
 		{
-			format = speeds[j];
+			format = samp_freqs[j];
 			res = ioctl (data->pcm_fd, SNDCTL_DSP_SPEED, &format);
 			if ( res < 0 )
 			{
 				continue;
 			}
 
-			if ( format == speeds[j] )
+			if ( format == samp_freqs[j] )
 			{
 				data->glob_speed = format;
 				break;
 			}
 		}
-		if ( j == sizeof (speeds) / sizeof (speeds[0]) )
+		if ( j == sizeof (samp_freqs) / sizeof (samp_freqs[0]) )
 		{
 			/* if none of the sampling frequencies can be set, try next */
 			continue;

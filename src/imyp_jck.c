@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- JACK backend.
  *
- * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -42,9 +42,17 @@
 # error JACK requested, but components not found.
 #endif
 
+#ifdef HAVE_STRING_H
+# if ((!defined STDC_HEADERS) || (!STDC_HEADERS)) && (defined HAVE_MEMORY_H)
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+
 #ifdef HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
+
 #ifdef HAVE_MALLOC_H
 # include <malloc.h>
 #endif
@@ -59,15 +67,12 @@
 
 struct imyp_jack_backend_data
 {
-	double tone_freq;
-	int volume_level;
-	int duration;
-	unsigned long int last_index;
-	volatile int inside_callback;
+	jack_nframes_t last_index;
 	jack_port_t * joutput;
 	jack_client_t * jclient;
 	const char **ports;
-	long int samples_remain;
+	volatile jack_nframes_t samples_remain;
+	void * buf;
 };
 
 #ifndef HAVE_MALLOC
@@ -94,12 +99,7 @@ static int imyp_jack_fill_buffer (
 #endif
 {
 	jack_nframes_t i;
-	jack_default_audio_sample_t samp;
 	jack_default_audio_sample_t *output;
-	jack_nframes_t sampfreq;
-	double nperiods;
-	unsigned long int nperiods_rounded;
-	double periods_in_full;
 	jack_nframes_t frames_to_play;
 
 	struct imyp_jack_backend_data * data =
@@ -114,73 +114,44 @@ static int imyp_jack_fill_buffer (
 
 	if ( output == NULL )
 	{
+		return -1;
+	}
+	/* check for the marker, or if we simply played the whole buffer already: */
+	if ( data->samples_remain <= 1 )
+	{
+#ifdef HAVE_MEMSET
+		memset(output, 0, nframes * sizeof (jack_default_audio_sample_t));
+#else
+		for ( i = 0; i < nframes; i++ )
+		{
+			output[i] = 0;
+		}
+#endif
+		data->samples_remain = 0;
 		return 0;
 	}
-
-	data->inside_callback = 1;
-	/* zero-out the whole buffer first */
-	for ( i = data->last_index; i < data->last_index + nframes; i++ )
+	frames_to_play = IMYP_MIN(nframes, data->samples_remain);
+	for ( i = 0; i < frames_to_play; i++ )
 	{
-		if ( imyp_sig_recvd != 0 )
-		{
-			data->inside_callback = 0;
-			return -2;
-		}
-		output[i - data->last_index] = 0;
+		/* data is little-endian - low byte is first,
+		 * data is signed - subtract the high value,
+		 * data is 16-bit - divide by the maximum value to get a signal between -1.0 and +1.0
+		 */
+		output[i] = (float)(((((char *)data->buf)[(data->last_index + i) * 2] & 0x0FF) | ((((char *)data->buf)[(data->last_index + i) * 2 + 1] & 0x0FF) << 8)) - (1 << 15)) * 1.0f / (1 << 15);
 	}
-	if ( data->tone_freq > 0.0 )
+	/* fill the remaining part of the buffer, if any: */
+	for ( /* "i" is already set */; i < nframes; i++ )
 	{
-		sampfreq = jack_get_sample_rate (data->jclient);
-		nperiods = sampfreq / data->tone_freq;
-		/* round down, else we may think that a period fits while it doesn't: */
-		/* nperiods_rounded = (unsigned long int)IMYP_ROUND(nperiods); */
-		nperiods_rounded = (unsigned long int)nperiods;
-		periods_in_full = 2 * M_PI / nperiods;
-		frames_to_play = IMYP_MIN(nframes, (unsigned long int)data->samples_remain);
-		for ( i = data->last_index; i < data->last_index + frames_to_play; i++ )
-		{
-			if ( imyp_sig_recvd != 0 )
-			{
-				data->inside_callback = 0;
-				return -2;
-			}
-			if ( nperiods_rounded == 0 )
-			{
-				/* not a single full period fits in the buffer */
-#if (defined HAVE_SIN) || (defined HAVE_LIBM)
-				samp = (jack_default_audio_sample_t)
-					sin (i * periods_in_full);
-#else
-				samp = (jack_default_audio_sample_t) i / nperiods;
-#endif
-			}
-			else
-			{
-#if (defined HAVE_SIN) || (defined HAVE_LIBM)
-				samp = (jack_default_audio_sample_t)
-					sin (i * periods_in_full);
-#else
-				samp = (jack_default_audio_sample_t)
-					(i % nperiods_rounded) / nperiods;
-#endif
-			}
-			output[i - data->last_index] = (jack_default_audio_sample_t)
-				((samp * (jack_default_audio_sample_t)data->volume_level) / IMYP_MAX_IMY_VOLUME);
-		}
-		data->last_index += i - data->last_index;
-		/* just slows things down
-		while ( (data->last_index > (unsigned long int)NSAMP) && (imyp_sig_recvd == 0) )
-		{
-			data->last_index -= (unsigned long int)NSAMP;
-		}*/
-		/*data->last_index %= (unsigned long int)nperiods;*/
+		output[i] = 0;
 	}
-	else
+	data->last_index += frames_to_play;
+	data->samples_remain -= frames_to_play;
+	if ( data->samples_remain <= 0 )
 	{
-		/*data->last_index = 0;*/
+		/* just a marker, because we need another call to the callback, otherwise the note is lost: */
+		data->samples_remain = 1;
 	}
-	data->inside_callback = 0;
-	return 0;
+	return 0; /* no error */
 }
 
 /**
@@ -200,7 +171,7 @@ imyp_jack_play_tune (
 	const double freq,
 	const int volume_level,
 	const int duration,
-	void * const buf IMYP_ATTR((unused)),
+	void * const buf,
 	int bufsize)
 #else
 	imyp_data, freq, volume_level, duration, buf, bufsize)
@@ -208,10 +179,14 @@ imyp_jack_play_tune (
 	const double freq;
 	const int volume_level;
 	const int duration;
-	void * const buf IMYP_ATTR((unused));
-	int bufsize ;
+	void * const buf;
+	int bufsize;
 #endif
 {
+#ifndef HAVE_MEMSET
+	size_t bi;
+#endif
+
 	struct imyp_jack_backend_data * data =
 		(struct imyp_jack_backend_data *)imyp_data;
 
@@ -220,24 +195,36 @@ imyp_jack_play_tune (
 		return -100;
 	}
 
-	data->tone_freq = freq;
-	data->volume_level = volume_level;
-	data->duration = duration;
-	data->last_index = 0;
+	if ( (duration > 0) && (bufsize > 0) )
+	{
+		/* zero-out the old values first */
+#ifdef HAVE_MEMSET
+		memset(buf, 0, (size_t)bufsize);
+#else
+		for ( bi = 0; bi < bufsize; bi++ )
+		{
+			((char *)buf)[bi] = '\0';
+		}
+#endif
+		/* now generate the new samples: */
+		bufsize = imyp_generate_samples (freq, volume_level, duration,
+			buf, bufsize,
+			1 /* little endian */, 1 /* unsigned */, 16 /* quality */,
+			jack_get_sample_rate (data->jclient) /*44100*/, NULL);
+		data->buf = buf;
+		data->last_index = 0;
 
-	/* set the number of remaining samples to the initial duration of the tone */
-	data->samples_remain = (long int)(duration * (long int)jack_get_sample_rate (data->jclient)) / 1000; /* samples */
-	data->samples_remain = IMYP_MIN (bufsize, data->samples_remain); /* samples */
+		/* set the number of remaining samples to the initial duration of the tone, in one operation: */
+		data->samples_remain = (jack_nframes_t)bufsize; /*IMYP_MIN ((jack_nframes_t)bufsize, (jack_nframes_t)duration * jack_get_sample_rate (data->jclient) / 1000); */ /* in samples */
 
-	imyp_jack_pause (imyp_data, duration);
+		/* imyp_jack_pause (imyp_data, duration); */
 
-	while ( data->inside_callback != 0 ) {}
-
-	data->tone_freq = 0.0;
-	data->volume_level = 0;
-	data->duration = 0;
-	data->last_index = 0;
-	data->samples_remain = 0;
+		while ( (data->samples_remain > 0) && (imyp_sig_recvd == 0) ) {}
+	}
+	else
+	{
+		return -2;
+	}
 
 	return 0;
 }
@@ -316,12 +303,9 @@ imyp_jack_init (
 	data = &imyp_jack_backend_data_static;
 #endif
 
-	data->tone_freq = 0.0;
-	data->volume_level = 0;
-	data->duration = 0;
 	data->last_index = 0;
-	data->inside_callback = 0;
 
+	/* sample server start: "jackd -d alsa -r 44100 -p 8192 &" */
 	data->jclient = jack_client_open ("IMYplay", JackNullOption, &jstatus, dev_file);
 	if ( data->jclient == NULL )
 	{
@@ -330,6 +314,14 @@ imyp_jack_init (
 #endif
 		return -1;
 	}
+	for ( data->last_index = (1 << 16); data->last_index >= (1 << 10); data->last_index /= 2 )
+	{
+		if ( jack_set_buffer_size (data->jclient, data->last_index) == 0 )
+		{
+			break;
+		}
+	}
+	data->last_index = 0;
 
 	jack_set_process_callback (data->jclient, imyp_jack_fill_buffer, data);
 
@@ -453,6 +445,10 @@ imyp_jack_version (
 	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
+#ifdef HAVE_JACK_GET_VERSION_STRING
+	printf ( "JACK: %s\n", jack_get_version_string () );
+#else
 	/* no version information currently available */
 	printf ( "JACK: ?\n" );
+#endif
 }

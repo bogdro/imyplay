@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- signal handling.
  *
- * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -199,12 +199,12 @@ static void print_signal_error (
 	const int signum;
 # endif
 {
-# define 	TMPSIZE	12
+# define 	TMPSIZE	13
 	char tmp[TMPSIZE];		/* Place for a signal number. */
 	int res;
 
 # ifdef HAVE_SNPRINTF
-	res = snprintf (tmp, TMPSIZE-1, "%.*d", TMPSIZE-1, signum);
+	res = snprintf (tmp, TMPSIZE, "%.*d", TMPSIZE-1, signum);
 # else
 	res = sprintf (tmp, "%.*d", TMPSIZE-1, signum);
 # endif

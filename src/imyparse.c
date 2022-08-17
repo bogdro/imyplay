@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing file.
  *
- * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -651,6 +651,48 @@ imyp_check_string (
 
 /* ======================================================================== */
 
+#ifndef IMYP_ANSIC
+static void imyp_show_token_error IMYP_PARAMS ((
+	const char line[], const int pos, const char msg[]));
+#endif
+
+/**
+ * Shows the "unexpected/unknown token" error.
+ * \param[in] line the current 'melody_line'.
+ * \param[in] pos the position of the token in the current 'melody_line'.
+ */
+static void
+#ifdef IMYP_ANSIC
+IMYP_ATTR((nonnull))
+#endif
+imyp_show_token_error (
+#ifdef IMYP_ANSIC
+	const char line[], const int pos, const char msg[])
+#else
+	line, pos, msg)
+	const char line[];
+	const int pos;
+	const char msg[];
+#endif
+{
+	if ( (line == NULL) || (pos < 0) )
+	{
+		return;
+	}
+	if ( (unsigned int)pos < strlen (line) )
+	{
+		printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
+			msg,
+			line[pos],
+			(unsigned int)line[pos],
+			_(err_at_pos),
+			pos,
+			line);
+	}
+}
+
+/* ======================================================================== */
+
 /**
  * Plays the given IMY file.
  * \param file_name The name of the file to play.
@@ -857,18 +899,10 @@ imyp_play_file (
 								{
 									/* neither string not found
 									   - syntax error. */
-									if ( melody_index >= 0 &&
-										(unsigned int)melody_index
-										< strlen (melody_line) )
-									{
-										printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
-											_(err_unkn_token),
-											melody_line[melody_index],
-											(unsigned int)melody_line[melody_index],
-											_(err_at_pos),
-											melody_index,
-											melody_line);
-									}
+									imyp_show_token_error (
+										melody_line,
+										melody_index,
+										_(err_unkn_token));
 									melody_index++;
 									imyp_read_line (melody_line,
 										&melody_index,
@@ -974,18 +1008,10 @@ imyp_play_file (
 								{
 									/* neither string not found
 									   - syntax error. */
-									if ( melody_index >= 0 &&
-										(unsigned int)melody_index
-										< strlen (melody_line) )
-									{
-										printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
-											_(err_unkn_token),
-											melody_line[melody_index],
-											(unsigned int)melody_line[melody_index],
-											_(err_at_pos),
-											melody_index,
-											melody_line);
-									}
+									imyp_show_token_error (
+										melody_line,
+										melody_index,
+										_(err_unkn_token));
 									melody_index++;
 									imyp_read_line (melody_line,
 										&melody_index,
@@ -1077,18 +1103,10 @@ imyp_play_file (
 							{
 								/* neither string not found
 									- syntax error. */
-								if ( melody_index >= 0 &&
-									(unsigned int)melody_index
-									< strlen (melody_line) )
-								{
-									printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
-										_(err_unkn_token),
-										melody_line[melody_index],
-										(unsigned int)melody_line[melody_index],
-										_(err_at_pos),
-										melody_index,
-										melody_line);
-								}
+								imyp_show_token_error (
+									melody_line,
+									melody_index,
+									_(err_unkn_token));
 								melody_index++;
 								imyp_read_line (melody_line,
 									&melody_index,
@@ -1101,13 +1119,10 @@ imyp_play_file (
 						case '(':
 							if ( is_repeat != 0 )
 							{
-								printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
-									_(err_unex_token),
-									melody_line[melody_index],
-									(unsigned int)melody_line[melody_index],
-									_(err_at_pos),
-									melody_index,
-									melody_line);
+								imyp_show_token_error (
+									melody_line,
+			       						melody_index,
+									_(err_unex_token));
 							}
 							else
 							{
@@ -1227,13 +1242,10 @@ imyp_play_file (
 						case ')':
 							if ( is_repeat == 0 )
 							{
-								printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
-									_(err_unex_token),
-									melody_line[melody_index],
-									(unsigned int)melody_line[melody_index],
-									_(err_at_pos),
-									melody_index,
-									melody_line);
+								imyp_show_token_error (
+									melody_line,
+			       						melody_index,
+									_(err_unex_token));
 								melody_index++;
 								imyp_read_line (melody_line,
 									&melody_index,
@@ -1250,13 +1262,10 @@ imyp_play_file (
 						case '@':
 							if ( is_repeat == 0 )
 							{
-								printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
-									_(err_unex_token),
-									melody_line[melody_index],
-									(unsigned int)melody_line[melody_index],
-									_(err_at_pos),
-									melody_index,
-									melody_line);
+								imyp_show_token_error (
+									melody_line,
+			       						melody_index,
+									_(err_unex_token));
 								melody_index++;
 								imyp_read_line (melody_line,
 									&melody_index,
@@ -1321,17 +1330,10 @@ imyp_play_file (
 							is_flat = 0;
 							break;
 						default:
-							if ( melody_index >= 0 &&
-								(unsigned int)melody_index < strlen (melody_line) )
-							{
-								printf ("%s: '%c' (0x%x) %s %d: '%s'\n",
-									_(err_unkn_token),
-									melody_line[melody_index],
-									(unsigned int)melody_line[melody_index],
-									_(err_at_pos),
-									melody_index,
-									melody_line);
-							}
+							imyp_show_token_error (
+								melody_line,
+								melody_index,
+								_(err_unkn_token));
 							melody_index++;
 							imyp_read_line (melody_line,
 								&melody_index,

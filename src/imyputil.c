@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- utility functions.
  *
- * Copyright (C) 2012-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2012-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -334,7 +334,7 @@ imyp_generate_samples (
 	unsigned int qual_bits = samp_quality;
 	unsigned int qual_bytes;
 
-	if ( (buf == NULL) || (bufsize <= 0) || (samp_rate <= 0) || (duration <= 0) )
+	if ( (buf == NULL) || (bufsize <= 0) || (duration <= 0) )
 	{
 		return 0;
 	}
@@ -381,7 +381,7 @@ imyp_generate_samples (
 				samp = (int)(max_val /* disable to get rectangular wave */ +
 					IMYP_ROUND (max_val
 						/* * sin (i * periods_in_full)/3)); */
-						* sin (i * periods_in_full)));
+						* sin ((double)i * periods_in_full)));
 #else
 				samp = (int) IMYP_ROUND (i *
 					(max_val / nperiods));
@@ -393,7 +393,7 @@ imyp_generate_samples (
 				samp = (int)(max_val /* disable to get rectangular wave */ +
 					IMYP_ROUND (max_val
 						/* * sin ((i % nperiods_rounded) * periods_in_full)/3)); */
-						* sin (i * periods_in_full)));
+						* sin ((double)i * periods_in_full)));
 #else
 				samp = (int) IMYP_ROUND ((i % nperiods_rounded) *
 					(max_val / nperiods));
@@ -524,9 +524,10 @@ imyp_generate_filename (
 #endif
 {
 	char * imy;
+	char * new_filename;
 	size_t fnlen;
 	size_t elen;
-	int imy_index;
+	size_t imy_index;
 	size_t i;
 	size_t target_fname_len;
 
@@ -541,40 +542,46 @@ imyp_generate_filename (
 #ifdef HAVE_MALLOC
 	if ( imy != NULL )
 	{
-		imy_index = imy - filename;
-		imy = (char *) malloc (fnlen + 1);
+		imy_index = (size_t)(imy - filename);
+		new_filename = (char *) malloc (fnlen + 1);
 		target_fname_len = fnlen + 1;
 	}
 	else
 	{
-		imy_index = (int)fnlen;
-		imy = (char *) malloc (fnlen + elen + 1);
+		imy_index = fnlen;
+		new_filename = (char *) malloc (fnlen + elen + 1);
 		target_fname_len = fnlen + elen + 1;
 	}
-	if ( imy == NULL )
+	if ( new_filename == NULL )
 	{
 		return NULL;
 	}
 #ifdef HAVE_MEMSET
-	memset (imy, 0, (size_t)target_fname_len);
+	memset (new_filename, 0, (size_t)target_fname_len);
 #else
 	for (i = 0; i < target_fname_len; i++ )
 	{
-		((char *)imy)[i] = '\0';
+		((char *)new_filename)[i] = '\0';
 	}
 #endif
-	strncpy (imy, filename, fnlen);
+	strncpy (new_filename, filename, fnlen);
 	/* If ".imy" extension is present, change it to the provided one.
 	   Else, append the requested extension. */
-	for (i = (size_t)imy_index; i < fnlen; i++ )
+	for (i = imy_index; i < fnlen; i++ )
 	{
-		imy[i] = '\0';
+		new_filename[i] = '\0';
 	}
-	fnlen = (size_t)imy_index;
-	strncpy (&imy[fnlen], ext, elen + 1);
-	imy[fnlen + elen] = '\0';
+	fnlen = imy_index;
+	if ( (imy != NULL) ||
+		( (imy == NULL) && (strstr (filename, ext) == NULL) ) )
+	{
+		/* If ".imy" was present - substitute it. If not, and the
+		   new extension wasn't present already - add it. */
+		strncpy (&new_filename[fnlen], ext, elen + 1);
+	}
+	new_filename[fnlen + elen] = '\0';
 
-	return imy;
+	return new_filename;
 #else
 	return NULL;
 #endif

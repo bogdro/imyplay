@@ -38,7 +38,7 @@ This manual is for IMYplay, version @VERSION@
 
 @c ==================================================================
 
-    Copyright (c)  2009-2018 Bogdan Drozdowski
+    Copyright (c)  2009-2019 Bogdan Drozdowski
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.2
@@ -116,6 +116,8 @@ The program compiles on:
 @item Fedora Core 4 GNU/Linux, i686
 @item Fedora 12 GNU/Linux, i686
 @item Mandriva 2008.1 GNU/Linux, i686
+@item Mandriva 2011 GNU/Linux, i686 - versions from 0.7 (earlier not checked)
+@item OpenMandriva 3.0 GNU/Linux, x86-64 - versions from 1.2 (earlier not checked)
 @item OpenBSD 3.8, i586
 @item Debian 5.0 GNU/Linux, i686
 @end itemize
@@ -209,6 +211,11 @@ To create an RPM package (the new way):
 @comment  node-name, next,      previous,  up
 @section Compile under DOS
 
+
+The program compiles on:
+@itemize
+@item FreeDOS
+@end itemize
 
 Requirements for automatic compiling the DOS version:
 @itemize
@@ -341,7 +348,7 @@ Any other %X expressions will NOT be altered.
 @noindent @option{-f <file>}@*@option{--file <file>}@*
 @quotation
 Write raw samples to this file instead of normal sound output. Overrides @option{--output}.
-Changes any ".imy" file extenstion to ".raw".
+Changes any ".imy" file extension to ".raw".
 Use @option{--dev} to specify the sampling rate and samples' format.
 @end quotation
 
@@ -369,13 +376,19 @@ Names are NOT case-sensitive.
 
 PC-Speaker output may require the "snd-pcsp" kernel module to be loaded and
 permissions to access "/dev/console".
+
+JACK output: if the JACK server doesn't start automatically, you can run it
+yourself with e.g.
+
+	@command{jackd -d alsa -r 44100 -p 8192 &}
+
 @end quotation
 
 @noindent @option{--to-midi}@*
 @quotation
 Convert the given files to MIDI format (if the target file exists, it is deleted).
 Overrides @option{--output}, @option{-f} and @option{-e}. Changes any ".imy"
-file extenstion to ".mid".
+file extension to ".mid".
 @end quotation
 
 @noindent @option{-V}@*@option{--version}@*
@@ -399,7 +412,7 @@ and @option{-e}/@option{--exec} options.
 The IMYplay program can return any of the following values:
 
 @itemize
-@item 0: All actions on the last file succeded (no errors).
+@item 0: All actions on the last file succeeded (no errors).
 @item 1: Only version number, help or licence information was requested and printed, no action.
 @item -1: Bad/missing command line syntax.
 @item -2: Unable to initialize the sound library.
@@ -410,7 +423,7 @@ The IMYplay program can return any of the following values:
 or was caught after SIGCONT was received).
 @end itemize
 
-@strong{NOTE}: Actually, the negative values are substracted from 256,
+@strong{NOTE}: Actually, the negative values are subtracted from 256,
 so -1 could turn up as 255, -2 as 254 and so on.
 
 @strong{NOTE}: The error code is reset after each file. If the last file was played successfully,
@@ -461,10 +474,19 @@ bogdro (at) rudy . mif . pg . gda . pl
 
 
 or look at my website:@*
-[EN] http://imyplay.sf.net@*
-[EN] http://rudy.mif.pg.gda.pl/~bogdro/soft/@*
-[EN] http://rudy.mif.pg.gda.pl/~bogdro/inne/@*
-[PL] http://rudy.mif.pg.gda.pl/~bogdro/@*
+[EN] @url{http://imyplay.sf.net}@*
+[PL] @url{http://imyplay.sf.net/index-pl.php}@*
+[EN] @url{http://bogdro.evai.pl/soft/}@*
+[EN] @url{http://bogdro.evai.pl/inne/}@*
+[PL] @url{http://bogdro.evai.pl/}@*
+[EN] @url{http://bogdro.evai.pl/index-en.php}@*
+[EN] @url{http://bogdro.byethost18.com/soft/}@*
+[EN] @url{http://bogdro.byethost18.com/inne/}@*
+[PL] @url{http://bogdro.byethost18.com/}@*
+[EN] @url{http://bogdro.byethost18.com/index-en.php}@*
+[EN] @url{http://rudy.mif.pg.gda.pl/~bogdro/soft/}@*
+[EN] @url{http://rudy.mif.pg.gda.pl/~bogdro/inne/}@*
+[PL] @url{http://rudy.mif.pg.gda.pl/~bogdro/}@*
 
 @c ==================================================================
 
@@ -1688,7 +1710,7 @@ marked with capital letters in the header:
 
 @quotation
 # YOUR LANGUAGE translations for IMYplay package.@*
-# Copyright (C) 2009-2018 Bogdan 'bogdro' Drozdowski@*
+# Copyright (C) 2009-2019 Bogdan 'bogdro' Drozdowski@*
 # This file is distributed under the same license as@*
 # the IMYplay package.@*
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.@*

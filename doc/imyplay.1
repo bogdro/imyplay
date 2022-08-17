@@ -75,8 +75,13 @@ Use the given MIDI instrument number.
 .IP "-o|--output <system>"
 Use the given sound output system (allegro, sdl, alsa, oss, ao/libao, portaudio/port,
 jack, pulseaudio/pulse, gstreamer/gst, speaker/pcspeaker/spkr/pcspkr). Names are NOT case-sensitive.
+
 PC-Speaker output may require the "snd-pcsp" kernel module to be loaded and
 permissions to access "/dev/console".
+
+JACK output: if the JACK server doesn't start automatically, you can run it
+yourself with e.g. "jackd -d alsa -r 44100 -p 8192 &".
+
 .IP --to-midi
 Convert the given files to MIDI format (if the target file exists, it is deleted).
 Overrides the
@@ -124,6 +129,24 @@ bogdandr /AT/ op . pl
 bogdro /AT/ rudy . mif . pg . gda . pl
 
 [EN] http://imyplay.sf.net
+
+[PL] http://imyplay.sf.net/index-pl.php
+
+[EN] http://bogdro.evai.pl/soft/
+
+[EN] http://bogdro.evai.pl/inne/
+
+[PL] http://bogdro.evai.pl/
+
+[EN] http://bogdro.evai.pl/index-en.php
+
+[EN] http://bogdro.byethost18.com/soft/
+
+[EN] http://bogdro.byethost18.com/inne/
+
+[PL] http://bogdro.byethost18.com/
+
+[EN] http://bogdro.byethost18.com/index-en.php
 
 [EN] http://rudy.mif.pg.gda.pl/~bogdro/soft/
 

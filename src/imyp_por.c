@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PortAudio backend.
  *
- * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -65,8 +65,7 @@ struct imyp_portaudio_backend_data
 	unsigned long int last_index;
 	PaSampleFormat format;
 	double sampfreq;
-	volatile int inside_callback;
-	long int samples_remain;
+	volatile long int samples_remain;
 	PaStream * stream;
 };
 
@@ -111,7 +110,7 @@ static int imyp_portaudio_fill_buffer (
 	struct imyp_portaudio_backend_data * data =
 		(struct imyp_portaudio_backend_data *)userData;
 
-	if ( (userData == NULL) || (output == NULL) || (frameCount <= 0) )
+	if ( (userData == NULL) || (output == NULL) )
 	{
 		return paContinue;
 	}
@@ -133,23 +132,25 @@ static int imyp_portaudio_fill_buffer (
 		quality = 16;
 	}
 
-	data->inside_callback = 1;
-
-	for ( i = data->last_index; i < data->last_index + frameCount; i++ )
+	for ( i = 0; i < frameCount; i++ )
 	{
 		if ( imyp_sig_recvd != 0 )
 		{
-			data->inside_callback = 0;
 			return paAbort;
 		}
 		if ( quality == 16 )
 		{
-			((short *)output)[i - data->last_index] = 0;
+			((short *)output)[i] = 0;
 		}
 		else
 		{
-			((char *)output)[i - data->last_index] = 0;
+			((char *)output)[i] = 0;
 		}
+	}
+	if ( data->samples_remain <= 1 )
+	{
+		data->samples_remain = 0;
+		return paContinue;
 	}
 	/* only fill the buffer when there is something left to play */
 	if ( data->samples_remain > 0 )
@@ -162,11 +163,10 @@ static int imyp_portaudio_fill_buffer (
 		data->samples_remain -= (long int)frameCount;
 		if ( data->samples_remain <= 0 )
 		{
-			data->samples_remain = 0;
+			data->samples_remain = 1; /* just a marker */
 		}
 	}
 
-	data->inside_callback = 0;
 	if ( imyp_sig_recvd != 0 )
 	{
 		return paAbort;
@@ -238,20 +238,18 @@ imyp_portaudio_play_tune (
 	error = Pa_StartStream (data->stream);
 	if ( error != paNoError )
 	{
-		return -1;
+		return -2;
 	}
 
 	imyp_portaudio_pause (imyp_data, duration);
+	while ( (data->samples_remain != 0) && (imyp_sig_recvd == 0) ) {}
 
 	Pa_StopStream (data->stream);
-
-	while ( data->inside_callback != 0 ) {}
 
 	data->tone_freq = 0.0;
 	data->volume_level = 0;
 	data->duration = 0;
 	data->last_index = 0;
-	data->samples_remain = 0;
 
 	return 0;
 }
@@ -330,7 +328,7 @@ imyp_portaudio_init (
 	size_t i, j;
 	const PaSampleFormat formats[] = {paInt16, paInt8, paUInt8};
 	/* the lowest sampling frequency seems to work best. */
-	const double speeds[] = {/*44100.0, 22050.0,*/ 11025.0};
+	const double samp_freqs[] = {/*44100.0, 22050.0,*/ 11025.0};
 	PaError error;
 	int was_set = 0;
 
@@ -360,7 +358,6 @@ imyp_portaudio_init (
 	data->volume_level = 0;
 	data->duration = 0;
 	data->last_index = 0;
-	data->inside_callback = 0;
 	data->sampfreq = 0;
 	data->stream = NULL;
 
@@ -398,7 +395,7 @@ imyp_portaudio_init (
 		{
 			if ( data->sampfreq <= 0 )
 			{
-				data->sampfreq = 44100;
+				data->sampfreq = 11025;
 			}
 		}
 	}
@@ -409,7 +406,7 @@ imyp_portaudio_init (
 				&(data->stream),
 				0, 1,	/* no input, mono output */
 				data->format, data->sampfreq,
-				/*(duration * speeds[j] * ((formats[i] == paInt16)? 2 : 1)) / 1000,*/
+				/*(duration * samp_freqs[j] * ((formats[i] == paInt16)? 2 : 1)) / 1000,*/
 				/*16384,*/
 				paFramesPerBufferUnspecified,
 				&imyp_portaudio_fill_buffer, data);
@@ -423,24 +420,24 @@ imyp_portaudio_init (
 	{
 		for ( i = 0; i < sizeof (formats) / sizeof (formats[0]); i++ )
 		{
-			for ( j = 0; j < sizeof (speeds) / sizeof (speeds[0]); j++ )
+			for ( j = 0; j < sizeof (samp_freqs) / sizeof (samp_freqs[0]); j++ )
 			{
 				error = Pa_OpenDefaultStream (
 						&(data->stream),
 						0, 1,	/* no input, mono output */
-						formats[i], speeds[j],
-						/*(duration * speeds[j] * ((formats[i] == paInt16)? 2 : 1)) / 1000,*/
+						formats[i], samp_freqs[j],
+						/*(duration * samp_freqs[j] * ((formats[i] == paInt16)? 2 : 1)) / 1000,*/
 						/*16384,*/
 						paFramesPerBufferUnspecified,
 						&imyp_portaudio_fill_buffer, data);
 				if ( error == paNoError )
 				{
 					data->format = formats[i];
-					data->sampfreq = speeds[j];
+					data->sampfreq = samp_freqs[j];
 					break;
 				}
 			}
-			if ( j < sizeof (speeds) / sizeof (speeds[0]) )
+			if ( j < sizeof (samp_freqs) / sizeof (samp_freqs[0]) )
 			{
 				break;
 			}

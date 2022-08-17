@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- PulseAudio backend.
  *
- * Copyright (C) 2009-2018 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2019 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -200,7 +200,7 @@ imyp_pulse_init (
 {
 	unsigned int i, j;
 	const int formats[] = {PA_SAMPLE_S16LE, PA_SAMPLE_S16BE, PA_SAMPLE_U8};
-	const uint32_t speeds[] = {44100, 22050, 11025};
+	const uint32_t samp_freqs[] = {44100, 22050, 11025};
 	struct imyp_pulse_backend_data * data;
 
 	if ( imyp_data == NULL )
@@ -222,9 +222,9 @@ imyp_pulse_init (
 	for ( i = 0; i < sizeof (formats) / sizeof (formats[0]); i++ )
 	{
 		data->conf.format = formats[i];
-		for ( j = 0; j < sizeof (speeds) / sizeof (speeds[0]); j++ )
+		for ( j = 0; j < sizeof (samp_freqs) / sizeof (samp_freqs[0]); j++ )
 		{
-			data->conf.rate = speeds[j];
+			data->conf.rate = samp_freqs[j];
 			data->stream = pa_simple_new (dev_file, "IMYplay", PA_STREAM_PLAYBACK,
 				NULL, "iMelody", &(data->conf), NULL, NULL, NULL);
 			if ( data->stream != NULL )
@@ -232,7 +232,7 @@ imyp_pulse_init (
 				break;
 			}
 		}
-		if ( j < sizeof (speeds) / sizeof (speeds[0]) )
+		if ( j < sizeof (samp_freqs) / sizeof (samp_freqs[0]) )
 		{
 			break;
 		}

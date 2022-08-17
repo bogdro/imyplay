@@ -14,15 +14,16 @@ imyplay \- A program for playing iMelody ringtones (IMY files).
 The imyplay program plays the given iMelody files or converts them to MIDI format.
 IMYplay can use the following libraries to produce sound: the Allegro game library,
 SDL (Simple DirectMedia Layer), ALSA (Advanced Linux Sound Architecture),
-OSS (Open Sound System), libao, PortAudiov19, PulseAudio, JACK1/JACK2.
+OSS (Open Sound System), libao, PortAudiov19, PulseAudio, JACK1/JACK2, GStreamer
+(gstreamer-plugin-base required).
 
 .SH OPTIONS (for the full version)
 
 .IP "-d|--device <dev>"
-Try to use the given device (ALSA, OSS), driver ID (libao) or server name
+Try to use the given device (ALSA, OSS, GStreamer), driver ID (libao) or server name
 (JACK1, PulseAudio) for sound output.
 .IP "-e|--exec <program>"
-Execute the given program instead of normal sound output.
+Execute the given program instead of normal sound output. Overrides --output.
 
 You can pass the following expressions in the
 <program> argument and these will get substituted by the correct values when
@@ -43,7 +44,7 @@ example: 1.25. This equals to %l divided by 1000.
 example: 1250. This equals to %d (not rounded) times 1000.
 
 %l - the tone/pause duration in milliseconds as a floating point number
-(accurate), example: 1250,3. This equals to %s (not rounded) times 1000.
+(accurate), example: 1250.3. This equals to %s (not rounded) times 1000.
 
 %v - the tone's volume, form 0 to 15 inclusive.
 
@@ -53,10 +54,21 @@ Any other %X expressions will NOT be altered.
 Print help.
 .IP -l|--license
 Print license information.
+.IP "--midi-instr <number>"
+Use the given MIDI instrument number.
+.IP "-o|--output <system>"
+Use the given sound output system (allegro, sdl, alsa, oss, ao/libao, portaudio/port,
+jack, pulseaudio/pulse, gstreamer/gst). Names are NOT case-sensitive.
 .IP --to-midi
 Convert the given files to MIDI format (if the target file exists, it is deleted).
+Overrides --output.
 .IP -V|--version
 Print version number.
+
+.LP
+Alternatively to using the --output option, you can launch the program as
+"imyplay-alsa", "imyplay-allegro" and so on (these can be symbolic links
+or copies of the executable file).
 
 .SH DIAGNOSTICS
 The program returns with 0 exit code if everything went fine. If there

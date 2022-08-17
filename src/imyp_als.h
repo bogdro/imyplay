@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- ALSA backend, header file.
  *
- * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,11 +28,11 @@
 
 # include "imyplay.h"
 
-extern void imyp_alsa_pause PARAMS((const int milliseconds));
-extern void imyp_alsa_put_text PARAMS((const char * const text));
-extern int imyp_alsa_play_tune PARAMS((const double freq, const int volume_level,
+extern void imyp_alsa_pause PARAMS ((const int milliseconds));
+extern void imyp_alsa_put_text PARAMS ((const char * const text));
+extern int imyp_alsa_play_tune PARAMS ((const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_alsa_init PARAMS((const char * const dev_file));
-extern int imyp_alsa_close PARAMS((void));
+extern int imyp_alsa_init PARAMS ((const char * const dev_file));
+extern int imyp_alsa_close PARAMS ((void));
 
 #endif /* IMYP_ALSA */

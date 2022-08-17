@@ -435,7 +435,7 @@ typedef enum {
 #define MIDI_NOTE_DOTTED_SEMIQUAVER		  (96+48)
 #define MIDI_NOTE_DOTTED_SEMIDEMIQUAVER	  (48+24)
 
-#define MIDI_NOTE_TRIPLE_CROCHET			256			/* 3 imyp_notes in 2 crochet */
+#define MIDI_NOTE_TRIPLE_CROCHET			256			/* 3 notes in 2 crochet */
 
 
 /*

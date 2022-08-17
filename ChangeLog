@@ -1,3 +1,29 @@
+2011-03-26	Bogdan Drozdowski <bogdandr@op.pl>
+
+	* IMYplay version 0.5
+	  MIDI instrument number now selectable. Fixed some functions'
+	  descriptions. Output sound system now selectable by command-line
+	  and the program's name. GStreamer output. Run flawfinder, rats
+	  and cppcheck on the code and fixed a few performance problems.
+	* configure.ac: fixed double CFLAGS on compile.
+	* README: added the glibc license block. Updated RPM creating.
+	  Updated command-line options.
+	* imyplay.spi: added README, COPYING, AUTHORS and ChangeLog
+	  to the RPM package.
+	* doc/imyplay.txc: updated RPM creating. Updated command-line options.
+	* doc/imyplay.1: Updated command-line options.
+	* src/imyparse.{c,h}: separate files for parsing melody files with
+	  simplified code.
+	* src/imyparse.c (imyp_play_file): Errors displayed in more cases of
+	  unknown tokens in the IMY file.
+	* src/imyplay.c, src/imywrap.{c,h}, src/imyp_mid.{c,h}: MIDI
+	  instrument number now selectable.
+	* src/imyplay.c, src/imywrap.{c,h}: Output sound system now
+	  selectable by command-line and the program's name.
+	* src/imywrap.c, src/imyp_gst.{c,h}: GStreamer output.
+	* README, doc/imyplay.txc, doc/imyplay.1, INSTALL: GStreamer support
+	  information.
+
 2010-06-27	Bogdan Drozdowski <bogdandr@op.pl>
 
 	* IMYplay version 0.4

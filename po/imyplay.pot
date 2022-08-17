@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: imyplay 0.4\n"
+"Project-Id-Version: imyplay 0.5\n"
 "Report-Msgid-Bugs-To: bogdandr@op.pl\n"
-"POT-Creation-Date: 2010-06-27 11:22+0200\n"
+"POT-Creation-Date: 2011-03-23 18:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/imyplay.c:74
+#: src/imyplay.c:75
 msgid "version"
 msgstr ""
 
-#: src/imyplay.c:78
+#: src/imyplay.c:79
 msgid ""
 "Program for playing iMelody ringtones (IMY files).\n"
 "\n"
@@ -35,98 +35,106 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/imyplay.c:88
+#: src/imyplay.c:89
 msgid "error"
 msgstr ""
 
-#: src/imyplay.c:89
+#: src/imyplay.c:90
 msgid "Error while trying to set a signal handler for"
 msgstr ""
 
-#: src/imyplay.c:90
+#: src/imyplay.c:91
 msgid "Error during library init."
 msgstr ""
 
-#: src/imyplay.c:91
+#: src/imyplay.c:92
 msgid "Error during library closing."
 msgstr ""
 
-#: src/imyplay.c:93
-msgid "Unknown token"
-msgstr ""
-
-#: src/imyplay.c:94
-msgid "at position"
-msgstr ""
-
-#: src/imyplay.c:95
-msgid "Unexpected token"
-msgstr ""
-
-#: src/imyplay.c:96
-msgid "Can't open file"
-msgstr ""
-
-#: src/imyplay.c:97
-msgid "Problem parsing beat"
-msgstr ""
-
-#: src/imyplay.c:98
-msgid "Problem parsing style"
-msgstr ""
-
-#: src/imyplay.c:99
-msgid "Problem parsing volume"
-msgstr ""
-
 #: src/imyplay.c:100
-msgid "Not iMelody file"
-msgstr ""
-
-#: src/imyplay.c:101
-msgid "Error playing tune"
-msgstr ""
-
-#: src/imyplay.c:108
 msgid "unknown"
 msgstr ""
 
-#: src/imyplay.c:393
+#: src/imyplay.c:222
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr ""
 
-#: src/imyplay.c:394
+#: src/imyplay.c:223
 msgid "Syntax"
 msgstr ""
 
-#: src/imyplay.c:396
+#: src/imyplay.c:225
 msgid " [options] "
 msgstr ""
 
-#: src/imyplay.c:398
+#: src/imyplay.c:227
 msgid "Options"
 msgstr ""
 
-#: src/imyplay.c:399
+#: src/imyplay.c:228
 msgid "Try to use this device"
 msgstr ""
 
-#: src/imyplay.c:401
+#: src/imyplay.c:230
 msgid "Execute this program instead of sound output"
 msgstr ""
 
-#: src/imyplay.c:403
+#: src/imyplay.c:232
 msgid "Print help"
 msgstr ""
 
-#: src/imyplay.c:404
+#: src/imyplay.c:233
 msgid "Print license information"
 msgstr ""
 
-#: src/imyplay.c:406
+#: src/imyplay.c:235
+msgid "Select MIDI instrument number"
+msgstr ""
+
+#: src/imyplay.c:237
+msgid "Use the given output system"
+msgstr ""
+
+#: src/imyplay.c:239
 msgid "Convert the given files to MIDI format"
 msgstr ""
 
-#: src/imyplay.c:408
+#: src/imyplay.c:241
 msgid "Print version number"
+msgstr ""
+
+#: src/imyparse.c:55
+msgid "Unknown token"
+msgstr ""
+
+#: src/imyparse.c:56
+msgid "at position"
+msgstr ""
+
+#: src/imyparse.c:57
+msgid "Unexpected token"
+msgstr ""
+
+#: src/imyparse.c:58
+msgid "Can't open file"
+msgstr ""
+
+#: src/imyparse.c:59
+msgid "Problem parsing beat"
+msgstr ""
+
+#: src/imyparse.c:60
+msgid "Problem parsing style"
+msgstr ""
+
+#: src/imyparse.c:61
+msgid "Problem parsing volume"
+msgstr ""
+
+#: src/imyparse.c:62
+msgid "Not iMelody file"
+msgstr ""
+
+#: src/imyparse.c:63
+msgid "Error playing tune"
 msgstr ""

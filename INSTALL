@@ -13,7 +13,8 @@ library (http://alleg.sf.net), SDL (Simple DirectMedia Layer;
 http://www.libsdl.org), ALSA (Advanced Linux Sound Architecture;
 http://alsa-project.org), OSS (Open Sound System), libao
 (http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/), PulseAudio
-(http://www.pulseaudio.org/), JACK1 (http://jackaudio.org/).
+(http://www.pulseaudio.org/), JACK1/JACK2 (http://jackaudio.org/),
+GStreamer (http://gstreamer.freedesktop.org/, gstreamer-plugin-base required).
 
 
 Author: Bogdan Drozdowski, bogdandr @ op . pl
@@ -21,8 +22,10 @@ License: GPLv3+
 
 The program compiles on:
 - Fedora Core 4 GNU/Linux, i686
+- Fedora 12 GNU/Linux, i686
 - Mandriva 2008.1 GNU/Linux, i686
 - OpenBSD 3.8, i586
+- Debian 5.0 GNU/Linux, i686
 
 Requirements for compiling the full version:
 
@@ -48,6 +51,7 @@ Requirements for compiling the full version:
    	http://www.portaudio.com/	- for the PortAudiov19 library
    	http://www.pulseaudio.org/	- for the PulseAudio library
    	http://jackaudio.org/		- for the JACK1 library
+	http://gstreamer.freedesktop.org/ - for GStreamer
 
 Type './configure' to configure the program for your system.
 
@@ -73,10 +77,19 @@ Type 'info imyplay' to get help.
 
 =======================================================
 
-Building an RPM package:
+Building an RPM package (the old way):
 
 1) copy the imyplay.spc file to /usr/src/redhat/SPECS
 2) copy the source package imyplay-XX.tar.gz to /usr/src/redhat/SOURCES
 3) type
 	rpmbuild -ba /usr/src/redhat/SPECS/imyplay.spc
 4) get the rpms from /usr/src/redhat/RPMS/i386 and /usr/src/redhat/SRPMS
+
+Building an RPM package (the new way):
+
+1) copy the imyplay.spc file to $HOME/rpmbuild/SPECS
+2) copy the source package imyplay-XX.tar.gz to $HOME/rpmbuild/SOURCES
+3) type
+        rpmbuild -ba $HOME/rpmbuild/SPECS/imyplay.spc
+4) get the rpms from $HOME/rpmbuild/RPMS/i386 and $HOME/rpmbuild/SRPMS
+

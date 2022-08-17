@@ -1,6 +1,6 @@
 /*
  * A program for playing iMelody ringtones (IMY files).
- *	-- Allegro backend, header file.
+ *	-- melody parsing, header file.
  *
  * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
@@ -23,16 +23,11 @@
  *		USA
  */
 
-#ifndef IMYP_ALLEGRO
-# define IMYP_ALLEGRO 1
+#ifndef IMYP_PARSE_H
+# define IMYP_PARSE_H 1
 
-# include "imyplay.h"
+# include "imyplay.h"	/* PARAMS() */
 
-extern void imyp_all_pause PARAMS ((const int milliseconds));
-extern void imyp_all_put_text PARAMS ((const char * const text));
-extern int imyp_all_play_tune PARAMS ((const double freq, const int volume_level,
-	const int duration, void * const buf, int bufsize));
-extern int imyp_all_init PARAMS ((void));
-extern int imyp_all_close PARAMS ((void));
+extern int imyp_play_file PARAMS ((const char * const file_name, const IMYP_CURR_LIB curr));
 
-#endif /* IMYP_ALLEGRO */
+#endif /* IMYP_PARSE_H */

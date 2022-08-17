@@ -1,6 +1,7 @@
 bin_PROGRAMS = imyplay
 datadir = @datadir@
-imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c imyp_sig.h
+imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h \
+	imyp_sig.c imyp_sig.h imyparse.c imyparse.h
 
 imyplay_LDADD = $(INTLLIBS)
 localedir = $(datadir)/locale
@@ -45,5 +46,9 @@ endif
 
 if EXEC
 imyplay_SOURCES += imyp_exe.c imyp_exe.h
+endif
+
+if GSTREAMER
+imyplay_SOURCES += imyp_gst.c imyp_gst.h
 endif
 

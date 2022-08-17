@@ -1,8 +1,8 @@
 /*
  * A program for playing iMelody ringtones (IMY files).
- *	-- Allegro backend, header file.
+ *	-- GStreamer backend, header file.
  *
- * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2011 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -23,16 +23,16 @@
  *		USA
  */
 
-#ifndef IMYP_ALLEGRO
-# define IMYP_ALLEGRO 1
+#ifndef IMYP_GSTREAMER
+# define IMYP_GSTREAMER 1
 
 # include "imyplay.h"
 
-extern void imyp_all_pause PARAMS ((const int milliseconds));
-extern void imyp_all_put_text PARAMS ((const char * const text));
-extern int imyp_all_play_tune PARAMS ((const double freq, const int volume_level,
+extern void imyp_gst_pause PARAMS ((const int milliseconds));
+extern void imyp_gst_put_text PARAMS ((const char * const text));
+extern int imyp_gst_play_tune PARAMS ((const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_all_init PARAMS ((void));
-extern int imyp_all_close PARAMS ((void));
+extern int imyp_gst_init PARAMS ((const char * const dev_file));
+extern int imyp_gst_close PARAMS ((void));
 
-#endif /* IMYP_ALLEGRO */
+#endif /* IMYP_GSTREAMER */

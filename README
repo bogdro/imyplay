@@ -13,16 +13,43 @@ library (http://alleg.sf.net), SDL (Simple DirectMedia Layer;
 http://www.libsdl.org), ALSA (Advanced Linux Sound Architecture;
 http://alsa-project.org), OSS (Open Sound System), libao
 (http://xiph.org/ao/), PortAudiov19 (http://www.portaudio.com/), PulseAudio
-(http://www.pulseaudio.org/), JACK1/JACK2 (http://jackaudio.org/).
+(http://www.pulseaudio.org/), JACK1/JACK2 (http://jackaudio.org/),
+GStreamer (http://gstreamer.freedesktop.org/, gstreamer-plugin-base required).
 
 
 Author: Bogdan Drozdowski, bogdandr @ op . pl
 License: GPLv3+
 
+================================================================
+
+The binary version of libhideip is linked with the GNU C Library,
+ licensed under the GNU LGPL:
+
+Copyright (C) 1991,92,93,94,95,96,97,98,99,2000,2001,2002,2003,2004,2005,
+ 2006,2007 Free Software Foundation, Inc.
+
+The GNU C Library is free software; you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published
+ by the Free Software Foundation; either version 2.1 of the License, or
+ (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful, but
+ WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+ License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+ along with the GNU C Library; if not, write to the Free Software Foundation,
+ Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+
+================================================================
+
 The program compiles on:
 - Fedora Core 4 GNU/Linux, i686
+- Fedora 12 GNU/Linux, i686
 - Mandriva 2008.1 GNU/Linux, i686
 - OpenBSD 3.8, i586
+- Debian 5.0 GNU/Linux, i686
 
 Requirements for compiling the full version:
 
@@ -48,6 +75,7 @@ Requirements for compiling the full version:
    	http://www.portaudio.com/	- for the PortAudiov19 library
    	http://www.pulseaudio.org/	- for the PulseAudio library
    	http://jackaudio.org/		- for the JACK1/JACK2 library
+	http://gstreamer.freedesktop.org/ - for GStreamer
 
 - MIDI output requires the following functions from the standard C library:
   malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),
@@ -82,16 +110,24 @@ Syntax:
 
 Command line options (for the full version):
 
--d|--device <dev>	Try to use the given device (ALSA, OSS), driver ID
-			(libao) or server name (JACK1, PulseAudio)
+-d|--device <dev>	Try to use the given device (ALSA, OSS, GStreamer),
+			driver ID (libao) or server name (JACK1, PulseAudio)
 			sound output.
 -e|--exec <program>	Execute the given program instead of normal sound
-			output. Read below for options.
+			output. Read below for options. Overrides --output.
 -h|--help		Print help
 -l|--license		Print license information
---to-midi		Convert the given files to MIDI format
-			(if the target file exists, it is deleted)
+--midi-instr <number>	Use the given MIDI instrument number.
+-o|--output <system>	Use the given sound output system (allegro, sdl, alsa,
+			oss, ao/libao, portaudio/port, jack, pulseaudio/pulse,
+			gstreamer/gst). Names are NOT case-sensitive.
+--to-midi		Convert the given files to MIDI format (if the target
+			file exists, it is deleted). Overrides --output.
 -V|--version		Print version number
+
+Alternatively to using the --output option, you can launch the program as
+"imyplay-alsa", "imyplay-allegro" and so on (these can be symbolic links
+or copies of the executable file).
 
 Executed program's options - you can pass the following expressions in the
 <prog> argument and these will get substituted by the correct values when
@@ -108,7 +144,7 @@ the program is about to be started:
 %m - the tone/pause duration in milliseconds as an integer (rounded),
 	example: 1250. This equals to %d (not rounded) times 1000.
 %l - the tone/pause duration in milliseconds as a floating point number
-	(accurate), example: 1250,3. This equals to %s (not rounded)
+	(accurate), example: 1250.3. This equals to %s (not rounded)
 	times 1000.
 %v - the tone's volume, form 0 to 15 inclusive.
 
@@ -116,13 +152,21 @@ Any other %X expressions will NOT be altered.
 
 =======================================================
 
-Building an RPM package:
+Building an RPM package (the old way):
 
 1) copy the imyplay.spc file to /usr/src/redhat/SPECS
 2) copy the source package imyplay-XX.tar.gz to /usr/src/redhat/SOURCES
 3) type
 	rpmbuild -ba /usr/src/redhat/SPECS/imyplay.spc
 4) get the rpms from /usr/src/redhat/RPMS/i386 and /usr/src/redhat/SRPMS
+
+Building an RPM package (the new way):
+
+1) copy the imyplay.spc file to $HOME/rpmbuild/SPECS
+2) copy the source package imyplay-XX.tar.gz to $HOME/rpmbuild/SOURCES
+3) type
+        rpmbuild -ba $HOME/rpmbuild/SPECS/imyplay.spc
+4) get the rpms from $HOME/rpmbuild/RPMS/i386 and $HOME/rpmbuild/SRPMS
 
 =======================================================
 
@@ -137,7 +181,7 @@ you wish.
 marked with capital letters in the header:
 
 # YOUR LANGUAGE translations for imyplay package.
-# Copyright (C) 2009-2010 Bogdan 'bogdro' Drozdowski
+# Copyright (C) 2009-2011 Bogdan 'bogdro' Drozdowski
 # This file is distributed under the same license as
 # the imyplay package.
 # YOUR FULL NAME <EMAILADDRESS>, YEAR.
@@ -146,7 +190,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-09 17:59+0200\n"
+"POT-Creation-Date: 2011-03-23 18:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAILADDRESS>\n"
 "Language-Team: LANGUAGE <EMAILADDRESS>\n"
@@ -158,6 +202,6 @@ The rest of the file will contain messages from the program. Translate
 them all and send me the resulting XX.po file.
 
 Translating the documentation:
-- info: simply change the imyplay.texi.in file
+- info: simply change the imyplay.txc file
 - man: Unpack the page using 'gunzip imyplay.1.gz' and
   translate the resulting imyplay.1 file.

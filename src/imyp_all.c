@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- Allegro backend.
  *
- * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -121,7 +121,7 @@ imyp_all_audiostream_init PARAMS((const int number_of_samples, const int vol,
 #endif
 
 /**
- * Creates an AUDIOSTREAM for playing imyp_notes.
+ * Creates an AUDIOSTREAM for playing notes.
  * \param number_of_samples The number of samples for the buffer.
  * \param vol Volume of the tone (from 0 to 15).
  * \param quality Will get the audio stream's quality (16 or 8).

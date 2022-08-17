@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(imyplay, 0.4, bogdandr@op.pl)
+AC_INIT(imyplay, 0.5, bogdandr@op.pl)
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \
@@ -102,6 +102,15 @@ AC_ARG_ENABLE(EXEC,[[  --enable-EXEC		Enable executing commands as output.]],
 	]
 	,feat_EXEC=yes)
 
+AC_ARG_ENABLE(GSTRAMER,[[  --enable-GSTREAMER	Enable GStreamer output.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_GST=no
+	 else
+		feat_GST=yes
+	 fi
+	]
+	,feat_GST=yes)
+
 # ==================== Set of available languages (deprecated).
 #ALL_LINGUAS="pl"
 
@@ -187,6 +196,48 @@ if ( test "x$feat_EXEC" = "xyes" ); then
 	have_system=yes
 	AC_CHECK_FUNCS([system],AC_DEFINE([HAVE_SYSTEM],[1],
 		[Whether you have the system() function.]),[have_system=no])
+fi
+
+if ( test "x$feat_GST" = "xyes" ); then
+
+	PKG_PROG_PKG_CONFIG([])
+	if ( test "x$PKG_CONFIG" != "x" ); then
+
+		PKG_CHECK_MODULES([GST], [gstreamer-controller-0.10], [
+			libgstreamer=yes
+			AC_DEFINE([HAVE_GST_GST_H],[1],
+				[Whether you have the gst/gst.h header.])
+			], [libgstreamer=no]);
+		if ( test "x$libgstreamer" = "xno" ); then
+
+			PKG_CHECK_MODULES([GST], [gstreamer-controller >= 0.10], [
+				libgstreamer=yes
+				AC_DEFINE([HAVE_GST_GST_H],[1],
+					[Whether you have the gst/gst.h header.])
+				], [libgstreamer=no]);
+		fi
+		if ( test "x$libgstreamer" = "xno" ); then
+
+			PKG_CHECK_MODULES([GST], [gstreamer-0.10], [
+				libgstreamer=yes
+				AC_DEFINE([HAVE_GST_GST_H],[1],
+					[Whether you have the gst/gst.h header.])
+				], [libgstreamer=no]);
+		fi
+		if ( test "x$libgstreamer" = "xno" ); then
+
+			PKG_CHECK_MODULES([GST], [gstreamer >= 0.10], [
+				libgstreamer=yes
+				AC_DEFINE([HAVE_GST_GST_H],[1],
+					[Whether you have the gst/gst.h header.])
+				], [libgstreamer=no]);
+		fi
+		if ( test "x$libgstreamer" = "xyes" ); then
+
+			CFLAGS="$CFLAGS $GST_CFLAGS"
+			LDFLAGS="$LDFLAGS $GST_LIBS"
+		fi
+	fi
 fi
 
 # ==================== Checks for header files.
@@ -406,6 +457,8 @@ AM_CONDITIONAL(MIDI, [test "x$feat_MIDI" = "xyes" && test "x$have_malloc" = "xye
 AM_CONDITIONAL(EXEC, [test "x$feat_EXEC" = "xyes" && test "x$have_stdlib_h" = "xyes" \
 	&& test "x$have_system" = "xyes"])
 
+AM_CONDITIONAL(GSTREAMER, [test "x$libgstreamer" = "xyes"])
+
 # ===================== Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 AC_TYPE_SIZE_T
@@ -478,7 +531,8 @@ if (test "x$GCC" = "xyes" ); then
 #	fi
 fi
 
-AC_SUBST(AM_CFLAGS,$CFLAGS)
+# this doubles the CFLAGS on compile:
+#AC_SUBST(AM_CFLAGS,$CFLAGS)
 
 # =====================
 
@@ -735,6 +789,22 @@ else
 
 	else	#( test "x$have_system" != "xyes" ); then
 		echo " *	EXEC: no (system() function missing)"
+
+	fi
+fi
+
+if (	test "x$feat_GST" = "xyes" && test "x$libgstreamer" = "xyes" ); then
+
+	echo " *	GStreamer: yes"
+else
+	if (test "x$feat_GST" != "xyes"); then
+		echo " *	GStreamer: no (disabled by command line)"
+
+	elif ( test "x$PKG_CONFIG" != "xyes" ); then
+		echo " *	GStreamer: no (pkg-config missing)"
+
+	else	#( test "x$libgstreamer" != "xyes" ); then
+		echo " *	GStreamer: no (library or headers missing)"
 
 	fi
 fi

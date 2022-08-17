@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- MIDI writer backend, header file.
  *
- * Copyright (C) 2009-2010 Bogdan Drozdowski, bogdandr (at) op.pl
+ * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -28,11 +28,11 @@
 
 # include "imyplay.h"
 
-extern void imyp_midi_pause PARAMS((const int milliseconds, const int is_note));
-extern void imyp_midi_put_text PARAMS((const char * const text));
-extern int imyp_midi_play_tune PARAMS((const double freq, const int volume_level,
+extern void imyp_midi_pause PARAMS ((const int milliseconds, const int is_note));
+extern void imyp_midi_put_text PARAMS ((const char * const text));
+extern int imyp_midi_play_tune PARAMS ((const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_midi_init PARAMS((const char * const filename));
-extern int imyp_midi_close PARAMS((void));
+extern int imyp_midi_init PARAMS ((const char * const filename, const int instrument));
+extern int imyp_midi_close PARAMS ((void));
 
 #endif /* IMYP_MIDIW */

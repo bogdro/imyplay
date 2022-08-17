@@ -1,0 +1,307 @@
+/* config.hin.  Generated from configure.ac by autoheader.  */
+
+/* Define to 1 if translation of program messages to the user's native
+   language is requested. */
+#undef ENABLE_NLS
+
+/* Whether you have the allegro.h header. */
+#undef HAVE_ALLEGRO_H
+
+/* Whether you have the alsa/asoundlib.h header. */
+#undef HAVE_ALSA_ASOUNDLIB_H
+
+/* Whether you have the ao/ao.h header. */
+#undef HAVE_AO_AO_H
+
+/* Whether you have the ao.h header. */
+#undef HAVE_AO_H
+
+/* Whether you have the asoundlib.h header. */
+#undef HAVE_ASOUNDLIB_H
+
+/* Define to 1 if you have the `basename' function. */
+#undef HAVE_BASENAME
+
+/* Define to 1 if you have the Mac OS X function
+   CFLocaleCopyPreferredLanguages in the CoreFoundation framework. */
+#undef HAVE_CFLOCALECOPYPREFERREDLANGUAGES
+
+/* Define to 1 if you have the Mac OS X function CFPreferencesCopyAppValue in
+   the CoreFoundation framework. */
+#undef HAVE_CFPREFERENCESCOPYAPPVALUE
+
+/* Define to 1 if you have the `close' function. */
+#undef HAVE_CLOSE
+
+/* Define if the GNU dcgettext() function is already present or preinstalled.
+   */
+#undef HAVE_DCGETTEXT
+
+/* Define to 1 if you have the <errno.h> header file. */
+#undef HAVE_ERRNO_H
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
+
+/* Define to 1 if you have the `fseeko' function. */
+#undef HAVE_FSEEKO
+
+/* Define to 1 if you have the `ftello' function. */
+#undef HAVE_FTELLO
+
+/* Define to 1 if you have the `fwrite' function. */
+#undef HAVE_FWRITE
+
+/* Define to 1 if you have the <getopt.h> header file. */
+#undef HAVE_GETOPT_H
+
+/* Define to 1 if you have the `getopt_long' function. */
+#undef HAVE_GETOPT_LONG
+
+/* Define if the GNU gettext() function is already present or preinstalled. */
+#undef HAVE_GETTEXT
+
+/* Whether you have the gst/gst.h header. */
+#undef HAVE_GST_GST_H
+
+/* Define if you have the iconv() function and it works. */
+#undef HAVE_ICONV
+
+/* Define to 1 if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define to 1 if you have the `ioctl' function. */
+#undef HAVE_IOCTL
+
+/* Whether you have the jack_free() function in the JACK library. */
+#undef HAVE_JACK_FREE
+
+/* Define to 1 if you have the `jack_get_version_string' function. */
+#undef HAVE_JACK_GET_VERSION_STRING
+
+/* Whether you have the jack.h header. */
+#undef HAVE_JACK_H
+
+/* Whether you have the jack/jack.h header. */
+#undef HAVE_JACK_JACK_H
+
+/* Whether you have the Allegro library. */
+#undef HAVE_LIBALLEG
+
+/* Define to 1 if you have the `ao' library (-lao). */
+#undef HAVE_LIBAO
+
+/* Define to 1 if you have the `asound' library (-lasound). */
+#undef HAVE_LIBASOUND
+
+/* Define to 1 if you have the <libgen.h> header file. */
+#undef HAVE_LIBGEN_H
+
+/* Define to 1 if you have the `hideip' library (-lhideip). */
+#undef HAVE_LIBHIDEIP
+
+/* Whether you have the libhideip.h header. */
+#undef HAVE_LIBHIDEIP_H
+
+/* Define to 1 if you have the <libintl.h> header file. */
+#undef HAVE_LIBINTL_H
+
+/* Define to 1 if you have the `jack' library (-ljack). */
+#undef HAVE_LIBJACK
+
+/* Define to 1 if you have the `m' library (-lm). */
+#undef HAVE_LIBM
+
+/* Define to 1 if you have the `netblock' library (-lnetblock). */
+#undef HAVE_LIBNETBLOCK
+
+/* Whether you have the libnetblock.h header. */
+#undef HAVE_LIBNETBLOCK_H
+
+/* Define to 1 if you have the `portaudio' library (-lportaudio). */
+#undef HAVE_LIBPORTAUDIO
+
+/* Define to 1 if you have the `pulse' library (-lpulse). */
+#undef HAVE_LIBPULSE
+
+/* Define to 1 if you have the `pulse-simple' library (-lpulse-simple). */
+#undef HAVE_LIBPULSE_SIMPLE
+
+/* Define to 1 if you have the `SDL' library (-lSDL). */
+#undef HAVE_LIBSDL
+
+/* Define to 1 if you have the `SDL2' library (-lSDL2). */
+#undef HAVE_LIBSDL2
+
+/* Define to 1 if you have the <locale.h> header file. */
+#undef HAVE_LOCALE_H
+
+/* Define to 1 if your system has a GNU libc compatible `malloc' function, and
+   to 0 otherwise. */
+#undef HAVE_MALLOC
+
+/* Define to 1 if you have the <malloc.h> header file. */
+#undef HAVE_MALLOC_H
+
+/* Define to 1 if you have the <math.h> header file. */
+#undef HAVE_MATH_H
+
+/* Define to 1 if you have the `memcpy' function. */
+#undef HAVE_MEMCPY
+
+/* Define to 1 if you have the `memset' function. */
+#undef HAVE_MEMSET
+
+/* Define to 1 if the system has the type `off_t'. */
+#undef HAVE_OFF_T
+
+/* Define to 1 if you have the `open' function. */
+#undef HAVE_OPEN
+
+/* Whether you have the portaudio.h header. */
+#undef HAVE_PORTAUDIO_H
+
+/* Whether you have the portaudio/portaudio.h header. */
+#undef HAVE_PORTAUDIO_PORTAUDIO_H
+
+/* Whether you have the pulse/simple.h header. */
+#undef HAVE_PULSE_SIMPLE_H
+
+/* Define to 1 if you have the `qsort' function. */
+#undef HAVE_QSORT
+
+/* Define to 1 if you have the `realloc' function. */
+#undef HAVE_REALLOC
+
+/* Whether you have the SDL2/SDL.h header. */
+#undef HAVE_SDL2_SDL_H
+
+/* Whether you have the SDL/SDL.h header. */
+#undef HAVE_SDL_SDL_H
+
+/* Define to 1 if you have the `select' function. */
+#undef HAVE_SELECT
+
+/* Define to 1 if you have the `setlocale' function. */
+#undef HAVE_SETLOCALE
+
+/* Define to 1 if you have the `sigaction' function. */
+#undef HAVE_SIGACTION
+
+/* Define to 1 if you have the <signal.h> header file. */
+#undef HAVE_SIGNAL_H
+
+/* Define to 1 if the system has the type `sig_atomic_t'. */
+#undef HAVE_SIG_ATOMIC_T
+
+/* Whether you have the simple.h header. */
+#undef HAVE_SIMPLE_H
+
+/* Define to 1 if you have the `sin' function. */
+#undef HAVE_SIN
+
+/* Define to 1 if the system has the type `size_t'. */
+#undef HAVE_SIZE_T
+
+/* Define to 1 if you have the `snprintf' function. */
+#undef HAVE_SNPRINTF
+
+/* Define to 1 if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define to 1 if you have the <stdio.h> header file. */
+#undef HAVE_STDIO_H
+
+/* Whether you have the stdlib.h header. */
+#undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Whether you have the string.h header. */
+#undef HAVE_STRING_H
+
+/* Define to 1 if you have the `system' function. */
+#undef HAVE_SYSTEM
+
+/* Define to 1 if you have the <sys/ioctl.h> header file. */
+#undef HAVE_SYS_IOCTL_H
+
+/* Define to 1 if you have the <sys/kd.h> header file. */
+#undef HAVE_SYS_KD_H
+
+/* Define to 1 if you have the <sys/select.h> header file. */
+#undef HAVE_SYS_SELECT_H
+
+/* Define to 1 if you have the <sys/soundcard.h> header file. */
+#undef HAVE_SYS_SOUNDCARD_H
+
+/* Define to 1 if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define to 1 if you have the <sys/time.h> header file. */
+#undef HAVE_SYS_TIME_H
+
+/* Define to 1 if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Whether you have the sys/wait.h header. */
+#undef HAVE_SYS_WAIT_H
+
+/* Define to 1 if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* Whether you have the wait.h header. */
+#undef HAVE_WAIT_H
+
+/* Define to 1 if you have the `write' function. */
+#undef HAVE_WRITE
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define to the address where bug reports for this package should be sent. */
+#undef PACKAGE_BUGREPORT
+
+/* Define to the full name of this package. */
+#undef PACKAGE_NAME
+
+/* Define to the full name and version of this package. */
+#undef PACKAGE_STRING
+
+/* Define to the one symbol short name of this package. */
+#undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
+/* Define to the version of this package. */
+#undef PACKAGE_VERSION
+
+/* Define as the return type of signal handlers (int or void). */
+#undef RETSIGTYPE
+
+/* Define to 1 if all of the C90 standard headers exist (not just the ones
+   required in a freestanding environment). This macro is provided for
+   backward compatibility; new code need not use it. */
+#undef STDC_HEADERS
+
+/* Version number of package */
+#undef VERSION
+
+/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
+   `char[]'. */
+#undef YYTEXT_POINTER
+
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
+
+/* Define to rpl_malloc if the replacement function should be used. */
+#undef malloc
+
+/* Define to `unsigned int' if <sys/types.h> does not define. */
+#undef size_t
+
+/* Define to empty if the keyword `volatile' does not work. Warning: valid
+   code using `volatile' can become incorrect without. Disable with care. */
+#undef volatile

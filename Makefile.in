@@ -39,7 +39,7 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/imyplay.spi $(top_srcdir)/configure \
 	$(top_srcdir)/po/Makefile.inn ABOUT-NLS AUTHORS COPYING \
 	ChangeLog INSTALL NEWS THANKS config.guess config.rpath \
-	config.sub depcomp install-sh missing mkinstalldirs
+	config.sub depcomp install-sh missing mkinstalldirs ylwrap
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/iconv.m4 \
@@ -145,6 +145,9 @@ INTLLIBS = @INTLLIBS@
 INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
 ISSED = @ISSED@
 LDFLAGS = @LDFLAGS@
+LEX = @LEX@
+LEXLIB = @LEXLIB@
+LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
@@ -230,7 +233,7 @@ top_srcdir = @top_srcdir@
 SUBDIRS = doc src po
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = config.rpath mkinstalldirs imyplay.spi m4/ax_cflag.m4 m4/ax_unus.m4 \
-	doc/imelody.txt imy THANKS dosdist.bat
+	doc/imelody.txt imy THANKS dosdist.bat dosfiles.txt
 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive

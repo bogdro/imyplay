@@ -35,6 +35,7 @@
 # include <gst/gst.h>
 # include <gst/controller/gstcontroller.h>
 # include <gst/controller/gstinterpolationcontrolsource.h>
+# include <gst/gstversion.h>
 #else
 # error The GStreamer library was not found.
 #endif
@@ -363,3 +364,37 @@ imyp_gst_close (
 
 	return 0;
 }
+
+/**
+ * Displays the version of the GStreamer library IMYplay was compiled with.
+ */
+void
+imyp_gst_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+#if (defined GST_VERSION_MAJOR) && (defined GST_VERSION_MINOR) \
+	&& (defined GST_VERSION_MICRO) && (defined GST_VERSION_NANO)
+	printf ( "GStreamer: %d.%d.%d.%d\n", GST_VERSION_MAJOR, GST_VERSION_MINOR,
+		GST_VERSION_MICRO, GST_VERSION_NANO );
+#else
+# if (defined GST_VERSION_MAJOR) && (defined GST_VERSION_MINOR) \
+	&& (defined GST_VERSION_MICRO)
+	printf ( "GStreamer: %d.%d.%d\n", GST_VERSION_MAJOR, GST_VERSION_MINOR,
+		GST_VERSION_MICRO );
+# else
+#  if (defined GST_VERSION_MAJOR) && (defined GST_VERSION_MINOR)
+	printf ( "GStreamer: %d.%d\n", GST_VERSION_MAJOR, GST_VERSION_MINOR );
+#  else
+#   if (defined GST_VERSION_MAJOR)
+	printf ( "GStreamer: %d\n", GST_VERSION_MAJOR );
+#   else
+	printf ( "GStreamer: ?\n" );
+#   endif
+#  endif
+# endif
+#endif
+}
+

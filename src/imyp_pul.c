@@ -28,6 +28,7 @@
 #include "imyplay.h"
 #include "imyp_pul.h"
 #include "imyp_sig.h"
+#include "imyputil.h"
 
 #include <stdio.h>
 
@@ -37,10 +38,12 @@
 #  include <simple.h>
 #  include <sample.h>
 #  include <util.h>
+#  include <version.h>
 # else
 #  include <pulse/simple.h>
 #  include <pulse/sample.h>
 #  include <pulse/util.h>
+#  include <pulse/version.h>
 # endif
 #else
 # error The PulseAudio libraries were not found.
@@ -84,8 +87,6 @@ imyp_pulse_play_tune (
 #endif
 {
 	unsigned int quality = 16;
-	int i;
-	int samp; 	/* better than float */
 	int res;
 	int is_le = 1;
 
@@ -108,62 +109,11 @@ imyp_pulse_play_tune (
 		quality = 16;
 	}
 
-	bufsize = IMYP_MIN (bufsize, (duration * (int)conf.rate * ((int)quality/8)) / 1000);
-
-	if ( freq > 0.0 )
+	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
+		is_le, 1, quality, conf.rate);
+	if ( sig_recvd != 0 )
 	{
-#define NSAMP ((conf.rate)/(freq))
-		for ( i=0; i < bufsize; i++ )
-		{
-			if ( sig_recvd != 0 )
-			{
-				return -2;
-			}
-#if (defined HAVE_SIN) || (defined HAVE_LIBM)
-			samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-				/* The "/3" is required to have a full sine wave, not
-				trapese-like wave */
-				IMYP_ROUND (((1<<(quality-1))-1)
-					* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
-				/*if ( i < NSAMP ) printf("buf[%d]=%d\n", i, buf[i]);*/;
-#else
-			samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-				(((1<<(quality-1))-1)/NSAMP));
-#endif
-			if ( quality == 16 )
-			{
-				if ( i*2 >= bufsize ) break;
-				if ( is_le != 0 )
-				{
-					((char *)buf)[i*2] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-					((char *)buf)[i*2+1] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
-				}
-				else
-				{
-					((char *)buf)[i*2] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
-					((char *)buf)[i*2+1] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-				}
-			}
-			else if ( quality == 8 )
-			{
-				((char *)buf)[i] = (char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-			}
-		}
-	}
-	else
-	{
-		for ( i=0; i < bufsize; i++ )
-		{
-			if ( sig_recvd != 0 )
-			{
-				return -2;
-			}
-			((char *)buf)[i] = 0;
-		}
+		return -2;
 	}
 	res = pa_simple_write (stream, buf, (size_t)bufsize, NULL);
 	if ( res >= 0 )
@@ -259,3 +209,29 @@ imyp_pulse_close (
 	if ( stream != NULL ) pa_simple_free (stream);
 	return 0;
 }
+
+/**
+ * Displays the version of the PulseAudio backend.
+ */
+void
+imyp_pulse_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+#if (defined PA_MAJOR) && (defined PA_MINOR) && (defined PA_MICRO)
+	printf ( "PulseAudio: %d.%d.%d\n", PA_MAJOR, PA_MINOR, PA_MICRO );
+#else
+# if (defined PA_MAJOR) && (defined PA_MINOR)
+	printf ( "PulseAudio: %d.%d\n", PA_MAJOR, PA_MINOR );
+# else
+#  if (defined PA_MAJOR)
+	printf ( "PulseAudio: %d\n", PA_MAJOR );
+#  else
+	printf ( "PulseAudio: ?\n" );
+#  endif
+# endif
+#endif
+}
+

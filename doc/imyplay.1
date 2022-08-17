@@ -50,6 +50,12 @@ example: 1250. This equals to %d (not rounded) times 1000.
 
 Any other %X expressions will NOT be altered.
 
+.IP "-f|--file <file>"
+Write raw samples to this file instead of normal sound output. Overrides --output.
+Use
+.B --dev
+to specify the sampling rate and samples' format (case-insensitive: s16le, s16be,
+u16le, u16be, s8le, s8be, u8le, u8be), e.g. "--dev 44100:s16le".
 .IP -h|--help
 Print help.
 .IP -l|--license
@@ -68,7 +74,9 @@ Print version number.
 .LP
 Alternatively to using the --output option, you can launch the program as
 "imyplay-alsa", "imyplay-allegro" and so on (these can be symbolic links
-or copies of the executable file).
+or copies of the executable file). This overrides the default order of
+output systems, but does NOT override the --to-midi, -f/--file and
+-e/--exec options.
 
 .SH DIAGNOSTICS
 The program returns with 0 exit code if everything went fine. If there

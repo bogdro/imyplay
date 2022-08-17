@@ -34,8 +34,10 @@
 #if (defined HAVE_LIBSDL) && ((defined HAVE_SDL_H) || (defined HAVE_SDL_SDL_H))
 # if (defined HAVE_SDL_H)
 #  include <SDL.h>
+#  include <SDL_version.h>
 # else
 #  include <SDL/SDL.h>
+#  include <SDL/SDL_version.h>
 # endif
 #else
 # error The SDL library was not found.
@@ -87,6 +89,7 @@ static void SDLCALL imyp_sdl_fill_buffer (
 	unsigned int quality = 16;
 	int is_le = 1;
 	int is_uns = 0;
+	double nperiods;
 
 	if ( (stream == NULL) || (len <= 0) || (userdata == NULL) ) return;
 
@@ -136,7 +139,7 @@ static void SDLCALL imyp_sdl_fill_buffer (
 	if ( data->tone_freq > 0.0 )
 	{
 		data->inside_callback = 1;
-#define NSAMP ((data->received.freq)/(data->tone_freq))
+		nperiods = data->received.freq/data->tone_freq;
 		for ( i=data->last_index; i < data->last_index+len; i++ )
 		{
 			if ( sig_recvd != 0 )
@@ -144,21 +147,37 @@ static void SDLCALL imyp_sdl_fill_buffer (
 				data->inside_callback = 0;
 				return;
 			}
+			if ( (int)IMYP_ROUND(nperiods) == 0 )
+			{
+				/* not a single full period fits in the buffer */
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
-			samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-				/* The "/3" is required to have a full sine wave, not
-				trapese-like wave */
-				IMYP_ROUND (((1<<(quality-1))-1)
-					* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
-				/*if ( i < NSAMP ) printf("buf[%d]=%d\n", i, buf[i]);*/;
+				samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
+					/* The "/3" is required to have a full sine wave, not
+					trapese-like wave */
+					IMYP_ROUND (((1<<(quality-1))-1)
+						* sin (i*(2*M_PI/nperiods))/3));
+#else
+				samp = (int) IMYP_ROUND (i*
+					(((1<<(quality-1))-1)/nperiods));
+#endif
+			}
+			else
+			{
+#if (defined HAVE_SIN) || (defined HAVE_LIBM)
+				samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
+					/* The "/3" is required to have a full sine wave, not
+					trapese-like wave */
+					IMYP_ROUND (((1<<(quality-1))-1)
+						* sin ((i%((int)IMYP_ROUND(nperiods)))*(2*M_PI/nperiods))/3));
+#else
+				samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(nperiods)))*
+					(((1<<(quality-1))-1)/nperiods));
+#endif
+			}
 			if ( is_uns == 0 )
 			{
 				samp -= (1<<(quality-1))-1;
 			}
-#else
-			samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-				(((1<<(quality-1))-1)/NSAMP));
-#endif
 			if ( quality == 16 )
 			{
 				if ( (i-data->last_index)*2 >= len ) break;
@@ -347,3 +366,30 @@ imyp_sdl_close (
 	SDL_Quit ();
 	return 0;
 }
+
+/**
+ * Displays the version of the SDL backend.
+ */
+void
+imyp_sdl_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+#if (defined SDL_MAJOR_VERSION) && (defined SDL_MINOR_VERSION) && (defined SDL_PATCHLEVEL)
+	printf ( "SDL: %d.%d.%d\n", SDL_MAJOR_VERSION, SDL_MINOR_VERSION,
+		SDL_PATCHLEVEL );
+#else
+# if (defined SDL_MAJOR_VERSION) && (defined SDL_MINOR_VERSION)
+	printf ( "SDL: %d.%d\n", SDL_MAJOR_VERSION, SDL_MINOR_VERSION );
+# else
+#  if (defined SDL_MAJOR_VERSION)
+	printf ( "SDL: %d\n", SDL_MAJOR_VERSION );
+#  else
+	printf ( "SDL: ?\n" );
+#  endif
+# endif
+#endif
+}
+

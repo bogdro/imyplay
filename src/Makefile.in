@@ -45,10 +45,13 @@ bin_PROGRAMS = imyplay$(EXEEXT)
 @JACK_TRUE@am__append_8 = imyp_jck.c imyp_jck.h
 @MIDI_TRUE@am__append_9 = imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h midibase.h
 @EXEC_TRUE@am__append_10 = imyp_exe.c imyp_exe.h
-@GSTREAMER_TRUE@am__append_11 = imyp_gst.c imyp_gst.h
+@GSTREAMER_TRUE@am__append_11 = imyp_gst.c imyp_gst.h imyp_fil.c \
+@GSTREAMER_TRUE@	imyp_fil.h
+@FLEX_TRUE@am__append_12 = imyparsf.l
+@FLEX_FALSE@am__append_13 = imyparse.c
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/imyp_cfg.hin
+	$(srcdir)/imyp_cfg.hin imyparsf.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
 	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/iconv.m4 \
@@ -65,12 +68,13 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
-	imyp_sig.c imyp_sig.h imyparse.c imyparse.h imyp_all.c \
-	imyp_all.h imyp_sdl.c imyp_sdl.h imyp_als.c imyp_als.h \
-	imyp_oss.c imyp_oss.h imyp_ao.c imyp_ao.h imyp_por.c \
-	imyp_por.h imyp_pul.c imyp_pul.h imyp_jck.c imyp_jck.h \
-	imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h \
-	midibase.h imyp_exe.c imyp_exe.h imyp_gst.c imyp_gst.h
+	imyp_sig.c imyp_sig.h imyparse.h imyputil.c imyputil.h \
+	imyp_all.c imyp_all.h imyp_sdl.c imyp_sdl.h imyp_als.c \
+	imyp_als.h imyp_oss.c imyp_oss.h imyp_ao.c imyp_ao.h \
+	imyp_por.c imyp_por.h imyp_pul.c imyp_pul.h imyp_jck.c \
+	imyp_jck.h imyp_mid.c imyp_mid.h midifile.c midifile.h \
+	midiinfo.h midibase.h imyp_exe.c imyp_exe.h imyp_gst.c \
+	imyp_gst.h imyp_fil.c imyp_fil.h imyparsf.l imyparse.c
 @ALLEGRO_TRUE@am__objects_1 = imyp_all.$(OBJEXT)
 @SDL_TRUE@am__objects_2 = imyp_sdl.$(OBJEXT)
 @ALSA_TRUE@am__objects_3 = imyp_als.$(OBJEXT)
@@ -81,13 +85,15 @@ am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 @JACK_TRUE@am__objects_8 = imyp_jck.$(OBJEXT)
 @MIDI_TRUE@am__objects_9 = imyp_mid.$(OBJEXT) midifile.$(OBJEXT)
 @EXEC_TRUE@am__objects_10 = imyp_exe.$(OBJEXT)
-@GSTREAMER_TRUE@am__objects_11 = imyp_gst.$(OBJEXT)
+@GSTREAMER_TRUE@am__objects_11 = imyp_gst.$(OBJEXT) imyp_fil.$(OBJEXT)
+@FLEX_TRUE@am__objects_12 = imyparsf.$(OBJEXT)
+@FLEX_FALSE@am__objects_13 = imyparse.$(OBJEXT)
 am_imyplay_OBJECTS = imyplay.$(OBJEXT) imypwrap.$(OBJEXT) \
-	imyp_sig.$(OBJEXT) imyparse.$(OBJEXT) $(am__objects_1) \
+	imyp_sig.$(OBJEXT) imyputil.$(OBJEXT) $(am__objects_1) \
 	$(am__objects_2) $(am__objects_3) $(am__objects_4) \
 	$(am__objects_5) $(am__objects_6) $(am__objects_7) \
 	$(am__objects_8) $(am__objects_9) $(am__objects_10) \
-	$(am__objects_11)
+	$(am__objects_11) $(am__objects_12) $(am__objects_13)
 imyplay_OBJECTS = $(am_imyplay_OBJECTS)
 am__DEPENDENCIES_1 =
 imyplay_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -99,6 +105,8 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+LEXCOMPILE = $(LEX) $(LFLAGS) $(AM_LFLAGS)
+YLWRAP = $(top_srcdir)/ylwrap
 SOURCES = $(imyplay_SOURCES)
 DIST_SOURCES = $(am__imyplay_SOURCES_DIST)
 ETAGS = etags
@@ -141,6 +149,9 @@ INTLLIBS = @INTLLIBS@
 INTL_MACOSX_LIBS = @INTL_MACOSX_LIBS@
 ISSED = @ISSED@
 LDFLAGS = @LDFLAGS@
+LEX = @LEX@
+LEXLIB = @LEXLIB@
+LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
@@ -224,18 +235,18 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c \
-	imyp_sig.h imyparse.c imyparse.h $(am__append_1) \
+	imyp_sig.h imyparse.h imyputil.c imyputil.h $(am__append_1) \
 	$(am__append_2) $(am__append_3) $(am__append_4) \
 	$(am__append_5) $(am__append_6) $(am__append_7) \
 	$(am__append_8) $(am__append_9) $(am__append_10) \
-	$(am__append_11)
+	$(am__append_11) $(am__append_12) $(am__append_13)
 imyplay_LDADD = $(INTLLIBS)
 INCLUDES = -I../intl -DLOCALEDIR=\"$(localedir)\"
 EXTRA_DIST = imyp_cfg.hin
 all: all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .o .obj
+.SUFFIXES: .c .l .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
@@ -319,6 +330,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_als.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_ao.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_exe.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_fil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_gst.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_jck.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_mid.Po@am__quote@
@@ -328,7 +340,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_sdl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_sig.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyparse.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyparsf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyplay.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyputil.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imypwrap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/midifile.Po@am__quote@
 
@@ -345,6 +359,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+
+.l.c:
+	$(am__skiplex) $(SHELL) $(YLWRAP) $< $(LEX_OUTPUT_ROOT).c $@ -- $(LEXCOMPILE)
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -460,6 +477,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-rm -f imyparsf.c
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am

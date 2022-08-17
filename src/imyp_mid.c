@@ -29,6 +29,8 @@
 #include "imyp_mid.h"
 #include "imyp_sig.h"
 
+#include <stdio.h>
+
 #if ! ((defined HAVE_MALLOC) && (defined HAVE_REALLOC) && (defined HAVE_MEMSET) \
 	&& (defined HAVE_MEMCPY) && (defined HAVE_QSORT))
 # error MIDI output disabled, but is being compiled.
@@ -282,3 +284,18 @@ imyp_midi_close (
 	}
 	return 0;
 }
+
+/**
+ * Displays the version of the MIDI backend.
+ */
+void
+imyp_midi_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+	/* this is an internal backend */
+	printf ( "MIDI: 1.3\n" );
+}
+

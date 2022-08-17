@@ -1,3 +1,31 @@
+2011-10-06	Bogdan Drozdowski <bogdandr@op.pl>
+
+	* IMYplay version 0.6
+	  A new, flex-generated parser for the melody files. Displaying
+	  backend libraries' versions along with  imyplay's version. Raw
+	  file output backend. Support for LibNetBlock and LibHideIP.
+	* configure.ac: checking for flex for the new parser, added new
+	  C compiler flags to check: -Wwrite-strings and -Waggregate-return.
+	  Added raw file output option. Support for LibNetBlock and LibHideIP.
+	* src/Makefile.am: added the flex-based scanner. Added raw file output
+	  source codes to program sources.
+	* src/imyplay.c: fix missing "const". Added missing '?' option.
+	* src/imyparsf.l: the new flex-based scanner source.
+	* src/imyputil.{c,h}: new file with utility functions: output system
+	  name parsing (moved from imypwrap.c), case-insensitive string
+	  compare (moved from imypwrap.c), common samples' generation (moved
+	  from the Allegro, ALSA, AO, OSS and PulseAudio backends).
+	* src/imyplay.c, src/wrappers.{c,h}: Added displaying the libraries'
+	  versions along with the program's vesrion.
+	* src/imyp_fil.{c,h}: raw file backend
+	* src/{imyplay.h,imyplay.c,wrappers.c}: added an "IMYP_" prefix to
+	  current library enumeration.
+	* src/imyplay.c: Support for LibNetBlock and LibHideIP.
+	* src/imyp_jck.c, src/imyp_por.c, src/imyp_sdl.c: fixed samples'
+	  generation in case of small sampling frequencies or high tones.
+	* dosdist.bat: moved file list to a separate file, dosfiles.txt, to
+	  avoid DOS command line length limit of 128 characters.
+
 2011-03-26	Bogdan Drozdowski <bogdandr@op.pl>
 
 	* IMYplay version 0.5

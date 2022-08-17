@@ -34,5 +34,6 @@ extern int imyp_sdl_play_tune PARAMS ((const double freq, const int volume_level
 	const int duration, void * const buf, int bufsize));
 extern int imyp_sdl_init PARAMS ((void));
 extern int imyp_sdl_close PARAMS ((void));
+extern void imyp_sdl_version PARAMS ((void));
 
 #endif /* IMYP_SDL */

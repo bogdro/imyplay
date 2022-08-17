@@ -28,6 +28,7 @@
 #include "imyplay.h"
 #include "imyp_all.h"
 #include "imyp_sig.h"
+#include "imyputil.h"
 
 #include <stdio.h>
 
@@ -223,59 +224,26 @@ imyp_all_play_tune (
 {
 	AUDIOSTREAM * as;
 	void * new_buf;
+#ifndef HAVE_MEMCPY
 	int i;
+#endif
 	unsigned int sampfreq;
 	unsigned int quality;
-	int samp;	/* better than float */
 
-	if ( (buf == NULL) || (bufsize <= 0) ) return -1;
+	if ( (buf == NULL) || (bufsize <= 0) )
+	{
+		return -1;
+	}
 	as = imyp_all_audiostream_init (bufsize, volume_level, &quality, &sampfreq);
 
 	if ( as != NULL )
 	{
-		if ( freq > 0.0 )
+		imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
+			1, 1, quality, sampfreq);
+		if ( sig_recvd != 0 )
 		{
-#define NSAMP ((sampfreq)/(freq))
-			for ( i=0; i < bufsize; i++ )
-			{
-				if ( sig_recvd != 0 )
-				{
-					stop_audio_stream (as);
-					return -2;
-				}
-#if (defined HAVE_SIN) || (defined HAVE_LIBM)
-				samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-					/* The "/3" is required to have a full sine wave, not
-					trapese-like wave */
-					IMYP_ROUND (((1<<(quality-1))-1)
-						* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
-#else
-				samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-					(((1<<(quality-1))-1)/NSAMP));
-#endif
-				if ( quality == 16 )
-				{
-					if ( i*2 >= bufsize ) break;
-					((char *)buf)[i*2] = (char)(samp & 0x0FF);
-					((char *)buf)[i*2+1] = (char)((samp >> 8) & 0x0FF);
-				}
-				else if ( quality == 8 )
-				{
-					((char *)buf)[i] = (char)(samp & 0x0FF);
-				}
-			}
-		}
-		else
-		{
-			for ( i=0; i < bufsize; i++ )
-			{
-				if ( sig_recvd != 0 )
-				{
-					stop_audio_stream (as);
-					return -2;
-				}
-				((char *)buf)[i] = 0;
-			}
+			stop_audio_stream (as);
+			return -2;
 		}
 		new_buf = get_audio_stream_buffer (as);
 		if ( new_buf != NULL )
@@ -398,3 +366,21 @@ imyp_all_close (
 	allegro_exit ();
 	return 0;
 }
+
+/**
+ * Displays the version of the Allegro library IMYplay was compiled with.
+ */
+void
+imyp_all_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+#ifdef ALLEGRO_VERSION_STR
+	printf ( "Allegro: %s\n", ALLEGRO_VERSION_STR );
+#else
+	printf ( "Allegro: ?\n" );
+#endif
+}
+

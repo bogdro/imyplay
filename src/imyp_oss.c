@@ -28,6 +28,7 @@
 #include "imyplay.h"
 #include "imyp_oss.h"
 #include "imyp_sig.h"
+#include "imyputil.h"
 
 #include <stdio.h>
 
@@ -116,8 +117,6 @@ imyp_oss_play_tune (
 #endif
 {
 	unsigned int quality = 16;
-	int i;
-	int samp; 	/* better than float */
 	int res;
 	int is_le = 1;
 	int is_uns = 0;
@@ -158,66 +157,11 @@ imyp_oss_play_tune (
 		quality = 16;
 	}
 
-	bufsize = IMYP_MIN (bufsize, (duration * (int)glob_speed * ((int)quality/8)) / 1000);
-
-	if ( freq > 0.0 )
+	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
+		is_le, is_uns, quality, (unsigned int)glob_speed);
+	if ( sig_recvd != 0 )
 	{
-#define NSAMP ((glob_speed)/(freq))
-		for ( i=0; i < bufsize; i++ )
-		{
-			if ( sig_recvd != 0 )
-			{
-				return -2;
-			}
-#if (defined HAVE_SIN) || (defined HAVE_LIBM)
-			samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-				/* The "/3" is required to have a full sine wave, not
-				trapese-like wave */
-				IMYP_ROUND (((1<<(quality-1))-1)
-					* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
-				/*if ( i < NSAMP ) printf("buf[%d]=%d\n", i, buf[i]);*/;
-#else
-			samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-				(((1<<(quality-1))-1)/NSAMP));
-#endif
-			if ( is_uns == 0 )
-			{
-				samp -= (1<<(quality-1));
-			}
-			if ( quality == 16 )
-			{
-				if ( i*2 >= bufsize ) break;
-				if ( is_le != 0 )
-				{
-					((char *)buf)[i*2] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-					((char *)buf)[i*2+1] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
-				}
-				else
-				{
-					((char *)buf)[i*2] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
-					((char *)buf)[i*2+1] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-				}
-			}
-			else if ( quality == 8 )
-			{
-				((char *)buf)[i] = (char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-			}
-		}
-	}
-	else
-	{
-		for ( i=0; i < bufsize; i++ )
-		{
-			if ( sig_recvd != 0 )
-			{
-				return -2;
-			}
-			((char *)buf)[i] = 0;
-		}
+		return -2;
 	}
 	res = write (pcm_fd, buf, (size_t)bufsize);
 	if ( res == bufsize )
@@ -383,3 +327,29 @@ imyp_oss_close (
 	if ( pcm_fd >= 0 ) return close (pcm_fd);
 	return 0;
 }
+
+/**
+ * Displays the version of the OSS backend.
+ */
+void
+imyp_oss_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+#ifdef SOUND_VERSION
+# if SOUND_VERSION < 361
+	/* old style version */
+	printf ( "OSS: %d.%d.%d\n", SOUND_VERSION/100, (SOUND_VERSION/10) % 10,
+		SOUND_VERSION%10 );
+# else
+	/* new style version */
+	printf ( "OSS: %d.%d.%d\n", (SOUND_VERSION >> 16) & 0x0FF,
+		(SOUND_VERSION >> 8) & 0x0FF , SOUND_VERSION & 0x0FF );
+# endif
+#else
+	printf ( "OSS: ?\n" );
+#endif
+}
+

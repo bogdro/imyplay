@@ -115,6 +115,7 @@ static int imyp_jack_fill_buffer (
 	jack_default_audio_sample_t samp;
 	jack_default_audio_sample_t *output;
 	jack_nframes_t sampfreq;
+	double nperiods;
 
 	output = jack_port_get_buffer (joutput, nframes);
 
@@ -126,7 +127,7 @@ static int imyp_jack_fill_buffer (
 	if ( data->tone_freq > 0.0 )
 	{
 		data->inside_callback = 1;
-#define NSAMP ((sampfreq)/(data->tone_freq))
+		nperiods = sampfreq/data->tone_freq;
 		for ( i=data->last_index; i < data->last_index+nframes; i++ )
 		{
 			if ( sig_recvd != 0 )
@@ -134,13 +135,26 @@ static int imyp_jack_fill_buffer (
 				data->inside_callback = 0;
 				return -2;
 			}
+			if ( (int)IMYP_ROUND(nperiods) == 0 )
+			{
+				/* not a single full period fits in the buffer */
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
-			samp = (jack_default_audio_sample_t)
-				sin ((i%((jack_nframes_t)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP));
+				samp = (jack_default_audio_sample_t)
+					sin (i*(2*M_PI/nperiods));
 #else
-			samp = (jack_default_audio_sample_t)
-				(i%((jack_nframes_t)IMYP_ROUND(NSAMP)))/NSAMP;
+				samp = (jack_default_audio_sample_t)i/nperiods;
 #endif
+			}
+			else
+			{
+#if (defined HAVE_SIN) || (defined HAVE_LIBM)
+				samp = (jack_default_audio_sample_t)
+					sin ((i%((jack_nframes_t)IMYP_ROUND(nperiods)))*(2*M_PI/nperiods));
+#else
+				samp = (jack_default_audio_sample_t)
+					(i%((jack_nframes_t)IMYP_ROUND(nperiods)))/nperiods;
+#endif
+			}
 			output[i-data->last_index] = (jack_default_audio_sample_t)
 				((samp * (jack_default_audio_sample_t)data->volume_level) / IMYP_MAX_IMY_VOLUME);
 		}
@@ -359,3 +373,18 @@ imyp_jack_close (
 
 	return res;
 }
+
+/**
+ * Displays the version of the JACK library IMYplay was compiled with.
+ */
+void
+imyp_jack_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+	/* no version information currently available */
+	printf ( "JACK: ?\n" );
+}
+

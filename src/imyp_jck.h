@@ -34,5 +34,6 @@ extern int imyp_jack_play_tune PARAMS ((const double freq, const int volume_leve
 	const int duration, void * const buf, int bufsize));
 extern int imyp_jack_init PARAMS ((const char * const dev_file));
 extern int imyp_jack_close PARAMS ((void));
+extern void imyp_jack_version PARAMS ((void));
 
 #endif /* IMYP_JACK */

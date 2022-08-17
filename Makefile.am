@@ -3,7 +3,7 @@ SUBDIRS = doc src po
 ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = config.rpath mkinstalldirs imyplay.spi m4/ax_cflag.m4 m4/ax_unus.m4 \
-	doc/imelody.txt imy THANKS dosdist.bat
+	doc/imelody.txt imy THANKS dosdist.bat dosfiles.txt
 
 pack:	doc/imyplay.info
 	make dist-gzip

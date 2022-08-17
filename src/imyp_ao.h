@@ -34,5 +34,6 @@ extern int imyp_ao_play_tune PARAMS ((const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
 extern int imyp_ao_init PARAMS ((const char * const dev_file));
 extern int imyp_ao_close PARAMS ((void));
+extern void imyp_ao_version PARAMS ((void));
 
 #endif /* IMYP_AO */

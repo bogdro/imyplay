@@ -1,6 +1,6 @@
 /*
  * A program for playing iMelody ringtones (IMY files).
- *	-- PulseAudio backend, header file.
+ *	-- FILE backend, header file.
  *
  * Copyright (C) 2009-2011 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
@@ -23,17 +23,17 @@
  *		USA
  */
 
-#ifndef IMYP_PULSE
-# define IMYP_PULSE 1
+#ifndef IMYP_FILE
+# define IMYP_FILE 1
 
 # include "imyplay.h"
 
-extern void imyp_pulse_pause PARAMS ((const int milliseconds));
-extern void imyp_pulse_put_text PARAMS ((const char * const text));
-extern int imyp_pulse_play_tune PARAMS( (const double freq, const int volume_level,
+extern void imyp_file_pause PARAMS ((const int milliseconds, void * const buf, int bufsize));
+extern void imyp_file_put_text PARAMS ((const char * const text));
+extern int imyp_file_play_tune PARAMS ((const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_pulse_init PARAMS ((const char * const dev_file));
-extern int imyp_pulse_close PARAMS ((void));
-extern void imyp_pulse_version PARAMS ((void));
+extern int imyp_file_init PARAMS ((const char * const dev, const char * const file_out));
+extern int imyp_file_close PARAMS ((void));
+extern void imyp_file_version PARAMS ((void));
 
-#endif /* IMYP_PULSE */
+#endif /* IMYP_FILE */

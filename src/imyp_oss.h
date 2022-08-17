@@ -34,5 +34,6 @@ extern int imyp_oss_play_tune PARAMS ((const double freq, const int volume_level
 	const int duration, void * const buf, int bufsize));
 extern int imyp_oss_init PARAMS ((const char * const dev_file));
 extern int imyp_oss_close PARAMS ((void));
+extern void imyp_oss_version PARAMS ((void));
 
 #endif /* IMYP_OSS */

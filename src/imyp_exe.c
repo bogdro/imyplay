@@ -34,7 +34,7 @@
 #if (defined HAVE_STDLIB_H) && (defined HAVE_SYSTEM)
 # include <stdlib.h>
 #else
-# error Exec otput selected, but stdlib.h or sysytem() not found.
+# error Exec output selected, but stdlib.h or sysytem() not found.
 #endif
 
 #ifdef HAVE_STRING_H
@@ -327,3 +327,18 @@ imyp_exec_close (
 	}
 	return 0;
 }
+
+/**
+ * Displays the version of the EXEC backend.
+ */
+void
+imyp_exec_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+	/* this is an internal backend */
+	printf ( "EXEC\n" );
+}
+

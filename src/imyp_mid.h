@@ -34,5 +34,6 @@ extern int imyp_midi_play_tune PARAMS ((const double freq, const int volume_leve
 	const int duration, void * const buf, int bufsize));
 extern int imyp_midi_init PARAMS ((const char * const filename, const int instrument));
 extern int imyp_midi_close PARAMS ((void));
+extern void imyp_midi_version PARAMS ((void));
 
 #endif /* IMYP_MIDIW */

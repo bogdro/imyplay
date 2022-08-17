@@ -53,7 +53,20 @@ Requirements for compiling the full version:
    	http://jackaudio.org/		- for the JACK1 library
 	http://gstreamer.freedesktop.org/ - for GStreamer
 
-Type './configure' to configure the program for your system.
+Type './configure' to configure the program for your system. If you do not
+ with support for a particular output mechanism, configure the program with
+	./configure --enable-XXX=no
+ where "XXX" is the output system you wish to disable (allegro, SDL, ALSA,
+ OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER).
+By default, a flex-based scanner will be generated to parse the input file.
+ If the scanner does not compile for or works incorrectly, disable it with
+	./configure --enable-FLEXPARSER=no
+ and recompile imyplay.
+
+If you do NOT wish imyplay to use the network or get the computer's IP
+ address, get LibHideIP>=0.2 and LibNetBlock and configure imyplay with
+	./configure --enable-LIBHIDEIP --enable-LIBNETBLOCK
+NOTE: this may cause network sound output to fail.
 
 Type 'make' to compile the program.
 To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT

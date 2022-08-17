@@ -1,9 +1,11 @@
 /*
  * A program for playing iMelody ringtones (IMY files).
- *	-- GStreamer backend, header file.
+ *	-- utility functions, header file.
  *
  * Copyright (C) 2011 Bogdan Drozdowski, bogdandr (at) op.pl
  * License: GNU General Public License, v3+
+ *
+ * Syntax example: imyplay ringtone.imy
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,17 +25,29 @@
  *		USA
  */
 
-#ifndef IMYP_GSTREAMER
-# define IMYP_GSTREAMER 1
+#ifndef IMYP_UTILS
+# define IMYP_UTILS 1
 
 # include "imyplay.h"
 
-extern void imyp_gst_pause PARAMS ((const int milliseconds));
-extern void imyp_gst_put_text PARAMS ((const char * const text));
-extern int imyp_gst_play_tune PARAMS ((const double freq, const int volume_level,
-	const int duration, void * const buf, int bufsize));
-extern int imyp_gst_init PARAMS ((const char * const dev_file));
-extern int imyp_gst_close PARAMS ((void));
-extern void imyp_gst_version PARAMS ((void));
+enum IMYP_SAMPLE_FORMATS
+{
+	IMYP_SAMPLE_FORMAT_UNKNOWN,
+	IMYP_SAMPLE_FORMAT_S16LE,
+	IMYP_SAMPLE_FORMAT_S16BE,
+	IMYP_SAMPLE_FORMAT_U16LE,
+	IMYP_SAMPLE_FORMAT_U16BE,
+	IMYP_SAMPLE_FORMAT_S8LE,
+	IMYP_SAMPLE_FORMAT_S8BE,
+	IMYP_SAMPLE_FORMAT_U8LE,
+	IMYP_SAMPLE_FORMAT_U8BE
+};
 
-#endif /* IMYP_GSTREAMER */
+extern int imyp_compare PARAMS ((const char string1[], const char string2[]));
+extern IMYP_CURR_LIB imyp_parse_system PARAMS ((const char system_name[]));
+extern enum IMYP_SAMPLE_FORMATS imyp_get_format PARAMS ((const char string[]));
+extern int imyp_generate_samples PARAMS ((const double freq, const int volume_level,
+	const int duration, void * const buf, int bufsize, const int is_le,
+	const int is_uns, unsigned int quality, const unsigned int samp_rate));
+
+#endif /* IMYP_UTILS */

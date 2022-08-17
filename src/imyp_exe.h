@@ -34,5 +34,6 @@ extern int imyp_exec_play_tune PARAMS ((const double freq, const int volume_leve
 	const int duration, void * const buf, int bufsize));
 extern int imyp_exec_init PARAMS ((const char * const program));
 extern int imyp_exec_close PARAMS ((void));
+extern void imyp_exec_version PARAMS ((void));
 
 #endif /* IMYP_EXEC */

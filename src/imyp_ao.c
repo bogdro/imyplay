@@ -28,6 +28,7 @@
 #include "imyplay.h"
 #include "imyp_ao.h"
 #include "imyp_sig.h"
+#include "imyputil.h"
 
 #include <stdio.h>
 
@@ -102,69 +103,18 @@ imyp_ao_play_tune (
 #endif
 {
 	int res;
-	int samp;	/* better than float */
-	int i;
-	const int quality = format.bits;
-	const int sampfreq = format.rate;
 
-	if ( (buf == NULL) || (bufsize <= 0) ) return -1;
-
-	i = (duration * sampfreq * (quality/8)) / 1000;
-	bufsize = IMYP_MIN (bufsize, i);
-
-	if ( freq > 0.0 )
+	if ( (buf == NULL) || (bufsize <= 0) )
 	{
-#define NSAMP ((sampfreq)/(freq))
-		for ( i=0; i < bufsize; i++ )
-		{
-			if ( sig_recvd != 0 )
-			{
-				return -2;
-			}
-#if (defined HAVE_SIN) || (defined HAVE_LIBM)
-			samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-				/* The "/3" is required to have a full sine wave, not
-				trapese-like wave */
-				IMYP_ROUND (((1<<(quality-1))-1)
-					* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
-#else
-			samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-				(((1<<(quality-1))-1)/NSAMP));
-#endif
-			if ( quality == 16 )
-			{
-				if ( i*2 >= bufsize ) break;
-				if ( format.byte_format == AO_FMT_LITTLE )
-				{
-					((char *)buf)[i*2] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-					((char *)buf)[i*2+1] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
-				}
-				else
-				{
-					((char *)buf)[i*2] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
-					((char *)buf)[i*2+1] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-				}
-			}
-			else if ( quality == 8 )
-			{
-				((char *)buf)[i] = (char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-			}
-		}
+		return -1;
 	}
-	else
+
+	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
+		(format.byte_format == AO_FMT_LITTLE)? 1 : 0, 1,
+		(unsigned int)format.bits, (unsigned int)format.rate);
+	if ( sig_recvd != 0 )
 	{
-		for ( i=0; i < bufsize; i++ )
-		{
-			if ( sig_recvd != 0 )
-			{
-				return -2;
-			}
-			((char *)buf)[i] = 0;
-		}
+		return -2;
 	}
 	res = ao_play (device, buf, (uint_32) bufsize);
 	if ( res > 0 )
@@ -289,3 +239,18 @@ imyp_ao_close (
 	ao_shutdown ();
 	return 0;
 }
+
+/**
+ * Displays the version of the AO library IMYplay was compiled with.
+ */
+void
+imyp_ao_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+	/* no version information currently available */
+	printf ( "AO: ?\n" );
+}
+

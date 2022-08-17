@@ -34,5 +34,6 @@ extern int imyp_portaudio_play_tune PARAMS ((const double freq, const int volume
 	const int duration, void * const buf, int bufsize));
 extern int imyp_portaudio_init PARAMS ((const char * const dev_file));
 extern int imyp_portaudio_close PARAMS ((void));
+extern void imyp_portaudio_version PARAMS ((void));
 
 #endif /* IMYP_PORTAUDIO */

@@ -28,6 +28,7 @@
 #include "imyplay.h"
 #include "imyp_als.h"
 #include "imyp_sig.h"
+#include "imyputil.h"
 
 #include <stdio.h>
 
@@ -36,8 +37,10 @@
 #if (defined HAVE_LIBASOUND) && ((defined HAVE_ASOUNDLIB_H) || (defined HAVE_ALSA_ASOUNDLIB_H))
 # if (defined HAVE_ASOUNDLIB_H)
 #  include <asoundlib.h>
+#  include <version.h>
 # else
 #  include <alsa/asoundlib.h>
+#  include <alsa/version.h>
 # endif
 #else
 # error The ALSA library was not found.
@@ -104,15 +107,16 @@ imyp_alsa_play_tune (
 #endif
 {
 	int res, dir;
-	int samp;	/* better than float */
-	int i;
 	snd_pcm_format_t format;
 	unsigned int quality = 16;
 	unsigned int sampfreq = 44100;
 	int is_le = 1;
 	int is_uns = 0;
 
-	if ( (buf == NULL) || (bufsize <= 0) ) return -1;
+	if ( (buf == NULL) || (bufsize <= 0) )
+	{
+		return -1;
+	}
 
 	snd_pcm_hw_params_get_format (params, &format);
 	if ( (format == SND_PCM_FORMAT_S8) || (format == SND_PCM_FORMAT_U8) )
@@ -149,65 +153,11 @@ imyp_alsa_play_tune (
 		quality = 16;
 	}
 	snd_pcm_hw_params_get_rate (params, &sampfreq, &dir);
-	bufsize = IMYP_MIN (bufsize, (duration * (int)sampfreq * ((int)quality/8)) / 1000);
-
-	if ( freq > 0.0 )
+	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
+		is_le, is_uns, quality, sampfreq);
+	if ( sig_recvd != 0 )
 	{
-#define NSAMP ((sampfreq)/(freq))
-		for ( i=0; i < bufsize; i++ )
-		{
-			if ( sig_recvd != 0 )
-			{
-				return -2;
-			}
-#if (defined HAVE_SIN) || (defined HAVE_LIBM)
-			samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-				/* The "/3" is required to have a full sine wave, not
-				trapese-like wave */
-				IMYP_ROUND (((1<<(quality-1))-1)
-					* sin ((i%((int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
-#else
-			samp = (int) IMYP_ROUND ((i%((int)IMYP_ROUND(NSAMP)))*
-				(((1<<(quality-1))-1)/NSAMP));
-#endif
-			if ( is_uns == 0 )
-			{
-				samp -= (1<<(quality-1));
-			}
-			if ( quality == 16 )
-			{
-				if ( i*2 >= bufsize ) break;
-				if ( is_le != 0 )
-				{
-					((char *)buf)[i*2] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-					((char *)buf)[i*2+1] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
-				}
-				else
-				{
-					((char *)buf)[i*2] =
-						(char)((((samp * volume_level) / IMYP_MAX_IMY_VOLUME) >> 8) & 0x0FF);
-					((char *)buf)[i*2+1] =
-						(char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-				}
-			}
-			else if ( quality == 8 )
-			{
-				((char *)buf)[i] = (char)(((samp * volume_level) / IMYP_MAX_IMY_VOLUME) & 0x0FF);
-			}
-		}
-	}
-	else
-	{
-		for ( i=0; i < bufsize; i++ )
-		{
-			if ( sig_recvd != 0 )
-			{
-				return -2;
-			}
-			((char *)buf)[i] = 0;
-		}
+		return -2;
 	}
 	res = snd_pcm_writei (handle, buf, (snd_pcm_uframes_t)bufsize / (quality/8));
 	if ( res >= 0 )
@@ -345,3 +295,21 @@ imyp_alsa_close (
 	snd_pcm_hw_params_free (params);
 	return 0;
 }
+
+/**
+ * Displays the version of the ALSA library IMYplay was compiled with.
+ */
+void
+imyp_alsa_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+#ifdef SND_LIB_VERSION_STR
+	printf ( "ALSA: %s\n", SND_LIB_VERSION_STR );
+#else
+	printf ( "ALSA: ?\n" );
+#endif
+}
+

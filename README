@@ -81,7 +81,21 @@ Requirements for compiling the full version:
   malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),
   fclose() and qsort().
 
-Type './configure' to configure the program for your system.
+Type './configure' to configure the program for your system. If you do not
+ with support for a particular output mechanism, configure the program with
+	./configure --enable-XXX=no
+ where "XXX" is the output system you wish to disable (allegro, SDL, ALSA,
+ OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE).
+
+By default, a flex-based scanner will be generated to parse the input file.
+ If the scanner does not compile for you or works incorrectly, disable it with
+	./configure --enable-FLEXPARSER=no
+ and recompile imyplay.
+
+If you do NOT wish imyplay to use the network or get the computer's IP
+ address, get LibHideIP>=0.2 and LibNetBlock and configure imyplay with
+	./configure --enable-LIBHIDEIP --enable-LIBNETBLOCK
+NOTE: this may cause network sound output to fail.
 
 Type 'make' to compile the program.
 To compile under DOS using DJGPP, find your GCC's "limits.h" file (NOT
@@ -115,6 +129,11 @@ Command line options (for the full version):
 			sound output.
 -e|--exec <program>	Execute the given program instead of normal sound
 			output. Read below for options. Overrides --output.
+-f|--file <file>	Write raw samples to this file instead of normal
+			sound output. Overrides --output. Use --dev to specify
+			the sampling rate and samples' format
+			(case-insensitive: s16le, s16be, u16le, u16be, s8le,
+			s8be, u8le, u8be), e.g. "--dev 44100:s16le".
 -h|--help		Print help
 -l|--license		Print license information
 --midi-instr <number>	Use the given MIDI instrument number.
@@ -126,8 +145,10 @@ Command line options (for the full version):
 -V|--version		Print version number
 
 Alternatively to using the --output option, you can launch the program as
-"imyplay-alsa", "imyplay-allegro" and so on (these can be symbolic links
-or copies of the executable file).
+ "imyplay-alsa", "imyplay-allegro" and so on (these can be symbolic links
+ or copies of the executable file). This overrides the default order of
+ output systems, but does NOT override the --to-midi, -f/--file and
+ -e/--exec options.
 
 Executed program's options - you can pass the following expressions in the
 <prog> argument and these will get substituted by the correct values when

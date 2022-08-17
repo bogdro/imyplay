@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 0.1\n"
 "Report-Msgid-Bugs-To: bogdandr@op.pl\n"
-"POT-Creation-Date: 2011-03-23 18:41+0100\n"
+"POT-Creation-Date: 2011-10-02 13:02+0200\n"
 "PO-Revision-Date: 2010-05-30 13:52+0100\n"
 "Last-Translator: Bogdan Drozdowski <bogdandr@op.pl>\n"
 "Language-Team: Polish\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: src/imyplay.c:75
+#: src/imyplay.c:84
 msgid "version"
 msgstr "wersja"
 
-#: src/imyplay.c:79
+#: src/imyplay.c:88
 msgid ""
 "Program for playing iMelody ringtones (IMY files).\n"
 "\n"
@@ -50,71 +50,75 @@ msgstr ""
 "ZASTOSOWAÑ\n"
 "\n"
 
-#: src/imyplay.c:89
+#: src/imyplay.c:98
 msgid "error"
 msgstr "b³±d"
 
-#: src/imyplay.c:90
+#: src/imyplay.c:99
 msgid "Error while trying to set a signal handler for"
 msgstr "B³±d podczas ustawiania procedury obs³ugi sygna³u"
 
-#: src/imyplay.c:91
+#: src/imyplay.c:100
 msgid "Error during library init."
 msgstr "B³±d podczas inicjalizacji biblioteki"
 
-#: src/imyplay.c:92
+#: src/imyplay.c:101
 msgid "Error during library closing."
 msgstr "B³±d podczas zamykania biblioteki"
 
-#: src/imyplay.c:100
+#: src/imyplay.c:109
 msgid "unknown"
 msgstr "nieznany"
 
-#: src/imyplay.c:222
+#: src/imyplay.c:238
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr "Program do odtwarzania dzwonków iMelody (plików IMY)"
 
-#: src/imyplay.c:223
+#: src/imyplay.c:239
 msgid "Syntax"
 msgstr "Sk³adnia"
 
-#: src/imyplay.c:225
+#: src/imyplay.c:241
 msgid " [options] "
 msgstr " [opcje] "
 
-#: src/imyplay.c:227
+#: src/imyplay.c:243
 msgid "Options"
 msgstr "Opcje"
 
-#: src/imyplay.c:228
+#: src/imyplay.c:244
 msgid "Try to use this device"
 msgstr "Spróbuj u¿yæ tego urz±dzenia"
 
-#: src/imyplay.c:230
+#: src/imyplay.c:246
 msgid "Execute this program instead of sound output"
 msgstr "Wykonaj ten program zamiast wyj¶cia d¼wiêkowego"
 
-#: src/imyplay.c:232
+#: src/imyplay.c:249
+msgid "Write raw samples to this file instead of sound output"
+msgstr "Zapisz surowe próbki do tego pliku zamiast wyj¶cia d¼wiêkowego"
+
+#: src/imyplay.c:251
 msgid "Print help"
 msgstr "Wy¶wietl pomoc"
 
-#: src/imyplay.c:233
+#: src/imyplay.c:252
 msgid "Print license information"
 msgstr "Wy¶wietl informacje o licencji"
 
-#: src/imyplay.c:235
+#: src/imyplay.c:254
 msgid "Select MIDI instrument number"
 msgstr "Wybierz numer instrumentu MIDI"
 
-#: src/imyplay.c:237
+#: src/imyplay.c:256
 msgid "Use the given output system"
 msgstr "U¿yj danego systemu wyj¶cia"
 
-#: src/imyplay.c:239
+#: src/imyplay.c:258
 msgid "Convert the given files to MIDI format"
 msgstr "Przekonwertuj podane pliki na format MIDI"
 
-#: src/imyplay.c:241
+#: src/imyplay.c:260
 msgid "Print version number"
 msgstr "Wy¶wietl numer wersji"
 

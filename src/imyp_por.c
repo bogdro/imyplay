@@ -118,6 +118,7 @@ static int imyp_portaudio_fill_buffer (
 	unsigned long int i;
 	unsigned int quality = 16;
 	int is_uns = 0;
+	double nperiods;
 
 	if ( (userData == NULL) || (output == NULL) || (frameCount <= 0) ) return paContinue;
 
@@ -143,7 +144,7 @@ static int imyp_portaudio_fill_buffer (
 	if ( data->tone_freq > 0.0 )
 	{
 		data->inside_callback = 1;
-#define NSAMP ((data->sampfreq)/(data->tone_freq))
+		nperiods = data->sampfreq/data->tone_freq;
 		for ( i=data->last_index; i < data->last_index+frameCount; i++ )
 		{
 			if ( sig_recvd != 0 )
@@ -151,20 +152,37 @@ static int imyp_portaudio_fill_buffer (
 				data->inside_callback = 0;
 				return paAbort;
 			}
+			if ( (int)IMYP_ROUND(nperiods) == 0 )
+			{
+				/* not a single full period fits in the buffer */
 #if (defined HAVE_SIN) || (defined HAVE_LIBM)
-			samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
-				/* The "/3" is required to have a full sine wave, not
-				trapese-like wave */
-				IMYP_ROUND (((1<<(quality-1))-1)
-					* sin ((i%((unsigned long int)IMYP_ROUND(NSAMP)))*(2*M_PI/NSAMP))/3));
+				samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
+					/* The "/3" is required to have a full sine wave, not
+					trapese-like wave */
+					IMYP_ROUND (((1<<(quality-1))-1)
+						* sin (i*(2*M_PI/nperiods))/3));
+#else
+				samp = (int) IMYP_ROUND (i*
+					(((1<<(quality-1))-1)/nperiods));
+#endif
+			}
+			else
+			{
+#if (defined HAVE_SIN) || (defined HAVE_LIBM)
+				samp = (int)(((1<<(quality-1))-1) /* disable to get rectangular wave */ +
+					/* The "/3" is required to have a full sine wave, not
+					trapese-like wave */
+					IMYP_ROUND (((1<<(quality-1))-1)
+						* sin ((i%((unsigned long int)IMYP_ROUND(nperiods)))*(2*M_PI/nperiods))/3));
+#else
+				samp = (int) IMYP_ROUND ((i%((unsigned long int)IMYP_ROUND(nperiods)))*
+					(((1<<(quality-1))-1)/nperiods));
+#endif
+			}
 			if ( is_uns == 0 )
 			{
 				samp -= (1<<(quality-1))-1;
 			}
-#else
-			samp = (int) IMYP_ROUND ((i%((unsigned long int)IMYP_ROUND(NSAMP)))*
-				(((1<<(quality-1))-1)/NSAMP));
-#endif
 			if ( quality == 16 )
 			{
 				if ( (i-data->last_index)*2 >= frameCount ) break;
@@ -367,3 +385,17 @@ imyp_portaudio_close (
 	Pa_Terminate ();
 	return 0;
 }
+
+/**
+ * Displays the version of the PortAudio backend.
+ */
+void
+imyp_portaudio_version (
+#ifdef IMYP_ANSIC
+	void
+#endif
+)
+{
+	printf ( "PortAudio: %s\n", Pa_GetVersionText () );
+}
+

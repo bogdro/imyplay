@@ -58,9 +58,18 @@
 # include <sys/types.h>
 #endif
 
+#ifdef IMYP_HAVE_LIBNETBLOCK
+# include <libnetblock.h>
+#endif
+
+#ifdef IMYP_HAVE_LIBHIDEIP
+# include <libhideip.h>
+#endif
+
 #include "imypwrap.h"
 #include "imyp_sig.h"
 #include "imyparse.h"
+#include "imyputil.h"
 
 # ifdef __GNUC__
 #  pragma GCC poison strcpy strcat
@@ -100,7 +109,7 @@ static const char * const err_lib_close   = N_("Error during library closing.");
 const char * const imyp_sig_unk = N_("unknown");
 #endif /* HAVE_SIGNAL_H */
 
-static char *imyp_progname;	/* The name of the program */
+static const char * imyp_progname;	/* The name of the program */
 
 /* Command-line options. */
 /* These unconditionally: */
@@ -109,6 +118,10 @@ static int imyp_optind= 0;
 static int opt_tomidi  = 0;
 static int opt_midiins = 0;
 static int midi_instrument = -1;
+#endif
+#ifdef IMYP_HAVE_FILE
+static int opt_file    = 0;
+static char * out_file = NULL;
 #endif
 static char * device = NULL;
 static char * output_system = NULL;
@@ -134,6 +147,9 @@ static const struct option opts[] =
 # ifdef IMYP_HAVE_EXEC
 	{ "exec",       required_argument, &opt_exec,    1 },
 # endif
+# ifdef IMYP_HAVE_FILE
+	{ "file",       required_argument, &opt_file,    1 },
+# endif
 	{ "help",       no_argument,       &opt_help,    1 },
 	{ "licence",    no_argument,       &opt_license, 1 },
 	{ "license",    no_argument,       &opt_license, 1 },
@@ -147,7 +163,7 @@ static const struct option opts[] =
 };
 #endif
 
-static IMYP_CURR_LIB current_library = CURR_NONE;
+static IMYP_CURR_LIB current_library = IMYP_CURR_NONE;
 
 /**
  * Displays an error message.
@@ -229,10 +245,13 @@ print_help (
 #ifdef IMYP_HAVE_EXEC
 	printf ( "\n-e|--exec <program>\t%s", _("Execute this program instead of sound output") );
 #endif
+#ifdef IMYP_HAVE_FILE
+	printf ( "\n-f|--file <file>\t%s", _("Write raw samples to this file instead of sound output") );
+#endif
 	printf ( "\n-h|--help\t\t%s", _("Print help") );
 	printf ( "\n-l|--license\t\t%s", _("Print license information") );
 #ifdef IMYP_HAVE_MIDI
-	printf ( "\n--midi-instr <number>\t\t%s", _("Select MIDI instrument number") );
+	printf ( "\n--midi-instr <number>\t%s", _("Select MIDI instrument number") );
 #endif
 	printf ( "\n-o|--output <system>\t%s", _("Use the given output system") );
 #ifdef IMYP_HAVE_MIDI
@@ -280,6 +299,12 @@ main (
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 #endif
+#ifdef IMYP_HAVE_LIBNETBLOCK
+	libnetblock_enable ();
+#endif
+#ifdef IMYP_HAVE_LIBHIDEIP
+	libhideip_enable ();
+#endif
 
 	if ( (argc <= 1) || (argv == NULL) )
 	{
@@ -324,7 +349,7 @@ main (
 	optind = 0;
 	while (1==1)
 	{
-		opt_char = getopt_long ( argc, argv, "Vhld:e:o:", opts, NULL );
+		opt_char = getopt_long ( argc, argv, "Vh?ld:e:o:f:", opts, NULL );
 		if ( opt_char == -1 )
 		{
 			break;
@@ -340,6 +365,7 @@ main (
 		if ( (opt_char == (int)'V') || (opt_version == 1) )
 		{
 			printf ( "%s %s %s\n", imyp_progname, _(ver_str), VERSION );
+			imyp_report_versions ();
 			return 1;
 		}
 
@@ -375,6 +401,13 @@ main (
 			opt_exec = 0;
 		}
 # endif
+# ifdef IMYP_HAVE_FILE
+		if ( (opt_char == (int)'f') || (opt_file == 1) )
+		{
+			out_file = optarg;
+			opt_file = 0;
+		}
+# endif
 	}
 	imyp_optind = optind;
 #else
@@ -391,6 +424,7 @@ main (
 		if ( (strstr (argv[i], "-V") == argv[i]) || (strstr (argv[i], "--version") == argv[i]) )
 		{
 			printf ( "%s %s %s\n", imyp_progname, _(ver_str), VERSION );
+			imyp_report_versions ();
 			return 1;
 		}
 		if ( (strstr (argv[i], "-l") == argv[i]) || (strstr (argv[i], "--license") == argv[i])
@@ -454,6 +488,18 @@ main (
 			continue;
 		}
 # endif
+# ifdef IMYP_HAVE_FILE
+		if ( (strstr (argv[i], "--file") == argv[i]) || (strstr (argv[i], "-f") == argv[i]) )
+		{
+			if ( i+1 < (unsigned int)argc )
+			{
+				out_file = argv[i+1];
+				argv[i+1] = NULL;
+			}
+			argv[i] = NULL;
+			continue;
+		}
+# endif
 	}
 	imyp_optind = 1;
 #endif
@@ -470,12 +516,18 @@ main (
 	if (
 # ifdef IMYP_HAVE_MIDI
 		(opt_tomidi == 0)
-#  ifdef IMYP_HAVE_EXEC
+#  if (defined IMYP_HAVE_EXEC) || (defined IMYP_HAVE_FILE)
 		&&
 #  endif
 # endif
 # ifdef IMYP_HAVE_EXEC
 		(exec_program == NULL)
+#  if (defined IMYP_HAVE_FILE)
+		&&
+#  endif
+# endif
+# ifdef IMYP_HAVE_FILE
+		(out_file == NULL)
 # endif
 		)
 #endif
@@ -488,14 +540,16 @@ main (
 		if ( output_system != NULL )
 		{
 			IMYP_CURR_LIB sel = imyp_parse_system (output_system);
-			if ( sel == CURR_MIDI )
+			if ( sel == IMYP_CURR_MIDI )
 			{
 				opt_tomidi = 1;
 			}
-			else if ( (sel != CURR_MIDI) && (sel != CURR_EXEC) )
+			else if ( (sel != IMYP_CURR_MIDI)
+				&& (sel != IMYP_CURR_EXEC) && (sel != IMYP_CURR_FILE) )
 			{
 				/* try to initialize the given output system */
-				if ( imyp_init_selected (output_system, device, midi_instrument) != 0 )
+				if ( imyp_init_selected (output_system,
+					device, midi_instrument, out_file) != 0 )
 				{
 					printf ("%s\n", _(err_lib_init));
 					return -2;
@@ -504,7 +558,8 @@ main (
 				current_library = sel;
 			}
 		}
-		else if ( imyp_lib_init (&current_library, 0, device, 0, midi_instrument) != 0 )
+		else if ( imyp_lib_init (&current_library, 0, device, 0,
+			midi_instrument, 0, out_file) != 0 )
 		{
 			printf ("%s\n", _(err_lib_init));
 			return -2;
@@ -528,7 +583,8 @@ main (
 #ifdef IMYP_HAVE_MIDI
 		if ( opt_tomidi == 1 )
 		{
-			if ( imyp_lib_init (&current_library, 1, argv[imyp_optind], 0, midi_instrument) != 0 )
+			if ( imyp_lib_init (&current_library, 1, argv[imyp_optind],
+				0, midi_instrument, 0, out_file) != 0 )
 			{
 				printf ("%s\n", _(err_lib_init));
 				imyp_optind++;
@@ -539,7 +595,20 @@ main (
 #ifdef IMYP_HAVE_EXEC
 		if ( exec_program != NULL )
 		{
-			if ( imyp_lib_init (&current_library, 0, exec_program, 1, midi_instrument) != 0 )
+			if ( imyp_lib_init (&current_library, 0, exec_program,
+				1, midi_instrument, 0, out_file) != 0 )
+			{
+				printf ("%s\n", _(err_lib_init));
+				imyp_optind++;
+				continue;
+			}
+		}
+#endif
+#ifdef IMYP_HAVE_FILE
+		if ( out_file != NULL )
+		{
+			if ( imyp_lib_init (&current_library, 0, device,
+				0, midi_instrument, 1, out_file) != 0 )
 			{
 				printf ("%s\n", _(err_lib_init));
 				imyp_optind++;

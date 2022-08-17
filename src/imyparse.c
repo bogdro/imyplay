@@ -609,7 +609,7 @@ imyp_play_current_note (
 #endif
 {
 	if ( (imy == NULL) || (skipped_dur == NULL) || (note_duration == NULL)
-		|| (curr == CURR_NONE) || (play_res == NULL) )
+		|| (curr == IMYP_CURR_NONE) || (play_res == NULL) )
 	{
 		return;
 	}
@@ -685,7 +685,7 @@ imyp_play_current_note (
 		}
 	}
 	imyp_pause (imyp_get_rest_time (*note_duration,
-		style), curr, 1);
+		style), curr, 1, buf16, IMYP_SAMPBUFSIZE);
 	melody_index += *skipped_dur;
 	imyp_read_line (melody_line, &melody_index,
 		sizeof (melody_line) - 10, imy, 0);
@@ -1080,7 +1080,8 @@ imyp_play_file (
 							imyp_pause (imyp_get_duration (
 									&melody_line[melody_index],
 									&skipped_dur,
-									bpm, imy), curr, 0);
+									bpm, imy), curr, 0, buf16,
+									IMYP_SAMPBUFSIZE);
 							melody_index += skipped_dur;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy, 0);

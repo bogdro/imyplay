@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(imyplay, 0.5, bogdandr@op.pl)
+AC_INIT(imyplay, 0.6, bogdandr@op.pl)
 AM_INIT_AUTOMAKE
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in:po/Makefile.inn imyplay.spc:imyplay.spi \
@@ -111,6 +111,42 @@ AC_ARG_ENABLE(GSTRAMER,[[  --enable-GSTREAMER	Enable GStreamer output.]],
 	]
 	,feat_GST=yes)
 
+AC_ARG_ENABLE(FILE,[[  --enable-FILE		Enable raw file output.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_FILE=no
+	 else
+		feat_FILE=yes
+	 fi
+	]
+	,feat_FILE=yes)
+
+AC_ARG_ENABLE(FLEXPARSER,[[  --enable-FLEXPARSER	Enable flex-based parser.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_FLEX=no
+	 else
+		feat_FLEX=yes
+	 fi
+	]
+	,feat_FLEX=yes)
+
+AC_ARG_ENABLE(LIBHIDEIP,[[  --enable-LIBHIDEIP	Enable libhideip for imyplay.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_LIBHIDEIP=no
+	 else
+		feat_LIBHIDEIP=yes
+	 fi
+	]
+	,feat_LIBHIDEIP=no)
+
+AC_ARG_ENABLE(LIBNETBLOCK,[[  --enable-LIBNETBLOCK	Enable libnetblock for imyplay.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_LIBNETBLOCK=no
+	 else
+		feat_LIBNETBLOCK=yes
+	 fi
+	]
+	,feat_LIBNETBLOCK=no)
+
 # ==================== Set of available languages (deprecated).
 #ALL_LINGUAS="pl"
 
@@ -118,6 +154,16 @@ AC_ARG_ENABLE(GSTRAMER,[[  --enable-GSTREAMER	Enable GStreamer output.]],
 AC_PROG_CC
 AC_PROG_RANLIB
 AM_CONDITIONAL(ISGCC, [test "x$GCC" = "xyes"])
+
+have_flex=no
+if ( test "x$feat_FLEX" = "xyes" ); then
+
+	AM_PROG_LEX
+	if ( test "x$LEX" = "xflex" ); then
+
+		have_flex=yes
+	fi
+fi
 
 # ==================== Checks for libraries.
 
@@ -140,7 +186,7 @@ if ( test "x$feat_allegro" = "xyes" ); then
 	if ( test "x$alleg_ldflags" != "x" ); then
 		# do NOT substitute "LIBS" here! Allegro libraries would make all tests fail
 		# because of missing _mangled_main_address symbol.
-		AC_SUBST(AM_LDFLAGS,"$LDFLAGS $alleg_ldflags")
+		AC_SUBST(AM_LDFLAGS,"$AM_LDFLAGS $LDFLAGS $alleg_ldflags")
 	fi
 fi
 
@@ -240,6 +286,18 @@ if ( test "x$feat_GST" = "xyes" ); then
 	fi
 fi
 
+if ( test "x$feat_LIBHIDEIP" = "xyes" ); then
+
+	libhip=yes
+	AC_CHECK_LIB(hideip,[libhideip_enable],,[libhip=no])
+fi
+
+if ( test "x$feat_LIBNETBLOCK" = "xyes" ); then
+
+	libnb=yes
+	AC_CHECK_LIB(netblock,[libnetblock_enable],,[libnb=no])
+fi
+
 # ==================== Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_SYS_WAIT()
@@ -253,9 +311,29 @@ AC_CHECK_HEADER([sys/wait.h],AC_DEFINE([HAVE_SYS_WAIT_H],[1],
 AC_CHECK_HEADER([string.h],AC_DEFINE([HAVE_STRING_H],[1],[Whether you have the string.h header.]),
 	[AC_MSG_ERROR([[I need string.h to work.]])])
 
-AC_CHECK_HEADERS([getopt.h malloc.h sys/types.h stdlib.h locale.h math.h signal.h errno.h libgen.h])
+have_unistd_h=yes
+AC_CHECK_HEADERS([unistd.h], AC_DEFINE([HAVE_UNISTD_H],[1],
+	[Whether you have the unistd.h header.]), have_unistd_h=no)
 
-if ( test "x$feat_EXEC" = "xyes" || test "x$have_system" = "xyes" ); then
+have_errno_h=yes
+AC_CHECK_HEADERS([errno.h], AC_DEFINE([HAVE_ERRNO_H],[1],
+	[Whether you have the errno.h header.]), have_errno_h=no)
+
+have_stdlib_h=yes
+AC_CHECK_HEADERS([stdlib.h], AC_DEFINE([HAVE_STDLIB_H],[1],
+	[Whether you have the stdlib.h header.]), have_stdlib_h=no)
+
+if ( test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes" ); then
+
+	have_inttypes_h=yes
+	AC_CHECK_HEADERS([inttypes.h], AC_DEFINE([HAVE_INTTYPES_H],[1],
+		[Whether you have the inttypes.h header.]), have_inttypes_h=no)
+
+fi
+
+AC_CHECK_HEADERS([getopt.h malloc.h sys/types.h locale.h math.h signal.h libgen.h])
+
+if ( test "x$feat_EXEC" = "xyes" && test "x$have_system" = "xyes" ); then
 
 	have_stdlib_h=yes
 	AC_CHECK_HEADER([stdlib.h],AC_DEFINE([HAVE_STDLIB_H],[1],
@@ -333,7 +411,6 @@ if ( test "x$have_asoundlib_h" = "xyes" || test "x$feat_OSS" = "xyes"		\
 		have_sys_select_h=yes
 		have_sys_time_h=yes
 		have_sys_types_h=yes
-		have_unistd_h=yes
 		AC_HEADER_TIME()
 		AC_CHECK_HEADERS([sys/select.h], AC_DEFINE([HAVE_SYS_SELECT_H],[1],
 			[Whether you have the sys/select.h header.]), have_sys_select_h=no)
@@ -341,8 +418,6 @@ if ( test "x$have_asoundlib_h" = "xyes" || test "x$feat_OSS" = "xyes"		\
 			[Whether you have the sys/time.h header.]), have_sys_time_h=no)
 		AC_CHECK_HEADERS([sys/types.h], AC_DEFINE([HAVE_SYS_TYPES_H],[1],
 			[Whether you have the sys/types.h header.]), have_sys_types_h=no)
-		AC_CHECK_HEADERS([unistd.h], AC_DEFINE([HAVE_UNISTD_H],[1],
-			[Whether you have the unistd.h header.]), have_unistd_h=no)
 	fi
 fi
 
@@ -389,6 +464,20 @@ if ( test "x$libpulseaudio_simple" = "xyes" && test "x$libpulseaudio" = "xyes" )
 			have_pulseaudio_simple_h=no)])
 fi
 
+if ( test "x$feat_LIBHIDEIP" = "xyes" && test "x$libhip" = "xyes" ); then
+
+	have_libhideip_h=yes
+	AC_CHECK_HEADER([libhideip.h],AC_DEFINE([HAVE_LIBHIDEIP_H],[1],
+		[Whether you have the libhideip.h header.]), have_libhideip_h=no)
+fi
+
+if ( test "x$feat_LIBNETBLOCK" = "xyes" && test "x$libnb" = "xyes" ); then
+
+	have_libnetblock_h=yes
+	AC_CHECK_HEADER([libnetblock.h],AC_DEFINE([HAVE_LIBNETBLOCK_H],[1],
+		[Whether you have the libnetblock.h header.]), have_libnetblock_h=no)
+fi
+
 have_malloc=yes
 AC_CHECK_FUNCS([malloc],AC_DEFINE([HAVE_MALLOC],[1],
 	[Whether you have the malloc() function.]),[have_malloc=no])
@@ -410,16 +499,17 @@ fi
 
 
 AM_CONDITIONAL(ALLEGRO, [(test "x$liballeg" = "xyes" || test "x$alleg_ldflags" != "x") && \
-	test "x$have_all_h" = "xyes"])
+	test "x$have_all_h" = "xyes" && test "x$feat_allegro" = "xyes"])
 
-AM_CONDITIONAL(SDL, [test "x$libsdl" = "xyes" && test "x$have_sdl_h" = "xyes"])
+AM_CONDITIONAL(SDL, [test "x$libsdl" = "xyes" && test "x$have_sdl_h" = "xyes"		\
+	&& test "x$feat_SDL" = "xyes"])
 
 AM_CONDITIONAL(ALSA, [test "x$libalsa" = "xyes" && test "x$have_asoundlib_h" = "xyes"	\
 	&& test "x$have_select" = "xyes" && ( test "x$have_sys_select_h" = "xyes" || (	\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
 		test "x$have_unistd_h" = "xyes")					\
-		)])
+		) && test "x$feat_ALSA" = "xyes"])
 
 AM_CONDITIONAL(OSS, [test "x$have_ioctl" = "xyes" && test "x$have_sys_soundcard_h" = "xyes"	\
 	&& test "x$have_sys_ioctl_h" = "xyes" && test "x$have_fcntl_h" = "xyes"			\
@@ -435,29 +525,36 @@ AM_CONDITIONAL(LIBAO, [test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"		\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
 		test "x$have_unistd_h" = "xyes")					\
-		)])
+		) && test "x$feat_LIBAO" = "xyes"])
 
-AM_CONDITIONAL(PORTAUDIO, [test "x$libportaudio" = "xyes" && test "x$have_portaudio_h" = "xyes"])
+AM_CONDITIONAL(PORTAUDIO, [test "x$libportaudio" = "xyes" && \
+	test "x$have_portaudio_h" = "xyes" && test "x$feat_PORTAUDIO" = "xyes"])
 
-AM_CONDITIONAL(PULSEAUDIO, [test "x$libpulseaudio_simple" = "xyes" \
-	&& test "x$libpulseaudio" = "xyes" \
-	&& test "x$have_pulseaudio_simple_h" = "xyes"])
+AM_CONDITIONAL(PULSEAUDIO, [test "x$libpulseaudio_simple" = "xyes"			\
+	&& test "x$libpulseaudio" = "xyes"						\
+	&& test "x$have_pulseaudio_simple_h" = "xyes" && test "x$feat_PULSEAUDIO" = "xyes"])
 
 AM_CONDITIONAL(JACK, [test "x$libjack" = "xyes" && test "x$have_jack_h" = "xyes"	\
 	&& test "x$have_select" = "xyes" && ( test "x$have_sys_select_h" = "xyes" || (	\
 		test "x$have_sys_time_h" = "xyes"	&& 				\
 		test "x$have_sys_types_h" = "xyes"	&& 				\
 		test "x$have_unistd_h" = "xyes")					\
-		)])
+		) && test "x$feat_JACK" = "xyes"])
 
 AM_CONDITIONAL(MIDI, [test "x$feat_MIDI" = "xyes" && test "x$have_malloc" = "xyes"	\
-	&& test "x$have_realloc" = "xyes" && test "x$have_memset" = "xyes" \
+	&& test "x$have_realloc" = "xyes" && test "x$have_memset" = "xyes"		\
 	&& test "x$have_memcpy" = "xyes" && test "x$have_qsort" = "xyes"])
 
-AM_CONDITIONAL(EXEC, [test "x$feat_EXEC" = "xyes" && test "x$have_stdlib_h" = "xyes" \
+AM_CONDITIONAL(EXEC, [test "x$feat_EXEC" = "xyes" && test "x$have_stdlib_h" = "xyes"	\
 	&& test "x$have_system" = "xyes"])
 
-AM_CONDITIONAL(GSTREAMER, [test "x$libgstreamer" = "xyes"])
+AM_CONDITIONAL(GSTREAMER, [test "x$libgstreamer" = "xyes" && test "x$feat_GST" = "xyes"])
+
+AM_CONDITIONAL(FILE, [test "x$feat_FILE" = "xyes"])
+
+AM_CONDITIONAL(FLEX, [test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"	\
+	&& test "x$have_unistd_h" = "xyes" &&  test "x$have_errno_h" = "xyes"		\
+	&& test "x$have_stdlib_h" = "xyes" &&  test "x$have_inttypes_h" = "xyes" ])
 
 # ===================== Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -481,7 +578,11 @@ AC_CHECK_TYPES([sig_atomic_t],,,
 AC_TYPE_SIGNAL
 AC_FUNC_MALLOC
 
-AC_CHECK_FUNCS([setlocale sigaction fseeko ftello snprintf basename getopt_long])
+AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long])
+if ( test "x$have_flex" != "xyes" ); then
+
+	AC_CHECK_FUNCS([fseeko ftello])
+fi
 
 AM_GNU_GETTEXT_VERSION([0.17])
 AM_GNU_GETTEXT([external])
@@ -523,6 +624,8 @@ if (test "x$GCC" = "xyes" ); then
 	AX_C_CHECK_FLAG([-Wlogical-op], [CFLAGS="$CFLAGS -Wlogical-op"], [CFLAGS="$CFLAGS"])
 	AX_C_CHECK_FLAG([-fstack-protector-all], [CFLAGS="$CFLAGS -fstack-protector-all"], [CFLAGS="$CFLAGS"])
 	AX_C_CHECK_FLAG([-O2], [CFLAGS="$CFLAGS -O2"], [CFLAGS="$CFLAGS"])
+	AX_C_CHECK_FLAG([-Waggregate-return], [CFLAGS="$CFLAGS -Waggregate-return"], [CFLAGS="$CFLAGS"])
+	AX_C_CHECK_FLAG([-Wwrite-strings], [CFLAGS="$CFLAGS -Wwrite-strings"], [CFLAGS="$CFLAGS"])
 
 #	if (test "x$have_ll" = "xyes"); then
 #
@@ -805,6 +908,88 @@ else
 
 	else	#( test "x$libgstreamer" != "xyes" ); then
 		echo " *	GStreamer: no (library or headers missing)"
+
+	fi
+fi
+
+if (	test "x$feat_FILE" = "xyes" ); then
+
+	echo " *	FILE: yes"
+else
+	if (test "x$feat_FILE" != "xyes"); then
+		echo " *	FILE: no (disabled by command line)"
+
+	fi
+fi
+
+echo "***********************************"
+
+if (	test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"	\
+	&& test "x$have_unistd_h" = "xyes" &&  test "x$have_errno_h" = "xyes"		\
+	&& test "x$have_stdlib_h" = "xyes" &&  test "x$have_inttypes_h" = "xyes" ); then
+
+	echo " *	Flex parser: yes"
+	AC_MSG_WARN([Flex-based parser enabled. If it does not compile for])
+	AC_MSG_WARN([you or works incorrectly, re-configure imyplay with])
+	AC_MSG_WARN([./configure --enable-FLEXPARSER=no])
+else
+	if (test "x$feat_FLEX" != "xyes"); then
+		echo " *	Flex parser: no (disabled by command line)"
+
+	elif ( test "x$have_unistd_h" != "xyes" ); then
+		echo " *	Flex parser: no (unistd.h missing)"
+
+	elif ( test "x$have_errno_h" != "xyes" ); then
+		echo " *	Flex parser: no (errno.h missing)"
+
+	elif ( test "x$have_stdlib_h" != "xyes" ); then
+		echo " *	Flex parser: no (stdlib.h missing)"
+
+	elif ( test "x$have_inttypes_h" != "xyes" ); then
+		echo " *	Flex parser: no (inttypes.h missing)"
+
+	else	#( test "x$have_flex" != "xyes" ); then
+		echo " *	Flex parser: no (flex missing)"
+
+	fi
+fi
+
+if (	test "x$feat_LIBHIDEIP" = "xyes" && test "x$libhip" = "xyes" \
+	&& test "x$have_libhideip_h" = "xyes" ); then
+
+	echo " *	LibHideIP enabled: yes"
+	AC_MSG_WARN([LibHideIP may cause network sound output not to work.])
+	AC_MSG_WARN([If you do not wish to enable LibHideIP, re-configure imyplay with])
+	AC_MSG_WARN([./configure --enable-LIBHIDEIP=no])
+else
+	if (test "x$feat_LIBHIDEIP" != "xyes"); then
+		echo " *	LibHideIP enabled: no (disabled by command line)"
+
+	elif ( test "x$libhip" != "xyes" ); then
+		echo " *	LibHideIP enabled: no (library missing)"
+
+	else	#( test "x$have_libhideip_h" != "xyes" ); then
+		echo " *	LibHideIP enabled: no (libhideip.h header missing)"
+
+	fi
+fi
+
+if (	test "x$feat_LIBNETBLOCK" = "xyes" && test "x$libnb" = "xyes" \
+	&& test "x$have_libnetblock_h" = "xyes" ); then
+
+	echo " *	LibNetBlock enabled: yes"
+	AC_MSG_WARN([LibNetBlock may cause network sound output not to work.])
+	AC_MSG_WARN([If you do not wish to enable LibNetBlock, re-configure imyplay with])
+	AC_MSG_WARN([./configure --enable-LIBNETBLOCK=no])
+else
+	if (test "x$feat_LIBNETBLOCK" != "xyes"); then
+		echo " *	LibNetBlock enabled: no (disabled by command line)"
+
+	elif ( test "x$libnb" != "xyes" ); then
+		echo " *	LibNetBlock enabled: no (library missing)"
+
+	else	#( test "x$have_libnetblock_h" != "xyes" ); then
+		echo " *	LibNetBlock enabled: no (libnetblock.h header missing)"
 
 	fi
 fi

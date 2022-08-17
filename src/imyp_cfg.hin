@@ -1,0 +1,70 @@
+/*
+ * A program for playing iMelody ringtones (IMY files).
+ *	-- configuration header file.
+ *
+ * Copyright (C) 2009 Bogdan Drozdowski, bogdandr (at) op.pl
+ * License: GNU General Public License, v3+
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foudation:
+ *		Free Software Foundation
+ *		51 Franklin Street, Fifth Floor
+ *		Boston, MA 02110-1301
+ *		USA
+ */
+
+#ifndef IMYP_CFG_H
+# define IMYP_CFG_H 1
+
+# ifdef HAVE_CONFIG_H
+#  include <config.h>
+# else
+	/* be optimisitc - glibc has all of these */
+#  define ENABLE_NLS		1
+#  define HAVE_BASENAME		1
+#  define HAVE_ERRNO_H		1
+#  define HAVE_FSEEKO		1
+#  define HAVE_FTELLO		1
+#  define HAVE_GETOPT_H		1
+#  define HAVE_GETOPT_LONG	1
+#  define HAVE_GETTEXT		1
+#  define HAVE_LIBGEN_H		1
+#  define HAVE_LIBINTL_H	1
+#  define HAVE_LOCALE_H		1
+#  define HAVE_LONG_LONG	1
+#  define HAVE_MATH_H		1
+#  define HAVE_MEMCPY		1
+#  define HAVE_MEMORY_H		1
+#  define HAVE_SETLOCALE	1
+#  define HAVE_SIG_ATOMIC_T	1
+#  define HAVE_SIGACTION	1
+#  define HAVE_SIGNAL_H		1
+#  define HAVE_SIZE_T		1
+#  define HAVE_SLEEP		1
+#  define HAVE_SNPRINTF		1
+#  define HAVE_STRING_H		1
+#  define HAVE_SYS_TYPES_H	1
+
+#  undef size_t
+
+#  define STDC_HEADERS		1
+
+#  define PACKAGE_NAME "imyplayer"
+#  define PACKAGE PACKAGE_NAME
+#  define PACKAGE_VERSION "@VERSION@"
+#  define VERSION PACKAGE_VERSION
+#  define LOCALEDIR "/usr/share/locale"
+#  define RETSIGTYPE void
+# endif /* HAVE_CONFIG_H */
+
+#endif	/* IMYP_CFG_H */

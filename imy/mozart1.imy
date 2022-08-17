@@ -1,0 +1,11 @@
+BEGIN:IMELODY
+VERSION:1.2
+FORMAT:CLASS1.0
+NAME:Wolfgang Amadeus Mozart - Clarinet concerto part 3
+BEAT:120
+STYLE:S1
+VOLUME:V15
+MELODY:d3#d3f4f4f4g4f4e4f4g4f4#d2d3r2#a3a3g3g3g3f3#d3
+ #d3d3c3*3#a3a3#a3b3*4c3
+END:IMELODY
+

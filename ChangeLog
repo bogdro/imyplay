@@ -1,0 +1,8 @@
+2009-01-20	Bogdan Drozdowski <bogdandr@op.pl>
+
+	* IMYplay version 0.1
+	  Complies to the iMelody specification (doc/imelody.txt), uses the
+	  Allegro library, captures signals. Modular structure allows easy
+	  adding new sound libraries in the future. Full documentation
+	  included.
+

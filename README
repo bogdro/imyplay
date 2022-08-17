@@ -1,0 +1,98 @@
+This is the README file for imyplay, a program for playing iMelody
+ ringtones (IMY files).
+
+Read the info documentation (type 'info doc/imyplay.info') to get more
+ information.
+
+Author: Bogdan Drozdowski, bogdandr @ op . pl
+License: GPLv3+
+
+Requirements for compiling the full version:
+
+- a non-root account. Please, NEVER compile or 'make' anything as root.
+
+- a working C compiler.
+
+- development package for the C library (like glibc-devel and glibc-headers)
+  The getopt.h header and the getopt_long() from it are required. The
+  signal.h header is used to catch signals, and is optional. The translation
+  headers (locale.h, libintl.h or other) are optional.
+
+- the 'make' program
+
+- development package for the Allegro game library (usually included in
+  something like allegro-devel). If you don't have
+  anything like this installed or available (check twice), then go to
+  	http://alleg.sf.net/
+  Then compile and install that package.
+
+Type './configure' to configure the program for your system.
+
+Type 'make' to compile the program.
+Documentation will be compiled, if you have the 'makeinfo' program
+ ('texinfo' package).
+Translations will be compiled, if you have the 'gettext' package.
+
+Type 'make install' to install the program. NOTE: 'make install' is
+ NOT recommended. Create and install an rpm package instead, if possible.
+
+
+Type 'info imyplay' to get help.
+
+Syntax:
+
+	imyplay [options] file.imy [...]
+
+Command line options:
+
+-h|--help		Print help
+-l|--license		Print license information
+-V|--version		Print version number
+
+=======================================================
+
+Building an RPM package:
+
+1) copy the imyplay.spc file to /usr/src/redhat/SPECS
+2) copy the source package imyplay-XX.tar.gz to /usr/src/redhat/SOURCES
+3) type
+	rpmbuild -ba /usr/src/redhat/SPECS/imyplay.spc
+4) get the rpms from /usr/src/redhat/RPMS/i386 and /usr/src/redhat/SRPMS
+
+=======================================================
+
+Translating the docs to your language:
+
+ Type `msginit -i imyplay.pot -o XX.po', substituting your
+2-letter language code for 'XX' (e.g. 'pl' or 'de'). This requires the
+'gettext' package installed. You can manually copy the file
+imyplay.pot to XX.po and manually add the following header, if
+you wish.
+ In the resulting XX.po file you have to fill in all the fields
+marked with capital letters in the header:
+
+# YOUR LANGUAGE translations for imyplay package.
+# Copyright (C) 2007 Bogdan 'bogdro' Drozdowski
+# This file is distributed under the same license as
+# the imyplay package.
+# YOUR FULL NAME <EMAILADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: imyplay VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2007-04-25 11:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAILADDRESS>\n"
+"Language-Team: LANGUAGE <EMAILADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+The rest of the file will contain messages from the program. Translate
+them all and send me the resulting XX.po file.
+
+Translating the documentation:
+- info: simply change the imyplay.texi.in file
+- man: Unpack the page using 'gunzip imyplay.1.gz' and
+  translate the resulting imyplay.1 file.

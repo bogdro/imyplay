@@ -1,0 +1,138 @@
+# Polish translations for imyplay package
+# Polskie t³umaczenia dla pakietu imyplay.
+# Copyright (C) 2009 Bogdan bogdro Drozdowski
+# This file is distributed under the same license as the imyplay package.
+# Bogdan Drozdowski <bogdandr@op.pl>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: imyplay 0.1\n"
+"Report-Msgid-Bugs-To: bogdandr@op.pl\n"
+"POT-Creation-Date: 2009-02-01 16:43+0100\n"
+"PO-Revision-Date: 2009-01-18 13:52+0100\n"
+"Last-Translator: Bogdan Drozdowski <bogdandr@op.pl>\n"
+"Language-Team: Polish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+
+#: src/imyplay.c:77
+msgid "version"
+msgstr "wersja"
+
+#: src/imyplay.c:80
+msgid ""
+"Program for playing iMelody ringtones (IMY files).\n"
+"\n"
+"This program is Free Software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License\n"
+"as published by the Free Software Foundation; either version 3\n"
+"of the License, or (at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+"\n"
+msgstr ""
+"Program do odtwarzania dzwonków iMelody (plików IMY).\n"
+"\n"
+"Niniejszy program jest Wolnym Oprogramowaniem; mo¿esz go\n"
+"rozprowadzaæ dalej i/lub modyfikowaæ na warunkach Powszechnej\n"
+"Licencji Publicznej GNU, wydanej przez Fundacjê Wolnego\n"
+"Oprogramowania - wedug wersji 3-ciej tej Licencji lub ktorej¶\n"
+"z pó¼iejszych wersji.\n"
+"\n"
+"Niniejszy program rozpowszechniany jest z nadziej±, i¿ bêdzie on\n"
+"u¿yteczny - jednak BEZ JAKIEJKOLWIEK GWARANCJI, nawet domy¶lnej\n"
+"gwarancji PRZYDATNO¦CI HANDLOWEJ albo PRZYDATNO¦CI DO OKRE¦LONYCH\n"
+"ZASTOSOWAÑ\n"
+"\n"
+
+#: src/imyplay.c:90
+msgid "error"
+msgstr "b³±d"
+
+#: src/imyplay.c:91
+msgid "Error while trying to set a signal handler for"
+msgstr "B³±d podczas ustawiania procedury obs³ugi sygna³"
+
+#: src/imyplay.c:92
+msgid "Error during library init."
+msgstr "B³±d podczas inicjalizacji biblioteki"
+
+#: src/imyplay.c:93
+msgid "Error during library closing."
+msgstr "B³±d podczas zamykania biblioteki"
+
+#: src/imyplay.c:95
+msgid "Unknown token"
+msgstr "Nieznany token"
+
+#: src/imyplay.c:96
+msgid "at position"
+msgstr "na pozycji"
+
+#: src/imyplay.c:97
+msgid "Unexpected token"
+msgstr "Nieoczekiwany token"
+
+#: src/imyplay.c:98
+msgid "Can't open file"
+msgstr "Nie mogê otworzyæ pliku"
+
+#: src/imyplay.c:99
+msgid "Problem parsing beat"
+msgstr "Problem z parsowaniem beatu"
+
+#: src/imyplay.c:100
+msgid "Problem parsing style"
+msgstr "Problem z parsowaniem stylu"
+
+#: src/imyplay.c:101
+msgid "Problem parsing volume"
+msgstr "Problem z parsowaniem g³o¶no¶ci"
+
+#: src/imyplay.c:102
+msgid "Not iMelody file"
+msgstr "Nie jest plikiem iMelody"
+
+#: src/imyplay.c:103
+msgid "Error playing tune"
+msgstr "B³±d podczas odtwarzania d¼wiêku"
+
+#: src/imyplay.c:110
+msgid "unknown"
+msgstr "nieznany"
+
+#: src/imyplay.c:371
+msgid "A program for playing iMelody ringtones (IMY files)"
+msgstr "Program do odtwarzania dzwonków iMelody (plików IMY)"
+
+#: src/imyplay.c:372
+msgid "Syntax"
+msgstr "Sk³adnia"
+
+#: src/imyplay.c:374
+msgid " [options] "
+msgstr " [opcje] "
+
+#: src/imyplay.c:376
+msgid "Options"
+msgstr "Opcje"
+
+#: src/imyplay.c:377
+msgid "Print help"
+msgstr "Wy¶wietl pomoc"
+
+#: src/imyplay.c:378
+msgid "Print license information"
+msgstr "Wy¶wietl informacje o licencji"
+
+#: src/imyplay.c:379
+msgid "Print version number"
+msgstr "Wy¶wietl numer wersji"
+
+#~ msgid "Setting signal handlers"
+#~ msgstr "Ustawianie procedur obs³ugi sygna³ów"

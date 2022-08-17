@@ -1,0 +1,120 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Bogdan bogdro Drozdowski
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: bogdandr@op.pl\n"
+"POT-Creation-Date: 2009-02-01 16:43+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/imyplay.c:77
+msgid "version"
+msgstr ""
+
+#: src/imyplay.c:80
+msgid ""
+"Program for playing iMelody ringtones (IMY files).\n"
+"\n"
+"This program is Free Software; you can redistribute it and/or\n"
+"modify it under the terms of the GNU General Public License\n"
+"as published by the Free Software Foundation; either version 3\n"
+"of the License, or (at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+"\n"
+msgstr ""
+
+#: src/imyplay.c:90
+msgid "error"
+msgstr ""
+
+#: src/imyplay.c:91
+msgid "Error while trying to set a signal handler for"
+msgstr ""
+
+#: src/imyplay.c:92
+msgid "Error during library init."
+msgstr ""
+
+#: src/imyplay.c:93
+msgid "Error during library closing."
+msgstr ""
+
+#: src/imyplay.c:95
+msgid "Unknown token"
+msgstr ""
+
+#: src/imyplay.c:96
+msgid "at position"
+msgstr ""
+
+#: src/imyplay.c:97
+msgid "Unexpected token"
+msgstr ""
+
+#: src/imyplay.c:98
+msgid "Can't open file"
+msgstr ""
+
+#: src/imyplay.c:99
+msgid "Problem parsing beat"
+msgstr ""
+
+#: src/imyplay.c:100
+msgid "Problem parsing style"
+msgstr ""
+
+#: src/imyplay.c:101
+msgid "Problem parsing volume"
+msgstr ""
+
+#: src/imyplay.c:102
+msgid "Not iMelody file"
+msgstr ""
+
+#: src/imyplay.c:103
+msgid "Error playing tune"
+msgstr ""
+
+#: src/imyplay.c:110
+msgid "unknown"
+msgstr ""
+
+#: src/imyplay.c:371
+msgid "A program for playing iMelody ringtones (IMY files)"
+msgstr ""
+
+#: src/imyplay.c:372
+msgid "Syntax"
+msgstr ""
+
+#: src/imyplay.c:374
+msgid " [options] "
+msgstr ""
+
+#: src/imyplay.c:376
+msgid "Options"
+msgstr ""
+
+#: src/imyplay.c:377
+msgid "Print help"
+msgstr ""
+
+#: src/imyplay.c:378
+msgid "Print license information"
+msgstr ""
+
+#: src/imyplay.c:379
+msgid "Print version number"
+msgstr ""

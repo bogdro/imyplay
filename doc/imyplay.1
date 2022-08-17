@@ -1,0 +1,62 @@
+.\"	Process this file with groff -man -Tascii foo.1
+.\"
+.TH imyplayer 1 Linux "User's Manual"
+
+.SH NAME
+imyplay \- A program for playing iMelody ringtones (IMY files).
+
+.SH SYNOPSIS
+.B imyplay [options]
+.I ringtone.imy
+.B ...
+
+.SH DESCRIPTION
+The imyplay program plays the given iMelody file.
+
+.SH OPTIONS
+
+.IP -h|--help
+Print help
+.IP -l|--license
+Print license information
+.IP -V|--version
+Print version number
+
+.SH DIAGNOSTICS
+The program returns with 0 exit code if everything went fine. If there
+were errors, the program exits with non-zero exit code:
+.IP 1:
+Only version number, help or licence information was requested and printed, no action.
+.IP \-1:
+Bad/missing command line syntax.
+.IP \-2:
+Unable to initialize the sound library.
+.IP \-3:
+Unable to close the sound library.
+.IP \-4:
+Unable to open the given file.
+.IP \-100:
+A signal was caught and the program was forced to exit.
+
+.SH NOTES
+The error code is reset after each file played. If the last file was played successfully,
+but the previous weren't, their errors are currently lost.
+
+.SH AUTHOR
+Bogdan 'bogdro' Drozdowski,
+bogdandr /AT/ op . pl
+
+bogdro /AT/ rudy . mif . pg . gda . pl
+
+[EN] http://rudy.mif.pg.gda.pl/~bogdro/soft/
+
+[EN] http://rudy.mif.pg.gda.pl/~bogdro/inne/
+
+[PL] http://rudy.mif.pg.gda.pl/~bogdro/
+
+.SH "SEE ALSO"
+The 'info' documentation is more descriptive and is the main one. Type
+
+.B 	info imyplayer
+
+to read it.

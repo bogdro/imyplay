@@ -1,0 +1,11 @@
+BEGIN:IMELODY
+VERSION:1.2
+FORMAT:CLASS1.0
+NAME:Wolfgang Amadeus Mozart - Figaro's Wedding - Overture
+BEAT:120
+STYLE:S1
+VOLUME:V15
+MELODY:c2e3d3*3b3a3g3*4g4g4g4g4g4g4f4e4r2*5c2*4f3d3f3a3a3
+ f3d3*3b3b3*4c3*3g3e3e3
+END:IMELODY
+

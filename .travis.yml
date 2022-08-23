@@ -1,0 +1,26 @@
+#install: skip
+
+language: c
+
+#compiler:
+#        - gcc
+#        - clang
+
+os:
+        - linux
+        - osx
+        - freebsd
+
+branches:
+#        - master
+        - dev
+
+addons:
+        apt:
+                packages: liballegro4-dev libsdl2-dev libasound2-dev libao-dev portaudio19-dev libpulse-dev libjack-dev libgstreamer-plugins-base1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
+        homebrew:
+                packages: allegro sdl2 alsa-lib libao portaudio pulseaudio jack gstreamer gst-plugins-base
+        pkg:
+                packages: allegro sdl2 alsa-lib libao portaudio pulseaudio jackit gstreamer1 gstreamer1-plugins-all
+
+script: ./configure && make

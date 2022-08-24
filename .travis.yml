@@ -23,4 +23,4 @@ addons:
         pkg:
                 packages: allegro sdl2 alsa-lib libao portaudio pulseaudio jackit gstreamer1 gstreamer1-plugins-all
 
-script: ./configure && make
+script: touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin && ./configure && make

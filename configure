@@ -723,7 +723,7 @@ GST_CFLAGS
 PKG_CONFIG_LIBDIR
 PKG_CONFIG_PATH
 PKG_CONFIG
-AM_LDFLAGS
+ALLEGRO_LDFLAGS
 LEXLIB
 LEX_OUTPUT_ROOT
 LEX
@@ -5575,7 +5575,8 @@ printf "%s\n" "#define HAVE_LIBALLEG 1" >>confdefs.h
 	if ( test "x$alleg_ldflags" != "x" ); then
 		# do NOT substitute "LIBS" here! Allegro libraries would make all tests fail
 		# because of missing _mangled_main_address symbol.
-		AM_LDFLAGS="$AM_LDFLAGS $LDFLAGS $alleg_ldflags"
+		#AC_SUBST(AM_LDFLAGS,"$AM_LDFLAGS $LDFLAGS $alleg_ldflags")
+		ALLEGRO_LDFLAGS="$alleg_ldflags"
 
 	fi
 fi

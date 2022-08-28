@@ -164,6 +164,8 @@ am_imyplay_OBJECTS = imyplay.$(OBJEXT) imypwrap.$(OBJEXT) \
 imyplay_OBJECTS = $(am_imyplay_OBJECTS)
 am__DEPENDENCIES_1 =
 imyplay_DEPENDENCIES = $(am__DEPENDENCIES_1)
+imyplay_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(imyplay_LDFLAGS) \
+	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -238,9 +240,9 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/imyp_cfg.hin \
 	$(top_srcdir)/ylwrap imyparsf.c
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
+ALLEGRO_LDFLAGS = @ALLEGRO_LDFLAGS@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
-AM_LDFLAGS = @AM_LDFLAGS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -378,6 +380,7 @@ imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c \
 imyplay_LDADD = $(INTLLIBS)
 AM_CPPFLAGS = -I../intl -DLOCALEDIR=\"$(localedir)\"
 EXTRA_DIST = imyp_cfg.hin imypdos.asm
+@ALLEGRO_TRUE@imyplay_LDFLAGS = @ALLEGRO_LDFLAGS@
 #BUILT_SOURCES = imyparsf.c
 
 # WARNING: enabling nodist_imyplay_SOURCES in this form makes
@@ -465,7 +468,7 @@ clean-binPROGRAMS:
 
 imyplay$(EXEEXT): $(imyplay_OBJECTS) $(imyplay_DEPENDENCIES) $(EXTRA_imyplay_DEPENDENCIES) 
 	@rm -f imyplay$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(imyplay_OBJECTS) $(imyplay_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(imyplay_LINK) $(imyplay_OBJECTS) $(imyplay_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

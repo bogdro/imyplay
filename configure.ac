@@ -219,7 +219,8 @@ if ( test "x$feat_allegro" = "xyes" ); then
 	if ( test "x$alleg_ldflags" != "x" ); then
 		# do NOT substitute "LIBS" here! Allegro libraries would make all tests fail
 		# because of missing _mangled_main_address symbol.
-		AC_SUBST(AM_LDFLAGS,"$AM_LDFLAGS $LDFLAGS $alleg_ldflags")
+		#AC_SUBST(AM_LDFLAGS,"$AM_LDFLAGS $LDFLAGS $alleg_ldflags")
+		AC_SUBST(ALLEGRO_LDFLAGS,"$alleg_ldflags")
 	fi
 fi
 

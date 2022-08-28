@@ -90,26 +90,27 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = imyplay$(EXEEXT)
 @ALLEGRO_TRUE@am__append_1 = imyp_all.c imyp_all.h
+@ALLEGRO_TRUE@am__append_2 = @ALLEGRO_LDFLAGS@
 
 # SDLv2 has functions with the same names as those in SDLv1,
 # so enable at most one of the libraries at the same time
-@SDL2_TRUE@am__append_2 = imyp_sdl.c imyp_sdl.h
-@SDL2_FALSE@@SDL_TRUE@am__append_3 = imyp_sdl.c imyp_sdl.h
-@ALSA_TRUE@am__append_4 = imyp_als.c imyp_als.h
-@OSS_TRUE@am__append_5 = imyp_oss.c imyp_oss.h
-@LIBAO_TRUE@am__append_6 = imyp_ao.c imyp_ao.h
-@PORTAUDIO_TRUE@am__append_7 = imyp_por.c imyp_por.h
-@PULSEAUDIO_TRUE@am__append_8 = imyp_pul.c imyp_pul.h
-@JACK_TRUE@am__append_9 = imyp_jck.c imyp_jck.h
-@MIDI_TRUE@am__append_10 = imyp_mid.c imyp_mid.h midifile.c midifile.h \
+@SDL2_TRUE@am__append_3 = imyp_sdl.c imyp_sdl.h
+@SDL2_FALSE@@SDL_TRUE@am__append_4 = imyp_sdl.c imyp_sdl.h
+@ALSA_TRUE@am__append_5 = imyp_als.c imyp_als.h
+@OSS_TRUE@am__append_6 = imyp_oss.c imyp_oss.h
+@LIBAO_TRUE@am__append_7 = imyp_ao.c imyp_ao.h
+@PORTAUDIO_TRUE@am__append_8 = imyp_por.c imyp_por.h
+@PULSEAUDIO_TRUE@am__append_9 = imyp_pul.c imyp_pul.h
+@JACK_TRUE@am__append_10 = imyp_jck.c imyp_jck.h
+@MIDI_TRUE@am__append_11 = imyp_mid.c imyp_mid.h midifile.c midifile.h \
 @MIDI_TRUE@	midiinfo.h midibase.h
 
-@EXEC_TRUE@am__append_11 = imyp_exe.c imyp_exe.h
-@GSTREAMER_TRUE@am__append_12 = imyp_gst.c imyp_gst.h
-@FILE_TRUE@am__append_13 = imyp_fil.c imyp_fil.h
-@SPKR_TRUE@am__append_14 = imyp_spk.c imyp_spk.h
-@FLEX_TRUE@am__append_15 = imyparsf.l
-@FLEX_FALSE@am__append_16 = imyparse.c
+@EXEC_TRUE@am__append_12 = imyp_exe.c imyp_exe.h
+@GSTREAMER_TRUE@am__append_13 = imyp_gst.c imyp_gst.h
+@FILE_TRUE@am__append_14 = imyp_fil.c imyp_fil.h
+@SPKR_TRUE@am__append_15 = imyp_spk.c imyp_spk.h
+@FLEX_TRUE@am__append_16 = imyparsf.l
+@FLEX_FALSE@am__append_17 = imyparse.c
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
@@ -164,8 +165,6 @@ am_imyplay_OBJECTS = imyplay.$(OBJEXT) imypwrap.$(OBJEXT) \
 imyplay_OBJECTS = $(am_imyplay_OBJECTS)
 am__DEPENDENCIES_1 =
 imyplay_DEPENDENCIES = $(am__DEPENDENCIES_1)
-imyplay_LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(imyplay_LDFLAGS) \
-	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -286,7 +285,7 @@ LEX_OUTPUT_ROOT = @LEX_OUTPUT_ROOT@
 LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
-LIBS = @LIBS@
+LIBS = @LIBS@ $(am__append_2)
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
@@ -371,16 +370,15 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c \
 	imyp_sig.h imyparse.h imyputil.c imyputil.h iparsers.c \
-	iparsers.h $(am__append_1) $(am__append_2) $(am__append_3) \
-	$(am__append_4) $(am__append_5) $(am__append_6) \
-	$(am__append_7) $(am__append_8) $(am__append_9) \
-	$(am__append_10) $(am__append_11) $(am__append_12) \
-	$(am__append_13) $(am__append_14) $(am__append_15) \
-	$(am__append_16)
+	iparsers.h $(am__append_1) $(am__append_3) $(am__append_4) \
+	$(am__append_5) $(am__append_6) $(am__append_7) \
+	$(am__append_8) $(am__append_9) $(am__append_10) \
+	$(am__append_11) $(am__append_12) $(am__append_13) \
+	$(am__append_14) $(am__append_15) $(am__append_16) \
+	$(am__append_17)
 imyplay_LDADD = $(INTLLIBS)
 AM_CPPFLAGS = -I../intl -DLOCALEDIR=\"$(localedir)\"
 EXTRA_DIST = imyp_cfg.hin imypdos.asm
-@ALLEGRO_TRUE@imyplay_LDFLAGS = @ALLEGRO_LDFLAGS@
 #BUILT_SOURCES = imyparsf.c
 
 # WARNING: enabling nodist_imyplay_SOURCES in this form makes
@@ -468,7 +466,7 @@ clean-binPROGRAMS:
 
 imyplay$(EXEEXT): $(imyplay_OBJECTS) $(imyplay_DEPENDENCIES) $(EXTRA_imyplay_DEPENDENCIES) 
 	@rm -f imyplay$(EXEEXT)
-	$(AM_V_CCLD)$(imyplay_LINK) $(imyplay_OBJECTS) $(imyplay_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(LINK) $(imyplay_OBJECTS) $(imyplay_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

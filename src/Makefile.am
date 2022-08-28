@@ -11,7 +11,7 @@ EXTRA_DIST = imyp_cfg.hin imypdos.asm
 
 if ALLEGRO
 imyplay_SOURCES += imyp_all.c imyp_all.h
-imyplay_LDFLAGS = @ALLEGRO_LDFLAGS@
+LIBS += @ALLEGRO_LDFLAGS@
 endif
 
 # SDLv2 has functions with the same names as those in SDLv1,

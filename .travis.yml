@@ -1,5 +1,11 @@
 #install: skip
 
+install:
+        - if [ $TRAVIS_OS_NAME = linux ]; then sudo apt-get -y install liballegro4-dev libsdl2-dev libasound2-dev libao-dev portaudio19-dev libpulse-dev libjack-dev libgstreamer-plugins-base1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev;
+                elif [ $TRAVIS_OS_NAME = osx ]; then export HOMEBREW_NO_INSTALL_CLEANUP=1; brew install allegro sdl2 alsa-lib libao portaudio pulseaudio jack gstreamer gst-plugins-base;
+                elif [ $TRAVIS_OS_NAME = freebsd ]; then su -m root -c 'pkg install -y allegro sdl2 alsa-lib libao portaudio pulseaudio jackit gstreamer1 gstreamer1-plugins-all';
+                fi
+
 language: c
 
 #compiler:
@@ -15,12 +21,15 @@ branches:
 #        - master
         - dev
 
-addons:
-        apt:
-                packages: liballegro4-dev libsdl2-dev libasound2-dev libao-dev portaudio19-dev libpulse-dev libjack-dev libgstreamer-plugins-base1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
-        homebrew:
-                packages: allegro sdl2 alsa-lib libao portaudio pulseaudio jack gstreamer gst-plugins-base
-        pkg:
-                packages: allegro sdl2 alsa-lib libao portaudio pulseaudio jackit gstreamer1 gstreamer1-plugins-all
+#addons:
+        #apt:
+                #packages: liballegro4-dev libsdl2-dev libasound2-dev libao-dev portaudio19-dev libpulse-dev libjack-dev libgstreamer-plugins-base1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
+        #homebrew:
+                #packages: allegro sdl2 alsa-lib libao portaudio pulseaudio jack gstreamer gst-plugins-base
+        #pkg:
+                #packages: allegro sdl2 alsa-lib libao portaudio pulseaudio jackit gstreamer1 gstreamer1-plugins-all
 
-script: touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin && ./configure && make
+script: touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin po/*gmo &&
+        ./configure &&
+        touch doc/imyplay.info &&
+        make

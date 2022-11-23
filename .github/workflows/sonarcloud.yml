@@ -55,7 +55,7 @@ jobs:
       - name: Run build-wrapper
         run: |
           #autoreconf --install
-          touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.h.in po/*gmo
+          touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin po/*gmo
           sleep 1
           ./configure
           sleep 1

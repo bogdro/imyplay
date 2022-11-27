@@ -32,6 +32,25 @@
 
 #include <stdio.h>
 
+#if (defined __GNUC__) && ( \
+	(defined __MINGW32__) || \
+	(defined __MINGW64__) || \
+	(defined ___MSVCRT__) || \
+	(defined _WIN32) || \
+	(defined WIN32) || \
+	(defined __WIN32__) || \
+	(defined __WINNT) || \
+	(defined __WINNT__) || \
+	(defined WINNT) \
+  )
+
+/* Compatibility fix for DLL imports in MinGW - define function once. */
+# define AL_INLINE(type, name, args, code)	\
+	static __inline__ type name args;	\
+        static __inline__ type name args code
+
+#endif
+
 #ifdef IMYP_HAVE_ALLEGRO
 # include <allegro.h>
 #else
@@ -65,7 +84,8 @@ BEGIN_COLOR_DEPTH_LIST
 END_COLOR_DEPTH_LIST
 #endif
 
-#if (defined BEGIN_JOYSTICK_DRIVER_LIST) && (defined END_JOYSTICK_DRIVER_LIST)
+/* DLL-export-related errors on MinGW */
+#if (defined BEGIN_JOYSTICK_DRIVER_LIST) && (defined END_JOYSTICK_DRIVER_LIST) && (defined ALLEGRO_UNIX)
 BEGIN_JOYSTICK_DRIVER_LIST
 END_JOYSTICK_DRIVER_LIST
 #endif

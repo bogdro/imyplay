@@ -1,4 +1,5 @@
 a.out
+*.exe
 autom4te.cache
 config.h
 config.log

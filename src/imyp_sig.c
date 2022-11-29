@@ -240,7 +240,7 @@ imyp_set_sigh (
 #ifdef HAVE_SIGNAL_H
 	size_t s;			/* sizeof(signals) */
 
-# ifdef __STRICT_ANSI__
+# if (!defined HAVE_SIGACTION) || (defined __STRICT_ANSI__)
 	typedef void (*sighandler_t) (int);
 	sighandler_t shndlr;
 # else

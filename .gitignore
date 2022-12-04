@@ -18,6 +18,7 @@ imyplay
 *~
 imyplay.spc
 imyp_cfg.h
+imyparsf.c
 
 po/POTFILES
 po/Makefile.in

@@ -1,0 +1,26 @@
+---
+exclude_paths:
+  - aclocal.m4
+  - ar-lib
+  - autom4te.cache
+  - compile
+  - config.guess
+  - config.rpath
+  - config.status
+  - config.sub
+  - configure
+  - depcomp
+  - install-sh
+  - libtool
+  - ltmain.sh
+  - missing
+  - mkinstalldirs
+  - test-driver
+  - ylwrap
+  - src/imyparsf.c
+  - src/midi*
+  - .gitignore
+  - .git/
+  - .github/
+  - .gitlab*
+  - .travis*

@@ -16,13 +16,14 @@ mkinstalldirs
 test-driver
 ylwrap
 
-imyparsf.c
-midi*
+src/imyparsf.c
+src/midi*
 
 .gitignore
 .git/
 .github/
 .gitlab*
+.travis*
 
 :include .gitignore
 

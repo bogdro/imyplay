@@ -32,5 +32,7 @@ branches:
 
 script: touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin po/*gmo &&
         ./configure &&
+        sleep 1 &&
         touch doc/imyplay.info &&
+        sleep 1 &&
         make

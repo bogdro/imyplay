@@ -229,10 +229,11 @@ fi
 if ( test "x$feat_allegro" = "xyes" ); then
 
 	AC_CHECK_LIB([alleg],[allegro_init],[liballeg=yes],[liballeg=no])
-	alleg_ldflags=`allegro-config --libs`
+	alleg_ldflags=`allegro-config --libs 2>/dev/null`
 
 	if (test "x$liballeg" == "xyes" || test "x$alleg_ldflags" != "x" ); then
 		liballeg=yes
+		AC_MSG_NOTICE([Using "$alleg_ldflags" as Allegro library flags.])
 		AC_DEFINE([HAVE_LIBALLEG],[1],[Whether you have the Allegro library.])
 	fi
 
@@ -241,6 +242,8 @@ if ( test "x$feat_allegro" = "xyes" ); then
 		# because of missing _mangled_main_address symbol.
 		#AC_SUBST(AM_LDFLAGS,"$AM_LDFLAGS $LDFLAGS $alleg_ldflags")
 		AC_SUBST(ALLEGRO_LDFLAGS,"$alleg_ldflags")
+	else
+		AC_MSG_NOTICE([Allegro disabled, both the library and allegro-config are missing.])
 	fi
 fi
 

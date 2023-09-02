@@ -1,5 +1,5 @@
 /*
- * A program for playing iMelody ringtones (IMY files).
+ * IMYplay - A program for playing iMelody ringtones (IMY files).
  *	-- unit test for the imyputil.c file.
  *
  * Copyright (C) 2018-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net

@@ -1,5 +1,5 @@
 /*
- * A program for playing iMelody ringtones (IMY files).
+ * IMYplay - A program for playing iMelody ringtones (IMY files).
  *	-- GStreamer backend.
  *
  * Copyright (C) 2012-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net

@@ -1,5 +1,5 @@
 rem
-rem A program for playing iMelody ringtones (IMY files).
+rem IMYplay - A program for playing iMelody ringtones (IMY files).
 rem 	-- Build script for the DOS system.
 rem
 rem  Copyright (C) 2021-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net

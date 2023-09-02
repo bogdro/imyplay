@@ -1,5 +1,5 @@
 /*
- * A program for playing iMelody ringtones (IMY files).
+ * IMYplay - A program for playing iMelody ringtones (IMY files).
  *	-- LIBAO backend, header file.
  *
  * Copyright (C) 2009-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net

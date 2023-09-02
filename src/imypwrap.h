@@ -1,5 +1,5 @@
 /*
- * A program for playing iMelody ringtones (IMY files).
+ * IMYplay - A program for playing iMelody ringtones (IMY files).
  *	-- wrapper functions between the main program and the backends,
  *		header file.
  *

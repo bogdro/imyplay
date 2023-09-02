@@ -133,8 +133,14 @@ IMYplay, in various versions, has been successfully compiled on the following sy
 @item Mandriva 2011 GNU/Linux, i686 
 @item OpenMandriva 3.0 GNU/Linux, amd64
 @item OpenMandriva 4.2 GNU/Linux, amd64
+@item OpenMandriva 4.3 GNU/Linux, amd64
 @item OpenBSD 3.8, i586
 @item Debian 5.0 GNU/Linux, i686
+@item FreeDOS (DJGPP + NASM)
+@item DOSBox (DJGPP + NASM)
+@item FreeBSD
+@item Solaris/SunOS
+@item macOS
 @end itemize
 
 Requirements for compiling the full version of the program under Un*x:@*
@@ -148,13 +154,13 @@ The translation headers (@file{locale.h}, @file{libintl.h} or other) are optiona
 supported libraries (except OSS and PC-speaker, which require only
 the C library and system support).
 If you don't have any of these installed or available (check twice), then go to@*
-   	@url{http://alleg.sf.net/}@*
-   	@url{http://www.libsdl.org/}@*
-   	@url{http://alsa-project.org/}@*
-   	@url{http://xiph.org/ao/}@*
-   	@url{http://www.portaudio.com/}@*
-   	@url{http://www.pulseaudio.org/}@*
-   	@url{http://jackaudio.org/}@*
+	@url{http://alleg.sf.net/}@*
+	@url{http://www.libsdl.org/}@*
+	@url{http://alsa-project.org/}@*
+	@url{http://xiph.org/ao/}@*
+	@url{http://www.portaudio.com/}@*
+	@url{http://www.pulseaudio.org/}@*
+	@url{http://jackaudio.org/}@*
 	@url{http://gstreamer.freedesktop.org/}@*
 @item MIDI output requires the following functions from the standard C library:
 @samp{malloc()}, @samp{realloc()}, @samp{memset()}, @samp{memcpy()}, @samp{fopen()},
@@ -274,7 +280,7 @@ Requirements for automatic compiling the DOS version:
 of the supported libraries (except PC-speaker, which requires only
 the C library and system support). If you don't have any of these installed
 or available, then go to@*
-   	@url{http://alleg.sf.net/}	- for the Allegro library
+	@url{http://alleg.sf.net/}	- for the Allegro library
 
 @item MIDI output requires the following functions from the standard C library:
 @samp{malloc()}, @samp{realloc()}, @samp{memset()}, @samp{memcpy()}, @samp{fopen()},

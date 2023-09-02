@@ -636,7 +636,7 @@ char *yytext;
  * A program for playing iMelody ringtones (IMY files).
  *	-- melody parsing file using (f)lex.
  *
- * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+ * Copyright (C) 2009-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -650,11 +650,7 @@ char *yytext;
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foudation:
- *		Free Software Foundation
- *		51 Franklin Street, Fifth Floor
- *		Boston, MA 02110-1301
- *		USA
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "imyp_cfg.h"
@@ -946,10 +942,10 @@ imyp_make_pause (
 	imyp_pause (imyp_get_duration (melody, current_bpm), curr_lib, 0, buf16, IMYP_SAMPBUFSIZE);
 }
 
-#line 950 "imyparsf.c"
+#line 946 "imyparsf.c"
 /* ======================================================================== */
 /*%option fast - disables 8-bit, not needed */
-#line 325 "imyparsf.l"
+#line 321 "imyparsf.l"
  /*%option outfile="imyparsf.c" -- is taken care of by autoconf/automake */
  /* portability, recommended by autoconf: */
 
@@ -959,7 +955,7 @@ imyp_make_pause (
 
 
 
-#line 963 "imyparsf.c"
+#line 959 "imyparsf.c"
 
 #define INITIAL 0
 #define IN_IMELODY 1
@@ -1184,10 +1180,10 @@ YY_DECL
 		}
 
 	{
-#line 359 "imyparsf.l"
+#line 355 "imyparsf.l"
 
 
-#line 1191 "imyparsf.c"
+#line 1187 "imyparsf.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1259,7 +1255,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 361 "imyparsf.l"
+#line 357 "imyparsf.l"
 {
 
 	BEGIN (IN_IMELODY);
@@ -1267,22 +1263,22 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 366 "imyparsf.l"
+#line 362 "imyparsf.l"
 ECHO;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 368 "imyparsf.l"
+#line 364 "imyparsf.l"
 ECHO;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 370 "imyparsf.l"
+#line 366 "imyparsf.l"
 ECHO;
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 372 "imyparsf.l"
+#line 368 "imyparsf.l"
 {
 
 	ECHO;
@@ -1305,7 +1301,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 392 "imyparsf.l"
+#line 388 "imyparsf.l"
 {
 
 	ECHO;
@@ -1328,7 +1324,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 412 "imyparsf.l"
+#line 408 "imyparsf.l"
 {
 
 	ECHO;
@@ -1357,7 +1353,7 @@ YY_RULE_SETUP
 	ourselves and play the rest of the melody anyway. */
 case 8:
 YY_RULE_SETUP
-#line 438 "imyparsf.l"
+#line 434 "imyparsf.l"
 {
 
 	pos = 0;
@@ -1370,7 +1366,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 448 "imyparsf.l"
+#line 444 "imyparsf.l"
 {
 
 	imyp_play_current_note (yytext, &note_duration, curr, &play_result, 0, 0, bpm);
@@ -1384,7 +1380,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 459 "imyparsf.l"
+#line 455 "imyparsf.l"
 {
 
 	imyp_play_current_note (yytext+1 /* skip the '&' */, &note_duration,
@@ -1399,7 +1395,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 471 "imyparsf.l"
+#line 467 "imyparsf.l"
 {
 
 	imyp_play_current_note (yytext+1 /* skip the '#' */, &note_duration,
@@ -1414,7 +1410,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 483 "imyparsf.l"
+#line 479 "imyparsf.l"
 {
 
 	imyp_make_pause (yytext, curr, bpm);
@@ -1428,7 +1424,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 494 "imyparsf.l"
+#line 490 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1441,7 +1437,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 504 "imyparsf.l"
+#line 500 "imyparsf.l"
 {
 
 	scanf_res = sscanf (yytext+1, "%d", &octave);
@@ -1476,7 +1472,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 536 "imyparsf.l"
+#line 532 "imyparsf.l"
 {
 
 	if ( *(yytext+1) == '-' )
@@ -1505,7 +1501,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 562 "imyparsf.l"
+#line 558 "imyparsf.l"
 {
 
 	scanf_res = sscanf (yytext+1, "%d", &volume);
@@ -1531,7 +1527,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 585 "imyparsf.l"
+#line 581 "imyparsf.l"
 {
 
 	pos += yyleng;
@@ -1548,7 +1544,7 @@ YY_RULE_SETUP
 case 18:
 /* rule 18 can match eol */
 YY_RULE_SETUP
-#line 598 "imyparsf.l"
+#line 594 "imyparsf.l"
 {
 
 	/* a newline NOT followed by whitespace means the end of the melody line. */
@@ -1565,7 +1561,7 @@ YY_RULE_SETUP
 case 19:
 /* rule 19 can match eol */
 YY_RULE_SETUP
-#line 611 "imyparsf.l"
+#line 607 "imyparsf.l"
 {
 
 	pos = 0;
@@ -1579,7 +1575,7 @@ YY_RULE_SETUP
 case 20:
 /* rule 20 can match eol */
 YY_RULE_SETUP
-#line 621 "imyparsf.l"
+#line 617 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1592,7 +1588,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 631 "imyparsf.l"
+#line 627 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1614,7 +1610,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 650 "imyparsf.l"
+#line 646 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1636,7 +1632,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 669 "imyparsf.l"
+#line 665 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1658,7 +1654,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 688 "imyparsf.l"
+#line 684 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1679,7 +1675,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 706 "imyparsf.l"
+#line 702 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1699,7 +1695,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 723 "imyparsf.l"
+#line 719 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1741,7 +1737,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 762 "imyparsf.l"
+#line 758 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1777,7 +1773,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 795 "imyparsf.l"
+#line 791 "imyparsf.l"
 {
 
 	char * vol_ptr = NULL;
@@ -1839,7 +1835,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 854 "imyparsf.l"
+#line 850 "imyparsf.l"
 {
 
 	if ( YY_START == IN_REPEAT_BLOCK /*repeat_count == -2*/ )
@@ -1877,7 +1873,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 889 "imyparsf.l"
+#line 885 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1914,7 +1910,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 923 "imyparsf.l"
+#line 919 "imyparsf.l"
 {
 
 	if ( repeat_count == -1 )
@@ -1949,7 +1945,7 @@ YY_RULE_SETUP
 case 32:
 /* rule 32 can match eol */
 YY_RULE_SETUP
-#line 954 "imyparsf.l"
+#line 950 "imyparsf.l"
 {
 
 	/* a newline NOT followed by whitespace means the end of the melody line. */
@@ -1966,7 +1962,7 @@ YY_RULE_SETUP
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 967 "imyparsf.l"
+#line 963 "imyparsf.l"
 {
 
 	pos = 0;
@@ -1983,7 +1979,7 @@ YY_RULE_SETUP
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 980 "imyparsf.l"
+#line 976 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -2000,7 +1996,7 @@ YY_RULE_SETUP
 /* anything not processed up to here is an unknown token */
 case 35:
 YY_RULE_SETUP
-#line 994 "imyparsf.l"
+#line 990 "imyparsf.l"
 {
 
 	printf ("%s: '%c' (0x%x) %s %d:%d\n",
@@ -2021,7 +2017,7 @@ YY_RULE_SETUP
 /* anything not processed up to here is an unknown token */
 case 36:
 YY_RULE_SETUP
-#line 1012 "imyparsf.l"
+#line 1008 "imyparsf.l"
 {
 
 	printf ("%s: '%c' (0x%x) %s %d:%d\n",
@@ -2044,7 +2040,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 1032 "imyparsf.l"
+#line 1028 "imyparsf.l"
 {
 
 	BEGIN (INITIAL);
@@ -2060,7 +2056,7 @@ YY_RULE_SETUP
 case 38:
 /* rule 38 can match eol */
 YY_RULE_SETUP
-#line 1044 "imyparsf.l"
+#line 1040 "imyparsf.l"
 {
 
 	ECHO; /* echo unknown lines inside the melody block */
@@ -2073,7 +2069,7 @@ YY_RULE_SETUP
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 1053 "imyparsf.l"
+#line 1049 "imyparsf.l"
 {
 /* NOTE: using just ".|\x00" is NOT enough */
 
@@ -2087,10 +2083,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 1064 "imyparsf.l"
+#line 1060 "imyparsf.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 2094 "imyparsf.c"
+#line 2090 "imyparsf.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_IMELODY):
 case YY_STATE_EOF(IN_MELODY_LINE):
@@ -3076,7 +3072,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 1064 "imyparsf.l"
+#line 1060 "imyparsf.l"
 
 
 /* ======================================================================== */

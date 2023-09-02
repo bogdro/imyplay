@@ -1,3 +1,24 @@
+rem
+rem A program for playing iMelody ringtones (IMY files).
+rem 	-- Build script for the DOS system.
+rem
+rem  Copyright (C) 2021-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+rem  License: GNU General Public License, v3+
+rem
+rem  This program is free software; you can redistribute it and/or
+rem  modify it under the terms of the GNU General Public License
+rem  as published by the Free Software Foundation; either version 3
+rem  of the License, or (at your option) any later version.
+rem
+rem  This program is distributed in the hope that it will be useful,
+rem  but WITHOUT ANY WARRANTY; without even the implied warranty of
+rem  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+rem  GNU General Public License for more details.
+rem
+rem  You should have received a copy of the GNU General Public License
+rem  along with this program. If not, see <http://www.gnu.org/licenses/>.
+rem
+
 rem cd src
 
 set imymajor=1

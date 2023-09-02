@@ -2,7 +2,7 @@
  * A program for playing iMelody ringtones (IMY files).
  *	-- main file.
  *
- * Copyright (C) 2009-2021 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+ * Copyright (C) 2009-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -18,11 +18,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software Foudation:
- *		Free Software Foundation
- *		51 Franklin Street, Fifth Floor
- *		Boston, MA 02110-1301
- *		USA
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include "imyp_cfg.h"
@@ -82,7 +78,7 @@
 #define	PROGRAM_NAME	PACKAGE
 
 static const char ver_str[] = N_("version");
-static const char author_str[] = "Copyright (C) 2009-2021 Bogdan 'bogdro' Drozdowski, bogdro@users.sourceforge.net\n" \
+static const char author_str[] = "Copyright (C) 2009-2023 Bogdan 'bogdro' Drozdowski, bogdro@users.sourceforge.net\n" \
 	"MIDI code: Copyright 1998-2008, Steven Goodwin (StevenGoodwin@gmail.com)";
 static const char lic_str[] = N_(							\
 	"Program for playing iMelody ringtones (IMY files).\n"				\

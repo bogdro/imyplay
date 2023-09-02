@@ -46,7 +46,7 @@
 # endif
 
 # ifndef HAVE_OFF_T
-#  if (defined __USE_FILE_OFFSET64) && (defined HAVE_LONG_LONG)
+#  if (defined __USE_FILE_OFFSET64) && (defined HAVE_LONG_LONG_INT)
 typedef long long int off_t;
 #  else
 typedef long int off_t;

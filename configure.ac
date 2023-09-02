@@ -705,15 +705,12 @@ AM_CONDITIONAL(FLEX, [test "x$imyp_flex_enabled" = "xyes" ])
 
 # ===================== Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
-AC_TYPE_SIZE_T
 AC_C_VOLATILE
-AC_CHECK_TYPES([off_t, size_t],,,
-	[
-	#ifdef HAVE_SYS_TYPES_H
-	#include <sys/types.h>
-	#endif
-	#include <stdio.h>
-	])
+AC_TYPE_LONG_LONG_INT
+AC_TYPE_OFF_T
+AC_TYPE_SIZE_T
+AC_TYPE_SSIZE_T
+AC_TYPE_UINT32_T
 AC_CHECK_TYPES([sig_atomic_t],,,
 	[
 	#ifdef HAVE_SIGNAL_H

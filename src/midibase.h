@@ -34,7 +34,8 @@ extern "C" {
 
 #ifdef HAVE_STDINT_H
 # include <stdint.h>
-#else
+#endif
+#if !(defined UINT32_MAX || defined uint32_t)
 /*# if (defined __MSDOS) || (defined __MSDOS__) || (defined MSDOS)*/
 typedef	unsigned long		uint32_t;
 /*# endif / * DOS */

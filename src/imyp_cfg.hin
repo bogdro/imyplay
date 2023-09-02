@@ -105,6 +105,7 @@
 #   define HAVE_LIBGEN_H		1
 #   define HAVE_LIBINTL_H		1
 #   define HAVE_LIBM			1
+#   define HAVE_LONG_LONG_INT		1
 #   define HAVE_LOCALE_H		1
 #   define HAVE_MALLOC			1
 #   define HAVE_MALLOC_H		1

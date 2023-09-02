@@ -22,7 +22,7 @@
 #
 
 AC_PREREQ([2.71])
-AC_INIT([imyplay],[1.3],[bogdro@users.sourceforge.net])
+AC_INIT([IMYplay],[1.3],[bogdro@users.sourceforge.net],[imyplay],[https://imyplay.sourceforge.io])
 AM_INIT_AUTOMAKE([-Wall])
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in po/Makefile imyplay.spc:imyplay.spi \

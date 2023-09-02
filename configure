@@ -23076,7 +23076,7 @@ printf "%s\n" "$as_me: WARNING: If you do not wish to enable LibHideIP, re-confi
 printf "%s\n" "$as_me: WARNING: ./configure --enable-LIBHIDEIP=no" >&2;}
 else
 	if (test "x$feat_LIBHIDEIP" != "xyes"); then
-		echo " *	LibHideIP enabled: no (disabled by command line)"
+		echo " *	LibHideIP enabled: no (default/disabled by command line)"
 
 	elif ( test "x$libhip" != "xyes" ); then
 		echo " *	LibHideIP enabled: no (library missing)"
@@ -23099,7 +23099,7 @@ printf "%s\n" "$as_me: WARNING: If you do not wish to enable LibNetBlock, re-con
 printf "%s\n" "$as_me: WARNING: ./configure --enable-LIBNETBLOCK=no" >&2;}
 else
 	if (test "x$feat_LIBNETBLOCK" != "xyes"); then
-		echo " *	LibNetBlock enabled: no (disabled by command line)"
+		echo " *	LibNetBlock enabled: no (default/disabled by command line)"
 
 	elif ( test "x$libnb" != "xyes" ); then
 		echo " *	LibNetBlock enabled: no (library missing)"

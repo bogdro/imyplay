@@ -1228,7 +1228,7 @@ if (	test "x$feat_LIBHIDEIP" = "xyes" && test "x$libhip" = "xyes" \
 	AC_MSG_WARN([[./configure --enable-LIBHIDEIP=no]])
 else
 	if (test "x$feat_LIBHIDEIP" != "xyes"); then
-		echo " *	LibHideIP enabled: no (disabled by command line)"
+		echo " *	LibHideIP enabled: no (default/disabled by command line)"
 
 	elif ( test "x$libhip" != "xyes" ); then
 		echo " *	LibHideIP enabled: no (library missing)"
@@ -1248,7 +1248,7 @@ if (	test "x$feat_LIBNETBLOCK" = "xyes" && test "x$libnb" = "xyes" \
 	AC_MSG_WARN([[./configure --enable-LIBNETBLOCK=no]])
 else
 	if (test "x$feat_LIBNETBLOCK" != "xyes"); then
-		echo " *	LibNetBlock enabled: no (disabled by command line)"
+		echo " *	LibNetBlock enabled: no (default/disabled by command line)"
 
 	elif ( test "x$libnb" != "xyes" ); then
 		echo " *	LibNetBlock enabled: no (library missing)"

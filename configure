@@ -23433,7 +23433,7 @@ else
 	if (test "x$feat_GST" != "xyes"); then
 		echo " *	GStreamer-0.10: no (disabled by command line)"
 
-	elif ( test "x$PKG_CONFIG" != "xyes" ); then
+	elif ( test "x$PKG_CONFIG" = "x" ); then
 		echo " *	GStreamer-0.10: no (pkg-config missing)"
 
 	else	#( test "x$libgstreamer" != "xyes" ); then

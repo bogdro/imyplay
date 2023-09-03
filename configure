@@ -1504,8 +1504,8 @@ Optional Features:
   --enable-FILE		Enable raw file output.
   --enable-SPKR		Enable PC-Speaker output.
   --enable-FLEXPARSER	Enable flex-based parser.
-  --enable-LIBHIDEIP	Enable libhideip for imyplay.
-  --enable-LIBNETBLOCK	Enable libnetblock for imyplay.
+  --enable-LIBHIDEIP	Enable LibHideIP for IMYplay.
+  --enable-LIBNETBLOCK	Enable LibNetBlock for IMYplay.
   --enable-dependency-tracking
                           do not reject slow dependency extractors
   --disable-dependency-tracking
@@ -7225,6 +7225,9 @@ fi
 #	|| test "x$have_jack_h" = "xyes" || test "x$feat_SPKR" = "xyes"); then
 
 	have_select=yes
+	# No need for AC_FUNC_SELECT_ARGTYPES - we use only
+	# ( 0, NULL, NULL, NULL, &tv ) and the first parameter can be any
+	# kind of int or a size_t and the last parameter can be const or not.
 
   for ac_func in select
 do :
@@ -23361,13 +23364,16 @@ if (	test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"			\
 	echo " *	Flex parser: yes"
 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: Flex-based parser enabled. If it does not compile for" >&5
 printf "%s\n" "$as_me: WARNING: Flex-based parser enabled. If it does not compile for" >&2;}
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: you or works incorrectly, re-configure imyplay with" >&5
-printf "%s\n" "$as_me: WARNING: you or works incorrectly, re-configure imyplay with" >&2;}
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: you or works incorrectly, re-configure IMYplay with" >&5
+printf "%s\n" "$as_me: WARNING: you or works incorrectly, re-configure IMYplay with" >&2;}
 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: ./configure --enable-FLEXPARSER=no" >&5
 printf "%s\n" "$as_me: WARNING: ./configure --enable-FLEXPARSER=no" >&2;}
 else
 	if (test "x$feat_FLEX" != "xyes"); then
 		echo " *	Flex parser: no (disabled by command line)"
+
+	elif ( test "x$have_flex" != "xyes" ); then
+		echo " *	Flex parser: no (flex missing)"
 
 	elif ( test "x$have_unistd_h" != "xyes" ); then
 		echo " *	Flex parser: no (unistd.h missing)"
@@ -23388,7 +23394,7 @@ else
 		echo " *	Flex parser: no (realloc() function missing)"
 
 	else	#( test "x$have_flex" != "xyes" ); then
-		echo " *	Flex parser: no (flex missing)"
+		echo " *	Flex parser: no (unknown reason)"
 
 	fi
 fi
@@ -23399,8 +23405,8 @@ if (	test "x$feat_LIBHIDEIP" = "xyes" && test "x$libhip" = "xyes" \
 	echo " *	LibHideIP enabled: yes"
 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: LibHideIP may cause network sound output not to work." >&5
 printf "%s\n" "$as_me: WARNING: LibHideIP may cause network sound output not to work." >&2;}
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: If you do not wish to enable LibHideIP, re-configure imyplay with" >&5
-printf "%s\n" "$as_me: WARNING: If you do not wish to enable LibHideIP, re-configure imyplay with" >&2;}
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: If you do not wish to enable LibHideIP, re-configure IMYplay with" >&5
+printf "%s\n" "$as_me: WARNING: If you do not wish to enable LibHideIP, re-configure IMYplay with" >&2;}
 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: ./configure --enable-LIBHIDEIP=no" >&5
 printf "%s\n" "$as_me: WARNING: ./configure --enable-LIBHIDEIP=no" >&2;}
 else
@@ -23422,8 +23428,8 @@ if (	test "x$feat_LIBNETBLOCK" = "xyes" && test "x$libnb" = "xyes" \
 	echo " *	LibNetBlock enabled: yes"
 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: LibNetBlock may cause network sound output not to work." >&5
 printf "%s\n" "$as_me: WARNING: LibNetBlock may cause network sound output not to work." >&2;}
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: If you do not wish to enable LibNetBlock, re-configure imyplay with" >&5
-printf "%s\n" "$as_me: WARNING: If you do not wish to enable LibNetBlock, re-configure imyplay with" >&2;}
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: If you do not wish to enable LibNetBlock, re-configure IMYplay with" >&5
+printf "%s\n" "$as_me: WARNING: If you do not wish to enable LibNetBlock, re-configure IMYplay with" >&2;}
 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: ./configure --enable-LIBNETBLOCK=no" >&5
 printf "%s\n" "$as_me: WARNING: ./configure --enable-LIBNETBLOCK=no" >&2;}
 else

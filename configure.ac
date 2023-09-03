@@ -1201,6 +1201,9 @@ else
 	if (test "x$feat_FLEX" != "xyes"); then
 		echo " *	Flex parser: no (disabled by command line)"
 
+	elif ( test "x$have_flex" != "xyes" ); then
+		echo " *	Flex parser: no (flex missing)"
+
 	elif ( test "x$have_unistd_h" != "xyes" ); then
 		echo " *	Flex parser: no (unistd.h missing)"
 
@@ -1220,7 +1223,7 @@ else
 		echo " *	Flex parser: no (realloc() function missing)"
 
 	else	#( test "x$have_flex" != "xyes" ); then
-		echo " *	Flex parser: no (flex missing)"
+		echo " *	Flex parser: no (unknown reason)"
 
 	fi
 fi

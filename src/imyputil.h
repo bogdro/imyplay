@@ -37,7 +37,19 @@ enum IMYP_SAMPLE_FORMATS
 	IMYP_SAMPLE_FORMAT_U8BE
 };
 
+# ifdef HAVE_STRCASECMP
+#  define IMYP_STRCASECMP strcasecmp
+#  ifdef HAVE_STRINGS_H
+#   include <strings.h>
+#  endif
+#  ifdef AX_STRCASECMP_HEADER
+#   include AX_STRCASECMP_HEADER
+#  endif
+# else
+#  define IMYP_STRCASECMP imyp_compare
 extern int imyp_compare IMYP_PARAMS ((const char string1[], const char string2[]));
+# endif
+
 extern enum IMYP_CURR_LIB imyp_parse_system IMYP_PARAMS ((const char system_name[]));
 extern enum IMYP_SAMPLE_FORMATS imyp_get_format IMYP_PARAMS ((const char string[]));
 extern int imyp_generate_samples IMYP_PARAMS ((

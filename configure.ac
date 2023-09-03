@@ -396,7 +396,9 @@ if ( test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes" ); then
 
 fi
 
-AC_CHECK_HEADERS([getopt.h malloc.h sys/types.h locale.h math.h signal.h libgen.h])
+AC_CHECK_HEADERS([getopt.h malloc.h sys/types.h locale.h math.h signal.h \
+	libgen.h strings.h])
+AX_INCLUDE_STRCASECMP
 
 if ( test "x$feat_EXEC" = "xyes" && test "x$have_system" = "xyes" ); then
 
@@ -735,7 +737,7 @@ AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type 
 
 AC_FUNC_MALLOC
 
-AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long])
+AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long strcasecmp])
 if ( test "x$imyp_flex_enabled" != "xyes" ); then
 
 	AC_CHECK_FUNCS([fseeko ftello])

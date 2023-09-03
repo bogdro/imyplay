@@ -1,5 +1,8 @@
 /* config.hin.  Generated from configure.ac by autoheader.  */
 
+/* Defined to <strings.h> or <string.h> if strcasecmp is found */
+#undef AX_STRCASECMP_HEADER
+
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
 #undef ENABLE_NLS
@@ -211,6 +214,9 @@
 
 /* Whether you have the stdlib.h header. */
 #undef HAVE_STDLIB_H
+
+/* Define to 1 if you have the `strcasecmp' function. */
+#undef HAVE_STRCASECMP
 
 /* Define to 1 if you have the <strings.h> header file. */
 #undef HAVE_STRINGS_H

@@ -74,6 +74,7 @@
 # endif
 #endif
 
+#ifndef HAVE_STRCASECMP
 /**
  * Comapres the give strings case-insensitively.
  * \param string1 The first string.
@@ -82,13 +83,13 @@
  */
 int
 imyp_compare (
-#ifdef IMYP_ANSIC
+# ifdef IMYP_ANSIC
 	const char string1[], const char string2[])
-#else
+# else
 	string1, string2)
 	const char string1[];
 	const char string2[];
-#endif
+# endif
 {
 	size_t i, len1, len2;
 	char c1, c2;
@@ -138,6 +139,7 @@ imyp_compare (
 	}
 	return 0;
 }
+#endif /* HAVE_STRCASECMP */
 
 /**
  * Checks the given string for an output system name and returns the enum value
@@ -159,65 +161,65 @@ imyp_parse_system (
 		return IMYP_CURR_NONE;
 	}
 
-	if ( (imyp_compare (system_name, "allegro") == 0)
-		|| (imyp_compare (system_name, "all") == 0) )
+	if ( (IMYP_STRCASECMP (system_name, "allegro") == 0)
+		|| (IMYP_STRCASECMP (system_name, "all") == 0) )
 	{
 		return IMYP_CURR_ALLEGRO;
 	}
-	else if ( (imyp_compare (system_name, "midi") == 0)
-		|| (imyp_compare (system_name, "mid") == 0) )
+	else if ( (IMYP_STRCASECMP (system_name, "midi") == 0)
+		|| (IMYP_STRCASECMP (system_name, "mid") == 0) )
 	{
 		return IMYP_CURR_MIDI;
 	}
-	else if ( imyp_compare (system_name, "sdl") == 0 )
+	else if ( IMYP_STRCASECMP (system_name, "sdl") == 0 )
 	{
 		return IMYP_CURR_SDL;
 	}
-	else if ( imyp_compare (system_name, "alsa") == 0 )
+	else if ( IMYP_STRCASECMP (system_name, "alsa") == 0 )
 	{
 		return IMYP_CURR_ALSA;
 	}
-	else if ( imyp_compare (system_name, "oss") == 0 )
+	else if ( IMYP_STRCASECMP (system_name, "oss") == 0 )
 	{
 		return IMYP_CURR_OSS;
 	}
-	else if ( (imyp_compare (system_name, "libao") == 0)
-		|| (imyp_compare (system_name, "ao") == 0) )
+	else if ( (IMYP_STRCASECMP (system_name, "libao") == 0)
+		|| (IMYP_STRCASECMP (system_name, "ao") == 0) )
 	{
 		return IMYP_CURR_LIBAO;
 	}
-	else if ( (imyp_compare (system_name, "portaudio") == 0)
-		|| (imyp_compare (system_name, "port") == 0) )
+	else if ( (IMYP_STRCASECMP (system_name, "portaudio") == 0)
+		|| (IMYP_STRCASECMP (system_name, "port") == 0) )
 	{
 		return IMYP_CURR_PORTAUDIO;
 	}
-	else if ( imyp_compare (system_name, "jack") == 0 )
+	else if ( IMYP_STRCASECMP (system_name, "jack") == 0 )
 	{
 		return IMYP_CURR_JACK;
 	}
-	else if ( (imyp_compare (system_name, "pulseaudio") == 0)
-		|| (imyp_compare (system_name, "pulse") == 0) )
+	else if ( (IMYP_STRCASECMP (system_name, "pulseaudio") == 0)
+		|| (IMYP_STRCASECMP (system_name, "pulse") == 0) )
 	{
 		return IMYP_CURR_PULSEAUDIO;
 	}
-	else if ( (imyp_compare (system_name, "exec") == 0)
-		|| (imyp_compare (system_name, "exe") == 0) )
+	else if ( (IMYP_STRCASECMP (system_name, "exec") == 0)
+		|| (IMYP_STRCASECMP (system_name, "exe") == 0) )
 	{
 		return IMYP_CURR_EXEC;
 	}
-	else if ( (imyp_compare (system_name, "gstreamer") == 0)
-		|| (imyp_compare (system_name, "gst") == 0) )
+	else if ( (IMYP_STRCASECMP (system_name, "gstreamer") == 0)
+		|| (IMYP_STRCASECMP (system_name, "gst") == 0) )
 	{
 		return IMYP_CURR_GSTREAMER;
 	}
-	else if ( imyp_compare (system_name, "file") == 0 )
+	else if ( IMYP_STRCASECMP (system_name, "file") == 0 )
 	{
 		return IMYP_CURR_FILE;
 	}
-	else if ( (imyp_compare (system_name, "speaker") == 0)
-		|| (imyp_compare (system_name, "pcspeaker") == 0)
-		|| (imyp_compare (system_name, "spkr") == 0)
-		|| (imyp_compare (system_name, "pcspkr") == 0) )
+	else if ( (IMYP_STRCASECMP (system_name, "speaker") == 0)
+		|| (IMYP_STRCASECMP (system_name, "pcspeaker") == 0)
+		|| (IMYP_STRCASECMP (system_name, "spkr") == 0)
+		|| (IMYP_STRCASECMP (system_name, "pcspkr") == 0) )
 	{
 		return IMYP_CURR_SPKR;
 	}
@@ -242,35 +244,35 @@ imyp_get_format (
 	{
 		return IMYP_SAMPLE_FORMAT_UNKNOWN;
 	}
-	if ( imyp_compare (string, "s16le") == 0 )
+	if ( IMYP_STRCASECMP (string, "s16le") == 0 )
 	{
 		return IMYP_SAMPLE_FORMAT_S16LE;
 	}
-	if ( imyp_compare (string, "s16be") == 0 )
+	if ( IMYP_STRCASECMP (string, "s16be") == 0 )
 	{
 		return IMYP_SAMPLE_FORMAT_S16BE;
 	}
-	if ( imyp_compare (string, "u16le") == 0 )
+	if ( IMYP_STRCASECMP (string, "u16le") == 0 )
 	{
 		return IMYP_SAMPLE_FORMAT_U16LE;
 	}
-	if ( imyp_compare (string, "u16be") == 0 )
+	if ( IMYP_STRCASECMP (string, "u16be") == 0 )
 	{
 		return IMYP_SAMPLE_FORMAT_U16BE;
 	}
-	if ( imyp_compare (string, "s8le") == 0 )
+	if ( IMYP_STRCASECMP (string, "s8le") == 0 )
 	{
 		return IMYP_SAMPLE_FORMAT_S8LE;
 	}
-	if ( imyp_compare (string, "s8be") == 0 )
+	if ( IMYP_STRCASECMP (string, "s8be") == 0 )
 	{
 		return IMYP_SAMPLE_FORMAT_S8BE;
 	}
-	if ( imyp_compare (string, "u8le") == 0 )
+	if ( IMYP_STRCASECMP (string, "u8le") == 0 )
 	{
 		return IMYP_SAMPLE_FORMAT_U8LE;
 	}
-	if ( imyp_compare (string, "u8be") == 0 )
+	if ( IMYP_STRCASECMP (string, "u8be") == 0 )
 	{
 		return IMYP_SAMPLE_FORMAT_U8BE;
 	}

@@ -6991,6 +6991,75 @@ then :
   printf "%s\n" "#define HAVE_LIBGEN_H 1" >>confdefs.h
 
 fi
+ac_fn_c_check_header_compile "$LINENO" "strings.h" "ac_cv_header_strings_h" "$ac_includes_default"
+if test "x$ac_cv_header_strings_h" = xyes
+then :
+  printf "%s\n" "#define HAVE_STRINGS_H 1" >>confdefs.h
+
+fi
+
+
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for strcasecmp header file" >&5
+printf %s "checking for strcasecmp header file... " >&6; }
+if test ${ax_cv_include_strcasecmp_found+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+        ax_cv_include_strcasecmp_found=no
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <strings.h>
+int
+main (void)
+{
+strcasecmp("foo", "bar");
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_include_strcasecmp_found='<strings.h>'
+else $as_nop
+  ax_cv_include_strcasecmp_found=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+
+        if test x"$ax_cv_include_strcasecmp_found" = "xno"
+        then
+        cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <string.h>
+int
+main (void)
+{
+strcasecmp("foo", "bar");
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_link "$LINENO"
+then :
+  ax_cv_include_strcasecmp_found='<string.h>'
+else $as_nop
+  ax_cv_include_strcasecmp_found=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam \
+    conftest$ac_exeext conftest.$ac_ext
+        fi
+
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_include_strcasecmp_found" >&5
+printf "%s\n" "$ax_cv_include_strcasecmp_found" >&6; }
+        if test x"$ax_cv_include_strcasecmp_found" != "xno"
+        then
+
+printf "%s\n" "#define AX_STRCASECMP_HEADER $ax_cv_include_strcasecmp_found" >>confdefs.h
+
+
+        fi
 
 
 if ( test "x$feat_EXEC" = "xyes" && test "x$have_system" = "xyes" ); then
@@ -8259,6 +8328,12 @@ ac_fn_c_check_func "$LINENO" "getopt_long" "ac_cv_func_getopt_long"
 if test "x$ac_cv_func_getopt_long" = xyes
 then :
   printf "%s\n" "#define HAVE_GETOPT_LONG 1" >>confdefs.h
+
+fi
+ac_fn_c_check_func "$LINENO" "strcasecmp" "ac_cv_func_strcasecmp"
+if test "x$ac_cv_func_strcasecmp" = xyes
+then :
+  printf "%s\n" "#define HAVE_STRCASECMP 1" >>confdefs.h
 
 fi
 

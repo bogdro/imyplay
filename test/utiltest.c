@@ -101,6 +101,7 @@ int imyp_sig_recvd = 0;
 
 /* ======================================================= */
 
+#ifndef HAVE_STRCASECMP
 START_TEST(test_imyp_compare_both_null)
 {
 	printf("test_imyp_compare_both_null\n");
@@ -149,6 +150,7 @@ START_TEST(test_imyp_compare_nonequal)
 	ck_assert_int_ne(imyp_compare("aaa", "bbb"), 0);
 }
 END_TEST
+#endif /* ! HAVE_STRCASECMP */
 
 /* ======================================================= */
 
@@ -482,11 +484,14 @@ static Suite * imy_create_suite(void)
 {
 	Suite * s = suite_create("imyplay_util");
 
+#ifndef HAVE_STRCASECMP
 	TCase * tests_imyp_compare = tcase_create("imyp_compare");
+#endif /* ! HAVE_STRCASECMP */
 	TCase * tests_imyp_parse_system = tcase_create("imyp_parse_system");
 	TCase * tests_imyp_get_format = tcase_create("imyp_get_format");
 	TCase * tests_imyp_generate_filename = tcase_create("imyp_generate_filename");
 
+#ifndef HAVE_STRCASECMP
 	tcase_add_test (tests_imyp_compare, test_imyp_compare_both_null);
 	tcase_add_test (tests_imyp_compare, test_imyp_compare_first_null);
 	tcase_add_test (tests_imyp_compare, test_imyp_compare_second_null);
@@ -494,6 +499,7 @@ static Suite * imy_create_suite(void)
 	tcase_add_test (tests_imyp_compare, test_imyp_compare_equal_case_ins);
 	tcase_add_test (tests_imyp_compare, test_imyp_compare_equal_diff_len);
 	tcase_add_test (tests_imyp_compare, test_imyp_compare_nonequal);
+#endif /* ! HAVE_STRCASECMP */
 
 	tcase_add_test (tests_imyp_parse_system, test_imyp_parse_system_allegro);
 	tcase_add_test (tests_imyp_parse_system, test_imyp_parse_system_midi);
@@ -529,7 +535,9 @@ static Suite * imy_create_suite(void)
 	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_two_ext_mid);
 	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_two_ext_raw);
 
+#ifndef HAVE_STRCASECMP
 	suite_add_tcase(s, tests_imyp_compare);
+#endif /* ! HAVE_STRCASECMP */
 	suite_add_tcase(s, tests_imyp_parse_system);
 	suite_add_tcase(s, tests_imyp_get_format);
 	suite_add_tcase(s, tests_imyp_generate_filename);

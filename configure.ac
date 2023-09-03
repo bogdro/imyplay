@@ -740,7 +740,8 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long strcasecmp])
 if ( test "x$imyp_flex_enabled" != "xyes" ); then
 
-	AC_CHECK_FUNCS([fseeko ftello])
+	AC_FUNC_FSEEKO
+	AC_CHECK_FUNCS([ftello])
 fi
 
 AM_GNU_GETTEXT_VERSION([0.21])

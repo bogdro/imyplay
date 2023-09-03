@@ -872,8 +872,8 @@ AM_CONDITIONAL(SDL2, [test "x$feat_SDL2" = "xyes" && test "x$libsdl2" = "xyes"		
 
 if (	test "x$feat_SDL" = "xyes" && test "x$libsdl" = "xyes" \
 	&& test "x$have_sdl_h" = "xyes" && 
-	test "x$feat_SDL2" != "xyes" && test "x$libsdl2" != "xyes"		\
-	&& test "x$have_sdl2_h" != "xyes"); then
+	(test "x$feat_SDL2" != "xyes" || test "x$libsdl2" != "xyes"		\
+	|| test "x$have_sdl2_h" != "xyes")); then
 
 	echo " *	SDLv1: yes"
 else

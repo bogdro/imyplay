@@ -26,6 +26,10 @@
 # define NULL ((void *)0)
 #endif
 
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
 #ifdef HAVE_STRING_H
 # if ((!defined STDC_HEADERS) || (!STDC_HEADERS)) && (defined HAVE_MEMORY_H)
 #  include <memory.h>

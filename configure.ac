@@ -167,7 +167,7 @@ AC_ARG_ENABLE(FLEXPARSER,[[  --enable-FLEXPARSER	Enable flex-based parser.]],
 	]
 	,feat_FLEX=yes)
 
-AC_ARG_ENABLE(LIBHIDEIP,[[  --enable-LIBHIDEIP	Enable libhideip for imyplay.]],
+AC_ARG_ENABLE(LIBHIDEIP,[[  --enable-LIBHIDEIP	Enable LibHideIP for IMYplay.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_LIBHIDEIP=no
 	 else
@@ -176,7 +176,7 @@ AC_ARG_ENABLE(LIBHIDEIP,[[  --enable-LIBHIDEIP	Enable libhideip for imyplay.]],
 	]
 	,feat_LIBHIDEIP=no)
 
-AC_ARG_ENABLE(LIBNETBLOCK,[[  --enable-LIBNETBLOCK	Enable libnetblock for imyplay.]],
+AC_ARG_ENABLE(LIBNETBLOCK,[[  --enable-LIBNETBLOCK	Enable LibNetBlock for IMYplay.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_LIBNETBLOCK=no
 	 else
@@ -1195,7 +1195,7 @@ if (	test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"			\
 
 	echo " *	Flex parser: yes"
 	AC_MSG_WARN([[Flex-based parser enabled. If it does not compile for]])
-	AC_MSG_WARN([[you or works incorrectly, re-configure imyplay with]])
+	AC_MSG_WARN([[you or works incorrectly, re-configure IMYplay with]])
 	AC_MSG_WARN([[./configure --enable-FLEXPARSER=no]])
 else
 	if (test "x$feat_FLEX" != "xyes"); then
@@ -1230,7 +1230,7 @@ if (	test "x$feat_LIBHIDEIP" = "xyes" && test "x$libhip" = "xyes" \
 
 	echo " *	LibHideIP enabled: yes"
 	AC_MSG_WARN([[LibHideIP may cause network sound output not to work.]])
-	AC_MSG_WARN([[If you do not wish to enable LibHideIP, re-configure imyplay with]])
+	AC_MSG_WARN([[If you do not wish to enable LibHideIP, re-configure IMYplay with]])
 	AC_MSG_WARN([[./configure --enable-LIBHIDEIP=no]])
 else
 	if (test "x$feat_LIBHIDEIP" != "xyes"); then
@@ -1250,7 +1250,7 @@ if (	test "x$feat_LIBNETBLOCK" = "xyes" && test "x$libnb" = "xyes" \
 
 	echo " *	LibNetBlock enabled: yes"
 	AC_MSG_WARN([[LibNetBlock may cause network sound output not to work.]])
-	AC_MSG_WARN([[If you do not wish to enable LibNetBlock, re-configure imyplay with]])
+	AC_MSG_WARN([[If you do not wish to enable LibNetBlock, re-configure IMYplay with]])
 	AC_MSG_WARN([[./configure --enable-LIBNETBLOCK=no]])
 else
 	if (test "x$feat_LIBNETBLOCK" != "xyes"); then

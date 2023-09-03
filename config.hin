@@ -40,6 +40,9 @@
    */
 #undef HAVE_DCGETTEXT
 
+/* Whether KIOCSOUND is defined */
+#undef HAVE_DECL_KIOCSOUND
+
 /* Define to 1 if you have the <errno.h> header file. */
 #undef HAVE_ERRNO_H
 

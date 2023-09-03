@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 1.3\n"
 "Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
-"POT-Creation-Date: 2021-09-26 21:10+0200\n"
-"PO-Revision-Date: 2021-09-26 21:10+0200\n"
+"POT-Creation-Date: 2023-09-03 23:06+0200\n"
+"PO-Revision-Date: 2023-09-03 23:06+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en@quot\n"
@@ -39,11 +39,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/imyplay.c:84
+#: src/imyplay.c:80
 msgid "version"
 msgstr "version"
 
-#: src/imyplay.c:88
+#: src/imyplay.c:84
 msgid ""
 "Program for playing iMelody ringtones (IMY files).\n"
 "\n"
@@ -69,110 +69,110 @@ msgstr ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 "\n"
 
-#: src/imyplay.c:98
+#: src/imyplay.c:94
 msgid "error"
 msgstr "error"
 
-#: src/imyplay.c:99
+#: src/imyplay.c:95
 msgid "Error while trying to set a signal handler for"
 msgstr "Error while trying to set a signal handler for"
 
-#: src/imyplay.c:100
+#: src/imyplay.c:96
 msgid "Error during library init."
 msgstr "Error during library init."
 
-#: src/imyplay.c:102
+#: src/imyplay.c:98
 msgid "Error during library closing."
 msgstr "Error during library closing."
 
-#: src/imyplay.c:111
+#: src/imyplay.c:107
 msgid "unknown"
 msgstr "unknown"
 
-#: src/imyplay.c:258
+#: src/imyplay.c:254
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr "A program for playing iMelody ringtones (IMY files)"
 
-#: src/imyplay.c:259
+#: src/imyplay.c:255
 msgid "Syntax"
 msgstr "Syntax"
 
-#: src/imyplay.c:261
+#: src/imyplay.c:257
 msgid " [options] "
 msgstr " [options] "
 
-#: src/imyplay.c:263
+#: src/imyplay.c:259
 msgid "Options"
 msgstr "Options"
 
-#: src/imyplay.c:264
+#: src/imyplay.c:260
 msgid "Try to use this device"
 msgstr "Try to use this device"
 
-#: src/imyplay.c:266
+#: src/imyplay.c:262
 msgid "Execute this program instead of sound output"
 msgstr "Execute this program instead of sound output"
 
-#: src/imyplay.c:269
+#: src/imyplay.c:265
 msgid "Write raw samples to this file instead of sound output"
 msgstr "Write raw samples to this file instead of sound output"
 
-#: src/imyplay.c:271
+#: src/imyplay.c:267
 msgid "Print help"
 msgstr "Print help"
 
-#: src/imyplay.c:272
+#: src/imyplay.c:268
 msgid "Print license information"
 msgstr "Print license information"
 
-#: src/imyplay.c:274
+#: src/imyplay.c:270
 msgid "Select MIDI instrument number"
 msgstr "Select MIDI instrument number"
 
-#: src/imyplay.c:276
+#: src/imyplay.c:272
 msgid "Use the given output system"
 msgstr "Use the given output system"
 
-#: src/imyplay.c:278
+#: src/imyplay.c:274
 msgid "Convert the given files to MIDI format"
 msgstr "Convert the given files to MIDI format"
 
-#: src/imyplay.c:280
+#: src/imyplay.c:276
 msgid "Print version number"
 msgstr "Print version number"
 
-#: src/iparsers.c:40
+#: src/iparsers.c:36
 msgid "Unknown token"
 msgstr "Unknown token"
 
-#: src/iparsers.c:41
+#: src/iparsers.c:37
 msgid "at position"
 msgstr "at position"
 
-#: src/iparsers.c:42
+#: src/iparsers.c:38
 msgid "Unexpected token"
 msgstr "Unexpected token"
 
-#: src/iparsers.c:43
+#: src/iparsers.c:39
 msgid "Can't open file"
 msgstr "Can't open file"
 
-#: src/iparsers.c:44
+#: src/iparsers.c:40
 msgid "Problem parsing beat"
 msgstr "Problem parsing beat"
 
-#: src/iparsers.c:45
+#: src/iparsers.c:41
 msgid "Problem parsing style"
 msgstr "Problem parsing style"
 
-#: src/iparsers.c:46
+#: src/iparsers.c:42
 msgid "Problem parsing volume"
 msgstr "Problem parsing volume"
 
-#: src/iparsers.c:47
+#: src/iparsers.c:43
 msgid "Not iMelody file"
 msgstr "Not iMelody file"
 
-#: src/iparsers.c:48
+#: src/iparsers.c:44
 msgid "Error playing tune"
 msgstr "Error playing tune"

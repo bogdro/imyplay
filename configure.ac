@@ -479,6 +479,9 @@ fi
 #	|| test "x$have_jack_h" = "xyes" || test "x$feat_SPKR" = "xyes"); then
 
 	have_select=yes
+	# No need for AC_FUNC_SELECT_ARGTYPES - we use only
+	# ( 0, NULL, NULL, NULL, &tv ) and the first parameter can be any
+	# kind of int or a size_t and the last parameter can be const or not.
 	AC_CHECK_FUNCS([select],AC_DEFINE([HAVE_SELECT],[1],
 		[Whether you have the select() function.]),[have_select=no])
 	if ( test "x$have_select" = "xyes" ); then

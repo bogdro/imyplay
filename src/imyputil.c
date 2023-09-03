@@ -479,6 +479,11 @@ imyp_pause_select (
 	}
 #ifdef IMYP_HAVE_SELECT
 	{
+		/* No need for AC_FUNC_SELECT_ARGTYPES in configure.ac
+		 * - we use only ( 0, NULL, NULL, NULL, &tv ) and the first
+		 * parameter can be any kind of int or a size_t and the last
+		 * parameter can be const or not.
+		*/
 		struct timeval tv;
 		tv.tv_sec = milliseconds / 1000;
 		tv.tv_usec = ( milliseconds * 1000 ) % 1000000;

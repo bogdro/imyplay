@@ -148,12 +148,10 @@ static void imyp_play_current_note IMYP_PARAMS ((const char melody[],
  * Play the given note. Also resets the sharp and flat flags.
  * \param[in] melody The note string to play.
  * \param[out] duration The duration of the note.
- * \param[in] note_index The index of the note in the array ('C'=0, 'B'=11).
  * \param[in] curr_lib The current output backend.
  * \param[out] play_res The result of playing the note.
  * \param[in] is_sharp Non-zero if the note is sharp.
  * \param[in] is_flat Non-zero if the note is flat.
- * \param[in] curr_lib The current output backend.
  * \param[in] current_bpm The current BPM value.
  */
 static void
@@ -178,8 +176,12 @@ imyp_play_current_note (
 {
 	int note_index = 0;
 
-	if ( (duration == NULL) || (curr_lib == IMYP_CURR_NONE)
+	if ( (duration == NULL) || (curr_lib == NULL)
 		|| (play_res == NULL) || (duration == NULL) )
+	{
+		return;
+	}
+	if ( curr_lib->imyp_curr_lib == IMYP_CURR_NONE )
 	{
 		return;
 	}
@@ -302,7 +304,11 @@ imyp_make_pause (
 	const int current_bpm;
 #endif
 {
-	if ( (melody == NULL) || (curr_lib == IMYP_CURR_NONE) || (imyp_sig_recvd != 0) )
+	if ( (melody == NULL) || (curr_lib == NULL) || (imyp_sig_recvd != 0) )
+	{
+		return;
+	}
+	if ( curr_lib->imyp_curr_lib == IMYP_CURR_NONE )
 	{
 		return;
 	}

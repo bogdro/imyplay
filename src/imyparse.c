@@ -519,7 +519,7 @@ imyp_play_current_note (
 #endif
 {
 	if ( (imy == NULL) || (skipped_dur == NULL) || (note_duration == NULL)
-		|| (curr == NULL) || (play_res == NULL) || (curr == NULL) )
+		|| (curr == NULL) || (play_res == NULL) )
 	{
 		return;
 	}

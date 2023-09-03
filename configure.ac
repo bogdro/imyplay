@@ -520,15 +520,18 @@ if ( test "x$feat_SPKR" = "xyes" ); then
 	have_sys_kd_h=yes
 	AC_CHECK_HEADERS([sys/kd.h], AC_DEFINE([HAVE_SYS_KD_H],[1],
 		[Whether you have the sys/kd.h header.]), have_sys_kd_h=no)
-	have_kiocsound=yes
-	AC_CHECK_DECL([KIOCSOUND],[AC_DEFINE([HAVE_DECL_KIOCSOUND], [1], [Whether KIOCSOUND is defined])],
-		[have_kiocsound=no],
-		[
-		#ifdef HAVE_SYS_KD_H
-		#include <sys/kd.h>
-		#endif
-		])
+	have_kiocsound=no
+	if ( test "x$have_sys_kd_h" = "xyes" ); then
 
+		have_kiocsound=yes
+		AC_CHECK_DECL([KIOCSOUND],[AC_DEFINE([HAVE_DECL_KIOCSOUND], [1], [Whether KIOCSOUND is defined])],
+			[have_kiocsound=no],
+			[
+			#ifdef HAVE_SYS_KD_H
+			#include <sys/kd.h>
+			#endif
+			])
+	fi
 fi
 
 if ( test "x$feat_SPKR" = "xyes" || test "x$feat_OSS" = "xyes" ); then

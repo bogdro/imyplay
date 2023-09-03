@@ -7379,8 +7379,11 @@ else $as_nop
 fi
 
 done
-	have_kiocsound=yes
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $CC options needed to detect all undeclared functions" >&5
+	have_kiocsound=no
+	if ( test "x$have_sys_kd_h" = "xyes" ); then
+
+		have_kiocsound=yes
+		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $CC options needed to detect all undeclared functions" >&5
 printf %s "checking for $CC options needed to detect all undeclared functions... " >&6; }
 if test ${ac_cv_c_undeclared_builtin_options+y}
 then :
@@ -7461,9 +7464,9 @@ See \`config.log' for more details" "$LINENO" 5; } ;; #(
 esac
 
 ac_fn_check_decl "$LINENO" "KIOCSOUND" "ac_cv_have_decl_KIOCSOUND" "
-		#ifdef HAVE_SYS_KD_H
-		#include <sys/kd.h>
-		#endif
+			#ifdef HAVE_SYS_KD_H
+			#include <sys/kd.h>
+			#endif
 
 " "$ac_c_undeclared_builtin_options" "CFLAGS"
 if test "x$ac_cv_have_decl_KIOCSOUND" = xyes
@@ -7474,7 +7477,7 @@ printf "%s\n" "#define HAVE_DECL_KIOCSOUND 1" >>confdefs.h
 else $as_nop
   have_kiocsound=no
 fi
-
+	fi
 fi
 
 if ( test "x$feat_SPKR" = "xyes" || test "x$feat_OSS" = "xyes" ); then

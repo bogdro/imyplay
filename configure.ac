@@ -817,6 +817,8 @@ if (test "x$GCC" = "xyes" ); then
         AX_C_CHECK_FLAG([-Wstringop-truncation], [CFLAGS="$CFLAGS -Wstringop-truncation"], [CFLAGS="$CFLAGS"])
         AX_C_CHECK_FLAG([-Wduplicated-branches], [CFLAGS="$CFLAGS -Wduplicated-branches"], [CFLAGS="$CFLAGS"])
         AX_C_CHECK_FLAG([-fstack-check], [CFLAGS="$CFLAGS -fstack-check"], [CFLAGS="$CFLAGS"])
+        # disabled, because of too much noise from the generated flex output file:
+        #AX_C_CHECK_FLAG([-fanalyzer], [CFLAGS="$CFLAGS -fanalyzer"], [CFLAGS="$CFLAGS"])
         AX_C_CHECK_FLAG([-g], [CFLAGS="$CFLAGS -g"], [CFLAGS="$CFLAGS"])	# needed for the 'debuginfo' rpm package
 
 #	if (test "x$have_ll" = "xyes"); then

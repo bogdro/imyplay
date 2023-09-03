@@ -21234,6 +21234,8 @@ else $as_nop
 fi
 	fi
 
+        # disabled, because of too much noise from the generated flex output file:
+        #AX_C_CHECK_FLAG([-fanalyzer], [CFLAGS="$CFLAGS -fanalyzer"], [CFLAGS="$CFLAGS"])
 
 
 

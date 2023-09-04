@@ -498,18 +498,28 @@ imyp_sdl_version (
 	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
+#ifdef IMYP_HAVE_SDL2
+	SDL_version ver;
+#endif /* IMYP_HAVE_SDL2 */
 #if (defined SDL_MAJOR_VERSION) && (defined SDL_MINOR_VERSION) && (defined SDL_PATCHLEVEL)
-	printf ( "SDL: %d.%d.%d\n", SDL_MAJOR_VERSION, SDL_MINOR_VERSION,
+	printf ( "SDL (%s): %d.%d.%d\n", ver_msg_compiled,
+		SDL_MAJOR_VERSION, SDL_MINOR_VERSION,
 		SDL_PATCHLEVEL );
 #else
 # if (defined SDL_MAJOR_VERSION) && (defined SDL_MINOR_VERSION)
-	printf ( "SDL: %d.%d\n", SDL_MAJOR_VERSION, SDL_MINOR_VERSION );
+	printf ( "SDL (%s): %d.%d\n", ver_msg_compiled,
+		SDL_MAJOR_VERSION, SDL_MINOR_VERSION );
 # else
 #  if (defined SDL_MAJOR_VERSION)
-	printf ( "SDL: %d\n", SDL_MAJOR_VERSION );
+	printf ( "SDL (%s): %d\n", ver_msg_compiled, SDL_MAJOR_VERSION );
 #  else
-	printf ( "SDL: ?\n" );
+	printf ( "SDL (%s): ?\n", ver_msg_compiled );
 #  endif
 # endif
 #endif
+#ifdef IMYP_HAVE_SDL2
+	SDL_GetVersion (&ver);
+	printf ( "SDL (%s): %d.%d.%d\n", ver_msg_runtime,
+		ver.major, ver.minor, ver.patch);
+#endif /* IMYP_HAVE_SDL2 */
 }

@@ -164,9 +164,6 @@ imyp_file_pause (
 	int bufsize;
 #endif
 {
-#ifndef HAVE_MEMSET
-	int i;
-#endif
 	int quality = 16;
 	struct imyp_file_backend_data * data =
 		(struct imyp_file_backend_data *)imyp_data;
@@ -185,14 +182,7 @@ imyp_file_pause (
 	}
 
 	bufsize = IMYP_MIN (bufsize, (milliseconds * (int)data->samp_rate * ((int)quality/8)) / 1000);
-#ifdef HAVE_MEMSET
-	memset (buf, 0, (size_t)bufsize);
-#else
-	for (i = 0; i < bufsize; i++ )
-	{
-		((char *)buf)[i] = '\0';
-	}
-#endif
+	IMYP_MEMSET (buf, 0, (size_t)bufsize);
 	/* write silence to the file */
 	fwrite (buf, 1, (size_t)bufsize, data->raw_file);
 }

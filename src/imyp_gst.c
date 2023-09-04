@@ -227,9 +227,6 @@ imyp_gst_init (
 	const char * const dev_file;
 #endif
 {
-#ifndef HAVE_MEMSET
-	size_t i;
-#endif
 	struct imyp_gst_backend_data * data;
 	char name_volume[] = "volume";
 	char name_freq[] = "freq";
@@ -447,19 +444,8 @@ imyp_gst_init (
 		return -12;
 	}
 
-#ifdef HAVE_MEMSET
-	memset (&(data->g_vol), 0, sizeof (GValue));
-	memset (&(data->g_freq), 0, sizeof (GValue));
-#else
-	for ( i = 0; i < sizeof (GValue); i++ )
-	{
-		((char *)&(data->g_vol))[i] = '\0';
-	}
-	for ( i = 0; i < sizeof (GValue); i++ )
-	{
-		((char *)&(data->g_freq))[i] = '\0';
-	}
-#endif
+	IMYP_MEMSET (&(data->g_vol), 0, sizeof (GValue));
+	IMYP_MEMSET (&(data->g_freq), 0, sizeof (GValue));
 	g_value_init (&(data->g_vol), G_TYPE_DOUBLE);
 	g_value_init (&(data->g_freq), G_TYPE_DOUBLE);
 	*imyp_data = (imyp_backend_data_t *)data;

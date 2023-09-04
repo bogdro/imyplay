@@ -219,10 +219,7 @@ static int launch_program (
 	i = strlen (data->exename);
 	i = IMYP_MIN (i, IMYP_MAX_PROG_LEN-1);
 
-	for ( j = 0; j < IMYP_MAX_PROG_LEN; j++ )
-	{
-		data->to_execute[j] = '\0';
-	}
+	IMYP_MEMSET (data->to_execute, '\0', IMYP_MAX_PROG_LEN);
 	for ( j = 0; j < i; j++ )
 	{
 		exe_index = strlen (data->to_execute);
@@ -446,11 +443,8 @@ imyp_exec_init (
 #endif
 		return -3; /* all spaces */
 	}
-	for ( j = 0; j < IMYP_MAX_PROG_LEN; j++ )
-	{
-		data->exename[j] = '\0';
-		data->to_execute[j] = '\0';
-	}
+	IMYP_MEMSET (data->exename, '\0', IMYP_MAX_PROG_LEN);
+	IMYP_MEMSET (data->to_execute, '\0', IMYP_MAX_PROG_LEN);
 	strncpy (data->exename, program, IMYP_MIN (i+1, IMYP_MAX_PROG_LEN-1));
 	data->exename[IMYP_MAX_PROG_LEN-1] = '\0';
 	*imyp_data = (imyp_backend_data_t *)data;

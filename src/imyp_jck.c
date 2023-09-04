@@ -122,14 +122,7 @@ static int imyp_jack_fill_buffer (
 	/* check for the marker, or if we simply played the whole buffer already: */
 	if ( data->samples_remain <= 1 )
 	{
-#ifdef HAVE_MEMSET
-		memset(output, 0, nframes * sizeof (jack_default_audio_sample_t));
-#else
-		for ( i = 0; i < nframes; i++ )
-		{
-			output[i] = 0;
-		}
-#endif
+		IMYP_MEMSET (output, 0, nframes * sizeof (jack_default_audio_sample_t));
 		data->samples_remain = 0;
 		return 0;
 	}
@@ -186,10 +179,6 @@ imyp_jack_play_tune (
 	int bufsize;
 #endif
 {
-#ifndef HAVE_MEMSET
-	size_t bi;
-#endif
-
 	struct imyp_jack_backend_data * data =
 		(struct imyp_jack_backend_data *)imyp_data;
 
@@ -201,14 +190,7 @@ imyp_jack_play_tune (
 	if ( (duration > 0) && (bufsize > 0) )
 	{
 		/* zero-out the old values first */
-#ifdef HAVE_MEMSET
-		memset(buf, 0, (size_t)bufsize);
-#else
-		for ( bi = 0; bi < bufsize; bi++ )
-		{
-			((char *)buf)[bi] = '\0';
-		}
-#endif
+		IMYP_MEMSET (buf, 0, (size_t)bufsize);
 		/* now generate the new samples: */
 		bufsize = imyp_generate_samples (freq, volume_level, duration,
 			buf, bufsize,

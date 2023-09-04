@@ -721,22 +721,12 @@ imyp_play_file (
 	int skipped_dur;	/* has to be signed */
 	int play_res;
 	int note_duration = 0;
-#ifndef HAVE_MEMSET
-	size_t i;
-#endif
 
 	if ( (file_name == NULL) || (curr == NULL) )
 	{
 		return -100;
 	}
-#ifdef HAVE_MEMSET
-	memset (melody_line, 0, sizeof (melody_line));
-#else
-	for ( i = 0; i < sizeof (melody_line); i++ )
-	{
-		melody_line[i] = '\0';
-	}
-#endif
+	IMYP_MEMSET (melody_line, 0, sizeof (melody_line));
 	/* re-initialize the parser for each file: */
 	volume = 7;
 	style = 0;

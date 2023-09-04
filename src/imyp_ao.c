@@ -216,14 +216,7 @@ imyp_ao_init (
 	}
 
 	data->format.channels = 1;
-#ifdef HAVE_MEMSET
-	memset (&(data->format.matrix), 0, sizeof (data->format.matrix));
-#else
-	for (i = 0; i < sizeof (data->format.matrix); i++ )
-	{
-		((char *)&(data->format.matrix))[i] = '\0';
-	}
-#endif
+	IMYP_MEMSET (&(data->format.matrix), 0, sizeof (data->format.matrix));
 
 	/* file:///usr/share/doc/libao-devel-X.Y.Z/ao_example.c */
 	for ( i = 0; i < sizeof (samp_freqs) / sizeof (samp_freqs[0]); i++ )

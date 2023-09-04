@@ -286,9 +286,6 @@ imyp_all_play_tune (
 {
 	AUDIOSTREAM * as;
 	void * new_buf;
-#ifndef HAVE_MEMCPY
-	int i;
-#endif
 	struct imyp_allegro_backend_data * data =
 		(struct imyp_allegro_backend_data *)imyp_data;
 
@@ -311,14 +308,7 @@ imyp_all_play_tune (
 		new_buf = get_audio_stream_buffer (as);
 		while ( new_buf != NULL )
 		{
-#ifdef HAVE_MEMCPY
-			memcpy (new_buf, buf, (size_t)bufsize);
-#else
-			for ( i = 0; i < bufsize; i++ )
-			{
-				((char *)new_buf)[i] = ((char *)buf)[i];
-			}
-#endif
+			IMYP_MEMCOPY (new_buf, buf, (size_t)bufsize);
 			if ( imyp_sig_recvd != 0 )
 			{
 				stop_audio_stream (as);

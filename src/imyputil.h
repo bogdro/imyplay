@@ -50,6 +50,30 @@ enum IMYP_SAMPLE_FORMATS
 extern int imyp_compare IMYP_PARAMS ((const char string1[], const char string2[]));
 # endif
 
+# ifdef HAVE_MEMCPY
+#  define IMYP_MEMCOPY memcpy
+# else
+extern void imyp_memcopy IMYP_PARAMS ((void * const dest,
+	const void * const src, const size_t len));
+#  define IMYP_MEMCOPY imyp_memcopy
+# endif
+
+# ifdef HAVE_MEMSET
+#  define IMYP_MEMSET memset
+# else
+extern void imyp_mem_set IMYP_PARAMS ((void * const dest,
+	const char value, const size_t len));
+#  define IMYP_MEMSET imyp_mem_set
+# endif
+
+# ifdef HAVE_STRDUP
+#  define IMYP_STRDUP strdup
+# else
+extern char * imyp_duplicate_string IMYP_PARAMS ((const char src[]));
+#  define IMYP_STRDUP imyp_duplicate_string
+# endif
+
+
 extern enum IMYP_CURR_LIB imyp_parse_system IMYP_PARAMS ((const char system_name[]));
 extern enum IMYP_SAMPLE_FORMATS imyp_get_format IMYP_PARAMS ((const char string[]));
 extern int imyp_generate_samples IMYP_PARAMS ((

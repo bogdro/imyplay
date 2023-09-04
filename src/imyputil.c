@@ -565,14 +565,7 @@ imyp_generate_filename (
 	{
 		return NULL;
 	}
-# ifdef HAVE_MEMSET
-	memset (new_filename, 0, (size_t)target_fname_len);
-# else
-	for (i = 0; i < target_fname_len; i++ )
-	{
-		((char *)new_filename)[i] = '\0';
-	}
-# endif
+	IMYP_MEMSET (new_filename, 0, (size_t)target_fname_len);
 	strncpy (new_filename, filename, target_fname_len-1);
 	/* If ".imy" extension is present, change it to the provided one.
 	   Else, append the requested extension. */
@@ -595,3 +588,86 @@ imyp_generate_filename (
 	return NULL;
 #endif /* HAVE_MALLOC */
 }
+
+/* =============================================================== */
+
+#ifndef HAVE_STRDUP
+char * imyp_duplicate_string (
+# ifdef IMYP_ANSIC
+	const char src[])
+# else
+	src)
+	const char src[];
+# endif
+{
+	size_t len;
+	char * dest;
+
+	if ( src == NULL )
+	{
+		return NULL;
+	}
+	len = strlen (src);
+	if ( len == 0 )
+	{
+		return NULL;
+	}
+	dest = (char *) malloc (len + 1);
+	if ( dest == NULL )
+	{
+		return NULL;
+	}
+# ifdef HAVE_STRING_H
+	strncpy (dest, src, len + 1);
+# else
+	IMYP_MEMCOPY (dest, src, len);
+# endif
+	dest[len] = '\0';
+	return dest;
+}
+#endif /* ! HAVE_STRDUP */
+
+/* =============================================================== */
+
+#ifndef HAVE_MEMCPY
+void imyp_memcopy (
+# ifdef IMYP_ANSIC
+	void * const dest, const void * const src, const size_t len)
+# else
+	dest, src, len)
+	void * const dest;
+	const void * const src;
+	const size_t len;
+# endif
+{
+	size_t i;
+	char * const d = (char *)dest;
+	const char * const s = (const char *)src;
+
+	for ( i = 0; i < len; i++ )
+	{
+		d[i] = s[i];
+	}
+}
+#endif
+
+/* =============================================================== */
+
+#ifndef HAVE_MEMSET
+void imyp_mem_set (
+# ifdef IMYP_ANSIC
+	void * const dest, const char value, const size_t len)
+# else
+	dest, value, len)
+	void * const dest;
+	const char value;
+	const size_t len;
+# endif
+{
+	size_t i;
+	for ( i = 0; i < len; i++ )
+	{
+		((char *)dest)[i] = value;
+	}
+}
+#endif

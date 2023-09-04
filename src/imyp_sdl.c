@@ -130,10 +130,7 @@ static void SDLCALL imyp_sdl_fill_buffer (
 			((char *)stream)[i] = ((char *)data->buf)[data->last_index + i];
 		}
 		/* fill the remaining part of the buffer, if any: */
-		for ( /* "i" is already set */; i < (unsigned int)len; i++ )
-		{
-			((char *)stream)[i] = 0;
-		}
+		IMYP_MEMSET (stream, 0, (unsigned int)len - nsamp);
 		data->last_index += nsamp;
 		data->samples_remain -= (long int)nsamp;
 		if ( data->samples_remain <= 0 )
@@ -143,10 +140,7 @@ static void SDLCALL imyp_sdl_fill_buffer (
 	}
 	else
 	{
-		for ( i = 0; i < (unsigned int)len; i++ )
-		{
-			((char *)stream)[i] = 0;
-		}
+		IMYP_MEMSET (stream, 0, (unsigned int)len);
 	}
 }
 
@@ -195,14 +189,7 @@ imyp_sdl_play_tune (
 	if ( (duration > 0) && (bufsize > 0) )
 	{
 		/* zero-out the old values first */
-#ifdef HAVE_MEMSET
-		memset(buf, 0, (size_t)bufsize);
-#else
-		for ( bi = 0; bi < bufsize; bi++ )
-		{
-			((char *)buf)[bi] = '\0';
-		}
-#endif
+		IMYP_MEMSET (buf, 0, (size_t)bufsize);
 		if ( (data->received.format == AUDIO_U8) || (data->received.format == AUDIO_S8) )
 		{
 			if ( data->received.format == AUDIO_U8 )

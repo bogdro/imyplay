@@ -22,6 +22,7 @@
 #include "imyp_cfg.h"
 
 #include "imyplay.h"
+#include "imyputil.h"
 
 #ifdef HAVE_ERRNO_H
 # include <errno.h>
@@ -278,14 +279,7 @@ imyp_set_sigh (
 
 # else
 	/* more than ANSI C */
-#  ifdef HAVE_MEMSET
-	memset (&sa, 0, sizeof (struct sigaction));
-#  else
-	for ( s = 0; s < sizeof (struct sigaction); s++ )
-	{
-		((char *)&sa)[s] = '\0';
-	}
-#  endif
+	IMYP_MEMSET (&sa, 0, sizeof (struct sigaction));
 	sa.sa_handler = &term_signal_received;
 	for ( s = 0; s < sizeof (signals) / sizeof (signals[0]); s++ )
 	{

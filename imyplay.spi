@@ -49,7 +49,7 @@ Group:		Sound
 #Group:		Applications/Multimedia
 Source:		%{imyp_name}-%{imyp_version}.tar.gz
 BuildRoot:	%{_tmppath}/%{imyp_name}-build
-BuildRequires:	gcc, glibc, glibc-devel, make
+BuildRequires:	gcc, glibc, glibc-devel, make, texinfo
 
 %description
 %{imyp_descr}

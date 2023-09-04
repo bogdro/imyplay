@@ -130,15 +130,10 @@ IMYplay, in various versions, has been successfully compiled on the following sy
 @itemize
 @item Fedora Core 4 GNU/Linux, i686
 @item Fedora 12 GNU/Linux, i686
-@item Mandriva 2008.1 GNU/Linux, i686
-@item Mandriva 2011 GNU/Linux, i686 
-@item OpenMandriva 3.0 GNU/Linux, amd64
-@item OpenMandriva 4.2 GNU/Linux, amd64
-@item OpenMandriva 4.3 GNU/Linux, amd64
+@item Mandriva 2008.1, 2011 GNU/Linux, i686
+@item OpenMandriva 3.0, 4.2, 4.3 GNU/Linux, amd64
 @item OpenBSD 3.8, i586
 @item Debian 5.0 GNU/Linux, i686
-@item FreeDOS (DJGPP + NASM)
-@item DOSBox (DJGPP + NASM)
 @item FreeBSD
 @item Solaris/SunOS
 @item macOS
@@ -265,8 +260,8 @@ To create an RPM package (the old way):
 IMYplay, in various versions, has been successfully compiled on the following
 systems:
 @itemize
-@item FreeDOS
-@item DOSBox
+@item FreeDOS (DJGPP + NASM)
+@item DOSBox (DJGPP + NASM)
 @end itemize
 
 Requirements for automatic compiling the DOS version:

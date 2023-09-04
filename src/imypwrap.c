@@ -492,7 +492,7 @@ imyp_init_selected (
 {
 	int res = -1;
 
-	if ( output_system == NULL )
+	if ( (output_system == NULL) || (curr == NULL) )
 	{
 		return res;
 	}

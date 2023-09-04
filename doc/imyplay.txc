@@ -114,7 +114,7 @@ IMYplay's homepage is @url{https://imyplay.sourceforge.io}.
 @chapter How to compile the program?
 
 @menu
-* Compile under Un*x::		Compile under Linux/Unix
+* Compile under Un*x::		Compile under Linux/Un*x
 * Compile under DOS::		Compile under DOS
 @end menu
 
@@ -149,7 +149,7 @@ The translation headers (@file{locale.h}, @file{libintl.h} or other) are optiona
 @item if you want sound, not just MIDI conversion, a development package for one of the
 supported libraries (except OSS and PC-speaker, which require only
 the C library and system support).
-If you don't have any of these installed or available (check twice), then go to@*
+If you don't have any of these installed or available, then go to@*
 	@url{http://alleg.sf.net/}@*
 	@url{http://www.libsdl.org/}@*
 	@url{http://alsa-project.org/}@*
@@ -171,8 +171,8 @@ to configure the program for your system.
 
 
 If you do not with support for a particular output mechanism,
-give the @option{--enable-XXX=no} option to @samp{./configure}
-(XXX=allegro, SDL, SDL2, ALSA,
+give the @option{--enable-NAME=no} option to @samp{./configure}
+(NAME=allegro, SDL, SDL2, ALSA,
 OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE, SPKR).
 
 Run @samp{./configure --help} for details.
@@ -266,7 +266,7 @@ systems:
 
 Requirements for automatic compiling the DOS version:
 @itemize
-@item a working GCC compiler (preferably DJGPP).
+@item a working GCC compiler (preferably @url{http://www.delorie.com/djgpp/, DJGPP}).
 
 @item development package for the C library (comes with DJGPP)
 
@@ -274,7 +274,7 @@ Requirements for automatic compiling the DOS version:
 
 @item if you want sound, not just MIDI conversion, a development package for one
 of the supported libraries (except PC-speaker, which requires only
-the C library and system support). If you don't have any of these installed
+the C library). If you don't have any of these installed
 or available, then go to@*
 	@url{http://alleg.sf.net/}	- for the Allegro library
 
@@ -558,7 +558,7 @@ To report usage problems, include:
 
 Bogdan 'bogdro' Drozdowski.
 
-To contact me, try one of these adresses (English accepted): @*
+To contact me, try one of these addresses (English accepted): @*
 @quotation
 bogdro (at) users . sourceforge . net@*
 bogdro-soft (at) gmx . com

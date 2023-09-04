@@ -1051,7 +1051,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-.|[\x00-\x1F]				{
+.|[\x00-\x1F]|[\x80-\xFF]		{
 /* NOTE: using just ".|\x00" is NOT enough */
 
 	fflush(stdout);

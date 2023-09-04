@@ -23517,12 +23517,12 @@ if (	test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"			\
 	&& test "x$have_malloc" = "xyes" && test "x$have_realloc" = "xyes" ); then
 
 	echo " *	Flex parser: yes"
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: Flex-based parser enabled. If it does not compile for" >&5
-printf "%s\n" "$as_me: WARNING: Flex-based parser enabled. If it does not compile for" >&2;}
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: you or works incorrectly, re-configure IMYplay with" >&5
-printf "%s\n" "$as_me: WARNING: you or works incorrectly, re-configure IMYplay with" >&2;}
-	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: ./configure --enable-FLEXPARSER=no" >&5
-printf "%s\n" "$as_me: WARNING: ./configure --enable-FLEXPARSER=no" >&2;}
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: Flex-based parser enabled. If it does not compile for" >&5
+printf "%s\n" "$as_me: Flex-based parser enabled. If it does not compile for" >&6;}
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: you or works incorrectly, re-configure IMYplay with" >&5
+printf "%s\n" "$as_me: you or works incorrectly, re-configure IMYplay with" >&6;}
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: ./configure --enable-FLEXPARSER=no" >&5
+printf "%s\n" "$as_me: ./configure --enable-FLEXPARSER=no" >&6;}
 else
 	if (test "x$feat_FLEX" != "xyes"); then
 		echo " *	Flex parser: no (disabled by command line)"

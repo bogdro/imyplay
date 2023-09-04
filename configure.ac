@@ -1210,9 +1210,9 @@ if (	test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"			\
 	&& test "x$have_malloc" = "xyes" && test "x$have_realloc" = "xyes" ); then
 
 	echo " *	Flex parser: yes"
-	AC_MSG_WARN([[Flex-based parser enabled. If it does not compile for]])
-	AC_MSG_WARN([[you or works incorrectly, re-configure IMYplay with]])
-	AC_MSG_WARN([[./configure --enable-FLEXPARSER=no]])
+	AC_MSG_NOTICE([[Flex-based parser enabled. If it does not compile for]])
+	AC_MSG_NOTICE([[you or works incorrectly, re-configure IMYplay with]])
+	AC_MSG_NOTICE([[./configure --enable-FLEXPARSER=no]])
 else
 	if (test "x$feat_FLEX" != "xyes"); then
 		echo " *	Flex parser: no (disabled by command line)"

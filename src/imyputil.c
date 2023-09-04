@@ -538,7 +538,6 @@ imyp_generate_filename (
 	size_t fnlen;
 	size_t elen;
 	size_t imy_index;
-	size_t i;
 	size_t target_fname_len;
 #endif
 
@@ -569,10 +568,7 @@ imyp_generate_filename (
 	strncpy (new_filename, filename, target_fname_len-1);
 	/* If ".imy" extension is present, change it to the provided one.
 	   Else, append the requested extension. */
-	for (i = imy_index; i < fnlen; i++ )
-	{
-		new_filename[i] = '\0';
-	}
+	IMYP_MEMSET (new_filename, '\0', fnlen - imy_index);
 	fnlen = imy_index;
 	if ( (imy != NULL) ||
 		( (imy == NULL) && (strstr (filename, ext) == NULL) ) )

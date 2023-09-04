@@ -298,16 +298,20 @@ imyp_pulse_version (
 #endif
 {
 #if (defined PA_MAJOR) && (defined PA_MINOR) && (defined PA_MICRO)
-	printf ( "PulseAudio: %d.%d.%d\n", PA_MAJOR, PA_MINOR, PA_MICRO );
+	printf ( "PulseAudio (%s): %d.%d.%d\n", ver_msg_compiled,
+		PA_MAJOR, PA_MINOR, PA_MICRO );
 #else
 # if (defined PA_MAJOR) && (defined PA_MINOR)
-	printf ( "PulseAudio: %d.%d\n", PA_MAJOR, PA_MINOR );
+	printf ( "PulseAudio (%s): %d.%d\n", ver_msg_compiled,
+		PA_MAJOR, PA_MINOR );
 # else
 #  if (defined PA_MAJOR)
-	printf ( "PulseAudio: %d\n", PA_MAJOR );
+	printf ( "PulseAudio (%s): %d\n", ver_msg_compiled, PA_MAJOR );
 #  else
-	printf ( "PulseAudio: ?\n" );
+	printf ( "PulseAudio (%s): ?\n", ver_msg_compiled);
 #  endif
 # endif
 #endif
+	printf ( "PulseAudio (%s): %s\n", ver_msg_runtime,
+		pa_get_library_version() );
 }

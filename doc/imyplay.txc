@@ -109,7 +109,7 @@ IMYplay's homepage is @url{https://imyplay.sourceforge.io}.
 
 
 
-@node How to compile?, Compile under Un*x, What is IMYplay?, Top
+@node How to compile?, Usage, What is IMYplay?, Top
 @comment  node-name, next,      previous,  up
 @chapter How to compile the program?
 
@@ -122,7 +122,7 @@ IMYplay's homepage is @url{https://imyplay.sourceforge.io}.
 
 
 
-@node Compile under Un*x, Compile under DOS, How to compile?, How to compile?
+@node Compile under Un*x, Compile under DOS, , How to compile?
 @comment  node-name, next,      previous,  up
 @section Compile under Un*x
 
@@ -252,7 +252,7 @@ To create an RPM package (the old way):
 @c ==================================================================
 
 
-@node Compile under DOS, Usage, Compile under Un*x, How to compile?
+@node Compile under DOS, , Compile under Un*x, How to compile?
 @comment  node-name, next,      previous,  up
 @section Compile under DOS
 
@@ -321,7 +321,7 @@ The resulting @file{imyplay.exe} is the program to use.
 
 @c ==================================================================
 
-@node Usage, Return values, Compile under DOS, Top
+@node Usage, Return values, How to compile?, Top
 @comment  node-name, next,      previous,  up
 @chapter Usage
 

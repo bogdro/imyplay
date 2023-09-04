@@ -596,7 +596,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_MELODY_LINE>\n[^[:space:]]		{
+<IN_MELODY_LINE>[\r\n]+[^[:space:]]	{
 
 	/* a newline NOT followed by whitespace means the end of the melody line. */
 	BEGIN (IN_IMELODY);

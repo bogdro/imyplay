@@ -540,25 +540,36 @@ imyp_gst_version (
 	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
+	guint major;
+	guint minor;
+	guint micro;
+	guint nano;
+
 #if (defined GST_VERSION_MAJOR) && (defined GST_VERSION_MINOR) \
 	&& (defined GST_VERSION_MICRO) && (defined GST_VERSION_NANO)
-	printf ( "GStreamer: %d.%d.%d.%d\n", GST_VERSION_MAJOR, GST_VERSION_MINOR,
+	printf ( "GStreamer (%s): %d.%d.%d.%d\n", ver_msg_compiled,
+		GST_VERSION_MAJOR, GST_VERSION_MINOR,
 		GST_VERSION_MICRO, GST_VERSION_NANO );
 #else
 # if (defined GST_VERSION_MAJOR) && (defined GST_VERSION_MINOR) \
 	&& (defined GST_VERSION_MICRO)
-	printf ( "GStreamer: %d.%d.%d\n", GST_VERSION_MAJOR, GST_VERSION_MINOR,
+	printf ( "GStreamer (%s): %d.%d.%d\n", ver_msg_compiled,
+		GST_VERSION_MAJOR, GST_VERSION_MINOR,
 		GST_VERSION_MICRO );
 # else
 #  if (defined GST_VERSION_MAJOR) && (defined GST_VERSION_MINOR)
-	printf ( "GStreamer: %d.%d\n", GST_VERSION_MAJOR, GST_VERSION_MINOR );
+	printf ( "GStreamer (%s): %d.%d\n", ver_msg_compiled,
+		GST_VERSION_MAJOR, GST_VERSION_MINOR );
 #  else
 #   if (defined GST_VERSION_MAJOR)
-	printf ( "GStreamer: %d\n", GST_VERSION_MAJOR );
+	printf ( "GStreamer (%s): %d\n", ver_msg_compiled, GST_VERSION_MAJOR );
 #   else
-	printf ( "GStreamer: ?\n" );
+	printf ( "GStreamer (%s): ?\n", ver_msg_compiled );
 #   endif
 #  endif
 # endif
 #endif
+	gst_version (&major, &minor, &micro, &nano);
+	printf ( "GStreamer (%s): %d.%d.%d.%d\n", ver_msg_runtime,
+		major, minor, micro, nano );
 }

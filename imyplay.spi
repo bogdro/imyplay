@@ -40,7 +40,7 @@ call an external program on each note.
 Summary:	%{imyp_summary}
 Name:		%{imyp_name}
 Version:	%{imyp_version}
-Release:	%{imyp_release}
+Release:	%{imyp_release}%{?dist}
 URL:		%{imyp_url}
 BugURL:		%{imyp_url}
 License:	%{imyp_lic}

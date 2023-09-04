@@ -5,7 +5,8 @@ Read the info documentation (type 'info doc/imyplay.info') to get more
  information.
 
 This program is used for playing iMelody ringtones (IMY files),
-conforming to the iMelody specification, as written in doc/imelody.txt.
+conforming to the iMelody (https://en.wikipedia.org/wiki/IMelody)
+specification, as written in doc/imelody.txt.
 
 IMYplay can use the following outputs to produce sound:
 1. the Allegro game library (<http://alleg.sf.net>),

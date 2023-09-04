@@ -71,7 +71,8 @@ Free Documentation License" in the "Copying" chapter.
 @chapter What is IMYplay?
 
 This program is used for playing iMelody ringtones (IMY files),
-conforming to the iMelody specification, as written in @file{doc/imelody.txt}.
+conforming to the iMelody (@url{https://en.wikipedia.org/wiki/IMelody})
+specification, as written in @file{doc/imelody.txt}.
 
 IMYplay can use the following outputs to produce sound:
 @enumerate

@@ -102,6 +102,10 @@ static const char * const err_lib_close   = N_("Error during library closing.");
 /* Messages displayed when verbose mode is on */
 /*const char * const msg_signal      = N_("Setting signal handlers");*/
 
+/* Messages for version numbers. */
+const char * const ver_msg_compiled       = N_("compiled with");
+const char * const ver_msg_runtime        = N_("running with");
+
 /* Signal-related stuff */
 #ifdef HAVE_SIGNAL_H
 const char * const imyp_sig_unk = N_("unknown");

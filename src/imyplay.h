@@ -101,6 +101,8 @@ extern void
 extern const char * const err_msg;
 extern const char * const imyp_sig_unk;
 extern const char * const imyp_err_msg_signal;
+extern const char * const ver_msg_compiled;
+extern const char * const ver_msg_runtime;
 
 enum IMYP_CURR_LIB
 {

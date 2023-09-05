@@ -364,15 +364,15 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	BEGIN (IN_IMELODY);
 }
 
-<IN_IMELODY>^VERSION:.*			ECHO;
+<IN_IMELODY>^VERSION:.*[\r\n]*		ECHO;
 
-<IN_IMELODY>^FORMAT:.*			ECHO;
+<IN_IMELODY>^FORMAT:.*[\r\n]*		ECHO;
 
-<IN_IMELODY>^NAME:.*			ECHO;
+<IN_IMELODY>^NAME:.*[\r\n]*		ECHO;
 
-<IN_IMELODY>^COMPOSER:.*		ECHO;
+<IN_IMELODY>^COMPOSER:.*[\r\n]*		ECHO;
 
-<IN_IMELODY>^BEAT:.*			{
+<IN_IMELODY>^BEAT:.*[\r\n]*		{
 
 	ECHO;
 	/* parse beat */
@@ -392,7 +392,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_IMELODY>^STYLE:S.*			{
+<IN_IMELODY>^STYLE:S.*[\r\n]*		{
 
 	ECHO;
 	/* parse style */
@@ -412,7 +412,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_IMELODY>^VOLUME:V.*			{
+<IN_IMELODY>^VOLUME:V.*[\r\n]*		{
 
 	ECHO;
 	/* parse volume */
@@ -436,7 +436,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_IMELODY>^COPYRIGHT:.*		ECHO;
+<IN_IMELODY>^COPYRIGHT:.*[\r\n]*	ECHO;
 
  /* don't use "^MELODY:{FULL_MELODY} here, because we want to catch unknown tokens
 	ourselves and play the rest of the melody anyway. */
@@ -1046,9 +1046,20 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_IMELODY>.|\n|\r			{
+<IN_IMELODY>[\n\r]			{
 
-	ECHO; /* echo unknown lines inside the melody block */
+	/* skip leftover newline characters inside the melody block
+	   (meaning: those which aren't a melody continuation sequence) */
+	fflush(stdout);
+	if ( imyp_sig_recvd != 0 )
+	{
+		return -1;
+	}
+}
+
+<IN_IMELODY>.			{
+
+	ECHO; /* echo unknown characters inside the melody block */
 	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;

@@ -638,7 +638,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( YY_START == IN_REPEAT_BLOCK_PASS /*repeat_count != -2*/ )
 	{
@@ -657,7 +657,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( YY_START == IN_REPEAT_BLOCK_PASS /*repeat_count != -2*/ )
 	{
@@ -676,7 +676,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( YY_START == IN_REPEAT_BLOCK_PASS /*repeat_count != -2*/ )
 	{
@@ -695,7 +695,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( YY_START == IN_REPEAT_BLOCK_PASS /*repeat_count != -2*/ )
 	{
@@ -713,7 +713,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( YY_START == IN_REPEAT_BLOCK_PASS /*repeat_count != -2*/ )
 	{
@@ -730,7 +730,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( YY_START == IN_REPEAT_BLOCK_PASS /*repeat_count != -2*/ )
 	{
@@ -769,7 +769,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( YY_START == IN_REPEAT_BLOCK_PASS /*repeat_count != -2*/ )
 	{
@@ -818,7 +818,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( YY_START == IN_REPEAT_BLOCK_PASS /*repeat_count != -2*/ )
 	{
@@ -883,7 +883,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		BEGIN (REPEAT_BLOCK_VOL_PASS);
 	}
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( imyp_sig_recvd != 0 )
 	{
@@ -896,7 +896,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( YY_START == REPEAT_BLOCK_VOL /*repeat_count != -2*/ )
 	{
@@ -973,7 +973,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 
 	pos = 0;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( imyp_sig_recvd != 0 )
 	{
@@ -987,7 +987,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( imyp_sig_recvd != 0 )
 	{
@@ -1026,7 +1026,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	/* update the line position to display the position of unknown tokens */
 	repeat_pos = pos + yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
-	   after looking throuhg the whole repeat block. */
+	   after looking through the whole repeat block. */
 	yymore ();
 	if ( imyp_sig_recvd != 0 )
 	{

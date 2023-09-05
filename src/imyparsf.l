@@ -370,6 +370,8 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 
 <IN_IMELODY>^NAME:.*			ECHO;
 
+<IN_IMELODY>^COMPOSER:.*		ECHO;
+
 <IN_IMELODY>^BEAT:.*			{
 
 	ECHO;
@@ -433,6 +435,8 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 		return -1;
 	}
 }
+
+<IN_IMELODY>^COPYRIGHT:.*		ECHO;
 
  /* don't use "^MELODY:{FULL_MELODY} here, because we want to catch unknown tokens
 	ourselves and play the rest of the melody anyway. */

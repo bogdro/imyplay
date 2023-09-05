@@ -956,7 +956,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_REPEAT_BLOCK,REPEAT_BLOCK_VOL,REPEAT_BLOCK_END,IN_REPEAT_BLOCK_PASS,REPEAT_BLOCK_VOL_PASS>\n[^[:space:]]	{
+<IN_REPEAT_BLOCK,REPEAT_BLOCK_VOL,REPEAT_BLOCK_END,IN_REPEAT_BLOCK_PASS,REPEAT_BLOCK_VOL_PASS>[\n\r]+[^[:space:]]	{
 
 	/* a newline NOT followed by whitespace means the end of the melody line. */
 	BEGIN (IN_IMELODY);
@@ -1046,7 +1046,7 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_IMELODY>.|\n			{
+<IN_IMELODY>.|\n|\r			{
 
 	ECHO; /* echo unknown lines inside the melody block */
 	if ( imyp_sig_recvd != 0 )

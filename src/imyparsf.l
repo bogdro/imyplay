@@ -1034,12 +1034,12 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_IMELODY>^END:IMELODY		{
+<IN_IMELODY>^END:IMELODY[\r\n]*		{
 
 	BEGIN (INITIAL);
-	ECHO;
+	/*ECHO;*/
 	/* print a newline no matter if it was present in the file, so we can use just one pattern. */
-	printf ("\n");
+	/*printf ("\n");*/
 	if ( imyp_sig_recvd != 0 )
 	{
 		return -1;

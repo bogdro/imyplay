@@ -43,6 +43,7 @@
 #include "imypwrap.h"
 #include "imyparse.h"
 #include "iparsers.h"
+#include "imyputil.h"
 
 # ifdef __GNUC__
 #  pragma GCC poison strcpy strcat
@@ -1116,6 +1117,11 @@ imyp_play_file (
 									melody_line,
 			       						melody_index,
 									_(err_unex_token));
+								melody_index++;
+								imyp_read_line (melody_line,
+									&melody_index,
+									sizeof (melody_line) - 10,
+									imy, 0);
 							}
 							else
 							{

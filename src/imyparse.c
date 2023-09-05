@@ -545,8 +545,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n",
-				_(err_play_tune));
+			printf ("%s\n", _(err_play_tune));
 		}
 	}
 	else if ( (is_flat != 0) && (note_index != 0) )
@@ -557,8 +556,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n",
-				_(err_play_tune));
+			printf ("%s\n", _(err_play_tune));
 		}
 	}
 	else if ( (is_sharp != 0) && (note_index == IMYP_NOTES_PER_OCTAVE-1)
@@ -570,8 +568,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n",
-				_(err_play_tune));
+			printf ("%s\n", _(err_play_tune));
 		}
 	}
 	else if ( (is_sharp != 0) && (note_index != IMYP_NOTES_PER_OCTAVE-1) )
@@ -582,8 +579,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n",
-				_(err_play_tune));
+			printf ("%s\n", _(err_play_tune));
 		}
 	}
 	else
@@ -596,8 +592,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n",
-				_(err_play_tune));
+			printf ("%s\n", _(err_play_tune));
 		}
 	}
 	imyp_pause (imyp_get_rest_time (*note_duration,
@@ -1229,7 +1224,8 @@ imyp_play_file (
 									SEEK_SET);
 #endif
 								/* make sure a new line will be read */
-								melody_index = sizeof (melody_line)+1;
+								melody_index = 0;
+								melody_line[0] = '\0';
 								imyp_read_line (melody_line,
 									&melody_index,
 									sizeof (melody_line) - 10,
@@ -1317,8 +1313,8 @@ imyp_play_file (
 #endif
 									/* make sure a new line
 									   will be read */
-									melody_index =
-										sizeof (melody_line)+1;
+									melody_index = 0;
+									melody_line[0] = '\0';
 									imyp_read_line (melody_line,
 										&melody_index,
 										sizeof (melody_line) - 10,

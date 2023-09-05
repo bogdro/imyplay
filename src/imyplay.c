@@ -75,7 +75,7 @@
 # include <allegro.h>	/* END_OF_MAIN() */
 #endif
 
-#define	PROGRAM_NAME	PACKAGE
+#define	PROGRAM_NAME	PACKAGE_NAME
 
 static const char ver_str[] = N_("version");
 static const char author_str[] = "Copyright (C) 2009-2023 Bogdan 'bogdro' Drozdowski, bogdro@users.sourceforge.net\n" \
@@ -255,7 +255,7 @@ print_help (
 		prog = my_name;
 	}
 
-	printf ("%s - %s\n\n", prog, _("A program for playing iMelody ringtones (IMY files)") );
+	printf ("%s - %s\n\n", PROGRAM_NAME, _("A program for playing iMelody ringtones (IMY files)") );
 	printf ( "%s: ", _("Syntax") );
 	printf ( "%s", prog);
 	printf ( "%s", _(" [options] ") );
@@ -387,7 +387,7 @@ main (
 
 		if ( (opt_char == (int)'V') || (opt_version == 1) )
 		{
-			printf ( "%s %s %s\n", imyp_progname, _(ver_str), VERSION );
+			printf ( "%s %s %s\n", PROGRAM_NAME, _(ver_str), VERSION );
 			imyp_report_versions (&current_library);
 			return 1;
 		}
@@ -451,7 +451,7 @@ main (
 		}
 		if ( (strstr (argv[i], "-V") == argv[i]) || (strstr (argv[i], "--version") == argv[i]) )
 		{
-			printf ( "%s %s %s\n", imyp_progname, _(ver_str), VERSION );
+			printf ( "%s %s %s\n", PROGRAM_NAME, _(ver_str), VERSION );
 			imyp_report_versions (&current_library);
 			return 1;
 		}

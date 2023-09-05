@@ -862,7 +862,18 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	{
 		if ( sscanf (strchr (yytext, '@')+1, "%d", &repeat_count) == 1 )
 		{
-			if ( repeat_count == 0 ) repeat_count = -1;
+			if ( repeat_count == 0 )
+			{
+				repeat_count = -1;
+			}
+			else
+			{
+				/* Initial increase, because we're decreasing
+				at the end of the repeat block, even during
+				the first parsing, when we didn't output any
+				note yet. */
+				repeat_count++;
+			}
 		}
 		else
 		{

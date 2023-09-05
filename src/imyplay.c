@@ -103,8 +103,8 @@ static const char * const err_lib_close   = N_("Error during library closing.");
 /*const char * const msg_signal      = N_("Setting signal handlers");*/
 
 /* Messages for version numbers. */
-const char * const ver_msg_compiled       = N_("compiled with");
-const char * const ver_msg_runtime        = N_("running with");
+const char * const ver_msg_compiled       = N_("compiled with version");
+const char * const ver_msg_runtime        = N_("running with version");
 
 /* Signal-related stuff */
 #ifdef HAVE_SIGNAL_H

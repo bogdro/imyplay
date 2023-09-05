@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 1.2.1\n"
 "Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
-"POT-Creation-Date: 2023-09-03 23:06+0200\n"
+"POT-Creation-Date: 2023-09-05 19:50+0200\n"
 "PO-Revision-Date: 2010-05-30 13:52+0100\n"
 "Last-Translator: Bogdan Drozdowski <bogdro@users.sourceforge.net>\n"
 "Language-Team: Polish\n"
@@ -67,59 +67,67 @@ msgstr "B³±d podczas inicjalizacji biblioteki"
 msgid "Error during library closing."
 msgstr "B³±d podczas zamykania biblioteki"
 
+#: src/imyplay.c:106
+msgid "compiled with version"
+msgstr "skompilowane z wersj±"
+
 #: src/imyplay.c:107
+msgid "running with version"
+msgstr "uruchomione z wersj±"
+
+#: src/imyplay.c:111
 msgid "unknown"
 msgstr "nieznany"
 
-#: src/imyplay.c:254
+#: src/imyplay.c:258
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr "Program do odtwarzania dzwonków iMelody (plików IMY)"
 
-#: src/imyplay.c:255
+#: src/imyplay.c:259
 msgid "Syntax"
 msgstr "Sk³adnia"
 
-#: src/imyplay.c:257
+#: src/imyplay.c:261
 msgid " [options] "
 msgstr " [opcje] "
 
-#: src/imyplay.c:259
+#: src/imyplay.c:263
 msgid "Options"
 msgstr "Opcje"
 
-#: src/imyplay.c:260
+#: src/imyplay.c:264
 msgid "Try to use this device"
 msgstr "Spróbuj u¿yæ tego urz±dzenia"
 
-#: src/imyplay.c:262
+#: src/imyplay.c:266
 msgid "Execute this program instead of sound output"
 msgstr "Wykonaj ten program zamiast wyj¶cia d¼wiêkowego"
 
-#: src/imyplay.c:265
+#: src/imyplay.c:269
 msgid "Write raw samples to this file instead of sound output"
 msgstr "Zapisz surowe próbki do tego pliku zamiast wyj¶cia d¼wiêkowego"
 
-#: src/imyplay.c:267
+#: src/imyplay.c:271
 msgid "Print help"
 msgstr "Wy¶wietl pomoc"
 
-#: src/imyplay.c:268
+#: src/imyplay.c:272
 msgid "Print license information"
 msgstr "Wy¶wietl informacje o licencji"
 
-#: src/imyplay.c:270
+#: src/imyplay.c:274
 msgid "Select MIDI instrument number"
 msgstr "Wybierz numer instrumentu MIDI"
 
-#: src/imyplay.c:272
+#: src/imyplay.c:276
 msgid "Use the given output system"
 msgstr "U¿yj danego systemu wyj¶cia"
 
-#: src/imyplay.c:274
+#: src/imyplay.c:278
 msgid "Convert the given files to MIDI format"
 msgstr "Przekonwertuj podane pliki na format MIDI"
 
-#: src/imyplay.c:276
+#: src/imyplay.c:280
 msgid "Print version number"
 msgstr "Wy¶wietl numer wersji"
 

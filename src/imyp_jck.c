@@ -136,10 +136,7 @@ static int imyp_jack_fill_buffer (
 		output[i] = (float)(((((char *)data->buf)[(data->last_index + i) * 2] & 0x0FF) | ((((char *)data->buf)[(data->last_index + i) * 2 + 1] & 0x0FF) << 8)) - (1 << 15)) * 1.0f / (1 << 15);
 	}
 	/* fill the remaining part of the buffer, if any: */
-	for ( /* "i" is already set */; i < nframes; i++ )
-	{
-		output[i] = 0;
-	}
+	IMYP_MEMSET (&output[frames_to_play], 0, (nframes - frames_to_play) * sizeof (jack_default_audio_sample_t));
 	data->last_index += frames_to_play;
 	data->samples_remain -= frames_to_play;
 	if ( data->samples_remain <= 0 )

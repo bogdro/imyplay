@@ -54,6 +54,13 @@
 # include <malloc.h>
 #endif
 
+#ifdef HAVE_STRING_H
+# if ((!defined STDC_HEADERS) || (!STDC_HEADERS)) && (defined HAVE_MEMORY_H)
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+
 struct imyp_gst_backend_data
 {
 	GstElement *src;

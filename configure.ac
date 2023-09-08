@@ -357,6 +357,7 @@ if ( test "x$feat_GST" = "xyes" ); then
 
 			CFLAGS="$CFLAGS $GST_CFLAGS"
 			LDFLAGS="$LDFLAGS $GST_LIBS"
+			LIBS="$LIBS $GST_LIBS"
 		fi
 	fi
 fi

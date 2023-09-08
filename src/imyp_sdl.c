@@ -130,7 +130,7 @@ static void SDLCALL imyp_sdl_fill_buffer (
 			((char *)stream)[i] = ((char *)data->buf)[data->last_index + i];
 		}
 		/* fill the remaining part of the buffer, if any: */
-		IMYP_MEMSET (stream, 0, (unsigned int)len - nsamp);
+		IMYP_MEMSET (&stream[nsamp], 0, (unsigned int)len - nsamp);
 		data->last_index += nsamp;
 		data->samples_remain -= (long int)nsamp;
 		if ( data->samples_remain <= 0 )

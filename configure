@@ -1500,7 +1500,7 @@ Optional Features:
   --enable-JACK		Enable JACK output.
   --enable-MIDI		Enable MIDI output.
   --enable-EXEC		Enable executing commands as output.
-  --enable-GSTREAMER	Enable GStreamer-0.10 output.
+  --enable-GSTREAMER	Enable GStreamer output.
   --enable-FILE		Enable raw file output.
   --enable-SPKR		Enable PC-Speaker output.
   --enable-FLEXPARSER	Enable flex-based parser.
@@ -6259,6 +6259,161 @@ fi
 	if ( test "x$PKG_CONFIG" != "x" ); then
 
 		libgstreamer=no
+
+pkg_failed=no
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for GST" >&5
+printf %s "checking for GST... " >&6; }
+
+if test -n "$GST_CFLAGS"; then
+    pkg_cv_GST_CFLAGS="$GST_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-controller-1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-controller-1.0") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GST_CFLAGS=`$PKG_CONFIG --cflags "gstreamer-controller-1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GST_LIBS"; then
+    pkg_cv_GST_LIBS="$GST_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-controller-1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-controller-1.0") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GST_LIBS=`$PKG_CONFIG --libs "gstreamer-controller-1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GST_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gstreamer-controller-1.0" 2>&1`
+        else
+	        GST_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gstreamer-controller-1.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GST_PKG_ERRORS" >&5
+
+	libgstreamer=no
+elif test $pkg_failed = untried; then
+     	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+	libgstreamer=no
+else
+	GST_CFLAGS=$pkg_cv_GST_CFLAGS
+	GST_LIBS=$pkg_cv_GST_LIBS
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+
+			libgstreamer=yes
+
+printf "%s\n" "#define HAVE_GST_GST_H 1" >>confdefs.h
+
+
+fi;
+		if ( test "x$libgstreamer" = "xno" ); then
+
+
+pkg_failed=no
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for GST" >&5
+printf %s "checking for GST... " >&6; }
+
+if test -n "$GST_CFLAGS"; then
+    pkg_cv_GST_CFLAGS="$GST_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-controller >= 1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-controller >= 1.0") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GST_CFLAGS=`$PKG_CONFIG --cflags "gstreamer-controller >= 1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GST_LIBS"; then
+    pkg_cv_GST_LIBS="$GST_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gstreamer-controller >= 1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gstreamer-controller >= 1.0") 2>&5
+  ac_status=$?
+  printf "%s\n" "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GST_LIBS=`$PKG_CONFIG --libs "gstreamer-controller >= 1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GST_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gstreamer-controller >= 1.0" 2>&1`
+        else
+	        GST_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gstreamer-controller >= 1.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GST_PKG_ERRORS" >&5
+
+	libgstreamer=no
+elif test $pkg_failed = untried; then
+     	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+	libgstreamer=no
+else
+	GST_CFLAGS=$pkg_cv_GST_CFLAGS
+	GST_LIBS=$pkg_cv_GST_LIBS
+        { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+printf "%s\n" "yes" >&6; }
+
+				libgstreamer=yes
+
+printf "%s\n" "#define HAVE_GST_GST_H 1" >>confdefs.h
+
+
+fi;
+		fi
 		if ( test "x$libgstreamer" = "xno" ); then
 
 
@@ -7916,8 +8071,7 @@ else
 fi
 
 
- if test "x$feat_GST" = "xyes" && test "x$libgstreamer" = "xyes" \
-	&& test "x$feat_GST" = "xyes"; then
+ if test "x$feat_GST" = "xyes" && test "x$libgstreamer" = "xyes"; then
   GSTREAMER_TRUE=
   GSTREAMER_FALSE='#'
 else
@@ -23430,16 +23584,16 @@ fi
 
 if (	test "x$feat_GST" = "xyes" && test "x$libgstreamer" = "xyes" ); then
 
-	echo " *	GStreamer-0.10: yes"
+	echo " *	GStreamer: yes"
 else
 	if (test "x$feat_GST" != "xyes"); then
-		echo " *	GStreamer-0.10: no (disabled by command line)"
+		echo " *	GStreamer: no (disabled by command line)"
 
 	elif ( test "x$PKG_CONFIG" = "x" ); then
-		echo " *	GStreamer-0.10: no (pkg-config missing)"
+		echo " *	GStreamer: no (pkg-config missing)"
 
 	else	#( test "x$libgstreamer" != "xyes" ); then
-		echo " *	GStreamer-0.10: no (library or headers missing)"
+		echo " *	GStreamer: no (library or headers missing)"
 
 	fi
 fi

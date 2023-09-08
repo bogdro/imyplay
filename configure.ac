@@ -131,7 +131,7 @@ AC_ARG_ENABLE(EXEC,[[  --enable-EXEC		Enable executing commands as output.]],
 	]
 	,feat_EXEC=yes)
 
-AC_ARG_ENABLE(GSTREAMER,[[  --enable-GSTREAMER	Enable GStreamer-0.10 output.]],
+AC_ARG_ENABLE(GSTREAMER,[[  --enable-GSTREAMER	Enable GStreamer output.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_GST=no
 	 else
@@ -308,6 +308,19 @@ if ( test "x$feat_GST" = "xyes" ); then
 	if ( test "x$PKG_CONFIG" != "x" ); then
 
 		libgstreamer=no
+		PKG_CHECK_MODULES([GST], [gstreamer-controller-1.0], [
+			libgstreamer=yes
+			AC_DEFINE([HAVE_GST_GST_H],[1],
+				[Whether you have the gst/gst.h header.])
+			], [libgstreamer=no]);
+		if ( test "x$libgstreamer" = "xno" ); then
+
+			PKG_CHECK_MODULES([GST], [gstreamer-controller >= 1.0], [
+				libgstreamer=yes
+				AC_DEFINE([HAVE_GST_GST_H],[1],
+					[Whether you have the gst/gst.h header.])
+				], [libgstreamer=no]);
+		fi
 		if ( test "x$libgstreamer" = "xno" ); then
 
 			PKG_CHECK_MODULES([GST], [gstreamer-controller-0.10], [
@@ -692,8 +705,7 @@ AM_CONDITIONAL(MIDI, [test "x$feat_MIDI" = "xyes" && test "x$have_malloc" = "xye
 AM_CONDITIONAL(EXEC, [test "x$feat_EXEC" = "xyes" && test "x$have_stdlib_h" = "xyes"	\
 	&& test "x$have_system" = "xyes"])
 
-AM_CONDITIONAL(GSTREAMER, [test "x$feat_GST" = "xyes" && test "x$libgstreamer" = "xyes" \
-	&& test "x$feat_GST" = "xyes"])
+AM_CONDITIONAL(GSTREAMER, [test "x$feat_GST" = "xyes" && test "x$libgstreamer" = "xyes"])
 
 AM_CONDITIONAL(FILE, [test "x$feat_FILE" = "xyes" && test "x$have_fwrite" = "xyes"])
 
@@ -1123,16 +1135,16 @@ fi
 
 if (	test "x$feat_GST" = "xyes" && test "x$libgstreamer" = "xyes" ); then
 
-	echo " *	GStreamer-0.10: yes"
+	echo " *	GStreamer: yes"
 else
 	if (test "x$feat_GST" != "xyes"); then
-		echo " *	GStreamer-0.10: no (disabled by command line)"
+		echo " *	GStreamer: no (disabled by command line)"
 
 	elif ( test "x$PKG_CONFIG" = "x" ); then
-		echo " *	GStreamer-0.10: no (pkg-config missing)"
+		echo " *	GStreamer: no (pkg-config missing)"
 
 	else	#( test "x$libgstreamer" != "xyes" ); then
-		echo " *	GStreamer-0.10: no (library or headers missing)"
+		echo " *	GStreamer: no (library or headers missing)"
 
 	fi
 fi

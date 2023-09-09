@@ -64,7 +64,8 @@
 struct imyp_jack_backend_data
 {
 	jack_nframes_t last_index;
-	jack_port_t * joutput;
+	jack_port_t * joutput1;
+	jack_port_t * joutput2;
 	jack_client_t * jclient;
 	const char **ports;
 	volatile jack_nframes_t samples_remain;
@@ -81,6 +82,66 @@ struct imyp_jack_backend_data
 #ifndef HAVE_MALLOC
 static struct imyp_jack_backend_data imyp_jack_backend_data_static;
 #endif
+
+#ifndef IMYP_ANSIC
+static int imyp_jack_fill_single_buffer
+	IMYP_PARAMS ((struct imyp_jack_backend_data * const data,
+		jack_default_audio_sample_t * const output,
+		const jack_nframes_t nframes,
+		jack_nframes_t * const frames_to_play));
+#endif
+
+/**
+ * The fill buffer function.
+ * \param data pointer to the backend's private data.
+ * \param nframes the number of frames to fill.
+ * \return 0 in case of success.
+ */
+static int imyp_jack_fill_single_buffer (
+#ifdef IMYP_ANSIC
+	struct imyp_jack_backend_data * const data,
+	jack_default_audio_sample_t * const output,
+	const jack_nframes_t nframes,
+	jack_nframes_t * const frames_to_play)
+#else
+	data, output, nframes, frames_to_play)
+	struct imyp_jack_backend_data * const data;
+	jack_default_audio_sample_t * const output;
+	const jack_nframes_t nframes;
+	jack_nframes_t * const frames_to_play;
+#endif
+{
+	jack_nframes_t i;
+
+	if ( (data == NULL) || (output == NULL) || (frames_to_play == NULL) )
+	{
+		return -1;
+	}
+	if ( data->buf == NULL )
+	{
+		return -1;
+	}
+	/* check for the marker, or if we simply played the whole buffer already: */
+	if ( data->samples_remain <= 1 )
+	{
+		IMYP_MEMSET (output, 0, nframes * sizeof (jack_default_audio_sample_t));
+		data->samples_remain = 0;
+		return 0;
+	}
+	*frames_to_play = IMYP_MIN(nframes, data->samples_remain);
+	for ( i = 0; i < *frames_to_play; i++ )
+	{
+		/* data is little-endian - low byte is first,
+		* data is signed - subtract the high value,
+		* data is 16-bit - divide by the maximum value to get a signal between -1.0 and +1.0
+		*/
+		output[i] = (float)(((((char *)data->buf)[(data->last_index + i) * 2] & 0x0FF)
+			| ((((char *)data->buf)[(data->last_index + i) * 2 + 1] & 0x0FF) << 8)) - (1 << 15)) * 1.0f / (1 << 15);
+	}
+	/* fill the remaining part of the buffer, if any: */
+	IMYP_MEMSET (&output[*frames_to_play], 0, (nframes - *frames_to_play) * sizeof (jack_default_audio_sample_t));
+	return 0; /* no error */
+}
 
 #ifndef IMYP_ANSIC
 static int imyp_jack_fill_buffer IMYP_PARAMS ((jack_nframes_t nframes, void * arg));
@@ -101,9 +162,9 @@ static int imyp_jack_fill_buffer (
 	void * arg;
 #endif
 {
-	jack_nframes_t i;
-	jack_default_audio_sample_t *output;
 	jack_nframes_t frames_to_play;
+	int ret1;
+	int ret2;
 
 	struct imyp_jack_backend_data * data =
 		(struct imyp_jack_backend_data *)arg;
@@ -112,31 +173,17 @@ static int imyp_jack_fill_buffer (
 	{
 		return -100;
 	}
-
-	output = jack_port_get_buffer (data->joutput, nframes);
-
-	if ( (output == NULL) || (data->buf == NULL) )
+	if ( data->buf == NULL )
 	{
 		return -1;
 	}
-	/* check for the marker, or if we simply played the whole buffer already: */
-	if ( data->samples_remain <= 1 )
-	{
-		IMYP_MEMSET (output, 0, nframes * sizeof (jack_default_audio_sample_t));
-		data->samples_remain = 0;
-		return 0;
-	}
-	frames_to_play = IMYP_MIN(nframes, data->samples_remain);
-	for ( i = 0; i < frames_to_play; i++ )
-	{
-		/* data is little-endian - low byte is first,
-		 * data is signed - subtract the high value,
-		 * data is 16-bit - divide by the maximum value to get a signal between -1.0 and +1.0
-		 */
-		output[i] = (float)(((((char *)data->buf)[(data->last_index + i) * 2] & 0x0FF) | ((((char *)data->buf)[(data->last_index + i) * 2 + 1] & 0x0FF) << 8)) - (1 << 15)) * 1.0f / (1 << 15);
-	}
-	/* fill the remaining part of the buffer, if any: */
-	IMYP_MEMSET (&output[frames_to_play], 0, (nframes - frames_to_play) * sizeof (jack_default_audio_sample_t));
+
+	ret1 = imyp_jack_fill_single_buffer (data,
+		jack_port_get_buffer (data->joutput1, nframes),
+		nframes, &frames_to_play);
+	ret2 = imyp_jack_fill_single_buffer (data,
+		jack_port_get_buffer (data->joutput2, nframes),
+		nframes, &frames_to_play);
 	data->last_index += frames_to_play;
 	data->samples_remain -= frames_to_play;
 	if ( data->samples_remain <= 0 )
@@ -144,7 +191,7 @@ static int imyp_jack_fill_buffer (
 		/* just a marker, because we need another call to the callback, otherwise the note is lost: */
 		data->samples_remain = 1;
 	}
-	return 0; /* no error */
+	return (ret1 != 0)? ret1 : ret2;
 }
 
 /**
@@ -308,11 +355,24 @@ imyp_jack_init (
 
 	jack_set_process_callback (data->jclient, &imyp_jack_fill_buffer, data);
 
-	data->joutput = jack_port_register (data->jclient, "output", JACK_DEFAULT_AUDIO_TYPE,
-		JackPortIsOutput, 0);
+	data->joutput1 = jack_port_register (data->jclient, "output1",
+		JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
 
-	if ( data->joutput == NULL )
+	if ( data->joutput1 == NULL )
 	{
+		jack_client_close (data->jclient);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+		return -2;
+	}
+
+	data->joutput2 = jack_port_register (data->jclient, "output2",
+		JACK_DEFAULT_AUDIO_TYPE, JackPortIsOutput, 0);
+
+	if ( data->joutput2 == NULL )
+	{
+		jack_port_unregister (data->jclient, data->joutput1);
 		jack_client_close (data->jclient);
 #ifdef HAVE_MALLOC
 		free (data);
@@ -323,7 +383,8 @@ imyp_jack_init (
 	res = jack_activate (data->jclient);
 	if ( res != 0 )
 	{
-		jack_port_unregister (data->jclient, data->joutput);
+		jack_port_unregister (data->jclient, data->joutput2);
+		jack_port_unregister (data->jclient, data->joutput1);
 		jack_client_close (data->jclient);
 #ifdef HAVE_MALLOC
 		free (data);
@@ -336,7 +397,8 @@ imyp_jack_init (
 	{
 		/* no ports available */
 		jack_deactivate (data->jclient);
-		jack_port_unregister (data->jclient, data->joutput);
+		jack_port_unregister (data->jclient, data->joutput2);
+		jack_port_unregister (data->jclient, data->joutput1);
 		jack_client_close (data->jclient);
 #ifdef HAVE_MALLOC
 		free (data);
@@ -344,7 +406,7 @@ imyp_jack_init (
 		return -4;
 	}
 
-	res = jack_connect (data->jclient, jack_port_name (data->joutput), data->ports[0]);
+	res = jack_connect (data->jclient, jack_port_name (data->joutput1), data->ports[0]);
 	if ( res != 0 )
 	{
 #ifdef HAVE_JACK_FREE
@@ -353,7 +415,26 @@ imyp_jack_init (
 		free (data->ports);
 #endif
 		jack_deactivate (data->jclient);
-		jack_port_unregister (data->jclient, data->joutput);
+		jack_port_unregister (data->jclient, data->joutput2);
+		jack_port_unregister (data->jclient, data->joutput1);
+		jack_client_close (data->jclient);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+		return -5;
+	}
+
+	res = jack_connect (data->jclient, jack_port_name (data->joutput2), data->ports[1]);
+	if ( res != 0 )
+	{
+#ifdef HAVE_JACK_FREE
+		jack_free (data->ports);
+#else
+		free (data->ports);
+#endif
+		jack_deactivate (data->jclient);
+		jack_port_unregister (data->jclient, data->joutput2);
+		jack_port_unregister (data->jclient, data->joutput1);
 		jack_client_close (data->jclient);
 #ifdef HAVE_MALLOC
 		free (data);
@@ -386,13 +467,19 @@ imyp_jack_close (
 
 	if ( data != NULL )
 	{
-		jack_disconnect (data->jclient, jack_port_name (data->joutput), data->ports[0]);
+		jack_disconnect (data->jclient, jack_port_name (data->joutput1), data->ports[0]);
+		jack_disconnect (data->jclient, jack_port_name (data->joutput2), data->ports[1]);
 		tempres = jack_deactivate (data->jclient);
 		if ( res == 0 )
 		{
 			res = tempres;
 		}
-		tempres = jack_port_unregister (data->jclient, data->joutput);
+		tempres = jack_port_unregister (data->jclient, data->joutput2);
+		if ( res == 0 )
+		{
+			res = tempres;
+		}
+		tempres = jack_port_unregister (data->jclient, data->joutput1);
 		if ( res == 0 )
 		{
 			res = tempres;

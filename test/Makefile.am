@@ -121,6 +121,15 @@ testsdl_CFLAGS = $(COMMON_CFLAGS)
 testsdl_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_sdl.o
 endif
 
+if SPKR
+TESTS += testspk
+check_PROGRAMS += testspk
+
+testspk_SOURCES = testspk.c
+testspk_CFLAGS = $(COMMON_CFLAGS)
+testspk_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_spk.o
+endif
+
 zcompile: $(TESTS)
 .PHONY: zcompile
 

@@ -113,13 +113,14 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_4) $(am__EXEEXT_5) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_6) $(am__EXEEXT_7) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_8) $(am__EXEEXT_9) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_10)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_10) $(am__EXEEXT_11)
 @IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1) $(am__EXEEXT_2) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_3) $(am__EXEEXT_4) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_5) $(am__EXEEXT_6) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_7) $(am__EXEEXT_8) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_9) $(am__EXEEXT_10)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_9) $(am__EXEEXT_10) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_11)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_1 = testalle
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_2 = testalle
 @ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_3 = testalsa
@@ -140,6 +141,8 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__append_18 = testsdl
 @IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_19 = testsdl
 @IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_20 = testsdl
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_21 = testspk
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_22 = testspk
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
@@ -171,6 +174,7 @@ CONFIG_CLEAN_VPATH_FILES =
 @IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@	testpuls$(EXEEXT)
 @IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__EXEEXT_9 = testsdl$(EXEEXT)
 @IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__EXEEXT_10 = testsdl$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__EXEEXT_11 = testspk$(EXEEXT)
 am__testalle_SOURCES_DIST = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalle_OBJECTS = testalle-testalle.$(OBJEXT)
 testalle_OBJECTS = $(am_testalle_OBJECTS)
@@ -250,6 +254,15 @@ testsdl_OBJECTS = $(am_testsdl_OBJECTS)
 @IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@	$(top_builddir)/src/imyp_sdl.o
 testsdl_LINK = $(CCLD) $(testsdl_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
+am__testspk_SOURCES_DIST = testspk.c
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am_testspk_OBJECTS =  \
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@	testspk-testspk.$(OBJEXT)
+testspk_OBJECTS = $(am_testspk_OBJECTS)
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@testspk_DEPENDENCIES =  \
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@	$(am__DEPENDENCIES_1) \
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@	$(top_builddir)/src/imyp_spk.o
+testspk_LINK = $(CCLD) $(testspk_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am__utiltest_SOURCES_DIST = utiltest.c
 @IMY_TESTS_ENABLED_TRUE@am_utiltest_OBJECTS =  \
 @IMY_TESTS_ENABLED_TRUE@	utiltest-utiltest.$(OBJEXT)
@@ -279,7 +292,7 @@ am__depfiles_remade = ./$(DEPDIR)/testalle-testalle.Po \
 	./$(DEPDIR)/testoss-testoss.Po \
 	./$(DEPDIR)/testport-testport.Po \
 	./$(DEPDIR)/testpuls-testpuls.Po \
-	./$(DEPDIR)/testsdl-testsdl.Po \
+	./$(DEPDIR)/testsdl-testsdl.Po ./$(DEPDIR)/testspk-testspk.Po \
 	./$(DEPDIR)/utiltest-utiltest.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -301,13 +314,13 @@ am__v_CCLD_1 =
 SOURCES = $(testalle_SOURCES) $(testalsa_SOURCES) $(testao_SOURCES) \
 	$(testgst_SOURCES) $(testjack_SOURCES) $(testoss_SOURCES) \
 	$(testport_SOURCES) $(testpuls_SOURCES) $(testsdl_SOURCES) \
-	$(utiltest_SOURCES)
+	$(testspk_SOURCES) $(utiltest_SOURCES)
 DIST_SOURCES = $(am__testalle_SOURCES_DIST) \
 	$(am__testalsa_SOURCES_DIST) $(am__testao_SOURCES_DIST) \
 	$(am__testgst_SOURCES_DIST) $(am__testjack_SOURCES_DIST) \
 	$(am__testoss_SOURCES_DIST) $(am__testport_SOURCES_DIST) \
 	$(am__testpuls_SOURCES_DIST) $(am__testsdl_SOURCES_DIST) \
-	$(am__utiltest_SOURCES_DIST)
+	$(am__testspk_SOURCES_DIST) $(am__utiltest_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -703,6 +716,9 @@ top_srcdir = @top_srcdir@
 @IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@testsdl_CFLAGS = $(COMMON_CFLAGS)
 @IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@testsdl_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_sdl.o
 @IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@testsdl_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_sdl.o
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@testspk_SOURCES = testspk.c
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@testspk_CFLAGS = $(COMMON_CFLAGS)
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@testspk_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_spk.o
 all: all-am
 
 .SUFFIXES:
@@ -776,6 +792,10 @@ testsdl$(EXEEXT): $(testsdl_OBJECTS) $(testsdl_DEPENDENCIES) $(EXTRA_testsdl_DEP
 	@rm -f testsdl$(EXEEXT)
 	$(AM_V_CCLD)$(testsdl_LINK) $(testsdl_OBJECTS) $(testsdl_LDADD) $(LIBS)
 
+testspk$(EXEEXT): $(testspk_OBJECTS) $(testspk_DEPENDENCIES) $(EXTRA_testspk_DEPENDENCIES) 
+	@rm -f testspk$(EXEEXT)
+	$(AM_V_CCLD)$(testspk_LINK) $(testspk_OBJECTS) $(testspk_LDADD) $(LIBS)
+
 utiltest$(EXEEXT): $(utiltest_OBJECTS) $(utiltest_DEPENDENCIES) $(EXTRA_utiltest_DEPENDENCIES) 
 	@rm -f utiltest$(EXEEXT)
 	$(AM_V_CCLD)$(utiltest_LINK) $(utiltest_OBJECTS) $(utiltest_LDADD) $(LIBS)
@@ -795,6 +815,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testport-testport.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testpuls-testpuls.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testsdl-testsdl.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testspk-testspk.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utiltest-utiltest.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -942,6 +963,20 @@ testsdl-testsdl.obj: testsdl.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testsdl.c' object='testsdl-testsdl.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testsdl_CFLAGS) $(CFLAGS) -c -o testsdl-testsdl.obj `if test -f 'testsdl.c'; then $(CYGPATH_W) 'testsdl.c'; else $(CYGPATH_W) '$(srcdir)/testsdl.c'; fi`
+
+testspk-testspk.o: testspk.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testspk_CFLAGS) $(CFLAGS) -MT testspk-testspk.o -MD -MP -MF $(DEPDIR)/testspk-testspk.Tpo -c -o testspk-testspk.o `test -f 'testspk.c' || echo '$(srcdir)/'`testspk.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testspk-testspk.Tpo $(DEPDIR)/testspk-testspk.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testspk.c' object='testspk-testspk.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testspk_CFLAGS) $(CFLAGS) -c -o testspk-testspk.o `test -f 'testspk.c' || echo '$(srcdir)/'`testspk.c
+
+testspk-testspk.obj: testspk.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testspk_CFLAGS) $(CFLAGS) -MT testspk-testspk.obj -MD -MP -MF $(DEPDIR)/testspk-testspk.Tpo -c -o testspk-testspk.obj `if test -f 'testspk.c'; then $(CYGPATH_W) 'testspk.c'; else $(CYGPATH_W) '$(srcdir)/testspk.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testspk-testspk.Tpo $(DEPDIR)/testspk-testspk.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testspk.c' object='testspk-testspk.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testspk_CFLAGS) $(CFLAGS) -c -o testspk-testspk.obj `if test -f 'testspk.c'; then $(CYGPATH_W) 'testspk.c'; else $(CYGPATH_W) '$(srcdir)/testspk.c'; fi`
 
 utiltest-utiltest.o: utiltest.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(utiltest_CFLAGS) $(CFLAGS) -MT utiltest-utiltest.o -MD -MP -MF $(DEPDIR)/utiltest-utiltest.Tpo -c -o utiltest-utiltest.o `test -f 'utiltest.c' || echo '$(srcdir)/'`utiltest.c
@@ -1220,6 +1255,13 @@ testsdl.log: testsdl$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+testspk.log: testspk$(EXEEXT)
+	@p='testspk$(EXEEXT)'; \
+	b='testspk'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -1320,6 +1362,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/testport-testport.Po
 	-rm -f ./$(DEPDIR)/testpuls-testpuls.Po
 	-rm -f ./$(DEPDIR)/testsdl-testsdl.Po
+	-rm -f ./$(DEPDIR)/testspk-testspk.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -1375,6 +1418,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/testport-testport.Po
 	-rm -f ./$(DEPDIR)/testpuls-testpuls.Po
 	-rm -f ./$(DEPDIR)/testsdl-testsdl.Po
+	-rm -f ./$(DEPDIR)/testspk-testspk.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

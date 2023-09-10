@@ -49,6 +49,15 @@ testalsa_CFLAGS = $(COMMON_CFLAGS)
 testalsa_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_als.o
 endif
 
+if LIBAO
+TESTS += testao
+check_PROGRAMS += testao
+
+testao_SOURCES = testao.c
+testao_CFLAGS = $(COMMON_CFLAGS)
+testao_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_ao.o
+endif
+
 zcompile: $(TESTS)
 .PHONY: zcompile
 

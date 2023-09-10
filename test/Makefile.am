@@ -40,6 +40,15 @@ testalle_CFLAGS = $(COMMON_CFLAGS)
 testalle_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_all.o @ALLEGRO_LDFLAGS@
 endif
 
+if ALSA
+TESTS += testalsa
+check_PROGRAMS += testalsa
+
+testalsa_SOURCES = testalsa.c
+testalsa_CFLAGS = $(COMMON_CFLAGS)
+testalsa_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_als.o
+endif
+
 zcompile: $(TESTS)
 .PHONY: zcompile
 

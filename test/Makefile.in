@@ -108,11 +108,14 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@IMY_TESTS_ENABLED_TRUE@TESTS = utiltest$(EXEEXT) $(am__EXEEXT_1)
+@IMY_TESTS_ENABLED_TRUE@TESTS = utiltest$(EXEEXT) $(am__EXEEXT_1) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_2)
 @IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1) $(am__EXEEXT_2)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_1 = testalle
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_2 = testalle
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_3 = testalsa
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_4 = testalsa
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
@@ -132,6 +135,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_1 =  \
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@	testalle$(EXEEXT)
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_2 = testalsa$(EXEEXT)
 am__testalle_SOURCES_DIST = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalle_OBJECTS = testalle-testalle.$(OBJEXT)
 testalle_OBJECTS = $(am_testalle_OBJECTS)
@@ -141,6 +145,14 @@ testalle_OBJECTS = $(am_testalle_OBJECTS)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(am__DEPENDENCIES_1) \
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyp_all.o
 testalle_LINK = $(CCLD) $(testalle_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am__testalsa_SOURCES_DIST = testalsa.c
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalsa_OBJECTS = testalsa-testalsa.$(OBJEXT)
+testalsa_OBJECTS = $(am_testalsa_OBJECTS)
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@testalsa_DEPENDENCIES =  \
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(am__DEPENDENCIES_1) \
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyp_als.o
+testalsa_LINK = $(CCLD) $(testalsa_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am__utiltest_SOURCES_DIST = utiltest.c
 @IMY_TESTS_ENABLED_TRUE@am_utiltest_OBJECTS =  \
@@ -165,6 +177,7 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/testalle-testalle.Po \
+	./$(DEPDIR)/testalsa-testalsa.Po \
 	./$(DEPDIR)/utiltest-utiltest.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -183,9 +196,9 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(testalle_SOURCES) $(utiltest_SOURCES)
+SOURCES = $(testalle_SOURCES) $(testalsa_SOURCES) $(utiltest_SOURCES)
 DIST_SOURCES = $(am__testalle_SOURCES_DIST) \
-	$(am__utiltest_SOURCES_DIST)
+	$(am__testalsa_SOURCES_DIST) $(am__utiltest_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -554,6 +567,9 @@ top_srcdir = @top_srcdir@
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_SOURCES = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_CFLAGS = $(COMMON_CFLAGS)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_all.o @ALLEGRO_LDFLAGS@
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@testalsa_SOURCES = testalsa.c
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@testalsa_CFLAGS = $(COMMON_CFLAGS)
+@ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@testalsa_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_als.o
 all: all-am
 
 .SUFFIXES:
@@ -595,6 +611,10 @@ testalle$(EXEEXT): $(testalle_OBJECTS) $(testalle_DEPENDENCIES) $(EXTRA_testalle
 	@rm -f testalle$(EXEEXT)
 	$(AM_V_CCLD)$(testalle_LINK) $(testalle_OBJECTS) $(testalle_LDADD) $(LIBS)
 
+testalsa$(EXEEXT): $(testalsa_OBJECTS) $(testalsa_DEPENDENCIES) $(EXTRA_testalsa_DEPENDENCIES) 
+	@rm -f testalsa$(EXEEXT)
+	$(AM_V_CCLD)$(testalsa_LINK) $(testalsa_OBJECTS) $(testalsa_LDADD) $(LIBS)
+
 utiltest$(EXEEXT): $(utiltest_OBJECTS) $(utiltest_DEPENDENCIES) $(EXTRA_utiltest_DEPENDENCIES) 
 	@rm -f utiltest$(EXEEXT)
 	$(AM_V_CCLD)$(utiltest_LINK) $(utiltest_OBJECTS) $(utiltest_LDADD) $(LIBS)
@@ -606,6 +626,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testalle-testalle.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testalsa-testalsa.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utiltest-utiltest.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -641,6 +662,20 @@ testalle-testalle.obj: testalle.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testalle.c' object='testalle-testalle.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalle_CFLAGS) $(CFLAGS) -c -o testalle-testalle.obj `if test -f 'testalle.c'; then $(CYGPATH_W) 'testalle.c'; else $(CYGPATH_W) '$(srcdir)/testalle.c'; fi`
+
+testalsa-testalsa.o: testalsa.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalsa_CFLAGS) $(CFLAGS) -MT testalsa-testalsa.o -MD -MP -MF $(DEPDIR)/testalsa-testalsa.Tpo -c -o testalsa-testalsa.o `test -f 'testalsa.c' || echo '$(srcdir)/'`testalsa.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testalsa-testalsa.Tpo $(DEPDIR)/testalsa-testalsa.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testalsa.c' object='testalsa-testalsa.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalsa_CFLAGS) $(CFLAGS) -c -o testalsa-testalsa.o `test -f 'testalsa.c' || echo '$(srcdir)/'`testalsa.c
+
+testalsa-testalsa.obj: testalsa.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalsa_CFLAGS) $(CFLAGS) -MT testalsa-testalsa.obj -MD -MP -MF $(DEPDIR)/testalsa-testalsa.Tpo -c -o testalsa-testalsa.obj `if test -f 'testalsa.c'; then $(CYGPATH_W) 'testalsa.c'; else $(CYGPATH_W) '$(srcdir)/testalsa.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testalsa-testalsa.Tpo $(DEPDIR)/testalsa-testalsa.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testalsa.c' object='testalsa-testalsa.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalsa_CFLAGS) $(CFLAGS) -c -o testalsa-testalsa.obj `if test -f 'testalsa.c'; then $(CYGPATH_W) 'testalsa.c'; else $(CYGPATH_W) '$(srcdir)/testalsa.c'; fi`
 
 utiltest-utiltest.o: utiltest.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(utiltest_CFLAGS) $(CFLAGS) -MT utiltest-utiltest.o -MD -MP -MF $(DEPDIR)/utiltest-utiltest.Tpo -c -o utiltest-utiltest.o `test -f 'utiltest.c' || echo '$(srcdir)/'`utiltest.c
@@ -863,6 +898,13 @@ testalle.log: testalle$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+testalsa.log: testalsa$(EXEEXT)
+	@p='testalsa$(EXEEXT)'; \
+	b='testalsa'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -955,6 +997,7 @@ clean-am: clean-checkPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/testalle-testalle.Po
+	-rm -f ./$(DEPDIR)/testalsa-testalsa.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -1002,6 +1045,7 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/testalle-testalle.Po
+	-rm -f ./$(DEPDIR)/testalsa-testalsa.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

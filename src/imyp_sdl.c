@@ -181,7 +181,7 @@ imyp_sdl_play_tune (
 	struct imyp_sdl_backend_data * data =
 		(struct imyp_sdl_backend_data *)imyp_data;
 
-	if ( data == NULL )
+	if ( (data == NULL) || (buf == NULL) )
 	{
 		return -100;
 	}

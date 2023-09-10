@@ -8,15 +8,15 @@ Read the info documentation (type `info doc/imyplay.info`) to get more informati
 
 IMYplay can use the following outputs to produce sound:
 
-1.   the Allegro game library (<http://alleg.sf.net>),
-2.   SDL (Simple DirectMedia Layer; <http://www.libsdl.org>),
-3.   ALSA (Advanced Linux Sound Architecture; <http://alsa-project.org>),
-4.   OSS (Open Sound System),
-5.   libao (<http://xiph.org/ao/>),
-6.   PortAudiov19 (<http://www.portaudio.com/>),
-7.   PulseAudio (<http://www.pulseaudio.org/>),
-8.   JACK1/JACK2 (<http://jackaudio.org/>),
-9.   GStreamer (<http://gstreamer.freedesktop.org/>, gstreamer-plugin-base required).
+1.  the Allegro game library (<http://alleg.sf.net>),
+2.  SDL (Simple DirectMedia Layer; <http://www.libsdl.org>),
+3.  ALSA (Advanced Linux Sound Architecture; <http://alsa-project.org>),
+4.  OSS (Open Sound System),
+5.  libao (<http://xiph.org/ao/>),
+6.  PortAudiov19 (<http://www.portaudio.com/>),
+7.  PulseAudio (<http://www.pulseaudio.org/>),
+8.  JACK1/JACK2 (<http://jackaudio.org/>),
+9.  GStreamer (<http://gstreamer.freedesktop.org/>, gstreamer-plugin-base required).
 
 It can also:
 -   convert IMY ringtones to MIDI files,
@@ -44,8 +44,7 @@ IMYplay, in various versions, has been successfully compiled on the following sy
 -   Solaris/SunOS
 -   macOS
 
-# WARNING #
-
+## WARNING ##
 
 The `dev` branch may contain code which is a work in progress and committed just for tests. The code here may not work properly or even compile.
 

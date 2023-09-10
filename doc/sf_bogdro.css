@@ -3,14 +3,14 @@
 /* CSS 1 (most) */
 
 body		{
-			/*font-family: sans-serif, serif, arial;*/
-			background-color: #87CEEB;
+			/* font-family: sans-serif, serif, arial; */
+			background-color: #87ceeb;
 			color: black;
 			text-align: justify;
 		}
 
 a:link		{
-			/*background-color: #87CEEB;*/
+			/* background-color: #87ceeb; */
 			color: blue;
 			text-transform: none;
 			text-decoration: underline;
@@ -18,7 +18,7 @@ a:link		{
 		}
 
 a:visited	{
-			/*background-color: #87CEEB;*/
+			/* background-color: #87ceeb; */
 			color: #006000;
 			text-transform: none;
 			text-decoration: underline;
@@ -27,14 +27,14 @@ a:visited	{
 
 pre		{
 			font-family: monospace, "courier new", courier;
-			background-color: #D0FFFF;
+			background-color: #d0ffff;
 			color: black;
 		}
 
 code, kbd, samp, var
 		{
 			font-family: monospace, "courier new", courier;
-			background-color: #A0EEEE;
+			background-color: #a0eeee;
 			color: black;
 		}
 
@@ -59,7 +59,7 @@ acronym, abbr	{
 
 /* Important information */
 .important	{
-			/*text-transform: uppercase;*/
+			/* text-transform: uppercase; */
 			text-decoration: underline;
 			font-weight: bold;
 			font-style: normal;
@@ -121,12 +121,14 @@ td		{
 			border-color: gray gray gray gray;
 		}
 */
+
 /* Break lines between table rows shall be displayed only by text browsers */
 td hr		{	display: none;			}
 td .invisible	{	display: none;			}
 
 /* something to put on the left side of the screen */
 .left		{	float: left;			}
+
 /* something to put on the right side of the screen */
 .right		{	float: right;			}
 
@@ -152,9 +154,9 @@ td .invisible	{	display: none;			}
 		}
 
 /* =============================================================== */
+
 /* CSS 2 */
 @media print {
-
 /* Print only in black & white, just in case */
   body		{
 			text-align: justify;
@@ -189,8 +191,10 @@ td .invisible	{	display: none;			}
   tr		{	page-break-inside: avoid;	}
 
   td		{	page-break-inside: avoid;	}
+
 /* don't print lines */
   hr		{	display: none;			}
+
 /* don't print images */
   img		{	display: none;			}
 

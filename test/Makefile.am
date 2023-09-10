@@ -67,6 +67,15 @@ testgst_CFLAGS = $(COMMON_CFLAGS)
 testgst_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_gst.o
 endif
 
+if JACK
+TESTS += testjack
+check_PROGRAMS += testjack
+
+testjack_SOURCES = testjack.c
+testjack_CFLAGS = $(COMMON_CFLAGS)
+testjack_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_jck.o
+endif
+
 zcompile: $(TESTS)
 .PHONY: zcompile
 

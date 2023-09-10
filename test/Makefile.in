@@ -110,10 +110,11 @@ build_triplet = @build@
 host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@TESTS = utiltest$(EXEEXT) $(am__EXEEXT_1) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_2) $(am__EXEEXT_3) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_4)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_4) $(am__EXEEXT_5)
 @IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1) $(am__EXEEXT_2) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_3) $(am__EXEEXT_4)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_3) $(am__EXEEXT_4) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_5)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_1 = testalle
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_2 = testalle
 @ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_3 = testalsa
@@ -122,6 +123,8 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@@LIBAO_TRUE@am__append_6 = testao
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_7 = testgst
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_8 = testgst
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_9 = testjack
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_10 = testjack
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
@@ -145,6 +148,7 @@ CONFIG_CLEAN_VPATH_FILES =
 @IMY_TESTS_ENABLED_TRUE@@LIBAO_TRUE@am__EXEEXT_3 = testao$(EXEEXT)
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_4 =  \
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@	testgst$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__EXEEXT_5 = testjack$(EXEEXT)
 am__testalle_SOURCES_DIST = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalle_OBJECTS = testalle-testalle.$(OBJEXT)
 testalle_OBJECTS = $(am_testalle_OBJECTS)
@@ -180,6 +184,14 @@ testgst_OBJECTS = $(am_testgst_OBJECTS)
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyp_gst.o
 testgst_LINK = $(CCLD) $(testgst_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
+am__testjack_SOURCES_DIST = testjack.c
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am_testjack_OBJECTS = testjack-testjack.$(OBJEXT)
+testjack_OBJECTS = $(am_testjack_OBJECTS)
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_DEPENDENCIES =  \
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@	$(am__DEPENDENCIES_1) \
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@	$(top_builddir)/src/imyp_jck.o
+testjack_LINK = $(CCLD) $(testjack_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am__utiltest_SOURCES_DIST = utiltest.c
 @IMY_TESTS_ENABLED_TRUE@am_utiltest_OBJECTS =  \
 @IMY_TESTS_ENABLED_TRUE@	utiltest-utiltest.$(OBJEXT)
@@ -205,6 +217,7 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/testalle-testalle.Po \
 	./$(DEPDIR)/testalsa-testalsa.Po ./$(DEPDIR)/testao-testao.Po \
 	./$(DEPDIR)/testgst-testgst.Po \
+	./$(DEPDIR)/testjack-testjack.Po \
 	./$(DEPDIR)/utiltest-utiltest.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -224,10 +237,11 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(testalle_SOURCES) $(testalsa_SOURCES) $(testao_SOURCES) \
-	$(testgst_SOURCES) $(utiltest_SOURCES)
+	$(testgst_SOURCES) $(testjack_SOURCES) $(utiltest_SOURCES)
 DIST_SOURCES = $(am__testalle_SOURCES_DIST) \
 	$(am__testalsa_SOURCES_DIST) $(am__testao_SOURCES_DIST) \
-	$(am__testgst_SOURCES_DIST) $(am__utiltest_SOURCES_DIST)
+	$(am__testgst_SOURCES_DIST) $(am__testjack_SOURCES_DIST) \
+	$(am__utiltest_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -605,6 +619,9 @@ top_srcdir = @top_srcdir@
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@testgst_SOURCES = testgst.c
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@testgst_CFLAGS = $(COMMON_CFLAGS)
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@testgst_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_gst.o
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_SOURCES = testjack.c
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_CFLAGS = $(COMMON_CFLAGS)
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_jck.o
 all: all-am
 
 .SUFFIXES:
@@ -658,6 +675,10 @@ testgst$(EXEEXT): $(testgst_OBJECTS) $(testgst_DEPENDENCIES) $(EXTRA_testgst_DEP
 	@rm -f testgst$(EXEEXT)
 	$(AM_V_CCLD)$(testgst_LINK) $(testgst_OBJECTS) $(testgst_LDADD) $(LIBS)
 
+testjack$(EXEEXT): $(testjack_OBJECTS) $(testjack_DEPENDENCIES) $(EXTRA_testjack_DEPENDENCIES) 
+	@rm -f testjack$(EXEEXT)
+	$(AM_V_CCLD)$(testjack_LINK) $(testjack_OBJECTS) $(testjack_LDADD) $(LIBS)
+
 utiltest$(EXEEXT): $(utiltest_OBJECTS) $(utiltest_DEPENDENCIES) $(EXTRA_utiltest_DEPENDENCIES) 
 	@rm -f utiltest$(EXEEXT)
 	$(AM_V_CCLD)$(utiltest_LINK) $(utiltest_OBJECTS) $(utiltest_LDADD) $(LIBS)
@@ -672,6 +693,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testalsa-testalsa.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testao-testao.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testgst-testgst.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testjack-testjack.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utiltest-utiltest.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -749,6 +771,20 @@ testgst-testgst.obj: testgst.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testgst.c' object='testgst-testgst.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testgst_CFLAGS) $(CFLAGS) -c -o testgst-testgst.obj `if test -f 'testgst.c'; then $(CYGPATH_W) 'testgst.c'; else $(CYGPATH_W) '$(srcdir)/testgst.c'; fi`
+
+testjack-testjack.o: testjack.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testjack_CFLAGS) $(CFLAGS) -MT testjack-testjack.o -MD -MP -MF $(DEPDIR)/testjack-testjack.Tpo -c -o testjack-testjack.o `test -f 'testjack.c' || echo '$(srcdir)/'`testjack.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testjack-testjack.Tpo $(DEPDIR)/testjack-testjack.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testjack.c' object='testjack-testjack.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testjack_CFLAGS) $(CFLAGS) -c -o testjack-testjack.o `test -f 'testjack.c' || echo '$(srcdir)/'`testjack.c
+
+testjack-testjack.obj: testjack.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testjack_CFLAGS) $(CFLAGS) -MT testjack-testjack.obj -MD -MP -MF $(DEPDIR)/testjack-testjack.Tpo -c -o testjack-testjack.obj `if test -f 'testjack.c'; then $(CYGPATH_W) 'testjack.c'; else $(CYGPATH_W) '$(srcdir)/testjack.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testjack-testjack.Tpo $(DEPDIR)/testjack-testjack.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testjack.c' object='testjack-testjack.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testjack_CFLAGS) $(CFLAGS) -c -o testjack-testjack.obj `if test -f 'testjack.c'; then $(CYGPATH_W) 'testjack.c'; else $(CYGPATH_W) '$(srcdir)/testjack.c'; fi`
 
 utiltest-utiltest.o: utiltest.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(utiltest_CFLAGS) $(CFLAGS) -MT utiltest-utiltest.o -MD -MP -MF $(DEPDIR)/utiltest-utiltest.Tpo -c -o utiltest-utiltest.o `test -f 'utiltest.c' || echo '$(srcdir)/'`utiltest.c
@@ -992,6 +1028,13 @@ testgst.log: testgst$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+testjack.log: testjack$(EXEEXT)
+	@p='testjack$(EXEEXT)'; \
+	b='testjack'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -1087,6 +1130,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/testalsa-testalsa.Po
 	-rm -f ./$(DEPDIR)/testao-testao.Po
 	-rm -f ./$(DEPDIR)/testgst-testgst.Po
+	-rm -f ./$(DEPDIR)/testjack-testjack.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -1137,6 +1181,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/testalsa-testalsa.Po
 	-rm -f ./$(DEPDIR)/testao-testao.Po
 	-rm -f ./$(DEPDIR)/testgst-testgst.Po
+	-rm -f ./$(DEPDIR)/testjack-testjack.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

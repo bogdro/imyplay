@@ -108,8 +108,11 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@IMY_TESTS_ENABLED_TRUE@TESTS = utiltest$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@TESTS = utiltest$(EXEEXT) $(am__EXEEXT_1)
+@IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1)
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_1 = testalle
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_2 = testalle
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
@@ -127,12 +130,23 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_1 =  \
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@	testalle$(EXEEXT)
+am__testalle_SOURCES_DIST = testalle.c
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalle_OBJECTS = testalle-testalle.$(OBJEXT)
+testalle_OBJECTS = $(am_testalle_OBJECTS)
+@IMY_TESTS_ENABLED_TRUE@am__DEPENDENCIES_1 =  \
+@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyputil.o
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_DEPENDENCIES =  \
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(am__DEPENDENCIES_1) \
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyp_all.o
+testalle_LINK = $(CCLD) $(testalle_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am__utiltest_SOURCES_DIST = utiltest.c
 @IMY_TESTS_ENABLED_TRUE@am_utiltest_OBJECTS =  \
 @IMY_TESTS_ENABLED_TRUE@	utiltest-utiltest.$(OBJEXT)
 utiltest_OBJECTS = $(am_utiltest_OBJECTS)
-@IMY_TESTS_ENABLED_TRUE@utiltest_DEPENDENCIES =  \
-@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyputil.o
+@IMY_TESTS_ENABLED_TRUE@utiltest_DEPENDENCIES = $(am__DEPENDENCIES_1)
 utiltest_LINK = $(CCLD) $(utiltest_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
@@ -150,7 +164,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/utiltest-utiltest.Po
+am__depfiles_remade = ./$(DEPDIR)/testalle-testalle.Po \
+	./$(DEPDIR)/utiltest-utiltest.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -168,8 +183,9 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(utiltest_SOURCES)
-DIST_SOURCES = $(am__utiltest_SOURCES_DIST)
+SOURCES = $(testalle_SOURCES) $(utiltest_SOURCES)
+DIST_SOURCES = $(am__testalle_SOURCES_DIST) \
+	$(am__utiltest_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -530,9 +546,14 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+@IMY_TESTS_ENABLED_TRUE@COMMON_LIBS = $(top_builddir)/src/imyputil.o @CHECK_LIBS@ @LIBS@
+@IMY_TESTS_ENABLED_TRUE@COMMON_CFLAGS = @CHECK_CFLAGS@ -I $(top_builddir)/src
 @IMY_TESTS_ENABLED_TRUE@utiltest_SOURCES = utiltest.c
-@IMY_TESTS_ENABLED_TRUE@utiltest_CFLAGS = @CHECK_CFLAGS@ -I $(top_builddir)/src
-@IMY_TESTS_ENABLED_TRUE@utiltest_LDADD = $(top_builddir)/src/imyputil.o @CHECK_LIBS@ @LIBS@
+@IMY_TESTS_ENABLED_TRUE@utiltest_CFLAGS = $(COMMON_CFLAGS)
+@IMY_TESTS_ENABLED_TRUE@utiltest_LDADD = $(COMMON_LIBS)
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_SOURCES = testalle.c
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_CFLAGS = $(COMMON_CFLAGS)
+@ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_all.o @ALLEGRO_LDFLAGS@
 all: all-am
 
 .SUFFIXES:
@@ -570,6 +591,10 @@ $(am__aclocal_m4_deps):
 clean-checkPROGRAMS:
 	-test -z "$(check_PROGRAMS)" || rm -f $(check_PROGRAMS)
 
+testalle$(EXEEXT): $(testalle_OBJECTS) $(testalle_DEPENDENCIES) $(EXTRA_testalle_DEPENDENCIES) 
+	@rm -f testalle$(EXEEXT)
+	$(AM_V_CCLD)$(testalle_LINK) $(testalle_OBJECTS) $(testalle_LDADD) $(LIBS)
+
 utiltest$(EXEEXT): $(utiltest_OBJECTS) $(utiltest_DEPENDENCIES) $(EXTRA_utiltest_DEPENDENCIES) 
 	@rm -f utiltest$(EXEEXT)
 	$(AM_V_CCLD)$(utiltest_LINK) $(utiltest_OBJECTS) $(utiltest_LDADD) $(LIBS)
@@ -580,6 +605,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testalle-testalle.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utiltest-utiltest.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -601,6 +627,20 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+testalle-testalle.o: testalle.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalle_CFLAGS) $(CFLAGS) -MT testalle-testalle.o -MD -MP -MF $(DEPDIR)/testalle-testalle.Tpo -c -o testalle-testalle.o `test -f 'testalle.c' || echo '$(srcdir)/'`testalle.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testalle-testalle.Tpo $(DEPDIR)/testalle-testalle.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testalle.c' object='testalle-testalle.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalle_CFLAGS) $(CFLAGS) -c -o testalle-testalle.o `test -f 'testalle.c' || echo '$(srcdir)/'`testalle.c
+
+testalle-testalle.obj: testalle.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalle_CFLAGS) $(CFLAGS) -MT testalle-testalle.obj -MD -MP -MF $(DEPDIR)/testalle-testalle.Tpo -c -o testalle-testalle.obj `if test -f 'testalle.c'; then $(CYGPATH_W) 'testalle.c'; else $(CYGPATH_W) '$(srcdir)/testalle.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testalle-testalle.Tpo $(DEPDIR)/testalle-testalle.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testalle.c' object='testalle-testalle.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalle_CFLAGS) $(CFLAGS) -c -o testalle-testalle.obj `if test -f 'testalle.c'; then $(CYGPATH_W) 'testalle.c'; else $(CYGPATH_W) '$(srcdir)/testalle.c'; fi`
 
 utiltest-utiltest.o: utiltest.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(utiltest_CFLAGS) $(CFLAGS) -MT utiltest-utiltest.o -MD -MP -MF $(DEPDIR)/utiltest-utiltest.Tpo -c -o utiltest-utiltest.o `test -f 'utiltest.c' || echo '$(srcdir)/'`utiltest.c
@@ -816,6 +856,13 @@ utiltest.log: utiltest$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+testalle.log: testalle$(EXEEXT)
+	@p='testalle$(EXEEXT)'; \
+	b='testalle'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -907,7 +954,8 @@ clean: clean-am
 clean-am: clean-checkPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
+		-rm -f ./$(DEPDIR)/testalle-testalle.Po
+	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -953,7 +1001,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
+		-rm -f ./$(DEPDIR)/testalle-testalle.Po
+	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

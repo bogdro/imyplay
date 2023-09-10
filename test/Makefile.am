@@ -23,9 +23,22 @@ if IMY_TESTS_ENABLED
 
 TESTS = utiltest
 check_PROGRAMS = utiltest
+
+COMMON_LIBS = $(top_builddir)/src/imyputil.o @CHECK_LIBS@ @LIBS@
+COMMON_CFLAGS = @CHECK_CFLAGS@ -I $(top_builddir)/src
+
 utiltest_SOURCES = utiltest.c
-utiltest_CFLAGS = @CHECK_CFLAGS@ -I $(top_builddir)/src
-utiltest_LDADD = $(top_builddir)/src/imyputil.o @CHECK_LIBS@ @LIBS@
+utiltest_CFLAGS = $(COMMON_CFLAGS)
+utiltest_LDADD = $(COMMON_LIBS)
+
+if ALLEGRO
+TESTS += testalle
+check_PROGRAMS += testalle
+
+testalle_SOURCES = testalle.c
+testalle_CFLAGS = $(COMMON_CFLAGS)
+testalle_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_all.o @ALLEGRO_LDFLAGS@
+endif
 
 zcompile: $(TESTS)
 .PHONY: zcompile

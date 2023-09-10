@@ -103,6 +103,24 @@ testpuls_CFLAGS = $(COMMON_CFLAGS)
 testpuls_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_pul.o
 endif
 
+if SDL2
+TESTS += testsdl
+check_PROGRAMS += testsdl
+
+testsdl_SOURCES = testsdl.c
+testsdl_CFLAGS = $(COMMON_CFLAGS)
+testsdl_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_sdl.o
+endif
+
+if SDL
+TESTS += testsdl
+check_PROGRAMS += testsdl
+
+testsdl_SOURCES = testsdl.c
+testsdl_CFLAGS = $(COMMON_CFLAGS)
+testsdl_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_sdl.o
+endif
+
 zcompile: $(TESTS)
 .PHONY: zcompile
 

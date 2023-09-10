@@ -58,6 +58,15 @@ testao_CFLAGS = $(COMMON_CFLAGS)
 testao_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_ao.o
 endif
 
+if GSTREAMER
+TESTS += testgst
+check_PROGRAMS += testgst
+
+testgst_SOURCES = testgst.c
+testgst_CFLAGS = $(COMMON_CFLAGS)
+testgst_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_gst.o
+endif
+
 zcompile: $(TESTS)
 .PHONY: zcompile
 

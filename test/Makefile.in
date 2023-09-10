@@ -111,12 +111,13 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@TESTS = utiltest$(EXEEXT) $(am__EXEEXT_1) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_2) $(am__EXEEXT_3) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_4) $(am__EXEEXT_5) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_6) $(am__EXEEXT_7)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_6) $(am__EXEEXT_7) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_8)
 @IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1) $(am__EXEEXT_2) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_3) $(am__EXEEXT_4) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_5) $(am__EXEEXT_6) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_7)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_7) $(am__EXEEXT_8)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_1 = testalle
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_2 = testalle
 @ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_3 = testalsa
@@ -131,6 +132,8 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_12 = testoss
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_13 = testport
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_14 = testport
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_15 = testpuls
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_16 = testpuls
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
@@ -158,6 +161,8 @@ CONFIG_CLEAN_VPATH_FILES =
 @IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__EXEEXT_6 = testoss$(EXEEXT)
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__EXEEXT_7 =  \
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@	testport$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__EXEEXT_8 =  \
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@	testpuls$(EXEEXT)
 am__testalle_SOURCES_DIST = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalle_OBJECTS = testalle-testalle.$(OBJEXT)
 testalle_OBJECTS = $(am_testalle_OBJECTS)
@@ -218,6 +223,13 @@ testport_OBJECTS = $(am_testport_OBJECTS)
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@	$(top_builddir)/src/imyp_por.o
 testport_LINK = $(CCLD) $(testport_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
+am__testpuls_SOURCES_DIST = testpuls.c
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am_testpuls_OBJECTS = testpuls-testpuls.$(OBJEXT)
+testpuls_OBJECTS = $(am_testpuls_OBJECTS)
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@testpuls_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@	$(top_builddir)/src/imyp_pul.o
+testpuls_LINK = $(CCLD) $(testpuls_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am__utiltest_SOURCES_DIST = utiltest.c
 @IMY_TESTS_ENABLED_TRUE@am_utiltest_OBJECTS =  \
 @IMY_TESTS_ENABLED_TRUE@	utiltest-utiltest.$(OBJEXT)
@@ -246,6 +258,7 @@ am__depfiles_remade = ./$(DEPDIR)/testalle-testalle.Po \
 	./$(DEPDIR)/testjack-testjack.Po \
 	./$(DEPDIR)/testoss-testoss.Po \
 	./$(DEPDIR)/testport-testport.Po \
+	./$(DEPDIR)/testpuls-testpuls.Po \
 	./$(DEPDIR)/utiltest-utiltest.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -266,12 +279,12 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(testalle_SOURCES) $(testalsa_SOURCES) $(testao_SOURCES) \
 	$(testgst_SOURCES) $(testjack_SOURCES) $(testoss_SOURCES) \
-	$(testport_SOURCES) $(utiltest_SOURCES)
+	$(testport_SOURCES) $(testpuls_SOURCES) $(utiltest_SOURCES)
 DIST_SOURCES = $(am__testalle_SOURCES_DIST) \
 	$(am__testalsa_SOURCES_DIST) $(am__testao_SOURCES_DIST) \
 	$(am__testgst_SOURCES_DIST) $(am__testjack_SOURCES_DIST) \
 	$(am__testoss_SOURCES_DIST) $(am__testport_SOURCES_DIST) \
-	$(am__utiltest_SOURCES_DIST)
+	$(am__testpuls_SOURCES_DIST) $(am__utiltest_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -658,6 +671,9 @@ top_srcdir = @top_srcdir@
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@testport_SOURCES = testport.c
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@testport_CFLAGS = $(COMMON_CFLAGS)
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@testport_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_por.o
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@testpuls_SOURCES = testpuls.c
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@testpuls_CFLAGS = $(COMMON_CFLAGS)
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@testpuls_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_pul.o
 all: all-am
 
 .SUFFIXES:
@@ -723,6 +739,10 @@ testport$(EXEEXT): $(testport_OBJECTS) $(testport_DEPENDENCIES) $(EXTRA_testport
 	@rm -f testport$(EXEEXT)
 	$(AM_V_CCLD)$(testport_LINK) $(testport_OBJECTS) $(testport_LDADD) $(LIBS)
 
+testpuls$(EXEEXT): $(testpuls_OBJECTS) $(testpuls_DEPENDENCIES) $(EXTRA_testpuls_DEPENDENCIES) 
+	@rm -f testpuls$(EXEEXT)
+	$(AM_V_CCLD)$(testpuls_LINK) $(testpuls_OBJECTS) $(testpuls_LDADD) $(LIBS)
+
 utiltest$(EXEEXT): $(utiltest_OBJECTS) $(utiltest_DEPENDENCIES) $(EXTRA_utiltest_DEPENDENCIES) 
 	@rm -f utiltest$(EXEEXT)
 	$(AM_V_CCLD)$(utiltest_LINK) $(utiltest_OBJECTS) $(utiltest_LDADD) $(LIBS)
@@ -740,6 +760,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testjack-testjack.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testoss-testoss.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testport-testport.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testpuls-testpuls.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utiltest-utiltest.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -859,6 +880,20 @@ testport-testport.obj: testport.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testport.c' object='testport-testport.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testport_CFLAGS) $(CFLAGS) -c -o testport-testport.obj `if test -f 'testport.c'; then $(CYGPATH_W) 'testport.c'; else $(CYGPATH_W) '$(srcdir)/testport.c'; fi`
+
+testpuls-testpuls.o: testpuls.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpuls_CFLAGS) $(CFLAGS) -MT testpuls-testpuls.o -MD -MP -MF $(DEPDIR)/testpuls-testpuls.Tpo -c -o testpuls-testpuls.o `test -f 'testpuls.c' || echo '$(srcdir)/'`testpuls.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testpuls-testpuls.Tpo $(DEPDIR)/testpuls-testpuls.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testpuls.c' object='testpuls-testpuls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpuls_CFLAGS) $(CFLAGS) -c -o testpuls-testpuls.o `test -f 'testpuls.c' || echo '$(srcdir)/'`testpuls.c
+
+testpuls-testpuls.obj: testpuls.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpuls_CFLAGS) $(CFLAGS) -MT testpuls-testpuls.obj -MD -MP -MF $(DEPDIR)/testpuls-testpuls.Tpo -c -o testpuls-testpuls.obj `if test -f 'testpuls.c'; then $(CYGPATH_W) 'testpuls.c'; else $(CYGPATH_W) '$(srcdir)/testpuls.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testpuls-testpuls.Tpo $(DEPDIR)/testpuls-testpuls.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testpuls.c' object='testpuls-testpuls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testpuls_CFLAGS) $(CFLAGS) -c -o testpuls-testpuls.obj `if test -f 'testpuls.c'; then $(CYGPATH_W) 'testpuls.c'; else $(CYGPATH_W) '$(srcdir)/testpuls.c'; fi`
 
 utiltest-utiltest.o: utiltest.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(utiltest_CFLAGS) $(CFLAGS) -MT utiltest-utiltest.o -MD -MP -MF $(DEPDIR)/utiltest-utiltest.Tpo -c -o utiltest-utiltest.o `test -f 'utiltest.c' || echo '$(srcdir)/'`utiltest.c
@@ -1123,6 +1158,13 @@ testport.log: testport$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+testpuls.log: testpuls$(EXEEXT)
+	@p='testpuls$(EXEEXT)'; \
+	b='testpuls'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -1221,6 +1263,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/testjack-testjack.Po
 	-rm -f ./$(DEPDIR)/testoss-testoss.Po
 	-rm -f ./$(DEPDIR)/testport-testport.Po
+	-rm -f ./$(DEPDIR)/testpuls-testpuls.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -1274,6 +1317,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/testjack-testjack.Po
 	-rm -f ./$(DEPDIR)/testoss-testoss.Po
 	-rm -f ./$(DEPDIR)/testport-testport.Po
+	-rm -f ./$(DEPDIR)/testpuls-testpuls.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

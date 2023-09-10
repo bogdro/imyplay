@@ -94,6 +94,15 @@ testport_CFLAGS = $(COMMON_CFLAGS)
 testport_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_por.o
 endif
 
+if PULSEAUDIO
+TESTS += testpuls
+check_PROGRAMS += testpuls
+
+testpuls_SOURCES = testpuls.c
+testpuls_CFLAGS = $(COMMON_CFLAGS)
+testpuls_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_pul.o
+endif
+
 zcompile: $(TESTS)
 .PHONY: zcompile
 

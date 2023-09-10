@@ -238,16 +238,19 @@ imyp_portaudio_play_tune (
 	playback, on the other hand, either crashes (when filling the whole
 	buffer at a time and playing it in one big part) or causes underruns
 	in the output system. */
-	error = Pa_StartStream (data->stream);
-	if ( error != paNoError )
+	if ( data->stream != NULL )
 	{
-		return -2;
+		error = Pa_StartStream (data->stream);
+		if ( error != paNoError )
+		{
+			return -2;
+		}
+
+		imyp_portaudio_pause (imyp_data, duration);
+		while ( (data->samples_remain != 0) && (imyp_sig_recvd == 0) ) {}
+
+		Pa_StopStream (data->stream);
 	}
-
-	imyp_portaudio_pause (imyp_data, duration);
-	while ( (data->samples_remain != 0) && (imyp_sig_recvd == 0) ) {}
-
-	Pa_StopStream (data->stream);
 
 	data->tone_freq = 0.0;
 	data->volume_level = 0;

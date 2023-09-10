@@ -106,7 +106,7 @@ imyp_pulse_play_tune (
 	struct imyp_pulse_backend_data * data =
 		(struct imyp_pulse_backend_data *)imyp_data;
 
-	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) )
+	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) || (duration <= 0) )
 	{
 		return -1;
 	}

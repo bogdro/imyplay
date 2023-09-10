@@ -23,28 +23,7 @@
 # include <config.h>
 #endif
 
-#include <check.h>
-
-/* compatibility with older check versions */
-#ifndef ck_abort
-# define ck_abort() ck_abort_msg(NULL)
-# define ck_abort_msg fail
-# define ck_assert(C) ck_assert_msg(C, NULL)
-# define ck_assert_msg fail_unless
-#endif
-
-#ifndef _ck_assert_int
-# define _ck_assert_int(X, O, Y) ck_assert_msg((X) O (Y), "Assertion '"#X#O#Y"' failed: "#X"==%d, "#Y"==%d", X, Y)
-# define ck_assert_int_eq(X, Y) _ck_assert_int(X, ==, Y)
-# define ck_assert_int_ne(X, Y) _ck_assert_int(X, !=, Y)
-#endif
-
-#ifndef _ck_assert_str
-# define _ck_assert_str(C, X, O, Y) ck_assert_msg(C, "Assertion '"#X#O#Y"' failed: "#X"==\"%s\", "#Y"==\"%s\"", X, Y)
-# define ck_assert_str_eq(X, Y) _ck_assert_str(!strcmp(X, Y), X, ==, Y)
-# define ck_assert_str_ne(X, Y) _ck_assert_str(strcmp(X, Y), X, !=, Y)
-#endif
-
+#include "imcommon.h"
 
 #ifdef HAVE_ERRNO_H
 # include <errno.h>
@@ -54,10 +33,6 @@ static int errno = -1;
 
 #ifdef HAVE_MALLOC_H
 # include <malloc.h>
-#endif
-
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
 #endif
 
 #include <stdio.h>
@@ -73,28 +48,7 @@ static int errno = -1;
 # include <string.h>
 #endif
 
-#ifdef HAVE_FCNTL_H
-# include <fcntl.h>
-#else
-# define O_RDONLY	0
-# define O_WRONLY	1
-# define O_RDWR		2
-# define O_TRUNC	01000
-#endif
-
 #include "imyputil.h"
-
-/*
-typedef ssize_t (*def_write)(int fd, const void *buf, size_t count);
-static def_write orig_write;
-static size_t nwritten = 0;
-
-ssize_t write(int fd, const void *buf, size_t count)
-{
-	nwritten = count;
-	return (*orig_write)(fd, buf, count);
-}
-*/
 
 /* dummy variable provided by files not included in the test */
 int imyp_sig_recvd = 0;

@@ -37,6 +37,6 @@ extern int imyp_init_selected IMYP_PARAMS ((imyp_backend_t * const curr,
 	const char output_system[], const char * const filename,
 	const int midi_instrument, const char * const out_file));
 extern int imyp_lib_close IMYP_PARAMS ((imyp_backend_t * const curr));
-extern void imyp_report_versions IMYP_PARAMS ((imyp_backend_t * const curr));
+extern void imyp_report_versions IMYP_PARAMS ((const imyp_backend_t * const curr));
 
 #endif /* IMYP_WRAPPERS */

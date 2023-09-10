@@ -862,10 +862,10 @@ imyp_lib_close (
 void
 imyp_report_versions (
 #ifdef IMYP_ANSIC
-	imyp_backend_t * const curr)
+	const imyp_backend_t * const curr)
 #else
 	curr)
-	imyp_backend_t * const curr;
+	const imyp_backend_t * const curr;
 #endif
 {
 #ifdef IMYP_HAVE_ALLEGRO

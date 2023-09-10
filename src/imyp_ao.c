@@ -104,7 +104,7 @@ imyp_ao_play_tune (
 	struct imyp_ao_backend_data * data =
 		(struct imyp_ao_backend_data *)imyp_data;
 
-	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) )
+	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) || (duration <= 0) )
 	{
 		return -1;
 	}

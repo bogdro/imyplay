@@ -195,11 +195,11 @@ imyp_file_pause (
 void
 imyp_file_put_text (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
 	imyp_data, text)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
@@ -269,7 +269,7 @@ imyp_file_init (
 	data->format = IMYP_SAMPLE_FORMAT_S16LE;
 	if ( dev != NULL )
 	{
-		colon = strrchr (dev, (int)':');
+		colon = strrchr (dev, ':');
 		if ( colon != NULL )
 		{
 			data->format = imyp_get_format (colon+1);
@@ -336,10 +336,10 @@ imyp_file_close (
 void
 imyp_file_version (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
 #else
 	imyp_data)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
 	/* this is an internal backend */

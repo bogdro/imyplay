@@ -338,7 +338,7 @@ main (
 		imyp_progname = basename (argv[0]);
 #else
 # if (defined HAVE_STRING_H)
-		imyp_progname = strrchr (argv[0], (int)'/') + 1;
+		imyp_progname = strrchr (argv[0], '/') + 1;
 # else
 		imyp_progname = argv[0];
 # endif
@@ -354,13 +354,13 @@ main (
 	}
 
 	/* find the output system's name from the program's executable name: */
-	dash = strchr (imyp_progname, (int)'-');
+	dash = strchr (imyp_progname, '-');
 	if ( dash != NULL )
 	{
 		strncpy (prog_name_output_system, dash+1, sizeof (prog_name_output_system)-1);
 		prog_name_output_system[sizeof (prog_name_output_system)-1] = '\0';
 		/* if dot present, remove it and the rest of the string with it: */
-		dash = strchr (prog_name_output_system, (int)'.');
+		dash = strchr (prog_name_output_system, '.');
 		if ( dash != NULL )
 		{
 			*dash = '\0';
@@ -379,26 +379,26 @@ main (
 		}
 
 		/* NOTE: these shouldn't be a sequence of else-ifs */
-		if ( (opt_char == (int)'?') || (opt_char == (int)'h') || (opt_help == 1) )
+		if ( (opt_char == '?') || (opt_char == 'h') || (opt_help == 1) )
 		{
 			print_help (imyp_progname);
 			return 1;
 		}
 
-		if ( (opt_char == (int)'V') || (opt_version == 1) )
+		if ( (opt_char == 'V') || (opt_version == 1) )
 		{
 			printf ( "%s %s %s\n", PROGRAM_NAME, _(ver_str), VERSION );
 			imyp_report_versions (&current_library);
 			return 1;
 		}
 
-		if ( (opt_char == (int)'l') || (opt_license == 1) )
+		if ( (opt_char == 'l') || (opt_license == 1) )
 		{
 			puts ( _(lic_str) );
 			puts ( author_str );
 			return 1;
 		}
-		if ( (opt_char == (int)'d') || (opt_dev == 1) )
+		if ( (opt_char == 'd') || (opt_dev == 1) )
 		{
 			device = optarg;
 			opt_dev = 0;
@@ -414,20 +414,20 @@ main (
 			opt_midiins = 0;
 		}
 # endif
-		if ( (opt_char == (int)'o') || (opt_output == 1) )
+		if ( (opt_char == 'o') || (opt_output == 1) )
 		{
 			output_system = optarg;
 			opt_output = 0;
 		}
 # ifdef IMYP_HAVE_EXEC
-		if ( (opt_char == (int)'e') || (opt_exec == 1) )
+		if ( (opt_char == 'e') || (opt_exec == 1) )
 		{
 			exec_program = optarg;
 			opt_exec = 0;
 		}
 # endif
 # ifdef IMYP_HAVE_FILE
-		if ( (opt_char == (int)'f') || (opt_file == 1) )
+		if ( (opt_char == 'f') || (opt_file == 1) )
 		{
 			out_file = optarg;
 			opt_file = 0;

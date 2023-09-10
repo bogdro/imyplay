@@ -26,14 +26,14 @@
 
 extern void imyp_exec_pause IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const int milliseconds));
-extern void imyp_exec_put_text IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_exec_put_text IMYP_PARAMS ((const imyp_backend_data_t * const imyp_data,
 	const char * const text));
 extern int imyp_exec_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level,
-	const int duration, void * const buf, int bufsize));
+	const int duration, const void * const buf, int bufsize));
 extern int imyp_exec_init IMYP_PARAMS ((imyp_backend_data_t ** const imyp_data,
 	const char * const program));
 extern int imyp_exec_close IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
-extern void imyp_exec_version IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_exec_version IMYP_PARAMS ((const imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_EXEC */

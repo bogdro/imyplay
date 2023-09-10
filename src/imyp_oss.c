@@ -110,7 +110,7 @@ imyp_oss_play_tune (
 	ssize_t res;
 	int is_le = 1;
 	int is_uns = 0;
-	struct imyp_oss_backend_data * data =
+	const struct imyp_oss_backend_data * const data =
 		(struct imyp_oss_backend_data *)imyp_data;
 
 	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) )
@@ -174,11 +174,11 @@ imyp_oss_play_tune (
 void
 imyp_oss_pause (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const int milliseconds)
 #else
 	imyp_data, milliseconds)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const int milliseconds;
 #endif
 {
@@ -193,11 +193,11 @@ imyp_oss_pause (
 void
 imyp_oss_put_text (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
 	imyp_data, text)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
@@ -222,7 +222,8 @@ imyp_oss_init (
 #endif
 {
 	int res;
-	unsigned int i, j;
+	unsigned int i;
+	unsigned int j;
 	const int formats[] = {AFMT_S16_LE, AFMT_U16_LE, AFMT_S16_BE, AFMT_U16_LE,
 		AFMT_S8, AFMT_U8};
 	const int samp_freqs[] = {44100, 22050, 11025};
@@ -379,10 +380,10 @@ imyp_oss_close (
 void
 imyp_oss_version (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
 #else
 	imyp_data)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
 #ifdef SOUND_VERSION

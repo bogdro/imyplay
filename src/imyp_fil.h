@@ -26,7 +26,7 @@
 
 extern void imyp_file_pause IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const int milliseconds, void * const buf, int bufsize));
-extern void imyp_file_put_text IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_file_put_text IMYP_PARAMS ((const imyp_backend_data_t * const imyp_data,
 	const char * const text));
 extern int imyp_file_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level,
@@ -34,6 +34,6 @@ extern int imyp_file_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_da
 extern int imyp_file_init IMYP_PARAMS ((imyp_backend_data_t ** const imyp_data,
 	const char * const dev, const char * const file_out));
 extern int imyp_file_close IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
-extern void imyp_file_version IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_file_version IMYP_PARAMS ((const imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_FILE */

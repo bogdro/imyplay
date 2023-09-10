@@ -29,7 +29,9 @@
 
 # define IMYP_ROUND(x) ( (((x) - (int)(x)) >= 0.5)? ((x)+1) : (x) )
 
-# undef IMYP_ATTR
+# ifdef IMYP_ATTR
+#  undef IMYP_ATTR
+# endif
 # ifdef __GNUC__
 #  define IMYP_ATTR(x)	__attribute__(x)
 # else
@@ -66,8 +68,12 @@ typedef int sig_atomic_t;
 /* IMYP_PARAMS is a macro used to wrap function prototypes, so that
    compilers that don't understand ANSI C prototypes still work,
    and ANSI C compilers can issue warnings about type mismatches. */
-# undef IMYP_PARAMS
-# undef IMYP_ANSIC
+# ifdef IMYP_PARAMS
+#  undef IMYP_PARAMS
+# endif
+# ifdef IMYP_ANSIC
+#  undef IMYP_ANSIC
+# endif
 # if defined (__STDC__) || defined (_AIX) \
 	|| (defined (__mips) && defined (_SYSTYPE_SVR4)) \
 	|| defined (WIN32) || defined (__cplusplus)
@@ -78,7 +84,9 @@ typedef int sig_atomic_t;
 #  undef IMYP_ANSIC
 # endif
 
-# undef IMYP_HAVE_SELECT
+# ifdef IMYP_HAVE_SELECT
+#  undef IMYP_HAVE_SELECT
+# endif
 # if ((defined HAVE_SYS_SELECT_H) || (defined TIME_WITH_SYS_TIME)\
 	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))	\
 	&& (defined HAVE_SELECT)
@@ -141,25 +149,33 @@ typedef struct imyp_backend imyp_backend_t;
 # if (defined HAVE_LIBALLEG) && (defined HAVE_ALLEGRO_H)
 #  define IMYP_HAVE_ALLEGRO	1
 # else
-#  undef IMYP_HAVE_ALLEGRO
+#  ifdef IMYP_HAVE_ALLEGRO
+#   undef IMYP_HAVE_ALLEGRO
+#  endif
 # endif
 
 # if (defined HAVE_LIBSDL2) && (defined HAVE_SDL2_SDL_H)
 #  define IMYP_HAVE_SDL2		1
 # else
-#  undef IMYP_HAVE_SDL2
+#  ifdef IMYP_HAVE_SDL2
+#   undef IMYP_HAVE_SDL2
+#  endif
 # endif
 
 # if (defined HAVE_LIBSDL) && (defined HAVE_SDL_SDL_H) && (!defined IMYP_HAVE_SDL2)
 #  define IMYP_HAVE_SDL		1
 # else
-#  undef IMYP_HAVE_SDL
+#  ifdef IMYP_HAVE_SDL
+#   undef IMYP_HAVE_SDL
+#  endif
 # endif
 
 # if (defined HAVE_LIBASOUND) && ((defined HAVE_ASOUNDLIB_H) || (defined HAVE_ALSA_ASOUNDLIB_H))
 #  define IMYP_HAVE_ALSA	1
 # else
-#  undef IMYP_HAVE_ALSA
+#  ifdef IMYP_HAVE_ALSA
+#   undef IMYP_HAVE_ALSA
+#  endif
 # endif
 
 #if (defined HAVE_IOCTL) && (defined HAVE_SYS_SOUNDCARD_H) && (defined HAVE_SYS_IOCTL_H) \
@@ -170,51 +186,67 @@ typedef struct imyp_backend imyp_backend_t;
  && (defined HAVE_UNISTD_H)))
 #  define IMYP_HAVE_OSS		1
 # else
-#  undef IMYP_HAVE_OSS
+#  ifdef IMYP_HAVE_OSS
+#   undef IMYP_HAVE_OSS
+#  endif
 # endif
 
 # if (defined HAVE_LIBAO) && ((defined HAVE_AO_H) || (defined HAVE_AO_AO_H))
 #  define IMYP_HAVE_LIBAO	1
 # else
-#  undef IMYP_HAVE_LIBAO
+#  ifdef IMYP_HAVE_LIBAO
+#   undef IMYP_HAVE_LIBAO
+#  endif
 # endif
 
 # if (defined HAVE_LIBPORTAUDIO) && ((defined HAVE_PORTAUDIO_H) || (defined HAVE_PORTAUDIO_PORTAUDIO_H))
 #  define IMYP_HAVE_PORTAUDIO	1
 # else
-#  undef IMYP_HAVE_PORTAUDIO
+#  ifdef IMYP_HAVE_PORTAUDIO
+#   undef IMYP_HAVE_PORTAUDIO
+#  endif
 # endif
 
 # if (defined HAVE_LIBJACK) && ((defined HAVE_JACK_H) || (defined HAVE_JACK_JACK_H))
 #  define IMYP_HAVE_JACK	1
 # else
-#  undef IMYP_HAVE_JACK
+#  ifdef IMYP_HAVE_JACK
+#   undef IMYP_HAVE_JACK
+#  endif
 # endif
 
 # if (defined HAVE_LIBPULSE) && (defined HAVE_LIBPULSE_SIMPLE) && \
 	((defined HAVE_SIMPLE_H) || (defined HAVE_PULSE_SIMPLE_H))
 #  define IMYP_HAVE_PULSEAUDIO	1
 # else
-#  undef IMYP_HAVE_PULSEAUDIO
+#  ifdef IMYP_HAVE_PULSEAUDIO
+#   undef IMYP_HAVE_PULSEAUDIO
+#  endif
 # endif
 
 # if (defined HAVE_MALLOC) && (defined HAVE_REALLOC) && (defined HAVE_MEMSET) \
 	&& (defined HAVE_MEMCPY) && (defined HAVE_QSORT)
 #  define IMYP_HAVE_MIDI	1
 # else
-#  undef IMYP_HAVE_MIDI
+#  ifdef IMYP_HAVE_MIDI
+#   undef IMYP_HAVE_MIDI
+#  endif
 # endif
 
 # if (defined HAVE_STDLIB_H) && (defined HAVE_SYSTEM)
 #  define IMYP_HAVE_EXEC	1
 # else
-#  undef IMYP_HAVE_EXEC
+#  ifdef IMYP_HAVE_EXEC
+#   undef IMYP_HAVE_EXEC
+#  endif
 # endif
 
 # ifdef HAVE_GST_GST_H
 #  define IMYP_HAVE_GST		1
 # else
-#  undef IMYP_HAVE_GST
+#  ifdef IMYP_HAVE_GST
+#   undef IMYP_HAVE_GST
+#  endif
 # endif
 
 /*
@@ -225,7 +257,9 @@ is defined, then the FILE backend has been enabled on the command line.
 # ifdef HAVE_FWRITE
 #  define IMYP_HAVE_FILE		1
 # else
-#  undef IMYP_HAVE_FILE
+#  ifdef IMYP_HAVE_FILE
+#   undef IMYP_HAVE_FILE
+#  endif
 # endif
 
 # if (defined HAVE_IOCTL) && (defined HAVE_SYS_KD_H)		\
@@ -236,19 +270,25 @@ is defined, then the FILE backend has been enabled on the command line.
  && (defined HAVE_UNISTD_H))) || (defined IMYP_IS_DOS)
 #  define IMYP_HAVE_SPKR	1
 # else
-#  undef IMYP_HAVE_SPKR
+#  ifdef IMYP_HAVE_SPKR
+#   undef IMYP_HAVE_SPKR
+#  endif
 # endif
 
 # if (defined HAVE_LIBHIDEIP) && (defined HAVE_LIBHIDEIP_H)
 #  define IMYP_HAVE_LIBHIDEIP	1
 # else
-#  undef IMYP_HAVE_LIBHIDEIP
+#  ifdef IMYP_HAVE_LIBHIDEIP
+#   undef IMYP_HAVE_LIBHIDEIP
+#  endif
 # endif
 
 # if (defined HAVE_LIBNETBLOCK) && (defined HAVE_LIBNETBLOCK_H)
 #  define IMYP_HAVE_LIBNETBLOCK	1
 # else
-#  undef IMYP_HAVE_LIBNETBLOCK
+#  ifdef IMYP_HAVE_LIBNETBLOCK
+#   undef IMYP_HAVE_LIBNETBLOCK
+#  endif
 # endif
 
 #endif /* _IMYPLAYER_H */

@@ -105,7 +105,7 @@ imyp_spkr_play_tune (
 	const double freq,
 	const int volume_level IMYP_ATTR ((unused)),
 	const int duration,
-	void * const buf IMYP_ATTR ((unused)),
+	const void * const buf IMYP_ATTR ((unused)),
 	int bufsize IMYP_ATTR ((unused)))
 #else
 	imyp_data, freq, volume_level, duration, buf, bufsize)
@@ -113,14 +113,14 @@ imyp_spkr_play_tune (
 	const double freq;
 	const int volume_level IMYP_ATTR ((unused));
 	const int duration;
-	void * const buf IMYP_ATTR ((unused));
+	const void * const buf IMYP_ATTR ((unused));
 	int bufsize IMYP_ATTR ((unused));
 #endif
 {
 	int ioctl_res = 0;
 	int ioctl_param;
 #ifndef IMYP_IS_DOS
-	struct imyp_spkr_backend_data * data =
+	const struct imyp_spkr_backend_data * const data =
 		(struct imyp_spkr_backend_data *)imyp_data;
 #endif
 	/* The PC speaker can't generate sounds with a frequency
@@ -172,11 +172,11 @@ imyp_spkr_play_tune (
 void
 imyp_spkr_pause (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const int milliseconds)
 #else
 	imyp_data, milliseconds)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const int milliseconds;
 #endif
 {
@@ -191,11 +191,11 @@ imyp_spkr_pause (
 void
 imyp_spkr_put_text (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
 	imyp_data, text)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
@@ -308,10 +308,10 @@ imyp_spkr_close (
 void
 imyp_spkr_version (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
 #else
 	imyp_data)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
 	/* this is an internal backend */

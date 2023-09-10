@@ -112,7 +112,7 @@ imyp_midi_play_tune (
 	const double freq,
 	const int volume_level,
 	const int duration,
-	void * const buf IMYP_ATTR((unused)),
+	const void * const buf IMYP_ATTR((unused)),
 	int bufsize IMYP_ATTR((unused)))
 #else
 	imyp_data, freq, volume_level, duration, buf, bufsize)
@@ -120,12 +120,13 @@ imyp_midi_play_tune (
 	const double freq;
 	const int volume_level;
 	const int duration;
-	void * const buf IMYP_ATTR((unused));
+	const void * const buf IMYP_ATTR((unused));
 	int bufsize IMYP_ATTR((unused));
 #endif
 {
 	BOOL res;
-	unsigned int oct, note;
+	unsigned int oct;
+	unsigned int note;
 	int midinote = -1;
 	int vol = MIDI_VOL_FULL;
 	int dur = 0;
@@ -376,10 +377,10 @@ imyp_midi_close (
 void
 imyp_midi_version (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
 #else
 	imyp_data)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
 	/* this is an internal backend */

@@ -206,7 +206,9 @@ static int launch_program (
 	const int duration;
 #endif
 {
-	size_t i, j, exe_index = 0;
+	size_t i;
+	size_t j;
+	size_t exe_index = 0;
 	int sys_ret;
 	struct imyp_exec_backend_data * data =
 		(struct imyp_exec_backend_data *)imyp_data;
@@ -329,7 +331,7 @@ imyp_exec_play_tune (
 	const double freq,
 	const int volume_level,
 	const int duration,
-	void * const buf IMYP_ATTR ((unused)),
+	const void * const buf IMYP_ATTR ((unused)),
 	int bufsize IMYP_ATTR ((unused)))
 #else
 	imyp_data, freq, volume_level, duration, buf, bufsize)
@@ -337,7 +339,7 @@ imyp_exec_play_tune (
 	const double freq;
 	const int volume_level;
 	const int duration;
-	void * const buf IMYP_ATTR ((unused));
+	const void * const buf IMYP_ATTR ((unused));
 	int bufsize IMYP_ATTR ((unused));
 #endif
 {
@@ -375,11 +377,11 @@ imyp_exec_pause (
 void
 imyp_exec_put_text (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
 	imyp_data, text)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
@@ -403,7 +405,8 @@ imyp_exec_init (
 	const char * const program;
 #endif
 {
-	size_t i, j;
+	size_t i;
+	size_t j;
 	struct imyp_exec_backend_data * data;
 
 	if ( (imyp_data == NULL) || (program == NULL) )
@@ -481,10 +484,10 @@ imyp_exec_close (
 void
 imyp_exec_version (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
 #else
 	imyp_data)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
 	/* this is an internal backend */

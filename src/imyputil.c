@@ -95,8 +95,11 @@ imyp_compare (
 	const char string2[];
 # endif
 {
-	size_t i, len1, len2;
-	char c1, c2;
+	size_t i;
+	size_t len1;
+	size_t len2;
+	char c1;
+	char c2;
 
 	if ( (string1 == NULL) && (string2 == NULL) )
 	{
@@ -453,7 +456,7 @@ imyp_generate_samples (
 			}
 			else if ( qual_bits == 8 )
 			{
-				((char *)buf)[(i - last_index)] = 0;
+				((char *)buf)[i - last_index] = 0;
 			}
 		}
 	}
@@ -477,22 +480,22 @@ imyp_pause_select (
 	const int milliseconds;
 #endif
 {
+#ifdef IMYP_HAVE_SELECT
+	struct timeval tv;
+#endif
 	if ( milliseconds <= 0 )
 	{
 		return;
 	}
 #ifdef IMYP_HAVE_SELECT
-	{
-		/* No need for AC_FUNC_SELECT_ARGTYPES in configure.ac
-		 * - we use only ( 0, NULL, NULL, NULL, &tv ) and the first
-		 * parameter can be any kind of int or a size_t and the last
-		 * parameter can be const or not.
-		*/
-		struct timeval tv;
-		tv.tv_sec = milliseconds / 1000;
-		tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
-		select ( 0, NULL, NULL, NULL, &tv );
-	}
+	/* No need for AC_FUNC_SELECT_ARGTYPES in configure.ac
+	 * - we use only ( 0, NULL, NULL, NULL, &tv ) and the first
+	 * parameter can be any kind of int or a size_t and the last
+	 * parameter can be const or not.
+	 */
+	tv.tv_sec = milliseconds / 1000;
+	tv.tv_usec = ( milliseconds * 1000 ) % 1000000;
+	select ( 0, NULL, NULL, NULL, &tv );
 #endif
 }
 
@@ -533,7 +536,7 @@ imyp_generate_filename (
 #endif
 {
 #ifdef HAVE_MALLOC
-	char * imy;
+	const char * imy;
 	char * new_filename;
 	size_t fnlen;
 	size_t elen;
@@ -564,7 +567,7 @@ imyp_generate_filename (
 	{
 		return NULL;
 	}
-	IMYP_MEMSET (new_filename, 0, (size_t)target_fname_len);
+	IMYP_MEMSET (new_filename, 0, target_fname_len);
 	strncpy (new_filename, filename, target_fname_len-1);
 	/* If ".imy" extension is present, change it to the provided one.
 	   Else, append the requested extension. */

@@ -30,10 +30,10 @@ extern void imyp_midi_put_text IMYP_PARAMS ((imyp_backend_data_t * const imyp_da
 	const char * const text));
 extern int imyp_midi_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level,
-	const int duration, void * const buf, int bufsize));
+	const int duration, const void * const buf, int bufsize));
 extern int imyp_midi_init IMYP_PARAMS ((imyp_backend_data_t ** const imyp_data,
 	const char * const filename, const int instrument));
 extern int imyp_midi_close IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
-extern void imyp_midi_version IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_midi_version IMYP_PARAMS ((const imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_MIDIW */

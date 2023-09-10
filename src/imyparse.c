@@ -320,11 +320,11 @@ imyp_read_number (
 			}
 			/* always skip at least one */
 			(*buf_index)++;
-			if ( ret >= 1000000000 )
+			/*if ( ret >= 1000000000 )
 			{
-				ret = /*prev_ret * 10000000000 +*/ ret;
+				ret = / * prev_ret * 10000000000 + * / ret;
 			}
-			else if ( ret >= 100000000 )
+			else*/ if ( ret >= 100000000 )
 			{
 				ret = prev_ret * 1000000000 + ret;
 			}

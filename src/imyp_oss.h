@@ -24,9 +24,9 @@
 
 # include "imyplay.h"
 
-extern void imyp_oss_pause IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_oss_pause IMYP_PARAMS ((const imyp_backend_data_t * const imyp_data,
 	const int milliseconds));
-extern void imyp_oss_put_text IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_oss_put_text IMYP_PARAMS ((const imyp_backend_data_t * const imyp_data,
 	const char * const text));
 extern int imyp_oss_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level,
@@ -34,6 +34,6 @@ extern int imyp_oss_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_dat
 extern int imyp_oss_init IMYP_PARAMS ((imyp_backend_data_t ** const imyp_data,
 	const char * const dev_file));
 extern int imyp_oss_close IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
-extern void imyp_oss_version IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
+extern void imyp_oss_version IMYP_PARAMS ((const imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_OSS */

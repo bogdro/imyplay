@@ -59,11 +59,8 @@ IMYplay, in various versions, has been successfully compiled on the following
 systems:
 - Fedora Core 4 GNU/Linux, i686
 - Fedora 12 GNU/Linux, i686
-- Mandriva 2008.1 GNU/Linux, i686
-- Mandriva 2011 GNU/Linux, i686
-- OpenMandriva 3.0 GNU/Linux, amd64
-- OpenMandriva 4.2 GNU/Linux, amd64
-- OpenMandriva 4.3 GNU/Linux, amd64
+- Mandriva 2008.1, 2011 GNU/Linux, i686
+- OpenMandriva 3.0, 4.2, 4.3 GNU/Linux, amd64
 - OpenBSD 3.8, i586
 - Debian 5.0 GNU/Linux, i686
 - FreeDOS (DJGPP + NASM)
@@ -88,7 +85,7 @@ Requirements for compiling the full version under Un*x:
 - if you want sound, not just MIDI conversion, a development package for one
   of the supported libraries (except OSS and PC-speaker, which require only
   the C library and system support). If you don't have any of these installed
-  or available (check twice), then go to
+  or available, then go to:
 	http://alleg.sf.net/		  - for the Allegro library
 	http://www.libsdl.org/		  - for the SDL library
 	http://alsa-project.org/	  - for the ALSA library
@@ -217,8 +214,9 @@ Command line options (in the full version):
 			oss, ao/libao, portaudio/port, jack, pulseaudio/pulse,
 			gstreamer/gst, speaker/pcspeaker/spkr/pcspkr). Names
 			are NOT case-sensitive. PC-Speaker output under Linux
-			may require the "snd-pcsp" kernel module to be loaded
-			and permissions to access "/dev/console".
+			may require the necessary kernel module ("snd-pcsp",
+			"pcspkr" or similar) to be loaded and permissions to
+			access "/dev/console".
 --to-midi		Convert the given files to MIDI format (if the target
 			file exists, it is deleted). Overrides -o/--output,
 			-f/--file and -e/--exec. Changes any ".imy" file

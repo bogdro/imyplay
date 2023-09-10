@@ -426,8 +426,8 @@ oss, ao/libao, portaudio/port, jack, pulseaudio/pulse, gstreamer/gst,
 speaker/pcspeaker/spkr/pcspkr).
 Names are @strong{NOT} case-sensitive.
 
-PC-Speaker output under Linux may require the @file{snd-pcsp} kernel module
-to be loaded and permissions to access @file{/dev/console}.
+PC-Speaker output under Linux may require the @file{snd-pcsp} or @file{pcspkr}
+(or similar) kernel module to be loaded and permissions to access @file{/dev/console}.
 
 JACK output: if the JACK server doesn't start automatically, you can run it
 yourself with e.g.

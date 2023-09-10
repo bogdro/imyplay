@@ -110,11 +110,13 @@ build_triplet = @build@
 host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@TESTS = utiltest$(EXEEXT) $(am__EXEEXT_1) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_2) $(am__EXEEXT_3) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_4) $(am__EXEEXT_5)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_4) $(am__EXEEXT_5) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_6) $(am__EXEEXT_7)
 @IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1) $(am__EXEEXT_2) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_3) $(am__EXEEXT_4) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_5)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_5) $(am__EXEEXT_6) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_7)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_1 = testalle
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_2 = testalle
 @ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_3 = testalsa
@@ -125,6 +127,10 @@ host_triplet = @host@
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_8 = testgst
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_9 = testjack
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_10 = testjack
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_11 = testoss
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_12 = testoss
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_13 = testport
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_14 = testport
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
@@ -149,6 +155,9 @@ CONFIG_CLEAN_VPATH_FILES =
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_4 =  \
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@	testgst$(EXEEXT)
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__EXEEXT_5 = testjack$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__EXEEXT_6 = testoss$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__EXEEXT_7 =  \
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@	testport$(EXEEXT)
 am__testalle_SOURCES_DIST = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalle_OBJECTS = testalle-testalle.$(OBJEXT)
 testalle_OBJECTS = $(am_testalle_OBJECTS)
@@ -192,6 +201,23 @@ testjack_OBJECTS = $(am_testjack_OBJECTS)
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@	$(top_builddir)/src/imyp_jck.o
 testjack_LINK = $(CCLD) $(testjack_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
+am__testoss_SOURCES_DIST = testoss.c
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am_testoss_OBJECTS =  \
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@	testoss-testoss.$(OBJEXT)
+testoss_OBJECTS = $(am_testoss_OBJECTS)
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@testoss_DEPENDENCIES =  \
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@	$(am__DEPENDENCIES_1) \
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@	$(top_builddir)/src/imyp_oss.o
+testoss_LINK = $(CCLD) $(testoss_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am__testport_SOURCES_DIST = testport.c
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am_testport_OBJECTS = testport-testport.$(OBJEXT)
+testport_OBJECTS = $(am_testport_OBJECTS)
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@testport_DEPENDENCIES =  \
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@	$(am__DEPENDENCIES_1) \
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@	$(top_builddir)/src/imyp_por.o
+testport_LINK = $(CCLD) $(testport_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am__utiltest_SOURCES_DIST = utiltest.c
 @IMY_TESTS_ENABLED_TRUE@am_utiltest_OBJECTS =  \
 @IMY_TESTS_ENABLED_TRUE@	utiltest-utiltest.$(OBJEXT)
@@ -218,6 +244,8 @@ am__depfiles_remade = ./$(DEPDIR)/testalle-testalle.Po \
 	./$(DEPDIR)/testalsa-testalsa.Po ./$(DEPDIR)/testao-testao.Po \
 	./$(DEPDIR)/testgst-testgst.Po \
 	./$(DEPDIR)/testjack-testjack.Po \
+	./$(DEPDIR)/testoss-testoss.Po \
+	./$(DEPDIR)/testport-testport.Po \
 	./$(DEPDIR)/utiltest-utiltest.Po
 am__mv = mv -f
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -237,10 +265,12 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(testalle_SOURCES) $(testalsa_SOURCES) $(testao_SOURCES) \
-	$(testgst_SOURCES) $(testjack_SOURCES) $(utiltest_SOURCES)
+	$(testgst_SOURCES) $(testjack_SOURCES) $(testoss_SOURCES) \
+	$(testport_SOURCES) $(utiltest_SOURCES)
 DIST_SOURCES = $(am__testalle_SOURCES_DIST) \
 	$(am__testalsa_SOURCES_DIST) $(am__testao_SOURCES_DIST) \
 	$(am__testgst_SOURCES_DIST) $(am__testjack_SOURCES_DIST) \
+	$(am__testoss_SOURCES_DIST) $(am__testport_SOURCES_DIST) \
 	$(am__utiltest_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
@@ -622,6 +652,12 @@ top_srcdir = @top_srcdir@
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_SOURCES = testjack.c
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_CFLAGS = $(COMMON_CFLAGS)
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_jck.o
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@testoss_SOURCES = testoss.c
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@testoss_CFLAGS = $(COMMON_CFLAGS)
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@testoss_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_oss.o
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@testport_SOURCES = testport.c
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@testport_CFLAGS = $(COMMON_CFLAGS)
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@testport_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_por.o
 all: all-am
 
 .SUFFIXES:
@@ -679,6 +715,14 @@ testjack$(EXEEXT): $(testjack_OBJECTS) $(testjack_DEPENDENCIES) $(EXTRA_testjack
 	@rm -f testjack$(EXEEXT)
 	$(AM_V_CCLD)$(testjack_LINK) $(testjack_OBJECTS) $(testjack_LDADD) $(LIBS)
 
+testoss$(EXEEXT): $(testoss_OBJECTS) $(testoss_DEPENDENCIES) $(EXTRA_testoss_DEPENDENCIES) 
+	@rm -f testoss$(EXEEXT)
+	$(AM_V_CCLD)$(testoss_LINK) $(testoss_OBJECTS) $(testoss_LDADD) $(LIBS)
+
+testport$(EXEEXT): $(testport_OBJECTS) $(testport_DEPENDENCIES) $(EXTRA_testport_DEPENDENCIES) 
+	@rm -f testport$(EXEEXT)
+	$(AM_V_CCLD)$(testport_LINK) $(testport_OBJECTS) $(testport_LDADD) $(LIBS)
+
 utiltest$(EXEEXT): $(utiltest_OBJECTS) $(utiltest_DEPENDENCIES) $(EXTRA_utiltest_DEPENDENCIES) 
 	@rm -f utiltest$(EXEEXT)
 	$(AM_V_CCLD)$(utiltest_LINK) $(utiltest_OBJECTS) $(utiltest_LDADD) $(LIBS)
@@ -694,6 +738,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testao-testao.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testgst-testgst.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testjack-testjack.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testoss-testoss.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testport-testport.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utiltest-utiltest.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -785,6 +831,34 @@ testjack-testjack.obj: testjack.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testjack.c' object='testjack-testjack.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testjack_CFLAGS) $(CFLAGS) -c -o testjack-testjack.obj `if test -f 'testjack.c'; then $(CYGPATH_W) 'testjack.c'; else $(CYGPATH_W) '$(srcdir)/testjack.c'; fi`
+
+testoss-testoss.o: testoss.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testoss_CFLAGS) $(CFLAGS) -MT testoss-testoss.o -MD -MP -MF $(DEPDIR)/testoss-testoss.Tpo -c -o testoss-testoss.o `test -f 'testoss.c' || echo '$(srcdir)/'`testoss.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testoss-testoss.Tpo $(DEPDIR)/testoss-testoss.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testoss.c' object='testoss-testoss.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testoss_CFLAGS) $(CFLAGS) -c -o testoss-testoss.o `test -f 'testoss.c' || echo '$(srcdir)/'`testoss.c
+
+testoss-testoss.obj: testoss.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testoss_CFLAGS) $(CFLAGS) -MT testoss-testoss.obj -MD -MP -MF $(DEPDIR)/testoss-testoss.Tpo -c -o testoss-testoss.obj `if test -f 'testoss.c'; then $(CYGPATH_W) 'testoss.c'; else $(CYGPATH_W) '$(srcdir)/testoss.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testoss-testoss.Tpo $(DEPDIR)/testoss-testoss.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testoss.c' object='testoss-testoss.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testoss_CFLAGS) $(CFLAGS) -c -o testoss-testoss.obj `if test -f 'testoss.c'; then $(CYGPATH_W) 'testoss.c'; else $(CYGPATH_W) '$(srcdir)/testoss.c'; fi`
+
+testport-testport.o: testport.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testport_CFLAGS) $(CFLAGS) -MT testport-testport.o -MD -MP -MF $(DEPDIR)/testport-testport.Tpo -c -o testport-testport.o `test -f 'testport.c' || echo '$(srcdir)/'`testport.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testport-testport.Tpo $(DEPDIR)/testport-testport.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testport.c' object='testport-testport.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testport_CFLAGS) $(CFLAGS) -c -o testport-testport.o `test -f 'testport.c' || echo '$(srcdir)/'`testport.c
+
+testport-testport.obj: testport.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testport_CFLAGS) $(CFLAGS) -MT testport-testport.obj -MD -MP -MF $(DEPDIR)/testport-testport.Tpo -c -o testport-testport.obj `if test -f 'testport.c'; then $(CYGPATH_W) 'testport.c'; else $(CYGPATH_W) '$(srcdir)/testport.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testport-testport.Tpo $(DEPDIR)/testport-testport.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testport.c' object='testport-testport.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testport_CFLAGS) $(CFLAGS) -c -o testport-testport.obj `if test -f 'testport.c'; then $(CYGPATH_W) 'testport.c'; else $(CYGPATH_W) '$(srcdir)/testport.c'; fi`
 
 utiltest-utiltest.o: utiltest.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(utiltest_CFLAGS) $(CFLAGS) -MT utiltest-utiltest.o -MD -MP -MF $(DEPDIR)/utiltest-utiltest.Tpo -c -o utiltest-utiltest.o `test -f 'utiltest.c' || echo '$(srcdir)/'`utiltest.c
@@ -1035,6 +1109,20 @@ testjack.log: testjack$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+testoss.log: testoss$(EXEEXT)
+	@p='testoss$(EXEEXT)'; \
+	b='testoss'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+testport.log: testport$(EXEEXT)
+	@p='testport$(EXEEXT)'; \
+	b='testport'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 .test.log:
 	@p='$<'; \
 	$(am__set_b); \
@@ -1131,6 +1219,8 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/testao-testao.Po
 	-rm -f ./$(DEPDIR)/testgst-testgst.Po
 	-rm -f ./$(DEPDIR)/testjack-testjack.Po
+	-rm -f ./$(DEPDIR)/testoss-testoss.Po
+	-rm -f ./$(DEPDIR)/testport-testport.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
@@ -1182,6 +1272,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/testao-testao.Po
 	-rm -f ./$(DEPDIR)/testgst-testgst.Po
 	-rm -f ./$(DEPDIR)/testjack-testjack.Po
+	-rm -f ./$(DEPDIR)/testoss-testoss.Po
+	-rm -f ./$(DEPDIR)/testport-testport.Po
 	-rm -f ./$(DEPDIR)/utiltest-utiltest.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic

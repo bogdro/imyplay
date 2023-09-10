@@ -85,6 +85,15 @@ testoss_CFLAGS = $(COMMON_CFLAGS)
 testoss_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_oss.o
 endif
 
+if PORTAUDIO
+TESTS += testport
+check_PROGRAMS += testport
+
+testport_SOURCES = testport.c
+testport_CFLAGS = $(COMMON_CFLAGS)
+testport_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_por.o
+endif
+
 zcompile: $(TESTS)
 .PHONY: zcompile
 

@@ -76,6 +76,15 @@ testjack_CFLAGS = $(COMMON_CFLAGS)
 testjack_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_jck.o
 endif
 
+if OSS
+TESTS += testoss
+check_PROGRAMS += testoss
+
+testoss_SOURCES = testoss.c
+testoss_CFLAGS = $(COMMON_CFLAGS)
+testoss_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_oss.o
+endif
+
 zcompile: $(TESTS)
 .PHONY: zcompile
 

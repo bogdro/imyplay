@@ -764,7 +764,8 @@ AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type 
 
 AC_FUNC_MALLOC
 
-AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long strcasecmp])
+AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long \
+	strcasecmp strdup])
 if ( test "x$imyp_flex_enabled" != "xyes" ); then
 
 	AC_FUNC_FSEEKO

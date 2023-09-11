@@ -48,6 +48,16 @@ RM_DIR = rmdir
 COPY = copy
 MKDIR = mkdir
 
+COMPILE_FILES = @DOSFILES.TXT
+
+ifeq ($(FLEX),1)
+COMPILE_FILES += src\imyparsf.c -lfl
+LEX = flex
+else
+COMPILE_FILES += src\imyparse.c
+LEX = error
+endif
+
 NASM = nasm
 NASM_OPTS = -O999 -f $(FORMAT) -DIMYPLAY_32BIT=$(ASM_BITS_FLAG)
 UPX = upx
@@ -74,7 +84,10 @@ all:	$(PROGNAME)$(EXE_EXT)
 $(PROGNAME)$(EXE_EXT): src/imyp_cfg.hin src/*.c src/*.h src/imypdos.asm Makefile.dos
 	$(SED) 's/[@]VERSION[@]/$(VER_STRING_CODE)/' src\imyp_cfg.hin > src\imyp_cfg.h
 	$(NASM) $(NASM_OPTS) -o src\imypdos.obj src\imypdos.asm
-	$(CC) $(CC_OPTS) -o $(PROGNAME)$(EXE_EXT) @DOSFILES.TXT
+ifeq ($(FLEX),1)
+	$(LEX) -B -i -osrc\imyparsf.c src\imyparsf.l
+endif
+	$(CC) $(CC_OPTS) -o $(PROGNAME)$(EXE_EXT) $(COMPILE_FILES)
 	$(UPX) $(UPX_OPTS) $(PROGNAME)$(EXE_EXT)
 
 dist:	$(PROGNAME)$(DIST_EXT)

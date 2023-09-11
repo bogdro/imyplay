@@ -1136,8 +1136,10 @@ imyp_play_file (
 			curr = curr_lib;
 			yyin = imy;
 			yylex ();
+#ifndef IMYP_IS_DOS
 			/* file parsing done, free all memory: */
-			yylex_destroy ();
+			yylex_destroy (); /* missing in flex-2.5.4 */
+#endif
 			fclose (imy);
 			return 0;
 		}

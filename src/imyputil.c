@@ -590,6 +590,44 @@ imyp_generate_filename (
 
 /* =============================================================== */
 
+#ifndef HAVE_STRDUP
+char * imyp_duplicate_string (
+# ifdef IMYP_ANSIC
+	const char src[])
+# else
+	src)
+	const char src[];
+# endif
+{
+	size_t len;
+	char * dest;
+
+	if ( src == NULL )
+	{
+		return NULL;
+	}
+	len = strlen (src);
+	if ( len == 0 )
+	{
+		return NULL;
+	}
+	dest = (char *) malloc (len + 1);
+	if ( dest == NULL )
+	{
+		return NULL;
+	}
+# ifdef HAVE_STRING_H
+	strncpy (dest, src, len + 1);
+# else
+	IMYP_MEMCOPY (dest, src, len);
+# endif
+	dest[len] = '\0';
+	return dest;
+}
+#endif /* ! HAVE_STRDUP */
+
+/* =============================================================== */
+
 #ifndef HAVE_MEMCPY
 void imyp_memcopy (
 # ifdef IMYP_ANSIC

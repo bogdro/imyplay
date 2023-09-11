@@ -53,6 +53,13 @@ extern void imyp_mem_set IMYP_PARAMS ((void * const dest,
 #  define IMYP_MEMSET imyp_mem_set
 # endif
 
+# ifdef HAVE_STRDUP
+#  define IMYP_STRDUP strdup
+# else
+extern char * imyp_duplicate_string IMYP_PARAMS ((const char src[]));
+#  define IMYP_STRDUP imyp_duplicate_string
+# endif
+
 enum IMYP_SAMPLE_FORMATS
 {
 	IMYP_SAMPLE_FORMAT_UNKNOWN,

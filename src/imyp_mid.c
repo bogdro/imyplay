@@ -124,7 +124,7 @@ imyp_midi_play_tune (
 	int bufsize IMYP_ATTR((unused));
 #endif
 {
-	BOOL res;
+	BOOL res = FALSE;
 	unsigned int oct;
 	unsigned int note;
 	int midinote = -1;

@@ -158,7 +158,7 @@ testspk_CFLAGS = $(COMMON_CFLAGS)
 testspk_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_spk.o
 endif
 
-zcompile: $(TESTS)
-.PHONY: zcompile
+x-compile: $(TESTS)
+.PHONY: x-compile
 
 endif

@@ -1594,8 +1594,8 @@ uninstall-am:
 .PRECIOUS: Makefile
 
 
-@IMY_TESTS_ENABLED_TRUE@zcompile: $(TESTS)
-@IMY_TESTS_ENABLED_TRUE@.PHONY: zcompile
+@IMY_TESTS_ENABLED_TRUE@x-compile: $(TESTS)
+@IMY_TESTS_ENABLED_TRUE@.PHONY: x-compile
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

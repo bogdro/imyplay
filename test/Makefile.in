@@ -114,7 +114,8 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_6) $(am__EXEEXT_7) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_8) $(am__EXEEXT_9) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_10) $(am__EXEEXT_11) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_12) $(am__EXEEXT_13)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_12) $(am__EXEEXT_13) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_14)
 @IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1) $(am__EXEEXT_2) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_3) $(am__EXEEXT_4) \
@@ -122,7 +123,7 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_7) $(am__EXEEXT_8) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_9) $(am__EXEEXT_10) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_11) $(am__EXEEXT_12) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_13)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_13) $(am__EXEEXT_14)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_1 = testalle
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_2 = testalle
 @ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_3 = testalsa
@@ -137,18 +138,20 @@ host_triplet = @host@
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_12 = testgst
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_13 = testjack
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_14 = testjack
-@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_15 = testoss
-@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_16 = testoss
-@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_17 = testport
-@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_18 = testport
-@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_19 = testpuls
-@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_20 = testpuls
-@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__append_21 = testsdl
-@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__append_22 = testsdl
-@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_23 = testsdl
-@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_24 = testsdl
-@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_25 = testspk
-@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_26 = testspk
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@am__append_15 = testmidi
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@am__append_16 = testmidi
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_17 = testoss
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_18 = testoss
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_19 = testport
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_20 = testport
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_21 = testpuls
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_22 = testpuls
+@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__append_23 = testsdl
+@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__append_24 = testsdl
+@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_25 = testsdl
+@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_26 = testsdl
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_27 = testspk
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_28 = testspk
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
@@ -175,14 +178,15 @@ CONFIG_CLEAN_VPATH_FILES =
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_6 =  \
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@	testgst$(EXEEXT)
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__EXEEXT_7 = testjack$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__EXEEXT_8 = testoss$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__EXEEXT_9 =  \
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@am__EXEEXT_8 = testmidi$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__EXEEXT_9 = testoss$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__EXEEXT_10 =  \
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@	testport$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__EXEEXT_10 =  \
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__EXEEXT_11 =  \
 @IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@	testpuls$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__EXEEXT_11 = testsdl$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__EXEEXT_12 = testsdl$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__EXEEXT_13 = testspk$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__EXEEXT_12 = testsdl$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__EXEEXT_13 = testsdl$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__EXEEXT_14 = testspk$(EXEEXT)
 am__testalle_SOURCES_DIST = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalle_OBJECTS = testalle-testalle.$(OBJEXT)
 testalle_OBJECTS = $(am_testalle_OBJECTS)
@@ -241,6 +245,16 @@ testjack_OBJECTS = $(am_testjack_OBJECTS)
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@	$(am__DEPENDENCIES_1) \
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@	$(top_builddir)/src/imyp_jck.o
 testjack_LINK = $(CCLD) $(testjack_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am__testmidi_SOURCES_DIST = testmidi.c
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@am_testmidi_OBJECTS = testmidi-testmidi.$(OBJEXT)
+testmidi_OBJECTS = $(am_testmidi_OBJECTS)
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@testmidi_DEPENDENCIES =  \
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@	$(am__DEPENDENCIES_1) \
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@	$(top_builddir)/src/imyp_mid.o \
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@	$(top_builddir)/src/midifile.o \
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@	$(top_builddir)/src/iparsers.c
+testmidi_LINK = $(CCLD) $(testmidi_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am__testoss_SOURCES_DIST = testoss.c
 @IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am_testoss_OBJECTS =  \
@@ -315,6 +329,7 @@ am__depfiles_remade = ./$(DEPDIR)/testalle-testalle.Po \
 	./$(DEPDIR)/testfile-testfile.Po \
 	./$(DEPDIR)/testgst-testgst.Po \
 	./$(DEPDIR)/testjack-testjack.Po \
+	./$(DEPDIR)/testmidi-testmidi.Po \
 	./$(DEPDIR)/testoss-testoss.Po \
 	./$(DEPDIR)/testport-testport.Po \
 	./$(DEPDIR)/testpuls-testpuls.Po \
@@ -339,16 +354,17 @@ am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(testalle_SOURCES) $(testalsa_SOURCES) $(testao_SOURCES) \
 	$(testexec_SOURCES) $(testfile_SOURCES) $(testgst_SOURCES) \
-	$(testjack_SOURCES) $(testoss_SOURCES) $(testport_SOURCES) \
-	$(testpuls_SOURCES) $(testsdl_SOURCES) $(testspk_SOURCES) \
-	$(utiltest_SOURCES)
+	$(testjack_SOURCES) $(testmidi_SOURCES) $(testoss_SOURCES) \
+	$(testport_SOURCES) $(testpuls_SOURCES) $(testsdl_SOURCES) \
+	$(testspk_SOURCES) $(utiltest_SOURCES)
 DIST_SOURCES = $(am__testalle_SOURCES_DIST) \
 	$(am__testalsa_SOURCES_DIST) $(am__testao_SOURCES_DIST) \
 	$(am__testexec_SOURCES_DIST) $(am__testfile_SOURCES_DIST) \
 	$(am__testgst_SOURCES_DIST) $(am__testjack_SOURCES_DIST) \
-	$(am__testoss_SOURCES_DIST) $(am__testport_SOURCES_DIST) \
-	$(am__testpuls_SOURCES_DIST) $(am__testsdl_SOURCES_DIST) \
-	$(am__testspk_SOURCES_DIST) $(am__utiltest_SOURCES_DIST)
+	$(am__testmidi_SOURCES_DIST) $(am__testoss_SOURCES_DIST) \
+	$(am__testport_SOURCES_DIST) $(am__testpuls_SOURCES_DIST) \
+	$(am__testsdl_SOURCES_DIST) $(am__testspk_SOURCES_DIST) \
+	$(am__utiltest_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -735,6 +751,11 @@ top_srcdir = @top_srcdir@
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_SOURCES = testjack.c
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_CFLAGS = $(COMMON_CFLAGS)
 @IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@testjack_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_jck.o
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@testmidi_SOURCES = testmidi.c
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@testmidi_CFLAGS = $(COMMON_CFLAGS)
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@testmidi_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_mid.o \
+@IMY_TESTS_ENABLED_TRUE@@MIDI_TRUE@	$(top_builddir)/src/midifile.o $(top_builddir)/src/iparsers.c
+
 @IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@testoss_SOURCES = testoss.c
 @IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@testoss_CFLAGS = $(COMMON_CFLAGS)
 @IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@testoss_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_oss.o
@@ -818,6 +839,10 @@ testjack$(EXEEXT): $(testjack_OBJECTS) $(testjack_DEPENDENCIES) $(EXTRA_testjack
 	@rm -f testjack$(EXEEXT)
 	$(AM_V_CCLD)$(testjack_LINK) $(testjack_OBJECTS) $(testjack_LDADD) $(LIBS)
 
+testmidi$(EXEEXT): $(testmidi_OBJECTS) $(testmidi_DEPENDENCIES) $(EXTRA_testmidi_DEPENDENCIES) 
+	@rm -f testmidi$(EXEEXT)
+	$(AM_V_CCLD)$(testmidi_LINK) $(testmidi_OBJECTS) $(testmidi_LDADD) $(LIBS)
+
 testoss$(EXEEXT): $(testoss_OBJECTS) $(testoss_DEPENDENCIES) $(EXTRA_testoss_DEPENDENCIES) 
 	@rm -f testoss$(EXEEXT)
 	$(AM_V_CCLD)$(testoss_LINK) $(testoss_OBJECTS) $(testoss_LDADD) $(LIBS)
@@ -855,6 +880,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testfile-testfile.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testgst-testgst.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testjack-testjack.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testmidi-testmidi.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testoss-testoss.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testport-testport.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testpuls-testpuls.Po@am__quote@ # am--include-marker
@@ -979,6 +1005,20 @@ testjack-testjack.obj: testjack.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testjack.c' object='testjack-testjack.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testjack_CFLAGS) $(CFLAGS) -c -o testjack-testjack.obj `if test -f 'testjack.c'; then $(CYGPATH_W) 'testjack.c'; else $(CYGPATH_W) '$(srcdir)/testjack.c'; fi`
+
+testmidi-testmidi.o: testmidi.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testmidi_CFLAGS) $(CFLAGS) -MT testmidi-testmidi.o -MD -MP -MF $(DEPDIR)/testmidi-testmidi.Tpo -c -o testmidi-testmidi.o `test -f 'testmidi.c' || echo '$(srcdir)/'`testmidi.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testmidi-testmidi.Tpo $(DEPDIR)/testmidi-testmidi.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testmidi.c' object='testmidi-testmidi.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testmidi_CFLAGS) $(CFLAGS) -c -o testmidi-testmidi.o `test -f 'testmidi.c' || echo '$(srcdir)/'`testmidi.c
+
+testmidi-testmidi.obj: testmidi.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testmidi_CFLAGS) $(CFLAGS) -MT testmidi-testmidi.obj -MD -MP -MF $(DEPDIR)/testmidi-testmidi.Tpo -c -o testmidi-testmidi.obj `if test -f 'testmidi.c'; then $(CYGPATH_W) 'testmidi.c'; else $(CYGPATH_W) '$(srcdir)/testmidi.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testmidi-testmidi.Tpo $(DEPDIR)/testmidi-testmidi.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testmidi.c' object='testmidi-testmidi.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testmidi_CFLAGS) $(CFLAGS) -c -o testmidi-testmidi.obj `if test -f 'testmidi.c'; then $(CYGPATH_W) 'testmidi.c'; else $(CYGPATH_W) '$(srcdir)/testmidi.c'; fi`
 
 testoss-testoss.o: testoss.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testoss_CFLAGS) $(CFLAGS) -MT testoss-testoss.o -MD -MP -MF $(DEPDIR)/testoss-testoss.Tpo -c -o testoss-testoss.o `test -f 'testoss.c' || echo '$(srcdir)/'`testoss.c
@@ -1313,6 +1353,13 @@ testjack.log: testjack$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+testmidi.log: testmidi$(EXEEXT)
+	@p='testmidi$(EXEEXT)'; \
+	b='testmidi'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 testoss.log: testoss$(EXEEXT)
 	@p='testoss$(EXEEXT)'; \
 	b='testoss'; \
@@ -1446,6 +1493,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/testfile-testfile.Po
 	-rm -f ./$(DEPDIR)/testgst-testgst.Po
 	-rm -f ./$(DEPDIR)/testjack-testjack.Po
+	-rm -f ./$(DEPDIR)/testmidi-testmidi.Po
 	-rm -f ./$(DEPDIR)/testoss-testoss.Po
 	-rm -f ./$(DEPDIR)/testport-testport.Po
 	-rm -f ./$(DEPDIR)/testpuls-testpuls.Po
@@ -1504,6 +1552,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/testfile-testfile.Po
 	-rm -f ./$(DEPDIR)/testgst-testgst.Po
 	-rm -f ./$(DEPDIR)/testjack-testjack.Po
+	-rm -f ./$(DEPDIR)/testmidi-testmidi.Po
 	-rm -f ./$(DEPDIR)/testoss-testoss.Po
 	-rm -f ./$(DEPDIR)/testport-testport.Po
 	-rm -f ./$(DEPDIR)/testpuls-testpuls.Po

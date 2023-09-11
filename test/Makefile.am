@@ -94,6 +94,16 @@ testjack_CFLAGS = $(COMMON_CFLAGS)
 testjack_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_jck.o
 endif
 
+if MIDI
+TESTS += testmidi
+check_PROGRAMS += testmidi
+
+testmidi_SOURCES = testmidi.c
+testmidi_CFLAGS = $(COMMON_CFLAGS)
+testmidi_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_mid.o \
+	$(top_builddir)/src/midifile.o $(top_builddir)/src/iparsers.c
+endif
+
 if OSS
 TESTS += testoss
 check_PROGRAMS += testoss

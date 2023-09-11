@@ -39,7 +39,7 @@
 #   undef ENABLE_NLS
 #   define HAVE_BASENAME		1
 #   define HAVE_CLOSE			1
-#   undef HAVE_DECL_KIOCSOUND		1
+#   undef HAVE_DECL_KIOCSOUND
 #   define HAVE_ERRNO_H			1
 #   define HAVE_FCNTL_H			1
 #   undef HAVE_FSEEKO

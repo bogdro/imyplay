@@ -152,13 +152,23 @@ START_TEST(test_file_init_close_dev_null_fn_notnull)
 {
 	imyp_backend_data_t * data;
 	int res;
+	FILE * f;
 
 	printf ("test_file_init_close_dev_null_fn_notnull\n");
 	res = imyp_file_init (&data, NULL, "file.out");
 	ck_assert_int_eq (res, 0);
 	res = imyp_file_close (data);
 	ck_assert_int_eq (res, 0);
-	unlink ("file.out.raw");
+	f = fopen ("file.out.raw", "r");
+	if ( f != NULL )
+	{
+		fclose (f);
+		unlink ("file.out.raw");
+	}
+	else
+	{
+		ck_assert (f != NULL);
+	}
 }
 END_TEST
 
@@ -166,13 +176,23 @@ START_TEST(test_file_init_close_rev_dev)
 {
 	imyp_backend_data_t * data;
 	int res;
+	FILE * f;
 
 	printf ("test_file_init_close_rev_dev\n");
 	res = imyp_file_init (&data, "s16le:44100", "filename");
 	ck_assert_int_eq (res, 0);
 	res = imyp_file_close (data);
 	ck_assert_int_eq (res, 0);
-	unlink ("filename.raw");
+	f = fopen ("filename.raw", "r");
+	if ( f != NULL )
+	{
+		fclose (f);
+		unlink ("filename.raw");
+	}
+	else
+	{
+		ck_assert (f != NULL);
+	}
 }
 END_TEST
 
@@ -180,13 +200,23 @@ START_TEST(test_file_init_close)
 {
 	imyp_backend_data_t * data;
 	int res;
+	FILE * f;
 
 	printf ("test_file_init_close\n");
 	res = imyp_file_init (&data, "44100:s16le", "filename");
 	ck_assert_int_eq (res, 0);
 	res = imyp_file_close (data);
 	ck_assert_int_eq (res, 0);
-	unlink ("filename.raw");
+	f = fopen ("filename.raw", "r");
+	if ( f != NULL )
+	{
+		fclose (f);
+		unlink ("filename.raw");
+	}
+	else
+	{
+		ck_assert (f != NULL);
+	}
 }
 END_TEST
 

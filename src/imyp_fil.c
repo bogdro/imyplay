@@ -226,6 +226,7 @@ imyp_file_init (
 	const char * const file_out;
 #endif
 {
+	char * format;
 	char * colon;
 	int scanf_res;
 	char * filename;
@@ -269,7 +270,8 @@ imyp_file_init (
 	data->format = IMYP_SAMPLE_FORMAT_S16LE;
 	if ( dev != NULL )
 	{
-		colon = strrchr (dev, ':');
+		format = IMYP_STRDUP (dev);
+		colon = strrchr (format, ':');
 		if ( colon != NULL )
 		{
 			data->format = imyp_get_format (colon+1);
@@ -281,7 +283,7 @@ imyp_file_init (
 			*colon = '\0';
 		}
 		/* get the sampling rate: */
-		scanf_res = sscanf (dev, "%d", &(data->samp_rate));
+		scanf_res = sscanf (format, "%d", &(data->samp_rate));
 		if ( scanf_res == 1 )
 		{
 			if ( data->samp_rate <= 0 )

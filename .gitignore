@@ -24,5 +24,19 @@ po/POTFILES
 po/Makefile.in
 
 utiltest
+testalle
+testalsa
+testao
+testexec
+testfile
+testgst
+testjack
+testmidi
+testoss
+testport
+testpuls
+testsdl
+testspk
+
 *.log
 *.trs

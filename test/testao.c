@@ -64,7 +64,7 @@ END_TEST
 START_TEST(test_ao_put_text_nonnull)
 {
 	printf ("test_ao_put_text_nonnull\n");
-	imyp_ao_put_text (NULL, "imyp_ao_put_text works");
+	imyp_ao_put_text (NULL, "imyp_ao_put_text works\n");
 }
 END_TEST
 

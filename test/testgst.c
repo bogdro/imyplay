@@ -66,7 +66,7 @@ END_TEST
 START_TEST(test_gst_put_text_nonnull)
 {
 	printf ("test_gst_put_text_nonnull\n");
-	imyp_gst_put_text (NULL, "imyp_gst_put_text works");
+	imyp_gst_put_text (NULL, "imyp_gst_put_text works\n");
 }
 END_TEST
 

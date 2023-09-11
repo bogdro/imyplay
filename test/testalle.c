@@ -64,7 +64,7 @@ END_TEST
 START_TEST(test_allegro_put_text_nonnull)
 {
 	printf ("test_allegro_put_text_nonnull\n");
-	imyp_all_put_text (NULL, "imyp_all_put_text works");
+	imyp_all_put_text (NULL, "imyp_all_put_text works\n");
 }
 END_TEST
 

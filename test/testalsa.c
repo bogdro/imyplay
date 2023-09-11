@@ -64,7 +64,7 @@ END_TEST
 START_TEST(test_alsa_put_text_nonnull)
 {
 	printf ("test_alsa_put_text_nonnull\n");
-	imyp_alsa_put_text (NULL, "imyp_alsa_put_text works");
+	imyp_alsa_put_text (NULL, "imyp_alsa_put_text works\n");
 }
 END_TEST
 

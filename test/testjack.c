@@ -64,7 +64,7 @@ END_TEST
 START_TEST(test_jack_put_text_nonnull)
 {
 	printf ("test_jack_put_text_nonnull\n");
-	imyp_jack_put_text (NULL, "imyp_jack_put_text works");
+	imyp_jack_put_text (NULL, "imyp_jack_put_text works\n");
 }
 END_TEST
 

@@ -58,6 +58,15 @@ testao_CFLAGS = $(COMMON_CFLAGS)
 testao_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_ao.o
 endif
 
+if EXEC
+TESTS += testexec
+check_PROGRAMS += testexec
+
+testexec_SOURCES = testexec.c
+testexec_CFLAGS = $(COMMON_CFLAGS)
+testexec_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_exe.o
+endif
+
 if GSTREAMER
 TESTS += testgst
 check_PROGRAMS += testgst

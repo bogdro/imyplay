@@ -194,8 +194,11 @@ imyp_midi_play_tune (
 			}
 		}
 	}
-	res = midiTrackAddNote (data->midi, 1 /* track */, midinote /*int iNote*/,
-		dur, vol, TRUE /*BOOL bAutoInc*/, TRUE /*BOOL bOverrideLength*/);
+	if ( data->midi != NULL )
+	{
+		res = midiTrackAddNote (data->midi, 1 /* track */, midinote /*int iNote*/,
+			dur, vol, TRUE /*BOOL bAutoInc*/, TRUE /*BOOL bOverrideLength*/);
+	}
 	if ( res == TRUE )
 	{
 		return 0;

@@ -114,14 +114,15 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_6) $(am__EXEEXT_7) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_8) $(am__EXEEXT_9) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_10) $(am__EXEEXT_11) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_12)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_12) $(am__EXEEXT_13)
 @IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1) $(am__EXEEXT_2) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_3) $(am__EXEEXT_4) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_5) $(am__EXEEXT_6) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_7) $(am__EXEEXT_8) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_9) $(am__EXEEXT_10) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_11) $(am__EXEEXT_12)
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_11) $(am__EXEEXT_12) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_13)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_1 = testalle
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_2 = testalle
 @ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_3 = testalsa
@@ -130,22 +131,24 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@@LIBAO_TRUE@am__append_6 = testao
 @EXEC_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_7 = testexec
 @EXEC_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_8 = testexec
-@GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_9 = testgst
-@GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_10 = testgst
-@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_11 = testjack
-@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_12 = testjack
-@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_13 = testoss
-@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_14 = testoss
-@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_15 = testport
-@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_16 = testport
-@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_17 = testpuls
-@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_18 = testpuls
-@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__append_19 = testsdl
-@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__append_20 = testsdl
-@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_21 = testsdl
-@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_22 = testsdl
-@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_23 = testspk
-@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_24 = testspk
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_9 = testfile
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_10 = testfile
+@GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_11 = testgst
+@GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_12 = testgst
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_13 = testjack
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__append_14 = testjack
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_15 = testoss
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__append_16 = testoss
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_17 = testport
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__append_18 = testport
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_19 = testpuls
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__append_20 = testpuls
+@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__append_21 = testsdl
+@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__append_22 = testsdl
+@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_23 = testsdl
+@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__append_24 = testsdl
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_25 = testspk
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__append_26 = testspk
 subdir = test
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cflag.m4 \
@@ -168,17 +171,18 @@ CONFIG_CLEAN_VPATH_FILES =
 @ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_2 = testalsa$(EXEEXT)
 @IMY_TESTS_ENABLED_TRUE@@LIBAO_TRUE@am__EXEEXT_3 = testao$(EXEEXT)
 @EXEC_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_4 = testexec$(EXEEXT)
-@GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_5 =  \
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_5 = testfile$(EXEEXT)
+@GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am__EXEEXT_6 =  \
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@	testgst$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__EXEEXT_6 = testjack$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__EXEEXT_7 = testoss$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__EXEEXT_8 =  \
+@IMY_TESTS_ENABLED_TRUE@@JACK_TRUE@am__EXEEXT_7 = testjack$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@OSS_TRUE@am__EXEEXT_8 = testoss$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@am__EXEEXT_9 =  \
 @IMY_TESTS_ENABLED_TRUE@@PORTAUDIO_TRUE@	testport$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__EXEEXT_9 =  \
+@IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@am__EXEEXT_10 =  \
 @IMY_TESTS_ENABLED_TRUE@@PULSEAUDIO_TRUE@	testpuls$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__EXEEXT_10 = testsdl$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__EXEEXT_11 = testsdl$(EXEEXT)
-@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__EXEEXT_12 = testspk$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@SDL2_TRUE@am__EXEEXT_11 = testsdl$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__EXEEXT_12 = testsdl$(EXEEXT)
+@IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__EXEEXT_13 = testspk$(EXEEXT)
 am__testalle_SOURCES_DIST = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalle_OBJECTS = testalle-testalle.$(OBJEXT)
 testalle_OBJECTS = $(am_testalle_OBJECTS)
@@ -213,6 +217,14 @@ testexec_OBJECTS = $(am_testexec_OBJECTS)
 @EXEC_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(am__DEPENDENCIES_1) \
 @EXEC_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyp_exe.o
 testexec_LINK = $(CCLD) $(testexec_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
+am__testfile_SOURCES_DIST = testfile.c
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testfile_OBJECTS = testfile-testfile.$(OBJEXT)
+testfile_OBJECTS = $(am_testfile_OBJECTS)
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@testfile_DEPENDENCIES =  \
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(am__DEPENDENCIES_1) \
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyp_fil.o
+testfile_LINK = $(CCLD) $(testfile_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 am__testgst_SOURCES_DIST = testgst.c
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testgst_OBJECTS = testgst-testgst.$(OBJEXT)
@@ -300,6 +312,7 @@ am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/testalle-testalle.Po \
 	./$(DEPDIR)/testalsa-testalsa.Po ./$(DEPDIR)/testao-testao.Po \
 	./$(DEPDIR)/testexec-testexec.Po \
+	./$(DEPDIR)/testfile-testfile.Po \
 	./$(DEPDIR)/testgst-testgst.Po \
 	./$(DEPDIR)/testjack-testjack.Po \
 	./$(DEPDIR)/testoss-testoss.Po \
@@ -325,16 +338,17 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(testalle_SOURCES) $(testalsa_SOURCES) $(testao_SOURCES) \
-	$(testexec_SOURCES) $(testgst_SOURCES) $(testjack_SOURCES) \
-	$(testoss_SOURCES) $(testport_SOURCES) $(testpuls_SOURCES) \
-	$(testsdl_SOURCES) $(testspk_SOURCES) $(utiltest_SOURCES)
+	$(testexec_SOURCES) $(testfile_SOURCES) $(testgst_SOURCES) \
+	$(testjack_SOURCES) $(testoss_SOURCES) $(testport_SOURCES) \
+	$(testpuls_SOURCES) $(testsdl_SOURCES) $(testspk_SOURCES) \
+	$(utiltest_SOURCES)
 DIST_SOURCES = $(am__testalle_SOURCES_DIST) \
 	$(am__testalsa_SOURCES_DIST) $(am__testao_SOURCES_DIST) \
-	$(am__testexec_SOURCES_DIST) $(am__testgst_SOURCES_DIST) \
-	$(am__testjack_SOURCES_DIST) $(am__testoss_SOURCES_DIST) \
-	$(am__testport_SOURCES_DIST) $(am__testpuls_SOURCES_DIST) \
-	$(am__testsdl_SOURCES_DIST) $(am__testspk_SOURCES_DIST) \
-	$(am__utiltest_SOURCES_DIST)
+	$(am__testexec_SOURCES_DIST) $(am__testfile_SOURCES_DIST) \
+	$(am__testgst_SOURCES_DIST) $(am__testjack_SOURCES_DIST) \
+	$(am__testoss_SOURCES_DIST) $(am__testport_SOURCES_DIST) \
+	$(am__testpuls_SOURCES_DIST) $(am__testsdl_SOURCES_DIST) \
+	$(am__testspk_SOURCES_DIST) $(am__utiltest_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -712,6 +726,9 @@ top_srcdir = @top_srcdir@
 @EXEC_TRUE@@IMY_TESTS_ENABLED_TRUE@testexec_SOURCES = testexec.c
 @EXEC_TRUE@@IMY_TESTS_ENABLED_TRUE@testexec_CFLAGS = $(COMMON_CFLAGS)
 @EXEC_TRUE@@IMY_TESTS_ENABLED_TRUE@testexec_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_exe.o
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@testfile_SOURCES = testfile.c
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@testfile_CFLAGS = $(COMMON_CFLAGS)
+@FILE_TRUE@@IMY_TESTS_ENABLED_TRUE@testfile_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_fil.o
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@testgst_SOURCES = testgst.c
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@testgst_CFLAGS = $(COMMON_CFLAGS)
 @GSTREAMER_TRUE@@IMY_TESTS_ENABLED_TRUE@testgst_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_gst.o
@@ -789,6 +806,10 @@ testexec$(EXEEXT): $(testexec_OBJECTS) $(testexec_DEPENDENCIES) $(EXTRA_testexec
 	@rm -f testexec$(EXEEXT)
 	$(AM_V_CCLD)$(testexec_LINK) $(testexec_OBJECTS) $(testexec_LDADD) $(LIBS)
 
+testfile$(EXEEXT): $(testfile_OBJECTS) $(testfile_DEPENDENCIES) $(EXTRA_testfile_DEPENDENCIES) 
+	@rm -f testfile$(EXEEXT)
+	$(AM_V_CCLD)$(testfile_LINK) $(testfile_OBJECTS) $(testfile_LDADD) $(LIBS)
+
 testgst$(EXEEXT): $(testgst_OBJECTS) $(testgst_DEPENDENCIES) $(EXTRA_testgst_DEPENDENCIES) 
 	@rm -f testgst$(EXEEXT)
 	$(AM_V_CCLD)$(testgst_LINK) $(testgst_OBJECTS) $(testgst_LDADD) $(LIBS)
@@ -831,6 +852,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testalsa-testalsa.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testao-testao.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testexec-testexec.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testfile-testfile.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testgst-testgst.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testjack-testjack.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testoss-testoss.Po@am__quote@ # am--include-marker
@@ -915,6 +937,20 @@ testexec-testexec.obj: testexec.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testexec.c' object='testexec-testexec.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testexec_CFLAGS) $(CFLAGS) -c -o testexec-testexec.obj `if test -f 'testexec.c'; then $(CYGPATH_W) 'testexec.c'; else $(CYGPATH_W) '$(srcdir)/testexec.c'; fi`
+
+testfile-testfile.o: testfile.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testfile_CFLAGS) $(CFLAGS) -MT testfile-testfile.o -MD -MP -MF $(DEPDIR)/testfile-testfile.Tpo -c -o testfile-testfile.o `test -f 'testfile.c' || echo '$(srcdir)/'`testfile.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testfile-testfile.Tpo $(DEPDIR)/testfile-testfile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testfile.c' object='testfile-testfile.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testfile_CFLAGS) $(CFLAGS) -c -o testfile-testfile.o `test -f 'testfile.c' || echo '$(srcdir)/'`testfile.c
+
+testfile-testfile.obj: testfile.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testfile_CFLAGS) $(CFLAGS) -MT testfile-testfile.obj -MD -MP -MF $(DEPDIR)/testfile-testfile.Tpo -c -o testfile-testfile.obj `if test -f 'testfile.c'; then $(CYGPATH_W) 'testfile.c'; else $(CYGPATH_W) '$(srcdir)/testfile.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/testfile-testfile.Tpo $(DEPDIR)/testfile-testfile.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='testfile.c' object='testfile-testfile.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testfile_CFLAGS) $(CFLAGS) -c -o testfile-testfile.obj `if test -f 'testfile.c'; then $(CYGPATH_W) 'testfile.c'; else $(CYGPATH_W) '$(srcdir)/testfile.c'; fi`
 
 testgst-testgst.o: testgst.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testgst_CFLAGS) $(CFLAGS) -MT testgst-testgst.o -MD -MP -MF $(DEPDIR)/testgst-testgst.Tpo -c -o testgst-testgst.o `test -f 'testgst.c' || echo '$(srcdir)/'`testgst.c
@@ -1256,6 +1292,13 @@ testexec.log: testexec$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+testfile.log: testfile$(EXEEXT)
+	@p='testfile$(EXEEXT)'; \
+	b='testfile'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 testgst.log: testgst$(EXEEXT)
 	@p='testgst$(EXEEXT)'; \
 	b='testgst'; \
@@ -1400,6 +1443,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/testalsa-testalsa.Po
 	-rm -f ./$(DEPDIR)/testao-testao.Po
 	-rm -f ./$(DEPDIR)/testexec-testexec.Po
+	-rm -f ./$(DEPDIR)/testfile-testfile.Po
 	-rm -f ./$(DEPDIR)/testgst-testgst.Po
 	-rm -f ./$(DEPDIR)/testjack-testjack.Po
 	-rm -f ./$(DEPDIR)/testoss-testoss.Po
@@ -1457,6 +1501,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/testalsa-testalsa.Po
 	-rm -f ./$(DEPDIR)/testao-testao.Po
 	-rm -f ./$(DEPDIR)/testexec-testexec.Po
+	-rm -f ./$(DEPDIR)/testfile-testfile.Po
 	-rm -f ./$(DEPDIR)/testgst-testgst.Po
 	-rm -f ./$(DEPDIR)/testjack-testjack.Po
 	-rm -f ./$(DEPDIR)/testoss-testoss.Po

@@ -1,8 +1,8 @@
 /*
  * IMYplay - A program for playing iMelody ringtones (IMY files).
- *	-- unit test for the imyp_ao.c file.
+ *	-- unit test for the imyp_gst.c file.
  *
- * Copyright (C) 2018-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+ * Copyright (C) 2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -145,7 +145,7 @@ END_TEST
 
 static Suite * imy_create_suite(void)
 {
-	Suite * s = suite_create("imyplay_ao");
+	Suite * s = suite_create("imyplay_gst");
 
 	TCase * tc_pause = tcase_create("pause");
 	TCase * tc_put_text = tcase_create("put_text");

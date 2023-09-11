@@ -83,6 +83,7 @@ END_TEST
 
 START_TEST(test_portaudio_play_duration_zero)
 {
+	/* PortAudio needs SOME kind of initialization not to crash: */
 	union d
 	{
 		imyp_backend_data_t data;
@@ -99,6 +100,7 @@ END_TEST
 
 START_TEST(test_portaudio_play_bufsize_zero)
 {
+	/* PortAudio needs SOME kind of initialization not to crash: */
 	union d
 	{
 		imyp_backend_data_t data;
@@ -115,6 +117,7 @@ END_TEST
 
 START_TEST(test_portaudio_play_buf_null)
 {
+	/* PortAudio needs SOME kind of initialization not to crash: */
 	union d
 	{
 		imyp_backend_data_t data;

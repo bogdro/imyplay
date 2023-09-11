@@ -1,6 +1,6 @@
 /*
  * IMYplay - A program for playing iMelody ringtones (IMY files).
- *	-- unit test for the imyp_ao.c file.
+ *	-- unit test for the imyp_exe.c file.
  *
  * Copyright (C) 2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+

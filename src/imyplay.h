@@ -263,7 +263,8 @@ is defined, then the FILE backend has been enabled on the command line.
 # endif
 
 # if (defined HAVE_IOCTL) && (defined HAVE_SYS_KD_H)		\
- && (defined HAVE_SYS_IOCTL_H) && (defined HAVE_FCNTL_H) && (defined HAVE_UNISTD_H)	\
+ && (defined HAVE_DECL_KIOCSOUND) && (defined HAVE_SYS_IOCTL_H)				\
+ && (defined HAVE_FCNTL_H) && (defined HAVE_UNISTD_H)					\
  && (defined HAVE_OPEN) && (defined HAVE_CLOSE) && (defined HAVE_SELECT)		\
  && ((defined HAVE_SYS_SELECT_H) || (((defined TIME_WITH_SYS_TIME)			\
 	|| (defined HAVE_SYS_TIME_H) || (defined HAVE_TIME_H))				\

@@ -711,7 +711,7 @@ AM_CONDITIONAL(GSTREAMER, [test "x$feat_GST" = "xyes" && test "x$libgstreamer" =
 AM_CONDITIONAL(FILE, [test "x$feat_FILE" = "xyes" && test "x$have_fwrite" = "xyes"])
 
 AM_CONDITIONAL(SPKR, [test "x$feat_SPKR" = "xyes" && test "x$have_ioctl" = "xyes"		\
-	&& test "x$have_sys_kd_h" = "xyes"	\
+	&& test "x$have_sys_kd_h" = "xyes" && test "x$have_kiocsound" = "xyes"			\
 	&& test "x$have_sys_ioctl_h" = "xyes" && test "x$have_fcntl_h" = "xyes"			\
 	&& test "x$have_unistd_h" = "xyes" && test "x$have_open" = "xyes"			\
 	&& test "x$have_close" = "xyes"	&& test "x$have_select" = "xyes" 			\

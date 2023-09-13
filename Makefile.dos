@@ -81,7 +81,7 @@ DIST_EXT = .zip
 
 all:	$(PROGNAME)$(EXE_EXT)
 
-$(PROGNAME)$(EXE_EXT): src/imyp_cfg.hin src/*.c src/*.h src/imypdos.asm Makefile.dos
+$(PROGNAME)$(EXE_EXT): src/imyp_cfg.hin src/*.c src/*.h src/imyparsf.l src/imypdos.asm Makefile.dos
 	$(SED) 's/[@]VERSION[@]/$(VER_STRING_CODE)/' src\imyp_cfg.hin > src\imyp_cfg.h
 	$(NASM) $(NASM_OPTS) -o src\imypdos.obj src\imypdos.asm
 ifeq ($(FLEX),1)

@@ -305,6 +305,12 @@ to
 Then, run @samp{make -f Makefile.dos}. If you don't have a @command{make} utility, you can
 run the @command{dosdist.bat} file.
 
+If you want to override the default C compiler, run
+@samp{make -f Makefile.dos CC=your-compiler}.
+
+If you want to override the default C compiler flags, run
+@samp{make -f Makefile.dos CC_OPTS=your-compiler-flags}.
+
 If you prefer the flex-based parser, install the @command{flex} utility (from
 @url{https://github.com/westes/flex}) and run @samp{make -f Makefile.dos FLEX=1}.
 

@@ -115,6 +115,12 @@ to
 Then, run "make -f Makefile.dos". If you don't have a 'make' utility, you can
 run the "dosdist.bat" file.
 
+If you want to override the default C compiler, run
+"make -f Makefile.dos CC=your-compiler".
+
+If you want to override the default C compiler flags, run
+"make -f Makefile.dos CC_OPTS=your-compiler-flags".
+
 If you prefer the flex-based parser, install the "flex" utility (from
 https://github.com/westes/flex) and run "make -f Makefile.dos FLEX=1".
 

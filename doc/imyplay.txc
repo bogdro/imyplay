@@ -302,8 +302,11 @@ to
 
 	@code{#include "syslimit.h"}
 
-The run @samp{make -f Makefile.dos}. If you don't have a @command{make} utility, you can
+Then, run @samp{make -f Makefile.dos}. If you don't have a @command{make} utility, you can
 run the @command{dosdist.bat} file.
+
+If you prefer the flex-based parser, install the @command{flex} utility (from
+@url{https://github.com/westes/flex}) and run @samp{make -f Makefile.dos FLEX=1}.
 
 If you prefer to compile manually (like when you don't have all of the
 required utilities, then go to the @file{src} directory. Change @var{VERSION} with

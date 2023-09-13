@@ -169,8 +169,11 @@ to
 
 	#include "syslimit.h"
 
-The run "make -f Makefile.dos". If you don't have a 'make' utility, you can
+Then, run "make -f Makefile.dos". If you don't have a 'make' utility, you can
 run the "dosdist.bat" file.
+
+If you prefer the flex-based parser, install the "flex" utility (from
+https://github.com/westes/flex) and run "make -f Makefile.dos FLEX=1".
 
 If you prefer to compile manually (like when you don't have all of the
  required utilities), then go to the src directory. Change @VERSION@ to

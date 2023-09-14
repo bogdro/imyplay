@@ -83,12 +83,17 @@ END_TEST
 
 START_TEST(test_exec_play_duration_zero)
 {
-	imyp_backend_data_t data;
+	union d
+	{
+		imyp_backend_data_t data;
+		char a[2 * IMYP_MAX_PROG_LEN];
+	} dt;
 	char buf[1];
 	int res;
 
 	printf ("test_exec_play_duration_zero\n");
-	res = imyp_exec_play_tune (&data, 1000, 7, 0, buf, 1);
+	memset (dt.a, 0, sizeof (dt.a));
+	res = imyp_exec_play_tune ((imyp_backend_data_t *)&dt, 1000, 7, 0, buf, 1);
 	ck_assert_int_eq (res, 0);
 }
 END_TEST

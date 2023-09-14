@@ -83,13 +83,18 @@ END_TEST
 
 START_TEST(test_oss_play_duration_zero)
 {
-	imyp_backend_data_t data;
-	char buf[1];
+	union d
+	{
+		imyp_backend_data_t data;
+		char a[100];
+	} dt;
+	char buf[1] = {0};
 	int res;
 
 	printf ("test_oss_play_duration_zero\n");
-	res = imyp_oss_play_tune (&data, 1000, 7, 0, buf, 1);
-	ck_assert_int_ne (res, 0);
+	memset (dt.a, 0, 100);
+	res = imyp_oss_play_tune ((imyp_backend_data_t *)&dt, 1000, 7, 0, buf, 1);
+	ck_assert_int_eq (res, 0);
 }
 END_TEST
 

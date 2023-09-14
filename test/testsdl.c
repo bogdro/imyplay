@@ -133,13 +133,39 @@ START_TEST(test_sdl_init_close_fn_null)
 }
 END_TEST
 
+START_TEST(test_sdl_init_close_rev_dev)
+{
+	imyp_backend_data_t * data;
+	int res;
+
+	printf ("test_sdlinit_close_rev_dev\n");
+	res = imyp_sdl_init (&data, "s16le:44100");
+	ck_assert_int_eq (res, 0);
+	res = imyp_sdl_close (data);
+	ck_assert_int_eq (res, 0);
+}
+END_TEST
+
+START_TEST(test_sdl_init_close_invalid)
+{
+	imyp_backend_data_t * data;
+	int res;
+
+	printf ("test_sdl_init_close_invalid\n");
+	res = imyp_sdl_init (&data, "filename");
+	ck_assert_int_eq (res, 0);
+	res = imyp_sdl_close (data);
+	ck_assert_int_eq (res, 0);
+}
+END_TEST
+
 START_TEST(test_sdl_init_close)
 {
 	imyp_backend_data_t * data;
 	int res;
 
-	printf ("test_sdl_init_close\n");
-	res = imyp_sdl_init (&data, "filename");
+	printf ("test_sdlinit_close_rev_dev\n");
+	res = imyp_sdl_init (&data, "44100:s16le");
 	ck_assert_int_eq (res, 0);
 	res = imyp_sdl_close (data);
 	ck_assert_int_eq (res, 0);
@@ -185,6 +211,8 @@ static Suite * imy_create_suite(void)
 	tcase_add_test (tc_play, test_sdl_play_bufsize_zero);
 	tcase_add_test (tc_play, test_sdl_play_buf_null);
 	tcase_add_test (tc_init_close, test_sdl_init_close_fn_null);
+	tcase_add_test (tc_init_close, test_sdl_init_close_rev_dev);
+	tcase_add_test (tc_init_close, test_sdl_init_close_invalid);
 	tcase_add_test (tc_init_close, test_sdl_init_close);
 	tcase_add_test (tc_version, test_sdl_ver_nonnull);
 	tcase_add_test (tc_version, test_sdl_ver_null);

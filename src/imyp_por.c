@@ -329,9 +329,11 @@ imyp_portaudio_init (
 {
 	struct imyp_portaudio_backend_data * data;
 	enum IMYP_SAMPLE_FORMATS format;
+	char * dev_copy;
 	char * colon;
 	int scanf_res;
-	size_t i, j;
+	size_t i;
+	size_t j;
 	const PaSampleFormat formats[] = {paInt16, paInt8, paUInt8};
 	/* the lowest sampling frequency seems to work best. */
 	const double samp_freqs[] = {/*44100.0, 22050.0,*/ 11025.0};
@@ -369,40 +371,45 @@ imyp_portaudio_init (
 
 	if ( dev_file != NULL )
 	{
-		colon = strrchr (dev_file, (int)':');
-		if ( colon != NULL )
+		dev_copy = IMYP_STRDUP (dev_file);
+		if ( dev_copy != NULL )
 		{
-			format = imyp_get_format (colon+1);
-			if ( format == IMYP_SAMPLE_FORMAT_UNKNOWN )
+			colon = strrchr (dev_copy, (int)':');
+			if ( colon != NULL )
 			{
-				format = IMYP_SAMPLE_FORMAT_S16LE;
-			}
+				format = imyp_get_format (colon+1);
+				if ( format == IMYP_SAMPLE_FORMAT_UNKNOWN )
+				{
+					format = IMYP_SAMPLE_FORMAT_S16LE;
+				}
 
-			if ( (format == IMYP_SAMPLE_FORMAT_S8LE)
-				|| (format == IMYP_SAMPLE_FORMAT_S8BE) )
-			{
-				data->format = paInt8;
+				if ( (format == IMYP_SAMPLE_FORMAT_S8LE)
+					|| (format == IMYP_SAMPLE_FORMAT_S8BE) )
+				{
+					data->format = paInt8;
+				}
+				else if ( (format == IMYP_SAMPLE_FORMAT_U8LE)
+					|| (format == IMYP_SAMPLE_FORMAT_U8BE) )
+				{
+					data->format = paUInt8;
+				}
+				else
+				{
+					data->format = paInt16;
+				}
+				/* wipe the colon to read the sampling rate */
+				*colon = '\0';
 			}
-			else if ( (format == IMYP_SAMPLE_FORMAT_U8LE)
-				|| (format == IMYP_SAMPLE_FORMAT_U8BE) )
+			/* get the sampling rate: */
+			scanf_res = sscanf (dev_copy, "%lf", &(data->sampfreq));
+			if ( scanf_res == 1 )
 			{
-				data->format = paUInt8;
+				if ( data->sampfreq <= 0 )
+				{
+					data->sampfreq = 11025;
+				}
 			}
-			else
-			{
-				data->format = paInt16;
-			}
-			/* wipe the colon to read the sampling rate */
-			*colon = '\0';
-		}
-		/* get the sampling rate: */
-		scanf_res = sscanf (dev_file, "%lf", &(data->sampfreq));
-		if ( scanf_res == 1 )
-		{
-			if ( data->sampfreq <= 0 )
-			{
-				data->sampfreq = 11025;
-			}
+			free (dev_copy);
 		}
 	}
 

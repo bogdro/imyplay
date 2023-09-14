@@ -271,25 +271,29 @@ imyp_file_init (
 	if ( dev != NULL )
 	{
 		format = IMYP_STRDUP (dev);
-		colon = strrchr (format, ':');
-		if ( colon != NULL )
+		if ( format != NULL )
 		{
-			data->format = imyp_get_format (colon+1);
-			if ( data->format == IMYP_SAMPLE_FORMAT_UNKNOWN )
+			colon = strrchr (format, ':');
+			if ( colon != NULL )
 			{
-				data->format = IMYP_SAMPLE_FORMAT_S16LE;
+				data->format = imyp_get_format (colon+1);
+				if ( data->format == IMYP_SAMPLE_FORMAT_UNKNOWN )
+				{
+					data->format = IMYP_SAMPLE_FORMAT_S16LE;
+				}
+				/* wipe the colon to read the sampling rate */
+				*colon = '\0';
 			}
-			/* wipe the colon to read the sampling rate */
-			*colon = '\0';
-		}
-		/* get the sampling rate: */
-		scanf_res = sscanf (format, "%d", &(data->samp_rate));
-		if ( scanf_res == 1 )
-		{
-			if ( data->samp_rate <= 0 )
+			/* get the sampling rate: */
+			scanf_res = sscanf (format, "%d", &(data->samp_rate));
+			if ( scanf_res == 1 )
 			{
-				data->samp_rate = 44100;
+				if ( data->samp_rate <= 0 )
+				{
+					data->samp_rate = 44100;
+				}
 			}
+			free (format);
 		}
 	}
 	*imyp_data = (imyp_backend_data_t *)data;

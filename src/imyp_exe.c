@@ -66,8 +66,6 @@
 # define WIFSIGNALED(status) (((signed char) (((status) & 0x7f) + 1) >> 1) > 0)
 #endif
 
-#define IMYP_MAX_PROG_LEN 4097
-
 struct imyp_exec_backend_data
 {
 	char exename[IMYP_MAX_PROG_LEN];

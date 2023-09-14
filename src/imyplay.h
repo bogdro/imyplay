@@ -42,6 +42,7 @@
 # define IMYP_MAX_IMY_VOLUME 15
 # define IMYP_MAX(a,b) ( ( (a) > (b) )? (a) : (b) )
 # define IMYP_MIN(a,b) ( ( (a) < (b) )? (a) : (b) )
+# define IMYP_MAX_PROG_LEN 4097
 
 # ifdef HAVE_SYS_TYPES_H
 #  include <sys/types.h>

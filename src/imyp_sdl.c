@@ -341,6 +341,7 @@ imyp_sdl_init (
 		NULL /* userdata */
 	};
 	enum IMYP_SAMPLE_FORMATS format;
+	char * dev_copy;
 	char * colon;
 	int scanf_res;
 
@@ -373,58 +374,63 @@ imyp_sdl_init (
 
 	if ( dev_file != NULL )
 	{
-		colon = strrchr (dev_file, (int)':');
-		if ( colon != NULL )
+		dev_copy = IMYP_STRDUP (dev_file);
+		if ( dev_copy != NULL )
 		{
-			format = imyp_get_format (colon+1);
-			if ( format == IMYP_SAMPLE_FORMAT_UNKNOWN )
+			colon = strrchr (dev_copy, (int)':');
+			if ( colon != NULL )
 			{
-				format = IMYP_SAMPLE_FORMAT_S16LE;
-			}
+				format = imyp_get_format (colon+1);
+				if ( format == IMYP_SAMPLE_FORMAT_UNKNOWN )
+				{
+					format = IMYP_SAMPLE_FORMAT_S16LE;
+				}
 
-			if ( format == IMYP_SAMPLE_FORMAT_S8LE )
-			{
-				desired.format = AUDIO_S8;
+				if ( format == IMYP_SAMPLE_FORMAT_S8LE )
+				{
+					desired.format = AUDIO_S8;
+				}
+				else if ( format == IMYP_SAMPLE_FORMAT_S8BE )
+				{
+					desired.format = AUDIO_S8;
+				}
+				else if ( format == IMYP_SAMPLE_FORMAT_U8LE )
+				{
+					desired.format = AUDIO_U8;
+				}
+				else if ( format == IMYP_SAMPLE_FORMAT_U8BE )
+				{
+					desired.format = AUDIO_U8;
+				}
+				else if ( format == IMYP_SAMPLE_FORMAT_S16LE )
+				{
+					desired.format = AUDIO_S16LSB;
+				}
+				else if ( format == IMYP_SAMPLE_FORMAT_S16BE )
+				{
+					desired.format = AUDIO_S16MSB;
+				}
+				else if ( format == IMYP_SAMPLE_FORMAT_U16LE )
+				{
+					desired.format = AUDIO_U16LSB;
+				}
+				else if ( format == IMYP_SAMPLE_FORMAT_U16BE )
+				{
+					desired.format = AUDIO_U16MSB;
+				}
+				/* wipe the colon to read the sampling rate */
+				*colon = '\0';
 			}
-			else if ( format == IMYP_SAMPLE_FORMAT_S8BE )
+			/* get the sampling rate: */
+			scanf_res = sscanf (dev_copy, "%d", &(desired.freq));
+			if ( scanf_res == 1 )
 			{
-				desired.format = AUDIO_S8;
+				if ( desired.freq <= 0 )
+				{
+					desired.freq = 44100;
+				}
 			}
-			else if ( format == IMYP_SAMPLE_FORMAT_U8LE )
-			{
-				desired.format = AUDIO_U8;
-			}
-			else if ( format == IMYP_SAMPLE_FORMAT_U8BE )
-			{
-				desired.format = AUDIO_U8;
-			}
-			else if ( format == IMYP_SAMPLE_FORMAT_S16LE )
-			{
-				desired.format = AUDIO_S16LSB;
-			}
-			else if ( format == IMYP_SAMPLE_FORMAT_S16BE )
-			{
-				desired.format = AUDIO_S16MSB;
-			}
-			else if ( format == IMYP_SAMPLE_FORMAT_U16LE )
-			{
-				desired.format = AUDIO_U16LSB;
-			}
-			else if ( format == IMYP_SAMPLE_FORMAT_U16BE )
-			{
-				desired.format = AUDIO_U16MSB;
-			}
-			/* wipe the colon to read the sampling rate */
-			*colon = '\0';
-		}
-		/* get the sampling rate: */
-		scanf_res = sscanf (dev_file, "%d", &(desired.freq));
-		if ( scanf_res == 1 )
-		{
-			if ( desired.freq <= 0 )
-			{
-				desired.freq = 44100;
-			}
+			free (dev_copy);
 		}
 	}
 

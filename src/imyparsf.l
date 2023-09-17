@@ -224,7 +224,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n", _(err_play_tune));
+			printf ("%s: %d\n", _(err_play_tune), *play_res);
 		}
 	}
 	else if ( (is_flat != 0) && (note_index != 0) )
@@ -235,7 +235,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n", _(err_play_tune));
+			printf ("%s: %d\n", _(err_play_tune), *play_res);
 		}
 	}
 	else if ( (is_sharp != 0) && (note_index == IMYP_NOTES_PER_OCTAVE-1)
@@ -247,7 +247,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n", _(err_play_tune));
+			printf ("%s: %d\n", _(err_play_tune), *play_res);
 		}
 	}
 	else if ( (is_sharp != 0) && (note_index != IMYP_NOTES_PER_OCTAVE-1) )
@@ -258,7 +258,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n", _(err_play_tune));
+			printf ("%s: %d\n", _(err_play_tune), *play_res);
 		}
 	}
 	else
@@ -271,7 +271,7 @@ imyp_play_current_note (
 			buf16, IMYP_SAMPBUFSIZE, curr_lib);
 		if ( (*play_res != 0) && (imyp_sig_recvd == 0) )
 		{
-			printf ("%s\n", _(err_play_tune));
+			printf ("%s: %d\n", _(err_play_tune), *play_res);
 		}
 	}
 	imyp_pause (imyp_get_rest_time (*duration, style), curr_lib, 1, buf16, IMYP_SAMPBUFSIZE);

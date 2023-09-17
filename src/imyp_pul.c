@@ -44,6 +44,10 @@
 # error PulseAudio requested, but components not found.
 #endif
 
+#ifdef HAVE_LIBINTL_H
+# include <libintl.h>	/* translation stuff */
+#endif
+
 #ifdef HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
@@ -298,20 +302,20 @@ imyp_pulse_version (
 #endif
 {
 #if (defined PA_MAJOR) && (defined PA_MINOR) && (defined PA_MICRO)
-	printf ( "PulseAudio (%s): %d.%d.%d\n", ver_msg_compiled,
+	printf ( "PulseAudio (%s): %d.%d.%d\n", _(ver_msg_compiled),
 		PA_MAJOR, PA_MINOR, PA_MICRO );
 #else
 # if (defined PA_MAJOR) && (defined PA_MINOR)
-	printf ( "PulseAudio (%s): %d.%d\n", ver_msg_compiled,
+	printf ( "PulseAudio (%s): %d.%d\n", _(ver_msg_compiled),
 		PA_MAJOR, PA_MINOR );
 # else
 #  if (defined PA_MAJOR)
-	printf ( "PulseAudio (%s): %d\n", ver_msg_compiled, PA_MAJOR );
+	printf ( "PulseAudio (%s): %d\n", _(ver_msg_compiled), PA_MAJOR );
 #  else
-	printf ( "PulseAudio (%s): ?\n", ver_msg_compiled);
+	printf ( "PulseAudio (%s): ?\n", _(ver_msg_compiled) );
 #  endif
 # endif
 #endif
-	printf ( "PulseAudio (%s): %s\n", ver_msg_runtime,
+	printf ( "PulseAudio (%s): %s\n", _(ver_msg_runtime),
 		pa_get_library_version() );
 }

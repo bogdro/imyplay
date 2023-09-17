@@ -306,6 +306,7 @@ main (
 #endif
 {
 	int ret = 0;
+	int init_res;
 #if ! ((defined HAVE_GETOPT_H) && (defined HAVE_GETOPT_LONG))
 	size_t i;
 #endif
@@ -620,7 +621,7 @@ main (
 				&& (sel != IMYP_CURR_FILE) )
 			{
 				/* try to initialize the given output system */
-				if ( imyp_init_selected (&current_library,
+				init_res = imyp_init_selected (&current_library,
 					output_system,
 					device,
 #ifdef IMYP_HAVE_MIDI
@@ -633,31 +634,36 @@ main (
 #else
 					NULL
 #endif
-					) != 0 )
+				);
+				if ( init_res != 0 )
 				{
-					printf ("%s\n", _(err_lib_init));
+					printf ("%s: %d\n", _(err_lib_init), init_res);
 					return -2;
 				}
 				/* initialized successfully - set the currently-used library */
 				current_library.imyp_curr_lib = sel;
 			}
 		}
-		else if ( imyp_lib_init (&current_library, 0, device, 0,
-#ifdef IMYP_HAVE_MIDI
-			midi_instrument,
-#else
-			0,
-#endif
-			0,
-#ifdef IMYP_HAVE_FILE
-			out_file
-#else
-			NULL
-#endif
-			) != 0 )
+		else
 		{
-			printf ("%s\n", _(err_lib_init));
-			return -2;
+			init_res = imyp_lib_init (&current_library, 0, device, 0,
+#ifdef IMYP_HAVE_MIDI
+				midi_instrument,
+#else
+				0,
+#endif
+				0,
+#ifdef IMYP_HAVE_FILE
+				out_file
+#else
+				NULL
+#endif
+			);
+			if ( init_res != 0 )
+			{
+				printf ("%s: %d\n", _(err_lib_init), init_res);
+				return -2;
+			}
 		}
 	}
 
@@ -679,10 +685,11 @@ main (
 #ifdef IMYP_HAVE_MIDI
 		if ( opt_tomidi == 1 )
 		{
-			if ( imyp_lib_init (&current_library, 1, argv[imyp_optind],
-				0, midi_instrument, 0, NULL) != 0 )
+			init_res = imyp_lib_init (&current_library, 1,
+				argv[imyp_optind], 0, midi_instrument, 0, NULL);
+			if ( init_res != 0 )
 			{
-				printf ("%s\n", _(err_lib_init));
+				printf ("%s: %d\n", _(err_lib_init), init_res);
 				imyp_optind++;
 				ret = -2;
 				continue;
@@ -703,10 +710,11 @@ main (
 #ifdef IMYP_HAVE_EXEC
 		if ( exec_program != NULL )
 		{
-			if ( imyp_lib_init (&current_library, 0, exec_program,
-				1, 0, 0, NULL) != 0 )
+			init_res = imyp_lib_init (&current_library, 0,
+				exec_program, 1, 0, 0, NULL);
+			if ( init_res != 0 )
 			{
-				printf ("%s\n", _(err_lib_init));
+				printf ("%s: %d\n", _(err_lib_init), init_res);
 				imyp_optind++;
 				ret = -2;
 				continue;
@@ -731,10 +739,11 @@ main (
 			{
 				out_file = argv[imyp_optind];
 			}
-			if ( imyp_lib_init (&current_library, 0, device,
-				0, 0, 1, out_file) != 0 )
+			init_res = imyp_lib_init (&current_library, 0,
+				device, 0, 0, 1, out_file);
+			if ( init_res != 0 )
 			{
-				printf ("%s\n", _(err_lib_init));
+				printf ("%s: %d\n", _(err_lib_init), init_res);
 				imyp_optind++;
 				ret = -2;
 				continue;

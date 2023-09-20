@@ -620,7 +620,7 @@ imyp_lib_init (
 	const char * const out_file IMYP_ONLY_IF_FILE;
 #endif
 {
-	int res = -1;
+	int res = -1111;
 	if ( curr == NULL )
 	{
 		return res;

@@ -93,7 +93,7 @@ static const char lic_str[] = N_(							\
 /* Error messages explaining the stage during which an error occurred. */
 const char * const err_msg                = N_("error");
 const char * const imyp_err_msg_signal    = N_("Error while trying to set a signal handler for");
-static const char * const err_lib_init    = N_("Error during library init.");
+static const char * const err_lib_init    = N_("Error during library init");
 #if (defined IMYP_HAVE_MIDI) || (defined IMYP_HAVE_EXEC)
 static const char * const err_lib_close   = N_("Error during library closing.");
 #endif

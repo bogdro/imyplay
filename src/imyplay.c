@@ -327,9 +327,9 @@ main (
 	libhideip_enable ();
 #endif
 
-	if ( (argc <= 1) || (argv == NULL) )
+	if ( (argc < 1) || (argv == NULL) )
 	{
-		print_help ("");
+		print_help ("imyplay");
 		return -1;
 	}
 

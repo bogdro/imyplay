@@ -1,0 +1,254 @@
+#
+# IMYplay - A program for playing iMelody ringtones (IMY files).
+# 	-- hand-made Makefile.in for the NSIS-based instlaler.
+#
+# @configure_input@
+#
+#  Copyright (C) 2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+#  License: GNU General Public License, v3+
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License
+#  as published by the Free Software Foundation; either version 3
+#  of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
+
+###########################################################################
+# General variables
+###########################################################################
+
+# core system utilities
+COPY		= /bin/cp -fr
+DEL		= /bin/rm -fr
+MOVE		= /bin/mv -f
+SHELL		= @SHELL@
+TOUCH		= touch
+UNIX2DOS	= unix2dos
+
+# www.perl.org
+PERL		= perl
+PERL_OPTS	= -e
+
+# Nullsoft Scriptable Install System (nsis.sf.net)
+NSIS		= makensis
+
+# Ultimate Packer for eXecutables (upx.sf.net)
+UPX		= upx
+
+# URL of a Timestamping Authority
+#TSAURL		= http://timestamp.comodoca.com
+#TSAURL		= http://timestamp.digicert.com
+#TSAURL		= http://tsa.izenpe.com/
+#TSAURL		= http://tsa.starfieldtech.com/
+#TSAURL		= http://timestamp.globalsign.com/scripts/timstamp.dll
+#TSAURL		= http://dse200.ncipher.com/TSS/HttpTspServer
+#TSAURL		= https://timestamp.geotrust.com/tsa
+TSAURL		= https://freetsa.org/tsr
+
+# osslsigncode-bogdro.sh is a wrapper around osslsigncode
+# (https://github.com/mtrojnar/osslsigncode) that provides the default
+# certificate. Osslsigncode allows digital signing of EXE files with
+# certificates.
+OSSLSIGNCODE	= osslsigncode-bogdro.sh
+
+# image converters: Inkscape (https://inkscape.org) and
+# ImageMagick (http://www.imagemagick.org/)
+SVG2PNG		= inkscape
+PNG2ICO		= convert
+
+# The cross-compiling host type
+CROSS_HOST	= i686-w64-mingw32
+CROSS_CC	= $(CROSS_HOST)-gcc
+# disable all pkg-config-based backends, otherwise they're marked as found
+# and fail to compile (because pkg-config finds the host's libraries):
+CROSS_CFG	= --host=$(CROSS_HOST) --enable-GSTREAMER=no
+
+###########################################################################
+# Internal variables
+###########################################################################
+
+NAME		= @PACKAGE_NAME@
+VER		= @VERSION@
+TOP_BUILDDIR	= @top_srcdir@
+
+# Options for osslsigncode - timestamp server, name, URL and the
+# hashing algorithm.
+# Even though osslsigncode supports other hashes, only MD5 and SHA-1 seem to
+# be compatible with WinXP.
+OSSLSIGNCODE_O  = -ts $(TSAURL) -n $(NAME) \
+	-i https://imyplay.sourceforge.io/ -h sha1
+
+# The current year, month and day of month used for formatting the dates.
+# Watch out for values < 10.
+YEAR       = $(shell $(PERL) $(PERL_OPTS) 'print 1900+((localtime)[5]);')
+MONTH      = $(shell $(PERL) $(PERL_OPTS) 'printf("%02d", (localtime)[4]+1);')
+DAYOFMONTH = $(shell $(PERL) $(PERL_OPTS) 'printf("%02d", (localtime)[3]);')
+
+ifeq ($(OLDSETUP),1)
+OLD_SETUP	= -DOLDSETUP=1
+else
+OLD_SETUP	=
+endif
+NSIS_OPT = -DVERSION=$(VER) -DYEAR=$(YEAR) -DMONTH=$(MONTH) \
+	-DDAYOFMONTH=$(DAYOFMONTH) $(OLD_SETUP)
+# -V4
+
+FILE_MANUAL_EN = $(TOP_BUILDDIR)/doc/imyplay.html/index.html
+
+FILE_INSTALLER = $(NAME)-$(VER)-setup.exe
+FILE_INSTALLER_SIGNED = $(NAME)-$(VER)-setup-signed.exe
+FILE_INSTALLER_CFG = imyplay.nsi
+
+FILE_PROGRAM = $(TOP_BUILDDIR)/src/imyplay.exe
+FILE_PROGRAM_SIGNED = $(TOP_BUILDDIR)/src/imyplay-signed.exe
+
+FILE_ANY_SOURCE_FILE = $(TOP_BUILDDIR)/src/imyplay.c
+
+###########################################################################
+# Targets
+###########################################################################
+
+all:	pack
+
+Makefile: Makefile.in
+	cd $(TOP_BUILDDIR) && ./config.status setup/Makefile
+
+###########################################################################
+# Distribution packages
+###########################################################################
+
+pack:	installer installer-signed installer-signed-clean \
+	installer-clean icons-clean
+
+###########################################################################
+# Manuals
+###########################################################################
+
+manual: $(FILE_MANUAL_EN)
+
+$(FILE_MANUAL_EN): $(TOP_BUILDDIR)/doc/imyplay.txc Makefile
+	$(MAKE) -C $(TOP_BUILDDIR)/doc html
+
+manual-clean:
+	$(DEL) $(TOP_BUILDDIR)/doc/imyplay.html
+
+###########################################################################
+# Application
+###########################################################################
+
+exe: exe-clean $(FILE_PROGRAM)
+
+$(FILE_PROGRAM): $(TOP_BUILDDIR)/src/*.c $(TOP_BUILDDIR)/src/*.h Makefile
+	cd $(TOP_BUILDDIR) && CC=$(CROSS_CC) ./configure $(CROSS_CFG)
+	$(MAKE) -C $(TOP_BUILDDIR)
+	$(TOUCH) $(FILE_PROGRAM)
+
+exe-clean:
+	$(MAKE) -C $(TOP_BUILDDIR)/src clean
+
+###########################################################################
+# Installer
+###########################################################################
+
+installer:	exe icons $(FILE_INSTALLER)
+
+$(FILE_INSTALLER):	$(FILE_INSTALLER_CFG) manual $(TOP_BUILDDIR)/AUTHORS \
+		$(TOP_BUILDDIR)/ChangeLog $(TOP_BUILDDIR)/INSTALL-imyplay.txt \
+		$(TOP_BUILDDIR)/COPYING $(TOP_BUILDDIR)/README \
+		$(TOP_BUILDDIR)/THANKS exe Makefile
+	$(COPY) $(TOP_BUILDDIR)/AUTHORS AUTHORS
+	$(COPY) $(TOP_BUILDDIR)/ChangeLog ChangeLog
+	$(COPY) $(TOP_BUILDDIR)/INSTALL-imyplay.txt INSTALL
+	$(COPY) $(TOP_BUILDDIR)/COPYING license.txt
+	$(COPY) $(TOP_BUILDDIR)/README README
+	$(COPY) $(TOP_BUILDDIR)/THANKS THANKS
+	$(UNIX2DOS) AUTHORS
+	$(UNIX2DOS) ChangeLog
+	$(UNIX2DOS) INSTALL
+	$(UNIX2DOS) license.txt
+	$(UNIX2DOS) README
+	$(UNIX2DOS) THANKS
+	$(NSIS) $(NSIS_OPT) $(FILE_INSTALLER_CFG)
+	#$(UPX) $(FILE_INSTALLER)
+	#$(DEL) $@-signed.exe
+	#$(OSSLSIGNCODE) $(OSSLSIGNCODE_O) -in $@ -out $@-signed.exe
+	#$(MOVE) $@-signed.exe $@
+	$(DEL) $(TOP_BUILDDIR)/$(FILE_INSTALLER)
+	$(MOVE) $@ $(TOP_BUILDDIR)
+
+installer-clean:
+	#$(DEL) $(TOP_BUILDDIR)/$(FILE_INSTALLER)
+	#$(DEL) $(FILE_PROGRAM)
+	$(DEL) AUTHORS
+	$(DEL) ChangeLog
+	$(DEL) INSTALL
+	$(DEL) license.txt
+	$(DEL) README
+	$(DEL) THANKS
+
+###########################################################################
+# Signed installer
+###########################################################################
+
+# The signed installer uses the signed EXEs, so touch the respective
+# source files after building, so that building the unsigned installer will
+# use the unsigned files again
+
+exe-signed: exe $(FILE_PROGRAM_SIGNED)
+
+$(FILE_PROGRAM_SIGNED): exe Makefile
+	$(OSSLSIGNCODE) $(OSSLSIGNCODE_O) -in $(FILE_PROGRAM) -out $@
+	$(MOVE) $@ $(FILE_PROGRAM)
+	$(TOUCH) $(FILE_ANY_SOURCE_FILE)
+
+installer-signed:	exe-signed installer $(FILE_INSTALLER_SIGNED)
+
+$(FILE_INSTALLER_SIGNED):	exe-signed installer $(FILE_INSTALLER_CFG)
+	$(NSIS) $(NSIS_OPT) $(FILE_INSTALLER_CFG)
+	$(DEL) $(FILE_INSTALLER_SIGNED)
+	$(OSSLSIGNCODE) $(OSSLSIGNCODE_O) -in $(FILE_INSTALLER) -out $@
+	#$(MOVE) $@ $(FILE_INSTALLER)
+	$(DEL) $(FILE_INSTALLER)
+	$(DEL) $(TOP_BUILDDIR)/$(FILE_INSTALLER_SIGNED)
+	$(MOVE) $@ $(TOP_BUILDDIR)
+	$(TOUCH) $(FILE_INSTALLER_CFG)
+
+installer-signed-clean:
+	#$(DEL) $(TOP_BUILDDIR)/$(FILE_INSTALLER_SIGNED)
+
+###########################################################################
+# Icons
+###########################################################################
+
+icons: imyplay.ico
+
+%.png: %.svg
+	$(SVG2PNG) --export-filename=$@ $<
+
+%.ico: %.png
+	$(PNG2ICO) $< $@
+
+icons-clean:
+	$(DEL) imyplay.png
+	$(DEL) imyplay.ico
+
+###########################################################################
+# Other targets
+###########################################################################
+
+clean:	installer-signed-clean installer-clean exe-clean \
+	manual-clean icons-clean
+
+.PHONY:	all pack manual manual-clean \
+	exe exe-clean exe-signed \
+	installer installer-clean installer-signed installer-signed-clean \
+	icons icons-clean
+	clean

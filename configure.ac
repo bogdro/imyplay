@@ -26,7 +26,8 @@ AC_INIT([IMYplay],[1.3],[bogdro@users.sourceforge.net],[imyplay],[https://imypla
 AM_INIT_AUTOMAKE([-Wall])
 AC_CONFIG_FILES([Makefile src/Makefile doc/imyplay.txi:doc/imyplay.txc \
 	po/Makefile.in po/Makefile imyplay.spc:imyplay.spi \
-	src/imyp_cfg.h:src/imyp_cfg.hin doc/Makefile test/Makefile])
+	src/imyp_cfg.h:src/imyp_cfg.hin doc/Makefile test/Makefile \
+	setup/Makefile])
 AC_CONFIG_SRCDIR([src/imyplay.c])
 AC_CONFIG_HEADERS([config.h:config.hin])
 
@@ -765,7 +766,7 @@ AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type 
 AC_FUNC_MALLOC
 
 AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long \
-	strcasecmp strdup])
+	strcasecmp strdup getenv])
 if ( test "x$imyp_flex_enabled" != "xyes" ); then
 
 	AC_FUNC_FSEEKO
@@ -818,7 +819,6 @@ if (test "x$GCC" = "xyes" ); then
 	AX_C_CHECK_FLAG([-O1 -Wuninitialized], [CFLAGS="$CFLAGS -O1 -Wuninitialized"], [CFLAGS="$CFLAGS"])
 	AX_C_CHECK_FLAG([-Winit-self], [CFLAGS="$CFLAGS -Winit-self"], [CFLAGS="$CFLAGS"])
 	AX_C_CHECK_FLAG([-Wlogical-op], [CFLAGS="$CFLAGS -Wlogical-op"], [CFLAGS="$CFLAGS"])
-	AX_C_CHECK_FLAG([-fstack-protector-all], [CFLAGS="$CFLAGS -fstack-protector-all"], [CFLAGS="$CFLAGS"])
 	AX_C_CHECK_FLAG([-O2], [CFLAGS="$CFLAGS -O2"], [CFLAGS="$CFLAGS"])
 	AX_C_CHECK_FLAG([-O3], [CFLAGS="$CFLAGS -O3"], [CFLAGS="$CFLAGS"])
 	AX_C_CHECK_FLAG([-Waggregate-return], [CFLAGS="$CFLAGS -Waggregate-return"], [CFLAGS="$CFLAGS"])
@@ -830,7 +830,12 @@ if (test "x$GCC" = "xyes" ); then
         AX_C_CHECK_FLAG([-Wno-nonnull-compare], [CFLAGS="$CFLAGS -Wno-nonnull-compare"], [CFLAGS="$CFLAGS"])
         AX_C_CHECK_FLAG([-Wstringop-truncation], [CFLAGS="$CFLAGS -Wstringop-truncation"], [CFLAGS="$CFLAGS"])
         AX_C_CHECK_FLAG([-Wduplicated-branches], [CFLAGS="$CFLAGS -Wduplicated-branches"], [CFLAGS="$CFLAGS"])
-        AX_C_CHECK_FLAG([-fstack-check], [CFLAGS="$CFLAGS -fstack-check"], [CFLAGS="$CFLAGS"])
+        if ( ! [ echo "x$host_os" | grep mingw >/dev/null ] ); then
+		# no stack checking if cross-compiling, otherwise
+		# "libssp-0.dll" required at run-time
+		AX_C_CHECK_FLAG([-fstack-protector-all], [CFLAGS="$CFLAGS -fstack-protector-all"], [CFLAGS="$CFLAGS"])
+		AX_C_CHECK_FLAG([-fstack-check], [CFLAGS="$CFLAGS -fstack-check"], [CFLAGS="$CFLAGS"])
+        fi
         # disabled, because of too much noise from the generated flex output file:
         #AX_C_CHECK_FLAG([-fanalyzer], [CFLAGS="$CFLAGS -fanalyzer"], [CFLAGS="$CFLAGS"])
         AX_C_CHECK_FLAG([-g], [CFLAGS="$CFLAGS -g"], [CFLAGS="$CFLAGS"])	# needed for the 'debuginfo' rpm package

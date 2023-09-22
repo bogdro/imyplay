@@ -45,6 +45,7 @@
 #   undef HAVE_FSEEKO
 #   undef HAVE_FTELLO
 #   define HAVE_FWRITE			1
+#   define HAVE_GETENV			1
 #   undef HAVE_GETOPT_H
 #   undef HAVE_GETOPT_LONG
 #   undef HAVE_GETTEXT
@@ -102,6 +103,7 @@
 #   define HAVE_FSEEKO			1
 #   define HAVE_FTELLO			1
 #   define HAVE_FWRITE			1
+#   define HAVE_GETENV			1
 #   define HAVE_GETOPT_H		1
 #   define HAVE_GETOPT_LONG		1
 #   define HAVE_GETTEXT			1

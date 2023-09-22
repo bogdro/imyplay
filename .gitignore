@@ -23,6 +23,9 @@ imyparsf.c
 po/POTFILES
 po/Makefile.in
 
+*.dll
+README-SDL.txt
+
 utiltest
 testalle
 testalsa

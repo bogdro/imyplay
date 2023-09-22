@@ -68,6 +68,7 @@ systems:
 - FreeBSD
 - Solaris/SunOS
 - macOS
+- MinGW
 
 ================================================================
 
@@ -238,6 +239,11 @@ Alternatively to using the --output option, you can launch the program as
  or copies of the executable file). This overrides the default order of
  output systems, but does NOT override the --to-midi, -f/--file and
  -e/--exec options.
+
+The default MinGW build has just the SDLv2 backend enabled, with a default
+ driver. If that doesn't work for you, you can set the environment variable
+ "SDL_AUDIODRIVER" to a value which works for you. Check the SDL documentation
+ for known drivers. Examples: "directsound", "dsound", "waveout", "winmm".
 
 Executed program's options - you can pass the following expressions in the
 <program> argument and these will get substituted by the correct values when

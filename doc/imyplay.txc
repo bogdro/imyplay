@@ -467,6 +467,12 @@ and @option{-e}/@option{--exec} options.
 If @command{imyplay-exec} is called, the @option{-e}/@option{--exec} is still
 required to provide the program to run.
 
+The default MinGW build has just the SDLv2 backend enabled, with a default
+driver. If that doesn't work for you, you can set the environment variable
+@env{SDL_AUDIODRIVER} to a value which works for you. Check the SDL documentation
+for known drivers. Examples: @code{directsound}, @code{dsound}, @code{waveout},
+@code{winmm}.
+
 @c ==================================================================
 
 

@@ -354,6 +354,16 @@ imyp_sdl_init (
 		return -100;
 	}
 
+#if (defined HAVE_GETENV) && ((defined WIN32) || (defined WINNT))
+	/* try to set some default SDL audio backend, if none is set */
+	if ( getenv ("SDL_AUDIODRIVER") == NULL )
+	{
+		/* "directsound" and "dsound" seem to work,
+		 * "waveout" gives initialization error,
+		 * "winmm" hangs the program */
+		putenv ("SDL_AUDIODRIVER=directsound");
+	}
+#endif
 	res = SDL_Init (SDL_INIT_AUDIO | SDL_INIT_TIMER);
 	if ( res != 0 )
 	{

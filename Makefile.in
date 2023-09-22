@@ -126,7 +126,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = imyplay.spc
+CONFIG_CLEAN_FILES = imyplay.spc setup/Makefile
 CONFIG_CLEAN_VPATH_FILES =
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -183,9 +183,10 @@ am__define_uniq_tagged_files = \
   done | $(am__uniquify_input)`
 DIST_SUBDIRS = $(SUBDIRS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.hin \
-	$(srcdir)/imyplay.spi ABOUT-NLS AUTHORS COPYING ChangeLog \
-	INSTALL NEWS README THANKS compile config.guess config.rpath \
-	config.sub depcomp install-sh missing mkinstalldirs ylwrap
+	$(srcdir)/imyplay.spi $(top_srcdir)/setup/Makefile.in \
+	ABOUT-NLS AUTHORS COPYING ChangeLog INSTALL NEWS README THANKS \
+	compile config.guess config.rpath config.sub depcomp \
+	install-sh missing mkinstalldirs ylwrap
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -418,6 +419,8 @@ $(srcdir)/config.hin:  $(am__configure_deps)
 distclean-hdr:
 	-rm -f config.h stamp-h1
 imyplay.spc: $(top_builddir)/config.status $(srcdir)/imyplay.spi
+	cd $(top_builddir) && $(SHELL) ./config.status $@
+setup/Makefile: $(top_builddir)/config.status $(top_srcdir)/setup/Makefile.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 
 # This directory's subdirectories are mostly independent; you can cd

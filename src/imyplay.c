@@ -371,7 +371,7 @@ main (
 	/* Parsing the command line */
 #if (defined HAVE_GETOPT_H) && (defined HAVE_GETOPT_LONG)
 	optind = 0;
-	while (1==1)
+	do
 	{
 		opt_char = getopt_long ( argc, argv, "Vh?ld:e:o:f:", opts, NULL );
 		if ( opt_char == -1 )
@@ -434,7 +434,7 @@ main (
 			opt_file = 0;
 		}
 # endif
-	}
+	} while (opt_char != -1 );
 	imyp_optind = optind;
 #else
 	for ( i = 1 ; i < (unsigned int)argc; i++ )	/* argv[0] is the program name */

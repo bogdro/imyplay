@@ -21,8 +21,8 @@ rem
 
 rem cd src
 
-set imymajor=1
-set imyminor=3
+set imymajor=2
+set imyminor=0
 rem set imysubminor=
 
 rem sed 's/[@]VERSION[@]/%imymajor%.%imyminor%.%imysubminor%/' src\imyp_cfg.hin > src\imyp_cfg.h

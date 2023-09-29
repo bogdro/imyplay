@@ -1,3 +1,196 @@
+2023-09-29	Bogdan Drozdowski <bogdro =at/ users . sourceforge . net>
+
+	* IMYplay version 2.0
+	  Significant portability updates: IMYplay now compiles also on macOS
+	  (as provided by Travis CI) and MinGW. IMYplay now compiles by default
+	  also on Solaris/SunOS (earlier, the PC-Speaker module had to be
+	  disabled during configuration). Added an installer for the MinGW
+	  version with SDLv2 included. Added support for GStreamer versions
+	  1.x. Significant improvements in the parsers, especially the
+	  flex-based one. Significant improvements in the configuration script.
+	  Added more sound drivers in the Allegro backend. Enabled stereo
+	  output in newer JACK versions. Many more safety checks in the code.
+	  Added replacement functions in case some standard ones are missing.
+	  Printing run-time versions apart from the compile-time versions
+	  where available. Print the error code if backend initialization or
+	  playing a note fails. Improvements in the build system. The DOS
+	  version can now be built with the flex-based parser. Code quality
+	  updates. Added unit tests for all backends. Improvements in the
+	  documentation. Version bumped to 2.0 because of the vast changes and
+	  to accommodate for the big step in version 0.3.
+	* configure.ac: Separated application name and tar-name, added URL.
+	  Show LibHideIP and LibNetBlock as disabled by default. If Allegro
+	  libraries were not found directly, but using allegro-config, show
+	  that, or show that Allegro is disabled otherwise, and redirect the
+	  error output from allegro-config to /dev/null. Use dedicated macros
+	  to check for off_t, size_t, ssize_t, uint32_t and 'long long'. Check
+	  for the <strings.h> header, the strcasecmp() function and use a
+	  dedicated macro to check for the strcasecmp() function's include.
+	  Use a dedicated macro to check for the fseeko() function. Added a
+	  note about why we're not using AC_FUNC_SELECT_ARGTYPES. Fix wrong
+	  reason given in the summary when 'flex' is missing. Check for and
+	  require the KIOCSOUND constant to enable the PC-Speaker backend.
+	  Fixed the summary condition checking if SDLv1 will be compiled in if
+	  SDLv2 is missing or unusable. Fix the test for pkg-config existence
+	  in the summary section for GStreamer. Added checking for the
+	  -fanalyzer compiler option, disable because of the flex output file.
+	  Reduced the warning about flex to "notice", because the parser now
+	  skips (more) binary data and should work better. Added support for
+	  GStreamer version 1.x. Added checking for the strdup() function.
+	  Added checking for the getenv() function for MinGW. Disable stack
+	  protections when cross-compiling (otherwise, GCC libraries, like
+	  "libssp-0.dll" are required at run-time). Added creating
+	  setup/Makefile. Other small changes.
+	* configure.ac, src/Makefile.am: Set Allegro libraries in another way.
+	* src/imyp_cfg.hin: Added a constant for 'long long'. Added constants
+	  for the strcasecmp() function and its header file. Added a constant
+	  for the KIOCSOUND #define. Updated the package constants. Added
+	  constants for the strdup() and getenv() functions.
+	* src/imyplay.h: Remove our substitution of off_t - the dedicated
+	  macro in configure.ac takes care of that.
+	* src/midibase.h: Change the detection of presence of uint32_t.
+	* src/imyputil.c: Changed #if to #ifdef for sys/time.h include. Added
+	  the missing #include <stdlib.h> for malloc().
+	* src/imyputil.{c,h}: Don't declare imyp_compare() if strcasecmp() is
+	  available and use a macro for the function. Add imyp_memcopy(),
+	  imyp_mem_set() and imyp_duplicate_string() as replacements for the
+	  memcpy(), memset() and strdup() functions, if they're not present,
+	  and add the relevant IMYP_ macros.
+	* src/imyputil.c (imyp_parse_system, imyp_get_format): Use the new
+	  macro instead of strcasecmp() / imyp_compare().
+	* src/imyputil.c (imyp_pause_select): Added a note about why we're not
+	  using AC_FUNC_SELECT_ARGTYPES.
+	* src/imyp_all.c: Allow compiling on MinGW.
+	* src/imyparse.c (imyp_play_current_note): Remove duplicated NULL
+	  parameter check. Print the error code if playing a note fails.
+	* src/imyparsf.l (imyp_play_current_note): Fix the check for the
+	  current output backend, and the function comment. Print the error
+	  code if playing a note fails.
+	* src/imyparsf.l (imyp_make_pause): Fix the check for the current
+	  output backend.
+	* src/imyp_all.c: Added more sound drivers.
+	* src/imyplay.{c,h}: Added messages for version numbers.
+	* src/imyp_gst.c (imyp_gst_version): Print also the run-time version
+	  being used and mark the static version as used during compiling.
+	* src/imyp_pul.c (imyp_pulse_version): Print also the run-time version
+	  being used and mark the static version as used during compiling.
+	* src/imyp_sdl.c (imyp_sdl_version): Print also the run-time version
+	  being used (available in SDL >= 2) and mark the static version as
+	  the one used during compiling.
+	* src/imyp_all.c (imyp_all_play_tune): Use the new IMYP_ replacement
+	  function.
+	* src/imyp_ao.c (imyp_ao_init): Use the new IMYP_ replacement function.
+	* src/imyparse.c (imyp_play_file): Use the new IMYP_ replacement
+	  function.
+	* src/imyp_fil.c (imyp_file_pause): Use the new IMYP_ replacement
+	  function.
+	* src/imyp_gst.c (imyp_gst_init): Use the new IMYP_ replacement
+	  function.
+	* src/imyp_jck.c (imyp_jack_fill_buffer, imyp_jack_play_tune): Use
+	  the new IMYP_ replacement function.
+	* src/imyp_sdl.c (imyp_sdl_play_tune, imyp_sdl_fill_buffer): Use the
+	  new IMYP_ replacement function.
+	* src/imyp_sig.c (imyp_set_sigh): Use the new IMYP_ replacement
+	  function.
+	* src/imyputil.c (imyp_generate_filename): Use the new IMYP_
+	  replacement function.
+	* src/imyp_exe.c (launch_program, imyp_exec_init): Use the new IMYP_
+	  replacement function.
+	* src/imypwrap.c (imyp_init_selected): Added a check for NULL. Use a
+	  distinct error code when the selected library can't be initialized.
+	* src/imyparsf.l: Add "[\r\n]+" to "^BEGIN:IMELODY" to avoid an empty
+	  line printed at the beginning of input. Skip (more) binary data.
+	  Support the COMPOSER and COPYRIGHT fields. Support CRLF line endings
+	  in all parts. Fixed an empty line being output in the place of the
+	  melody line. Skip displaying the final "END:IMELODY". Fix the repeat
+	  block iteration count. Use VOLUME_MODIFIER in REPEAT_BLOCK instead
+	  of repeating the regex.
+	* src/imyparse.c (imyp_play_file): Fixed parser hanging on the "("
+	  character. Fixed parsing the repeat blocks.
+	* src/imyplay.c (print_help, main): Show "IMYplay" as the program name
+	  in the help and version messages, but keep "imyplay" in the syntax.
+	* src/imyp_gst.c (global scope, imyp_gst_play_tune, imyp_gst_init,
+	  imyp_gst_close): Added support for GStreamer version 1.x.
+	* src/imyp_jck.c (struct imyp_jack_backend_data, imyp_jack_fill_buffer,
+	  imyp_jack_init, imyp_jack_close, imyp_jack_fill_single_buffer - new
+	  function): Enable stereo output.
+	* src/imyp_als.c (imyp_alsa_play_tune): Fixed crash with duration = 0.
+	* src/imyp_ao.c (imyp_ao_play_tune): Fixed crash with duration = 0.
+	* src/imyp_jck.c (imyp_jack_play_tune): Fixed crash with buf = NULL.
+	* src/imyp_por.c (imyp_portaudio_play_tune): Check if the stream is
+	  valid before using.
+	* src/imyp_pul.c (imyp_pulse_play_tune): Fixed crash with duration=0.
+	* src/imyp_sdl.c (imyp_sdl_play_tune): Fixed crash with buf = NULL.
+	* src/imyp_fil.c (imyp_file_init): Fixed crash with a constant "dev"
+	  parameter.
+	* src/imyp_all.c (imyp_all_init): Fixed crash with a constant
+	  "dev_file" parameter.
+	* src/imyp_por.c (imyp_portaudio_init): Fixed crash with a constant
+	  "dev_file" parameter.
+	* src/imyp_sdl.c (imyp_sdl_init): Fixed crash with a constant
+	  "dev_file" parameter. Add some default audio driver for SDL using an
+	  environment variable SDL_AUDIODRIVER, if none is set.
+	* src/imyp_mid.c (imyp_midi_play_tune): Check if the output handle is
+	  valid before using.
+	* src/imyparsf.l (imyp_play_file): Don't call yylex_destroy() under
+	  DOS - not available in flex 2.5.4.
+	* src/imyplay.c (main): Show the error code if initialization failed.
+	* src/imypwrap.c (imyp_lib_init): Use a distinct error code when no
+	  library has been initialized (or found).
+	* src/{imyp_exe.*,imyp_fil.*,imyp_mid.*,imyp_oss.*,imyp_spk.*,
+	  imyparse.c,imyplay.*,imyputil.*,iparsers.c,imypwrap.*}, README.md,
+	  doc/sf_bogdro.css: Quality fixes.
+	* test/imcommon.h: Added a header for things common to tests.
+	* test/utiltest.c: Skip testing imyp_compare() if strcasecmp() is
+	  available. Use imcommon.h.
+	* test/testalle.c: Added a test for the Allegro backend.
+	* test/testalsa.c: Added a test for the ALSA backend.
+	* test/testao.c: Added a test for the AO/LibAO backend.
+	* test/testexec.c: Added a test for the EXEC backend.
+	* test/testfile.c: Added a test for the FILE backend.
+	* test/testgst.c: Added a test for the GStreamer backend.
+	* test/testjack.c: Added a test for the JACK backend.
+	* test/testmidi.c: Added a test for the MIDI backend.
+	* test/testoss.c: Added a test for the OSS backend.
+	* test/testport.c: Added a test for the PortAudio backend.
+	* test/testpuls.c: Added a test for the Pulseaudio backend.
+	* test/testsdl.c: Added a test for the SDL backend.
+	* test/testspk.c: Added a test for the PC-Speaker backend.
+	* test/Makefile.am: Renamed 'zcompile' to 'x-compile'.
+	* m4/ax_include_strcasecmp.m4: A dedicated macro to check for the
+	  strcasecmp() function's include.
+	* Makefile.dos, dosfiles.txt: Allow building with the flex-based
+	  parser by passing FLEX=1 to 'make'.
+	* dosdist.bat: Use the hand-written parser by default for simplicity.
+	* setup: Added an NSIS-based installer for the MinGW version.
+	* Makefile.am: Added the necessary files from the setup directory to
+	  the distribution.
+	* po/*.{po,gmo,pot}: Updated and corrected translations and their
+	  metadata (line numbers and dates).
+	* doc/sf_bogdro.css: Added CSS for HTML docs.
+	* INSTALL-imyplay.txt, README, doc/imyplay.txc: Updated the supported
+	  OS list, fixed indents. Documented the "CC", "CC_OPTS" and the new
+	  "FLEX" parameter.
+	* README, doc/imyplay.txc: Added a link to the iMelody Wikipedia page.
+	  Added the "pcspkr" kernel module as a module like "snd-pcsp" on
+	  some systems. Added information related to the MinGW version (SDL
+	  driver).
+	* doc/imyplay.txc, doc/imyplay.1: Leave just the SourceForge address.
+	* README: Added the SourceForge URL.
+	* doc/imyplay.txc: Fixed navigation in submenus. Typo fixes and other
+	  small updates.
+	* imyplay.spi: Added texinfo to BuildRequires. Added the %{?dist} tag
+	  to 'Release:', as recommended by the Fedora packaging guidelines:
+	  https://docs.fedoraproject.org/en-US/packaging-guidelines/DistTag/.
+	* src/*.c, src/*.h, src/*.hin, doc/imyplay.txc, test/*.c, src/*.l,
+	  src/*.asm, */Makefile.am, dosdist.bat, Makefile.dos, po/pl.po,
+	  configure.ac, README, imyplay.spi: Updated (or added) the license
+	  blocks.
+	* INSTALL, compile, depcomp, doc/texinfo.tex, missing, test-driver,
+	  po/en@boldquot.insert-header, po/en@boldquot.po, po/en@quot.po,
+	  po/en@quot.insert-header, po/remove-potcdate.sed, ylwrap: Forced
+	  update using new Autotools.
+
 2021-10-21	Bogdan Drozdowski <bogdro =at/ users . sourceforge . net>
 
 	* IMYplay version 1.3

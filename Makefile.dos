@@ -19,8 +19,8 @@
 #  along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-VERSION_MAJ = 1
-VERSION_MIN = 3
+VERSION_MAJ = 2
+VERSION_MIN = 0
 VERSION_SUB = 
 
 ##################################

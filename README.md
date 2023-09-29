@@ -16,12 +16,12 @@ IMYplay can use the following outputs to produce sound:
 6.  PortAudiov19 (<http://www.portaudio.com/>),
 7.  PulseAudio (<http://www.pulseaudio.org/>),
 8.  JACK1/JACK2 (<http://jackaudio.org/>),
-9.  GStreamer (<http://gstreamer.freedesktop.org/>, gstreamer-plugin-base required).
+9.  GStreamer (<http://gstreamer.freedesktop.org/>, gstreamer-plugin-base required),
+10.  PC-speaker
 
 It can also:
 -   convert IMY ringtones to MIDI files,
 -   write raw samples to an output file,
--   use the PC-speaker,
 -   call an external program on each note.
 
 IMYplay's homepage: <https://imyplay.sourceforge.io/>.
@@ -43,6 +43,7 @@ IMYplay, in various versions, has been successfully compiled on the following sy
 -   FreeBSD
 -   Solaris/SunOS
 -   macOS
+-   MinGW
 
 ## WARNING ##
 

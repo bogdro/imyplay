@@ -24,7 +24,8 @@ SUBDIRS = doc src po test
 ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = config.rpath mkinstalldirs imyplay.spi m4/ax_cflag.m4 \
-	m4/ax_unus.m4 imy THANKS dosdist.bat dosfiles.txt Makefile.dos
+	m4/ax_unus.m4 imy THANKS dosdist.bat dosfiles.txt Makefile.dos \
+	setup/imyplay.bat setup/imyplay.nsi setup/imyplay.svg
 
 # The 'x-pack' target is a hack that removes unnecessary files from the
 # distribution that are generated during building and could not be

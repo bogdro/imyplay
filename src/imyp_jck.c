@@ -162,7 +162,7 @@ static int imyp_jack_fill_buffer (
 	void * arg;
 #endif
 {
-	jack_nframes_t frames_to_play;
+	jack_nframes_t frames_to_play = 0;
 	int ret1;
 	int ret2;
 

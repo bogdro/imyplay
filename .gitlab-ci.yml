@@ -20,9 +20,13 @@ image: gcc
 build:
   stage: build
   script:
-  - touch configure aclocal.m4 Makefile.in src/Makefile.in
-    doc/Makefile.in config.hin po/*gmo && sleep 1 && ./configure && touch doc/imyplay.info
-    && sleep 1 && make
+  - touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin po/*gmo
+    && sleep 1
+    && ./configure
+    && sleep 1
+    && touch doc/imyplay.info
+    && sleep 1
+    && make
 stages:
 - test
 - build

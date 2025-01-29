@@ -52,7 +52,9 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Install requirements
-        run: sudo apt-get -y install check liballegro4-dev libsdl2-dev libasound2-dev libao-dev portaudio19-dev libpulse-dev libjack-dev libgstreamer-plugins-base1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install check liballegro4-dev libsdl2-dev libasound2-dev libao-dev portaudio19-dev libpulse-dev libjack-dev libgstreamer-plugins-base1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v3
       - name: Configure

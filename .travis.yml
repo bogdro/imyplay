@@ -30,9 +30,12 @@ branches:
         #pkg:
                 #packages: allegro sdl2 alsa-lib libao portaudio pulseaudio jackit gstreamer1 gstreamer1-plugins-all
 
-script: touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin po/*gmo &&
-        ./configure &&
-        sleep 1 &&
-        touch doc/imyplay.info &&
-        sleep 1 &&
-        make
+script:
+        - touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin
+        - for i in po/*.po; do touch ${i/.po/.gmo}; done
+        - sleep 1
+        - ./configure
+        - sleep 1
+        - touch doc/imyplay.info
+        - sleep 1
+        - make

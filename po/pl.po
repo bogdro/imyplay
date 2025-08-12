@@ -1,6 +1,6 @@
 # Polish translations for imyplay package
 # Polskie t³umaczenia dla pakietu imyplay.
-# Copyright (C) 2009-2023 Bogdan bogdro Drozdowski
+# Copyright (C) 2009-2025 Bogdan bogdro Drozdowski
 # This file is distributed under the same license as the imyplay package.
 # Bogdan Drozdowski <bogdro@users.sourceforge.net>, 2009.
 #

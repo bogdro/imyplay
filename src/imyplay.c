@@ -2,7 +2,7 @@
  * IMYplay - A program for playing iMelody ringtones (IMY files).
  *	-- main file.
  *
- * Copyright (C) 2009-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+ * Copyright (C) 2009-2025 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * Syntax example: imyplay ringtone.imy
@@ -78,7 +78,7 @@
 #define	PROGRAM_NAME	PACKAGE_NAME
 
 static const char ver_str[] = N_("version");
-static const char author_str[] = "Copyright (C) 2009-2023 Bogdan 'bogdro' Drozdowski, bogdro@users.sourceforge.net\n" \
+static const char author_str[] = "Copyright (C) 2009-2025 Bogdan 'bogdro' Drozdowski, bogdro@users.sourceforge.net\n" \
 	"MIDI code: Copyright 1998-2008, Steven Goodwin (StevenGoodwin@gmail.com)";
 static const char lic_str[] = N_(							\
 	"Program for playing iMelody ringtones (IMY files).\n"				\

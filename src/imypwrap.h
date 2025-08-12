@@ -3,7 +3,7 @@
  *	-- wrapper functions between the main program and the backends,
  *		header file.
  *
- * Copyright (C) 2009-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+ * Copyright (C) 2009-2025 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or

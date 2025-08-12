@@ -2,7 +2,7 @@ rem
 rem IMYplay - A program for playing iMelody ringtones (IMY files).
 rem 	-- Build script for the DOS system.
 rem
-rem  Copyright (C) 2021-2023 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+rem  Copyright (C) 2021-2025 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
 rem  License: GNU General Public License, v3+
 rem
 rem  This program is free software; you can redistribute it and/or

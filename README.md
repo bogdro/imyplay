@@ -24,13 +24,17 @@ It can also:
 -   write raw samples to an output file,
 -   call an external program on each note.
 
-IMYplay's homepage: <https://imyplay.sourceforge.io/>.
-
 Author: Bogdan Drozdowski, bogdro (at) users . sourceforge . net
 
 License: GPLv3+
 
-IMYplay, in various versions, has been successfully compiled on the following systems:
+IMYplay's homepage: <https://imyplay.sourceforge.io/>.
+
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=bogdro_imyplay)
+
+[![Travis Build Status](https://app.travis-ci.com/bogdro/imyplay.svg?token=T93Xpo2K5F4sXcUCVsd5&branch=dev)](https://app.travis-ci.com/bogdro/imyplay)
+
+IMYplay, in various versions, has been successfully compiled on the following environments:
 
 -   Fedora Core 4 GNU/Linux, i686
 -   Fedora 12 GNU/Linux, i686

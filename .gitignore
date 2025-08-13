@@ -12,6 +12,9 @@ TODO*
 imyplay
 .deps
 *.o
+*.gcov
+*.gcda
+*.gcno
 
 *.info
 *.html
@@ -22,6 +25,7 @@ imyparsf.c
 
 po/POTFILES
 po/Makefile.in
+po/*.gmo
 
 *.dll
 README-SDL.txt

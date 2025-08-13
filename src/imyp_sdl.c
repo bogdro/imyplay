@@ -113,6 +113,7 @@ static void SDLCALL imyp_sdl_fill_buffer (
 	unsigned long int i;
 	unsigned int quality = 16;
 	unsigned long int nsamp;
+	unsigned long int nbytes;
 	struct imyp_sdl_backend_data * data =
 		(struct imyp_sdl_backend_data *)userdata;
 
@@ -125,17 +126,17 @@ static void SDLCALL imyp_sdl_fill_buffer (
 	{
 		quality = 8;
 	}
-
 	if ( data->samples_remain > 0 )
 	{
 		nsamp = IMYP_MIN((unsigned int)len / (quality / 8), (unsigned long int)data->samples_remain);
-		for ( i = 0; i < nsamp; i++ )
+		nbytes = nsamp * (quality / 8);
+		for ( i = 0; i < nbytes; i++ )
 		{
 			((char *)stream)[i] = ((char *)data->buf)[data->last_index + i];
 		}
 		/* fill the remaining part of the buffer, if any: */
-		IMYP_MEMSET (&stream[nsamp], 0, (unsigned int)len - nsamp * (quality / 8));
-		data->last_index += nsamp;
+		IMYP_MEMSET (&stream[nsamp], 0, (unsigned int)len - nbytes);
+		data->last_index += len;
 		data->samples_remain -= (long int)nsamp;
 		if ( data->samples_remain <= 0 )
 		{
@@ -338,7 +339,7 @@ imyp_sdl_init (
 		AUDIO_S16LSB, /**< Audio data format */
 		1, /**< Number of channels: 1 mono, 2 stereo */
 		0, /**< Audio buffer silence value (calculated) */
-		44100 /**< Audio buffer size in samples *//* do NOT set to less than 32768 */,
+		100 /**< Audio buffer size in samples */,
 		0, /**< Necessary for some compile environments */
 		0, /**< Audio buffer size in bytes (calculated) */
 		&imyp_sdl_fill_buffer,

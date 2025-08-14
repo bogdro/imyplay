@@ -37,6 +37,19 @@
 extern int imyp_compare IMYP_PARAMS ((const char string1[], const char string2[]));
 # endif
 
+# ifdef HAVE_STRNCASECMP
+#  define IMYP_STRNCASECMP strncasecmp
+#  ifdef HAVE_STRINGS_H
+#   include <strings.h>
+#  endif
+#  ifdef AX_STRCASECMP_HEADER
+#   include AX_STRCASECMP_HEADER
+#  endif
+# else
+#  define IMYP_STRNCASECMP imyp_compare_n
+extern int imyp_compare_n IMYP_PARAMS ((const char string1[], const char string2[], const size_t n));
+# endif
+
 # ifdef HAVE_MEMCPY
 #  define IMYP_MEMCOPY memcpy
 # else

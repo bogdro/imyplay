@@ -607,50 +607,6 @@ imyp_play_current_note (
 /* ======================================================================== */
 
 #ifndef IMYP_ANSIC
-static int imyp_check_string IMYP_PARAMS ((const char string[]));
-#endif
-
-/**
- * Finds and skips the given string.
- * \param[in] string The string to find and skip. It is assumed the whole
- *	string is in the 'melody_line' buffer, starting at 'melody_index'.
- * \return 1 if the full string has been found, 0 otherwise.
- */
-static int
-#ifdef IMYP_ANSIC
-IMYP_ATTR((nonnull))
-#endif
-imyp_check_string (
-#ifdef IMYP_ANSIC
-	const char string[])
-#else
-	string)
-	const char string[];
-#endif
-{
-	size_t i, len;
-	int j;
-
-	if ( string == NULL )
-	{
-		return 0;
-	}
-
-	len = strlen (string);
-	for ( i = 0, j = 0; i < len; i++, j++ )
-	{
-		if ( IMYP_TOUPPER (melody_line[melody_index+j])
-			!= IMYP_TOUPPER (string[i]) )
-		{
-			return 0;
-		}
-	}
-	return 1;
-}
-
-/* ======================================================================== */
-
-#ifndef IMYP_ANSIC
 static void imyp_show_token_error IMYP_PARAMS ((
 	const char line[], const int pos, const char msg[]));
 #endif
@@ -868,7 +824,7 @@ imyp_play_file (
 								melody_index++;
 								imyp_read_line (melody_line, &melody_index,
 									sizeof (melody_line) - 10, imy, 5);
-								if ( imyp_check_string ("BEON") == 1 )
+								if ( IMYP_STRNCASECMP (&melody_line[melody_index], "BEON", 4) == 0 )
 								{
 									melody_index += 4 /*strlen(BEON)*/;
 									imyp_read_line (melody_line,
@@ -876,7 +832,7 @@ imyp_play_file (
 										sizeof (melody_line) - 10,
 										imy, 0);
 								}
-								else if ( imyp_check_string ("BEOFF") == 1 )
+								else if ( IMYP_STRNCASECMP (&melody_line[melody_index], "BEOFF", 5) == 0 )
 								{
 									melody_index += 5 /*strlen(BEOFF)*/;
 									imyp_read_line (melody_line,
@@ -977,7 +933,7 @@ imyp_play_file (
 								melody_index++;
 								imyp_read_line (melody_line, &melody_index,
 									sizeof (melody_line) - 10, imy, 5);
-								if ( imyp_check_string ("CKON") == 1 )
+								if ( IMYP_STRNCASECMP (&melody_line[melody_index], "CKON", 4) == 0 )
 								{
 									melody_index += 4 /*strlen(CKON)*/;
 									imyp_read_line (melody_line,
@@ -985,7 +941,7 @@ imyp_play_file (
 										sizeof (melody_line) - 10,
 										imy, 0);
 								}
-								else if ( imyp_check_string ("CKOFF") == 1 )
+								else if ( IMYP_STRNCASECMP (&melody_line[melody_index], "CKOFF", 5) == 0 )
 								{
 									melody_index += 5 /*strlen(CKOFF)*/;
 									imyp_read_line (melody_line,
@@ -1072,7 +1028,7 @@ imyp_play_file (
 							melody_index++;
 							imyp_read_line (melody_line, &melody_index,
 								sizeof (melody_line) - 10, imy, 5);
-							if ( imyp_check_string ("EDON") == 1 )
+							if ( IMYP_STRNCASECMP (&melody_line[melody_index], "EDON", 4) == 0 )
 							{
 								melody_index += 4 /*strlen(EDON)*/;
 								imyp_read_line (melody_line,
@@ -1080,7 +1036,7 @@ imyp_play_file (
 									sizeof (melody_line) - 10,
 									imy, 0);
 							}
-							else if ( imyp_check_string ("EDOFF") == 1 )
+							else if ( IMYP_STRNCASECMP (&melody_line[melody_index], "EDOFF", 5) == 0 )
 							{
 								melody_index += 5 /*strlen(EDOFF)*/;
 								imyp_read_line (melody_line,

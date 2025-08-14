@@ -148,6 +148,67 @@ imyp_compare (
 }
 #endif /* HAVE_STRCASECMP */
 
+#ifndef HAVE_STRNCASECMP
+/**
+ * Comapres the give strings case-insensitively, up to the given number of bytes.
+ * \param string1 The first string.
+ * \param string2 The second string.
+ * \param n The maximum number of bytes to compare.
+ * \return 0 if the strings are equal, -1 is string1 is "less" than string2 and 1 otherwise.
+ */
+int
+imyp_compare_n (
+# ifdef IMYP_ANSIC
+	const char string1[], const char string2[], const size_t n)
+# else
+	string1, string2, n)
+	const char string1[];
+	const char string2[];
+	const size_t n;
+# endif
+{
+	size_t i;
+	char c1;
+	char c2;
+
+	if ( (string1 == NULL) && (string2 == NULL) )
+	{
+		return 0;
+	}
+	else if ( string1 == NULL )
+	{
+		return -1;
+	}
+	else if ( string2 == NULL )
+	{
+		return 1;
+	}
+	else
+	{
+		/* both strings not-null */
+		for ( i = 0; i < n; i++ )
+		{
+			c1 = IMYP_TOUPPER (string1[i]);
+			c2 = IMYP_TOUPPER (string2[i]);
+			if ( c1 < c2 )
+			{
+				return -1;
+			}
+			else if ( c1 > c2 )
+			{
+				return 1;
+			}
+			else if ( c1 == '\0' )
+			{
+				/* c1 == c2 && c1 == '\0' - end of both strings */
+				break;
+			}
+		}
+	}
+	return 0;
+}
+#endif /* HAVE_STRNCASECMP */
+
 /**
  * Checks the given string for an output system name and returns the enum value
  *	that corresponds to the given name.

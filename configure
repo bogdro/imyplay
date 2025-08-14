@@ -8644,6 +8644,12 @@ then :
   printf "%s\n" "#define HAVE_STRCASECMP 1" >>confdefs.h
 
 fi
+ac_fn_c_check_func "$LINENO" "strncasecmp" "ac_cv_func_strncasecmp"
+if test "x$ac_cv_func_strncasecmp" = xyes
+then :
+  printf "%s\n" "#define HAVE_STRNCASECMP 1" >>confdefs.h
+
+fi
 ac_fn_c_check_func "$LINENO" "strdup" "ac_cv_func_strdup"
 if test "x$ac_cv_func_strdup" = xyes
 then :

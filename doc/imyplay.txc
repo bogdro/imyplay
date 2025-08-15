@@ -85,13 +85,13 @@ IMYplay can use the following outputs to produce sound:
 @item PulseAudio (@url{http://www.pulseaudio.org/}),
 @item JACK1/JACK2 (@url{http://jackaudio.org/}),
 @item GStreamer (@url{http://gstreamer.freedesktop.org/}, gstreamer-plugin-base required).
+@item PC-speaker
 @end enumerate
 
 It can also:
 @itemize
 @item convert IMY ringtones to MIDI files,
 @item write raw samples to an output file,
-@item use the PC-speaker,
 @item call an external program on each note.
 @end itemize
 

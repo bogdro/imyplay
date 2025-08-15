@@ -204,20 +204,7 @@ Documentation is compiled, but may be recompiled, if you have the @command{makei
 program (@file{texinfo} package).
 Translations will be compiled, if you have the @file{gettext} package.
 
-
-@strong{NOTE}: if you have trouble compiling, send me:
-@enumerate
-@item the compiler name and version (e.g. @samp{gcc version 10}),
-@item the C standard library name and version (e.g. @samp{glibc version 2.x}),
-@item the output of the @command{configure} script. You can capture it by running
-@samp{./configure > configure-output.txt 2>&1},
-@item the generated @file{config.log} file,
-@item the generated @file{config.h} file, if it exists,
-@item the output of the @command{make} command. You can capture it by running
-@samp{make > make-output.txt 2>&1},
-@item any other error messages,
-@item any other information that you think could lead to solving the problem.
-@end enumerate
+@strong{NOTE}: if you have trouble compiling, @pxref{Reporting issues}.
 
 Type
 

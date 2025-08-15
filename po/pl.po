@@ -1,5 +1,5 @@
 # Polish translations for imyplay package
-# Polskie t³umaczenia dla pakietu imyplay.
+# Polskie tÅ‚umaczenia dla pakietu imyplay.
 # Copyright (C) 2009-2025 Bogdan bogdro Drozdowski
 # This file is distributed under the same license as the imyplay package.
 # Bogdan Drozdowski <bogdro@users.sourceforge.net>, 2009.
@@ -14,7 +14,7 @@ msgstr ""
 "Language-Team: Polish\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=ISO-8859-2\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
@@ -37,43 +37,43 @@ msgid ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 "\n"
 msgstr ""
-"Program do odtwarzania dzwonków iMelody (plików IMY).\n"
+"Program do odtwarzania dzwonkÃ³w iMelody (plikÃ³w IMY).\n"
 "\n"
-"Niniejszy program jest Wolnym Oprogramowaniem; mo¿esz go\n"
-"rozprowadzaæ dalej i/lub modyfikowaæ na warunkach Powszechnej\n"
-"Licencji Publicznej GNU, wydanej przez Fundacjê Wolnego\n"
-"Oprogramowania - wed³ug wersji 3-ciej tej Licencji lub której¶\n"
-"z pó¼niejszych wersji.\n"
+"Niniejszy program jest Wolnym Oprogramowaniem; moÅ¼esz go\n"
+"rozprowadzaÄ‡ dalej i/lub modyfikowaÄ‡ na warunkach Powszechnej\n"
+"Licencji Publicznej GNU, wydanej przez FundacjÄ™ Wolnego\n"
+"Oprogramowania - wedÅ‚ug wersji 3-ciej tej Licencji lub ktÃ³rejÅ›\n"
+"z pÃ³Åºniejszych wersji.\n"
 "\n"
-"Niniejszy program rozpowszechniany jest z nadziej±, i¿ bêdzie on\n"
-"u¿yteczny - jednak BEZ JAKIEJKOLWIEK GWARANCJI, nawet domy¶lnej\n"
-"gwarancji PRZYDATNO¦CI HANDLOWEJ albo PRZYDATNO¦CI DO OKRE¦LONYCH\n"
-"ZASTOSOWAÑ\n"
+"Niniejszy program rozpowszechniany jest z nadziejÄ…, iÅ¼ bÄ™dzie on\n"
+"uÅ¼yteczny - jednak BEZ JAKIEJKOLWIEK GWARANCJI, nawet domyÅ›lnej\n"
+"gwarancji PRZYDATNOÅšCI HANDLOWEJ albo PRZYDATNOÅšCI DO OKREÅšLONYCH\n"
+"ZASTOSOWAÅƒ\n"
 "\n"
 
 #: src/imyplay.c:94
 msgid "error"
-msgstr "b³±d"
+msgstr "bÅ‚Ä…d"
 
 #: src/imyplay.c:95
 msgid "Error while trying to set a signal handler for"
-msgstr "B³±d podczas ustawiania procedury obs³ugi sygna³u"
+msgstr "BÅ‚Ä…d podczas ustawiania procedury obsÅ‚ugi sygnaÅ‚u"
 
 #: src/imyplay.c:96
 msgid "Error during library init"
-msgstr "B³±d podczas inicjalizacji biblioteki"
+msgstr "BÅ‚Ä…d podczas inicjalizacji biblioteki"
 
 #: src/imyplay.c:98
 msgid "Error during library closing."
-msgstr "B³±d podczas zamykania biblioteki"
+msgstr "BÅ‚Ä…d podczas zamykania biblioteki"
 
 #: src/imyplay.c:106
 msgid "compiled with version"
-msgstr "skompilowane z wersj±"
+msgstr "skompilowane z wersjÄ…"
 
 #: src/imyplay.c:107
 msgid "running with version"
-msgstr "uruchomione z wersj±"
+msgstr "uruchomione z wersjÄ…"
 
 #: src/imyplay.c:111
 msgid "unknown"
@@ -81,11 +81,11 @@ msgstr "nieznany"
 
 #: src/imyplay.c:258
 msgid "A program for playing iMelody ringtones (IMY files)"
-msgstr "Program do odtwarzania dzwonków iMelody (plików IMY)"
+msgstr "Program do odtwarzania dzwonkÃ³w iMelody (plikÃ³w IMY)"
 
 #: src/imyplay.c:259
 msgid "Syntax"
-msgstr "Sk³adnia"
+msgstr "SkÅ‚adnia"
 
 #: src/imyplay.c:261
 msgid " [options] "
@@ -97,23 +97,23 @@ msgstr "Opcje"
 
 #: src/imyplay.c:264
 msgid "Try to use this device"
-msgstr "Spróbuj u¿yæ tego urz±dzenia"
+msgstr "SprÃ³buj uÅ¼yÄ‡ tego urzÄ…dzenia"
 
 #: src/imyplay.c:266
 msgid "Execute this program instead of sound output"
-msgstr "Wykonaj ten program zamiast wyj¶cia d¼wiêkowego"
+msgstr "Wykonaj ten program zamiast wyjÅ›cia dÅºwiÄ™kowego"
 
 #: src/imyplay.c:269
 msgid "Write raw samples to this file instead of sound output"
-msgstr "Zapisz surowe próbki do tego pliku zamiast wyj¶cia d¼wiêkowego"
+msgstr "Zapisz surowe prÃ³bki do tego pliku zamiast wyjÅ›cia dÅºwiÄ™kowego"
 
 #: src/imyplay.c:271
 msgid "Print help"
-msgstr "Wy¶wietl pomoc"
+msgstr "WyÅ›wietl pomoc"
 
 #: src/imyplay.c:272
 msgid "Print license information"
-msgstr "Wy¶wietl informacje o licencji"
+msgstr "WyÅ›wietl informacje o licencji"
 
 #: src/imyplay.c:274
 msgid "Select MIDI instrument number"
@@ -121,7 +121,7 @@ msgstr "Wybierz numer instrumentu MIDI"
 
 #: src/imyplay.c:276
 msgid "Use the given output system"
-msgstr "U¿yj danego systemu wyj¶cia"
+msgstr "UÅ¼yj danego systemu wyjÅ›cia"
 
 #: src/imyplay.c:278
 msgid "Convert the given files to MIDI format"
@@ -129,7 +129,7 @@ msgstr "Przekonwertuj podane pliki na format MIDI"
 
 #: src/imyplay.c:280
 msgid "Print version number"
-msgstr "Wy¶wietl numer wersji"
+msgstr "WyÅ›wietl numer wersji"
 
 #: src/iparsers.c:36
 msgid "Unknown token"
@@ -145,7 +145,7 @@ msgstr "Nieoczekiwany token"
 
 #: src/iparsers.c:39
 msgid "Can't open file"
-msgstr "Nie mogê otworzyæ pliku"
+msgstr "Nie mogÄ™ otworzyÄ‡ pliku"
 
 #: src/iparsers.c:40
 msgid "Problem parsing beat"
@@ -157,7 +157,7 @@ msgstr "Problem z parsowaniem stylu"
 
 #: src/iparsers.c:42
 msgid "Problem parsing volume"
-msgstr "Problem z parsowaniem g³o¶no¶ci"
+msgstr "Problem z parsowaniem gÅ‚oÅ›noÅ›ci"
 
 #: src/iparsers.c:43
 msgid "Not iMelody file"
@@ -165,7 +165,7 @@ msgstr "Nie jest plikiem iMelody"
 
 #: src/iparsers.c:44
 msgid "Error playing tune"
-msgstr "B³±d podczas odtwarzania d¼wiêku"
+msgstr "BÅ‚Ä…d podczas odtwarzania dÅºwiÄ™ku"
 
 #~ msgid "Setting signal handlers"
-#~ msgstr "Ustawianie procedur obs³ugi sygna³ów"
+#~ msgstr "Ustawianie procedur obsÅ‚ugi sygnaÅ‚Ã³w"

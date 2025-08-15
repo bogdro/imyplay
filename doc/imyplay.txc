@@ -143,7 +143,7 @@ Requirements for compiling the full version of the program under Un*x:@*
 @itemize
 @item a working C compiler
 @item development package for the C library (like @file{glibc-devel} and @file{glibc-headers}).
-The @file{getopt.h} header and the @samp{getopt_long()} from it are not required, but
+The @file{getopt.h} header and the @samp{getopt_long} from it are not required, but
 useful. The @file{signal.h} header is used to catch signals, and is optional.
 The translation headers (@file{locale.h}, @file{libintl.h} or other) are optional.
 @item if you want sound, not just MIDI conversion, a development package for one of the
@@ -159,8 +159,8 @@ If you don't have any of these installed or available, then go to@*
 	@url{http://jackaudio.org/}@*
 	@url{http://gstreamer.freedesktop.org/}@*
 @item MIDI output requires the following functions from the standard C library:
-@samp{malloc()}, @samp{realloc()}, @samp{memset()}, @samp{memcpy()}, @samp{fopen()},
-@samp{fwrite()}, @samp{fseek()}, @samp{fclose()} and @samp{qsort()}.
+@samp{malloc}, @samp{realloc}, @samp{memset}, @samp{memcpy}, @samp{fopen},
+@samp{fwrite}, @samp{fseek}, @samp{fclose} and @samp{qsort}.
 @end itemize
 
 Type
@@ -279,8 +279,8 @@ or available, then go to@*
 	@url{http://alleg.sf.net/}	- for the Allegro library
 
 @item MIDI output requires the following functions from the standard C library:
-@samp{malloc()}, @samp{realloc()}, @samp{memset()}, @samp{memcpy()}, @samp{fopen()},
-@samp{fwrite()}, @samp{fseek()}, @samp{fclose()} and @samp{qsort()}.
+@samp{malloc}, @samp{realloc}, @samp{memset}, @samp{memcpy}, @samp{fopen},
+@samp{fwrite}, @samp{fseek}, @samp{fclose} and @samp{qsort}.
 
 @item the @command{sed} utility (comes with DJGPP)
 

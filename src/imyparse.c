@@ -673,6 +673,7 @@ imyp_play_file (
 	int skipped_dur;	/* has to be signed */
 	int play_res;
 	int note_duration = 0;
+	int offset;
 
 	if ( (file_name == NULL) || (curr == NULL) )
 	{
@@ -753,7 +754,12 @@ imyp_play_file (
 			{
 				imyp_put_text (melody_line, curr);
 				/* parse style */
-				scanf_res = sscanf (&melody_line[7] /* "STYLE:S" */, "%d", &style);
+				int offset = 6; /* "STYLE:" */
+				if ( melody_line[offset] == 'S' || melody_line[offset] == 's' )
+				{
+					offset++;
+				}
+				scanf_res = sscanf (&melody_line[offset], "%d", &style);
 				if ( scanf_res != 1 )
 				{
 					printf ("%s: %s.\n", _(err_parse_style), melody_line);
@@ -768,7 +774,12 @@ imyp_play_file (
 			{
 				imyp_put_text (melody_line, curr);
 				/* parse volume */
-				scanf_res = sscanf (&melody_line[8] /* "VOLUME:" */, "%d", &volume);
+				offset = 7; /* "VOLUME:" */
+				if ( melody_line[offset] == 'V' || melody_line[offset] == 'v' )
+				{
+					offset++;
+				}
+				scanf_res = sscanf (&melody_line[offset], "%d", &volume);
 				if ( scanf_res != 1 )
 				{
 					printf ("%s: %s.\n", _(err_parse_vol), melody_line);

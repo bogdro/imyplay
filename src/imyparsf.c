@@ -383,12 +383,12 @@ static const flex_int16_t yy_accept[237] =
         0,    0,    6,    0,    0,    0,    0,    0,    4,    0,
         0,    0,    0,    0,   15,    0,    0,    0,   27,    0,
         0,    6,    6,    6,    0,    0,    0,    0,    0,    4,
-        4,    4,    0,    0,    0,    0,   15,   15,    0,   15,
+        4,    4,    7,    0,    0,    0,   15,   15,    0,   15,
         0,   27,   27,    0,   27,    0,    0,    0,    0,    3,
-       10,    7,    0,    0,   15,   15,   27,   27,    0,    0,
+       10,    7,    7,    7,    7,    0,    8,   15,   15,   27,
 
-        0,    0,    3,    3,    3,    7,    7,    7,    2,    8,
-        0,    5,    0,    0,    2,    2,    2,    8,    8,    8,
+       27,    0,    0,    0,    0,    3,    3,    3,    2,    8,
+        8,    8,    8,    0,    5,    0,    0,    2,    2,    2,
         0,    5,    5,    5,    9,    0,    0,    9,    9,    9,
        39,    0,   39,    1,    1,    0
     } ;
@@ -438,34 +438,34 @@ static const YY_CHAR yy_meta[62] =
 
 static const flex_int16_t yy_base[253] =
     {   0,
-        0,    4,    6,   63,  122,    0,  183,    0,  571,  570,
-      238,    0,    0,    0,    0,    1,  579,  582,  582,    0,
-      582,  582,  582,    2,    0,    0,    1,    3,    0,    0,
-        5,  582,  582,    8,   10,    0,    0,  582,    1,  563,
-        2,    4,  562,   58,  582,  582,   26,   31,    0,    0,
-      582,   36,   48,  536,    3,   32,  533,   63,  527,   43,
-        1,   58,   49,   47,   53,   65,   57,   63,   70,  582,
-      244,  523,  522,  582,  237,   79,  230,  238,  582,  250,
-      233,  582,  265,  521,  520,  582,  271,  258,  249,  255,
-      277,  582,  285,  269,  582,  265,  259,  263,  263,  517,
+        0,    4,    6,   63,  122,    0,  183,    0,  575,  574,
+      238,    0,    0,    0,    0,    1,  583,  586,  586,    0,
+      586,  586,  586,    2,    0,    0,    1,    3,    0,    0,
+        5,  586,  586,    8,   10,    0,    0,  586,    1,  567,
+        2,    4,  566,   58,  586,  586,   26,   31,    0,    0,
+      586,   36,   48,  565,    3,   32,  564,   63,  541,   43,
+        1,   58,   49,   47,   53,   65,   57,   63,   70,  586,
+      244,  535,  526,  586,  237,   79,  230,  238,  586,  250,
+      233,  586,  265,  525,  524,  586,  271,  258,  249,  255,
+      277,  586,  285,  269,  586,  265,  259,  263,  263,  521,
 
-      273,  272,  282,  277,  272,  271,  298,  301,  582,  281,
-      280,  582,  296,  318,  319,  582,  292,  289,  582,  299,
-      303,  516,  305,  304,  312,  325,  323,  515,  323,  320,
-      318,  582,  582,  317,  326,  319,  582,  582,  320,  330,
-      321,  512,  359,  321,  337,  346,  343,  341,  380,  511,
-      349,  363,  363,  364,  582,  365,  367,  366,  582,  368,
-      366,  400,  402,  418,  372,  393,  400,  510,  443,  421,
-      423,  425,  395,  400,  433,  408,  582,  582,  409,  582,
-      410,  582,  582,  411,  582,  406,  403,  412,  411,  438,
-      582,  442,   96,  405,  582,  582,  582,  582,  424,   93,
+      273,  272,  282,  277,  272,  271,  298,  301,  586,  281,
+      280,  586,  296,  318,  319,  586,  292,  289,  586,  299,
+      303,  520,  305,  304,  312,  325,  323,  519,  323,  320,
+      318,  586,  586,  317,  326,  319,  586,  586,  320,  330,
+      321,  517,  359,  321,  337,  346,  343,  341,  380,  511,
+      349,  363,  363,  364,  586,  365,  367,  366,  586,  368,
+      366,  400,  402,  418,  372,  393,  400,  463,  426,  421,
+      423,  425,  427,  401,  424,  409,  586,  586,  410,  586,
+      411,  586,  586,  412,  586,  407,  404,  414,  413,  442,
+      586,  444,  446,  448,  461,   96,  463,  586,  586,  586,
 
-      412,  417,  459,  462,  468,  470,  472,  474,  476,  478,
-      438,  480,   63,  463,  483,  486,  488,  490,  492,  494,
-      467,  497,  499,  501,  504,  470,  488,  508,  510,  512,
-      514,  480,  518,  520,  522,  582,  540,  543,  546,   66,
-       53,  549,    4,    0,  552,  555,  558,  561,  564,  567,
-      570,  573
+      586,  437,   93,  432,  437,  467,  469,  471,  473,  475,
+      481,  483,  488,  453,  490,   63,  466,  492,  494,  496,
+      470,  501,  503,  507,  509,  469,  492,  512,  514,  516,
+      521,  482,  523,  527,  529,  586,  542,  545,  548,   66,
+       53,  551,    4,    0,  554,  557,  560,  563,  566,  569,
+      572,  575
     } ;
 
 static const flex_int16_t yy_def[253] =
@@ -488,19 +488,19 @@ static const flex_int16_t yy_def[253] =
       236,  236,  245,  236,  236,  236,  236,  236,  246,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
       236,  245,  236,  245,  236,  236,  236,  236,  236,  246,
-      236,  246,  236,  236,  236,  236,  236,  236,  236,  236,
-      236,  236,  236,  236,  236,  236,  236,  236,  236,  247,
-      236,  248,  236,  236,  236,  236,  236,  236,  236,  236,
+      236,  246,  247,  236,  236,  236,  236,  236,  236,  236,
+      236,  236,  236,  236,  236,  236,  236,  236,  236,  248,
+      236,  247,  236,  247,  247,  236,  249,  236,  236,  236,
 
-      236,  236,  247,  236,  247,  248,  236,  248,  249,  250,
-      236,  251,  236,  236,  249,  236,  249,  250,  236,  250,
+      236,  236,  236,  236,  236,  248,  236,  248,  250,  249,
+      236,  249,  249,  236,  251,  236,  236,  250,  236,  250,
       236,  251,  236,  251,  252,  236,  236,  252,  236,  252,
       236,  236,  236,  236,  236,    0,  236,  236,  236,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
       236,  236
     } ;
 
-static const flex_int16_t yy_nxt[644] =
+static const flex_int16_t yy_nxt[648] =
     {   0,
        18,   18,   85,   18,   18,   18,   84,   18,   22,   23,
        71,   71,   71,   71,   74,   74,   75,   88,   66,   97,
@@ -513,7 +513,7 @@ static const flex_int16_t yy_nxt[644] =
       101,  102,   24,   25,   81,   26,   27,   98,   96,   94,
        99,  100,   28,   29,  103,  104,  105,   30,  106,  110,
 
-       31,  101,  102,   24,   25,   81,   26,   27,   98,  212,
+       31,  101,  102,   24,   25,   81,   26,   27,   98,  215,
        94,   99,  209,   28,   29,  103,  104,  105,   30,  106,
       110,   31,   32,   33,   34,   35,   33,   32,   36,   37,
        38,   32,   39,   32,   32,   32,   32,   32,   32,   32,
@@ -548,34 +548,34 @@ static const flex_int16_t yy_nxt[644] =
 
       169,  174,  163,  164,  163,  163,  175,  176,  178,  179,
       183,  181,  184,  186,  177,  187,  180,  188,  182,  185,
-      163,  164,  189,  171,  172,  171,  171,  171,  172,  192,
-      193,  195,  196,  197,  198,  199,  200,  201,  188,  202,
-      204,  205,  210,  189,  207,  208,  211,  213,  214,  194,
-      192,  193,  195,  196,  197,  198,  199,  200,  201,  191,
-      202,  204,  205,  210,  204,  204,  221,  211,  213,  214,
-      204,  205,  207,  208,  207,  207,  207,  208,  216,  217,
-      219,  220,  223,  224,  226,  216,  217,  221,  216,  216,
-      216,  217,  219,  220,  219,  219,  219,  220,  227,  223,
+      163,  164,  189,  171,  172,  171,  171,  171,  172,  193,
+      194,  196,  198,  199,  200,  201,  202,  203,  188,  204,
+      197,  205,  191,  189,  207,  208,  193,  194,  193,  193,
+      193,  194,  196,  198,  199,  200,  201,  202,  203,  214,
+      204,  195,  205,  193,  194,  211,  212,  216,  217,  207,
+      208,  207,  207,  207,  208,  219,  220,  211,  212,  190,
+      214,  221,  195,  211,  211,  211,  212,  226,  216,  217,
+      211,  212,  223,  224,  219,  220,  219,  219,  219,  220,
 
-      224,  223,  223,  223,  224,  226,  229,  230,  231,  232,
-      229,  230,  229,  229,  229,  230,  233,  233,  234,  227,
-      233,  233,  235,  235,  235,  235,  190,  173,  161,  231,
-      232,  149,  143,  125,  115,  114,  108,  107,   95,  234,
-       19,   19,   19,   21,   21,   21,   70,   91,   70,   82,
-       88,   82,  162,  162,  162,  170,  170,  170,  203,  203,
-      203,  206,  206,  206,  215,  215,  215,  218,  218,  218,
-      222,  222,  222,  228,  228,  228,   78,   75,  236,   45,
-       45,   17,  236,  236,  236,  236,  236,  236,  236,  236,
+      213,  227,  221,  223,  224,  223,  223,  231,  226,  223,
+      224,  229,  230,  232,  229,  230,  229,  229,  229,  230,
+      234,  213,  227,  233,  233,  233,  233,  173,  231,  235,
+      235,  235,  235,  161,  232,  149,  143,  125,  115,  114,
+      108,  234,   19,   19,   19,   21,   21,   21,   70,  107,
+       70,   82,   95,   82,  162,  162,  162,  170,  170,  170,
+      192,  192,  192,  206,  206,  206,  210,  210,  210,  218,
+      218,  218,  222,  222,  222,  228,  228,  228,   91,   88,
+       78,   75,  236,   45,   45,   17,  236,  236,  236,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
 
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
-      236,  236,  236
+      236,  236,  236,  236,  236,  236,  236
     } ;
 
-static const flex_int16_t yy_chk[644] =
+static const flex_int16_t yy_chk[648] =
     {   0,
         1,    1,  244,    1,    2,    2,  243,    2,    3,    3,
        34,   34,   35,   35,   39,   39,   41,   55,   29,   61,
@@ -584,12 +584,12 @@ static const flex_int16_t yy_chk[644] =
        61,   41,   55,   20,    2,   24,   28,   42,   31,   52,
        52,   26,   25,   27,   56,  241,   30,   31,   15,   16,
         1,   53,   53,   53,    2,    4,    4,   60,  240,   44,
-       63,   44,   44,   44,   58,   56,   58,   58,   58,  213,
+       63,   44,   44,   44,   58,   56,   58,   58,   58,  216,
        64,   65,    4,    4,   44,    4,    4,   62,   60,   58,
        62,   63,    4,    4,   66,   67,   68,    4,   69,   76,
 
-        4,   64,   65,    4,    4,   44,    4,    4,   62,  200,
-       58,   62,  193,    4,    4,   66,   67,   68,    4,   69,
+        4,   64,   65,    4,    4,   44,    4,    4,   62,  203,
+       58,   62,  196,    4,    4,   66,   67,   68,    4,   69,
        76,    4,    5,    5,    5,    5,    5,    5,    5,    5,
         5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
         5,    5,    5,    5,    5,    5,    5,    5,    5,    5,
@@ -624,30 +624,30 @@ static const flex_int16_t yy_chk[644] =
       148,  151,  162,  162,  163,  163,  152,  153,  154,  156,
       158,  157,  160,  161,  153,  165,  156,  166,  157,  160,
       164,  164,  167,  170,  170,  171,  171,  172,  172,  173,
-      174,  176,  179,  181,  184,  186,  187,  188,  166,  189,
-      190,  190,  194,  167,  192,  192,  199,  201,  202,  175,
-      173,  174,  176,  179,  181,  184,  186,  187,  188,  169,
-      189,  203,  203,  194,  204,  204,  211,  199,  201,  202,
-      205,  205,  206,  206,  207,  207,  208,  208,  209,  209,
-      210,  210,  212,  212,  214,  215,  215,  211,  216,  216,
-      217,  217,  218,  218,  219,  219,  220,  220,  221,  222,
+      173,  174,  176,  179,  181,  184,  186,  187,  166,  188,
+      175,  189,  169,  167,  190,  190,  192,  192,  193,  193,
+      194,  194,  174,  176,  179,  181,  184,  186,  187,  202,
+      188,  173,  189,  195,  195,  197,  197,  204,  205,  206,
+      206,  207,  207,  208,  208,  209,  209,  210,  210,  168,
+      202,  214,  173,  211,  211,  212,  212,  217,  204,  205,
+      213,  213,  215,  215,  218,  218,  219,  219,  220,  220,
 
-      222,  223,  223,  224,  224,  214,  225,  225,  226,  227,
-      228,  228,  229,  229,  230,  230,  231,  231,  232,  221,
-      233,  233,  234,  234,  235,  235,  168,  150,  142,  226,
-      227,  128,  122,  100,   85,   84,   73,   72,   59,  232,
-      237,  237,  237,  238,  238,  238,  239,   57,  239,  242,
-       54,  242,  245,  245,  245,  246,  246,  246,  247,  247,
-      247,  248,  248,  248,  249,  249,  249,  250,  250,  250,
-      251,  251,  251,  252,  252,  252,   43,   40,   17,   10,
-        9,  236,  236,  236,  236,  236,  236,  236,  236,  236,
+      197,  221,  214,  222,  222,  223,  223,  226,  217,  224,
+      224,  225,  225,  227,  228,  228,  229,  229,  230,  230,
+      232,  197,  221,  231,  231,  233,  233,  150,  226,  234,
+      234,  235,  235,  142,  227,  128,  122,  100,   85,   84,
+       73,  232,  237,  237,  237,  238,  238,  238,  239,   72,
+      239,  242,   59,  242,  245,  245,  245,  246,  246,  246,
+      247,  247,  247,  248,  248,  248,  249,  249,  249,  250,
+      250,  250,  251,  251,  251,  252,  252,  252,   57,   54,
+       43,   40,   17,   10,    9,  236,  236,  236,  236,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
 
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
       236,  236,  236,  236,  236,  236,  236,  236,  236,  236,
-      236,  236,  236
+      236,  236,  236,  236,  236,  236,  236
     } ;
 
 /* Table of booleans, true if rule could match eol. */
@@ -1365,12 +1365,17 @@ YY_RULE_SETUP
 #line 396 "imyparsf.l"
 {
 
+	int offset = 6; /* "STYLE:" */
 	ECHO;
 	/* parse style */
-	scanf_res = sscanf (yytext+7 /* "STYLE:S" */, "%d", &style);
+	if ( yytext[offset] == 'S' || yytext[offset] == 's' )
+	{
+		offset++;
+	}
+	scanf_res = sscanf (yytext+offset, "%d", &style);
 	if ( scanf_res != 1 )
 	{
-		printf ("%s: %s.\n", _(err_parse_style), yytext+7);
+		printf ("%s: %s.\n", _(err_parse_style), yytext+offset);
 		style = 0;
 	}
 	if ( (style < 0) || (style > 2) )
@@ -1386,15 +1391,20 @@ YY_RULE_SETUP
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 416 "imyparsf.l"
+#line 421 "imyparsf.l"
 {
 
+	int offset = 7; /* "VOLUME:" */
 	ECHO;
 	/* parse volume */
-	scanf_res = sscanf (yytext+8 /* VOLUME:V */, "%d", &volume);
+	if ( yytext[offset] == 'V' || yytext[offset] == 'v' )
+	{
+		offset++;
+	}
+	scanf_res = sscanf (yytext+offset, "%d", &volume);
 	if ( scanf_res != 1 )
 	{
-		printf ("%s: %s.\n", _(err_parse_vol), yytext+8);
+		printf ("%s: %s.\n", _(err_parse_vol), yytext+offset);
 		volume = 7;
 	}
 	if ( volume < 0 )
@@ -1414,14 +1424,14 @@ YY_RULE_SETUP
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 440 "imyparsf.l"
+#line 450 "imyparsf.l"
 ECHO;
 	YY_BREAK
 /* don't use "^MELODY:{FULL_MELODY} here, because we want to catch unknown tokens
 	ourselves and play the rest of the melody anyway. */
 case 10:
 YY_RULE_SETUP
-#line 444 "imyparsf.l"
+#line 454 "imyparsf.l"
 {
 
 	pos = 0;
@@ -1434,7 +1444,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 454 "imyparsf.l"
+#line 464 "imyparsf.l"
 {
 
 	imyp_play_current_note (yytext, &note_duration, curr, &play_result, 0, 0, bpm);
@@ -1448,7 +1458,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 465 "imyparsf.l"
+#line 475 "imyparsf.l"
 {
 
 	imyp_play_current_note (yytext+1 /* skip the '&' */, &note_duration,
@@ -1463,7 +1473,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 477 "imyparsf.l"
+#line 487 "imyparsf.l"
 {
 
 	imyp_play_current_note (yytext+1 /* skip the '#' */, &note_duration,
@@ -1478,7 +1488,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 489 "imyparsf.l"
+#line 499 "imyparsf.l"
 {
 
 	imyp_make_pause (yytext, curr, bpm);
@@ -1492,7 +1502,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 500 "imyparsf.l"
+#line 510 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1505,7 +1515,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 510 "imyparsf.l"
+#line 520 "imyparsf.l"
 {
 
 	scanf_res = sscanf (yytext+1, "%d", &octave);
@@ -1540,7 +1550,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 542 "imyparsf.l"
+#line 552 "imyparsf.l"
 {
 
 	if ( *(yytext+1) == '-' )
@@ -1569,7 +1579,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 568 "imyparsf.l"
+#line 578 "imyparsf.l"
 {
 
 	scanf_res = sscanf (yytext+1, "%d", &volume);
@@ -1595,7 +1605,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 591 "imyparsf.l"
+#line 601 "imyparsf.l"
 {
 
 	pos += yyleng;
@@ -1612,7 +1622,7 @@ YY_RULE_SETUP
 case 20:
 /* rule 20 can match eol */
 YY_RULE_SETUP
-#line 604 "imyparsf.l"
+#line 614 "imyparsf.l"
 {
 
 	/* a newline NOT followed by whitespace means the end of the melody line. */
@@ -1629,7 +1639,7 @@ YY_RULE_SETUP
 case 21:
 /* rule 21 can match eol */
 YY_RULE_SETUP
-#line 617 "imyparsf.l"
+#line 627 "imyparsf.l"
 {
 
 	pos = 0;
@@ -1643,7 +1653,7 @@ YY_RULE_SETUP
 case 22:
 /* rule 22 can match eol */
 YY_RULE_SETUP
-#line 627 "imyparsf.l"
+#line 637 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1656,7 +1666,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 637 "imyparsf.l"
+#line 647 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1678,7 +1688,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 656 "imyparsf.l"
+#line 666 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1700,7 +1710,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 675 "imyparsf.l"
+#line 685 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1722,7 +1732,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 694 "imyparsf.l"
+#line 704 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1743,7 +1753,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 712 "imyparsf.l"
+#line 722 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1763,7 +1773,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 729 "imyparsf.l"
+#line 739 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1805,7 +1815,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 768 "imyparsf.l"
+#line 778 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1841,7 +1851,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 801 "imyparsf.l"
+#line 811 "imyparsf.l"
 {
 
 	char * vol_ptr = NULL;
@@ -1903,7 +1913,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 860 "imyparsf.l"
+#line 870 "imyparsf.l"
 {
 
 	if ( YY_START == IN_REPEAT_BLOCK /*repeat_count == -2*/ )
@@ -1952,7 +1962,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 906 "imyparsf.l"
+#line 916 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -1989,7 +1999,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 940 "imyparsf.l"
+#line 950 "imyparsf.l"
 {
 
 	if ( repeat_count == -1 )
@@ -2024,7 +2034,7 @@ YY_RULE_SETUP
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 971 "imyparsf.l"
+#line 981 "imyparsf.l"
 {
 
 	/* a newline NOT followed by whitespace means the end of the melody line. */
@@ -2041,7 +2051,7 @@ YY_RULE_SETUP
 case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
-#line 984 "imyparsf.l"
+#line 994 "imyparsf.l"
 {
 
 	pos = 0;
@@ -2058,7 +2068,7 @@ YY_RULE_SETUP
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 997 "imyparsf.l"
+#line 1007 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
@@ -2075,7 +2085,7 @@ YY_RULE_SETUP
 /* anything not processed up to here is an unknown token */
 case 37:
 YY_RULE_SETUP
-#line 1011 "imyparsf.l"
+#line 1021 "imyparsf.l"
 {
 
 	printf ("%s: '%c' (0x%x) %s %d:%d\n",
@@ -2096,7 +2106,7 @@ YY_RULE_SETUP
 /* anything not processed up to here is an unknown token */
 case 38:
 YY_RULE_SETUP
-#line 1029 "imyparsf.l"
+#line 1039 "imyparsf.l"
 {
 
 	printf ("%s: '%c' (0x%x) %s %d:%d\n",
@@ -2120,7 +2130,7 @@ YY_RULE_SETUP
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 1049 "imyparsf.l"
+#line 1059 "imyparsf.l"
 {
 
 	BEGIN (INITIAL);
@@ -2136,7 +2146,7 @@ YY_RULE_SETUP
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 1061 "imyparsf.l"
+#line 1071 "imyparsf.l"
 {
 
 	/* skip leftover newline characters inside the melody block
@@ -2150,7 +2160,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 1072 "imyparsf.l"
+#line 1082 "imyparsf.l"
 {
 
 	ECHO; /* echo unknown characters inside the melody block */
@@ -2163,7 +2173,7 @@ YY_RULE_SETUP
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 1081 "imyparsf.l"
+#line 1091 "imyparsf.l"
 {
 /* NOTE: using just ".|\x00" is NOT enough */
 
@@ -2177,10 +2187,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 1092 "imyparsf.l"
+#line 1102 "imyparsf.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 2184 "imyparsf.c"
+#line 2194 "imyparsf.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_IMELODY):
 case YY_STATE_EOF(IN_MELODY_LINE):
@@ -3166,7 +3176,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 1092 "imyparsf.l"
+#line 1102 "imyparsf.l"
 
 
 /* ======================================================================== */

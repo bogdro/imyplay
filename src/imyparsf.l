@@ -392,14 +392,19 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_IMELODY>^STYLE:S.*[\r\n]*		{
+<IN_IMELODY>^STYLE:S?.*[\r\n]*		{
 
+	int offset = 6; /* "STYLE:" */
 	ECHO;
 	/* parse style */
-	scanf_res = sscanf (yytext+7 /* "STYLE:S" */, "%d", &style);
+	if ( yytext[offset] == 'S' || yytext[offset] == 's' )
+	{
+		offset++;
+	}
+	scanf_res = sscanf (yytext+offset, "%d", &style);
 	if ( scanf_res != 1 )
 	{
-		printf ("%s: %s.\n", _(err_parse_style), yytext+7);
+		printf ("%s: %s.\n", _(err_parse_style), yytext+offset);
 		style = 0;
 	}
 	if ( (style < 0) || (style > 2) )
@@ -412,14 +417,19 @@ FULL_MELODY		(({REPEAT_ELEMS}|{REPEAT_BLOCK})+)
 	}
 }
 
-<IN_IMELODY>^VOLUME:V.*[\r\n]*		{
+<IN_IMELODY>^VOLUME:V?.*[\r\n]*		{
 
+	int offset = 7; /* "VOLUME:" */
 	ECHO;
 	/* parse volume */
-	scanf_res = sscanf (yytext+8 /* VOLUME:V */, "%d", &volume);
+	if ( yytext[offset] == 'V' || yytext[offset] == 'v' )
+	{
+		offset++;
+	}
+	scanf_res = sscanf (yytext+offset, "%d", &volume);
 	if ( scanf_res != 1 )
 	{
-		printf ("%s: %s.\n", _(err_parse_vol), yytext+8);
+		printf ("%s: %s.\n", _(err_parse_vol), yytext+offset);
 		volume = 7;
 	}
 	if ( volume < 0 )

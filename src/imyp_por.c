@@ -247,7 +247,6 @@ imyp_portaudio_play_tune (
 		}
 
 		imyp_portaudio_pause (imyp_data, duration);
-		while ( (data->samples_remain != 0) && (imyp_sig_recvd == 0) ) {}
 
 		Pa_StopStream (data->stream);
 	}

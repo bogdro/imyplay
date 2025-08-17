@@ -246,9 +246,8 @@ imyp_sdl_play_tune (
 		SDL_PauseAudio (0);	/* start playing */
 		SDL_UnlockAudio ();
 
-		while ( (data->samples_remain > 0) && (imyp_sig_recvd == 0) ) {}
+		imyp_sdl_pause (imyp_data, duration);
 
-		/*imyp_sdl_pause (imyp_data, duration); */
 		SDL_PauseAudio (1);
 		SDL_LockAudio ();
 

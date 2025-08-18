@@ -105,4 +105,16 @@ extern char * imyp_generate_filename IMYP_PARAMS ((
 	const char * const filename,
 	const char * const ext));
 
+typedef int imyp_error_type;
+
+extern void
+# ifdef IMYP_ANSIC
+	IMYP_ATTR ((nonnull))
+# endif
+	imyp_show_error IMYP_PARAMS ((const imyp_error_type err, const char * const msg, const char * const extra));
+
+extern const char * const err_msg;
+extern const char * const imyp_sig_unk;
+extern const char * const imyp_err_msg_signal;
+
 #endif /* IMYP_UTILS */

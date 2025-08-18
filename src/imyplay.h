@@ -98,21 +98,6 @@ typedef int sig_atomic_t;
 # define IMYP_IS_DIGIT(c) ( ((c) >= '0') && ((c) <= '9') )
 # define IMYP_DEF_BPM 120
 
-
-typedef int imyp_error_type;
-
-extern void
-# ifdef IMYP_ANSIC
-	IMYP_ATTR ((nonnull))
-# endif
-	imyp_show_error IMYP_PARAMS ((const imyp_error_type err, const char * const msg, const char * const extra));
-
-extern const char * const err_msg;
-extern const char * const imyp_sig_unk;
-extern const char * const imyp_err_msg_signal;
-extern const char * const ver_msg_compiled;
-extern const char * const ver_msg_runtime;
-
 enum IMYP_CURR_LIB
 {
 	IMYP_CURR_NONE,

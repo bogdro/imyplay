@@ -23,7 +23,7 @@ bin_PROGRAMS = imyplay
 datadir = @datadir@
 imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 	imyp_sig.c imyp_sig.h imyparse.h imyputil.c imyputil.h \
-	iparsers.c iparsers.h
+	iparsers.c iparsers.h imyp_cmd.c imyp_cmd.h
 
 imyplay_LDADD = $(INTLLIBS)
 localedir = $(datadir)/locale

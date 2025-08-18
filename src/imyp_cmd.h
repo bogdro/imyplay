@@ -1,8 +1,8 @@
 /*
  * IMYplay - A program for playing iMelody ringtones (IMY files).
- *	-- signal handling, header file.
+ *	-- command-line parsing, header file.
  *
- * Copyright (C) 2009-2025 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+ * Copyright (C) 2025 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
  * License: GNU General Public License, v3+
  *
  * This program is free software; you can redistribute it and/or
@@ -19,14 +19,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef IMYP_SIGNAL
-# define IMYP_SIGNAL 1
+#ifndef _IMYPLAY_CMD_H
+# define _IMYPLAY_CMD_H 1
 
-# include "imyplay.h"
-# include "imyputil.h"
+/* define _GNU_SOURCE before any headers */
+# define _GNU_SOURCE	1	/* getopt_long() */
 
-extern volatile sig_atomic_t imyp_sig_recvd;	/* non-zero after signal received */
+# include "imyp_cfg.h"
 
-extern void imyp_set_sigh IMYP_PARAMS ((imyp_error_type * const error));
+# ifdef HAVE_LIBINTL_H
+#  include <libintl.h>	/* translation stuff */
+# endif
 
-#endif /* IMYP_SIGNAL */
+# ifdef HAVE_LOCALE_H
+#  include <locale.h>
+# endif
+
+# ifdef HAVE_LIBGEN_H
+#  include <libgen.h>	/* basename() */
+# endif
+
+extern int imyplay_parse_cmdline IMYP_PARAMS ((int argc, char* argv[]));
+
+extern const char * imyp_progname;
+extern const char * const ver_msg_compiled;
+extern const char * const ver_msg_runtime;
+
+#endif /* _IMYPLAY_CMD_H */

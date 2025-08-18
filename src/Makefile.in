@@ -153,13 +153,14 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 	imyp_sig.c imyp_sig.h imyparse.h imyputil.c imyputil.h \
-	iparsers.c iparsers.h imyp_all.c imyp_all.h imyp_sdl.c \
-	imyp_sdl.h imyp_als.c imyp_als.h imyp_oss.c imyp_oss.h \
-	imyp_ao.c imyp_ao.h imyp_por.c imyp_por.h imyp_pul.c \
-	imyp_pul.h imyp_jck.c imyp_jck.h imyp_mid.c imyp_mid.h \
-	midifile.c midifile.h midiinfo.h midibase.h imyp_exe.c \
-	imyp_exe.h imyp_gst.c imyp_gst.h imyp_fil.c imyp_fil.h \
-	imyp_spk.c imyp_spk.h imyparsf.l imyparse.c
+	iparsers.c iparsers.h imyp_cmd.c imyp_cmd.h imyp_all.c \
+	imyp_all.h imyp_sdl.c imyp_sdl.h imyp_als.c imyp_als.h \
+	imyp_oss.c imyp_oss.h imyp_ao.c imyp_ao.h imyp_por.c \
+	imyp_por.h imyp_pul.c imyp_pul.h imyp_jck.c imyp_jck.h \
+	imyp_mid.c imyp_mid.h midifile.c midifile.h midiinfo.h \
+	midibase.h imyp_exe.c imyp_exe.h imyp_gst.c imyp_gst.h \
+	imyp_fil.c imyp_fil.h imyp_spk.c imyp_spk.h imyparsf.l \
+	imyparse.c
 @ALLEGRO_TRUE@am__objects_1 = imyp_all.$(OBJEXT)
 @SDL2_TRUE@am__objects_2 = imyp_sdl.$(OBJEXT)
 @SDL2_FALSE@@SDL_TRUE@am__objects_3 = imyp_sdl.$(OBJEXT)
@@ -178,12 +179,12 @@ am__imyplay_SOURCES_DIST = imyplay.c imyplay.h imypwrap.c imypwrap.h \
 @FLEX_FALSE@am__objects_16 = imyparse.$(OBJEXT)
 am_imyplay_OBJECTS = imyplay.$(OBJEXT) imypwrap.$(OBJEXT) \
 	imyp_sig.$(OBJEXT) imyputil.$(OBJEXT) iparsers.$(OBJEXT) \
-	$(am__objects_1) $(am__objects_2) $(am__objects_3) \
-	$(am__objects_4) $(am__objects_5) $(am__objects_6) \
-	$(am__objects_7) $(am__objects_8) $(am__objects_9) \
-	$(am__objects_10) $(am__objects_11) $(am__objects_12) \
-	$(am__objects_13) $(am__objects_14) $(am__objects_15) \
-	$(am__objects_16)
+	imyp_cmd.$(OBJEXT) $(am__objects_1) $(am__objects_2) \
+	$(am__objects_3) $(am__objects_4) $(am__objects_5) \
+	$(am__objects_6) $(am__objects_7) $(am__objects_8) \
+	$(am__objects_9) $(am__objects_10) $(am__objects_11) \
+	$(am__objects_12) $(am__objects_13) $(am__objects_14) \
+	$(am__objects_15) $(am__objects_16)
 imyplay_OBJECTS = $(am_imyplay_OBJECTS)
 am__DEPENDENCIES_1 =
 imyplay_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -203,16 +204,16 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/imyp_all.Po ./$(DEPDIR)/imyp_als.Po \
-	./$(DEPDIR)/imyp_ao.Po ./$(DEPDIR)/imyp_exe.Po \
-	./$(DEPDIR)/imyp_fil.Po ./$(DEPDIR)/imyp_gst.Po \
-	./$(DEPDIR)/imyp_jck.Po ./$(DEPDIR)/imyp_mid.Po \
-	./$(DEPDIR)/imyp_oss.Po ./$(DEPDIR)/imyp_por.Po \
-	./$(DEPDIR)/imyp_pul.Po ./$(DEPDIR)/imyp_sdl.Po \
-	./$(DEPDIR)/imyp_sig.Po ./$(DEPDIR)/imyp_spk.Po \
-	./$(DEPDIR)/imyparse.Po ./$(DEPDIR)/imyparsf.Po \
-	./$(DEPDIR)/imyplay.Po ./$(DEPDIR)/imyputil.Po \
-	./$(DEPDIR)/imypwrap.Po ./$(DEPDIR)/iparsers.Po \
-	./$(DEPDIR)/midifile.Po
+	./$(DEPDIR)/imyp_ao.Po ./$(DEPDIR)/imyp_cmd.Po \
+	./$(DEPDIR)/imyp_exe.Po ./$(DEPDIR)/imyp_fil.Po \
+	./$(DEPDIR)/imyp_gst.Po ./$(DEPDIR)/imyp_jck.Po \
+	./$(DEPDIR)/imyp_mid.Po ./$(DEPDIR)/imyp_oss.Po \
+	./$(DEPDIR)/imyp_por.Po ./$(DEPDIR)/imyp_pul.Po \
+	./$(DEPDIR)/imyp_sdl.Po ./$(DEPDIR)/imyp_sig.Po \
+	./$(DEPDIR)/imyp_spk.Po ./$(DEPDIR)/imyparse.Po \
+	./$(DEPDIR)/imyparsf.Po ./$(DEPDIR)/imyplay.Po \
+	./$(DEPDIR)/imyputil.Po ./$(DEPDIR)/imypwrap.Po \
+	./$(DEPDIR)/iparsers.Po ./$(DEPDIR)/midifile.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -392,12 +393,12 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 imyplay_SOURCES = imyplay.c imyplay.h imypwrap.c imypwrap.h imyp_sig.c \
 	imyp_sig.h imyparse.h imyputil.c imyputil.h iparsers.c \
-	iparsers.h $(am__append_1) $(am__append_3) $(am__append_4) \
-	$(am__append_5) $(am__append_6) $(am__append_7) \
-	$(am__append_8) $(am__append_9) $(am__append_10) \
-	$(am__append_11) $(am__append_12) $(am__append_13) \
-	$(am__append_14) $(am__append_15) $(am__append_16) \
-	$(am__append_17)
+	iparsers.h imyp_cmd.c imyp_cmd.h $(am__append_1) \
+	$(am__append_3) $(am__append_4) $(am__append_5) \
+	$(am__append_6) $(am__append_7) $(am__append_8) \
+	$(am__append_9) $(am__append_10) $(am__append_11) \
+	$(am__append_12) $(am__append_13) $(am__append_14) \
+	$(am__append_15) $(am__append_16) $(am__append_17)
 imyplay_LDADD = $(INTLLIBS)
 AM_CPPFLAGS = -I../intl -DLOCALEDIR=\"$(localedir)\"
 EXTRA_DIST = imyp_cfg.hin imypdos.asm
@@ -499,6 +500,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_all.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_als.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_ao.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_cmd.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_exe.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_fil.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imyp_gst.Po@am__quote@ # am--include-marker
@@ -672,6 +674,7 @@ distclean: distclean-am
 		-rm -f ./$(DEPDIR)/imyp_all.Po
 	-rm -f ./$(DEPDIR)/imyp_als.Po
 	-rm -f ./$(DEPDIR)/imyp_ao.Po
+	-rm -f ./$(DEPDIR)/imyp_cmd.Po
 	-rm -f ./$(DEPDIR)/imyp_exe.Po
 	-rm -f ./$(DEPDIR)/imyp_fil.Po
 	-rm -f ./$(DEPDIR)/imyp_gst.Po
@@ -738,6 +741,7 @@ maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/imyp_all.Po
 	-rm -f ./$(DEPDIR)/imyp_als.Po
 	-rm -f ./$(DEPDIR)/imyp_ao.Po
+	-rm -f ./$(DEPDIR)/imyp_cmd.Po
 	-rm -f ./$(DEPDIR)/imyp_exe.Po
 	-rm -f ./$(DEPDIR)/imyp_fil.Po
 	-rm -f ./$(DEPDIR)/imyp_gst.Po

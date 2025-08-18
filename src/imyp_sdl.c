@@ -25,6 +25,7 @@
 #include "imyp_sdl.h"
 #include "imyp_sig.h"
 #include "imyputil.h"
+#include "imyp_cmd.h"
 
 #include <stdio.h>
 

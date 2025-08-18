@@ -70,6 +70,7 @@
 #include "imyplay.h"
 #include "imyputil.h"
 #include "imyp_sig.h"
+#include "imyp_cmd.h"
 
 #ifdef TEST_COMPILE
 # undef IMYP_ANSIC
@@ -77,6 +78,14 @@
 #  undef HAVE_MALLOC
 # endif
 #endif
+
+const char * const err_msg                = N_("error");
+const char * const imyp_err_msg_signal    = N_("Error while trying to set a signal handler for");
+
+/* Signal-related stuff */
+#ifdef HAVE_SIGNAL_H
+const char * const imyp_sig_unk = N_("unknown");
+#endif /* HAVE_SIGNAL_H */
 
 #ifndef HAVE_STRCASECMP
 /**
@@ -578,6 +587,45 @@ imyp_put_text_stdout (
 		printf ("%s", text);
 	}
 }
+
+/* ======================================================================== */
+
+/**
+ * Displays an error message.
+ * \param err Error code.
+ * \param msg The message.
+ * \param extra Last element of the error message (fsname or signal).
+ * \param FS The filesystem this message refers to.
+ */
+void
+#ifdef IMYP_ANSIC
+IMYP_ATTR ((nonnull))
+#endif
+imyp_show_error (
+#ifdef IMYP_ANSIC
+	const imyp_error_type	err,
+	const char * const	msg,
+	const char * const	extra )
+#else
+	err, msg, extra )
+	const imyp_error_type	err;
+	const char * const	msg;
+	const char * const	extra;
+#endif
+{
+	if ( msg == NULL )
+	{
+		return;
+	}
+
+	fprintf ( stderr, "%s: %s: %d (%s) %s", imyp_progname,
+		_(err_msg),
+		err, _(msg),
+		(extra != NULL)? extra : "" );
+	fflush (stderr);
+}
+
+/* ======================================================================== */
 
 /**
  * Generates a filename with the given extension from the given filename.

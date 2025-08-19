@@ -1,4 +1,4 @@
 # List of source files which contain translatable strings.
-src/imyplay.c
-#src/imyparse.c
+src/imyp_cmd.c
+src/imyputil.c
 src/iparsers.c

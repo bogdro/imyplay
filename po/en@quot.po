@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 2.0\n"
 "Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
-"POT-Creation-Date: 2023-09-23 20:52+0200\n"
-"PO-Revision-Date: 2023-09-23 20:52+0200\n"
+"POT-Creation-Date: 2025-08-19 22:37+0200\n"
+"PO-Revision-Date: 2025-08-19 22:37+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en@quot\n"
@@ -39,11 +39,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/imyplay.c:80
+#: src/imyp_cmd.c:65
 msgid "version"
 msgstr "version"
 
-#: src/imyplay.c:84
+#: src/imyp_cmd.c:69
 msgid ""
 "Program for playing iMelody ringtones (IMY files).\n"
 "\n"
@@ -69,85 +69,85 @@ msgstr ""
 "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 "\n"
 
-#: src/imyplay.c:94
-msgid "error"
-msgstr "error"
-
-#: src/imyplay.c:95
-msgid "Error while trying to set a signal handler for"
-msgstr "Error while trying to set a signal handler for"
-
-#: src/imyplay.c:96
+#: src/imyp_cmd.c:79
 msgid "Error during library init"
 msgstr "Error during library init"
 
-#: src/imyplay.c:98
+#: src/imyp_cmd.c:81
 msgid "Error during library closing."
 msgstr "Error during library closing."
 
-#: src/imyplay.c:106
+#: src/imyp_cmd.c:89
 msgid "compiled with version"
 msgstr "compiled with version"
 
-#: src/imyplay.c:107
+#: src/imyp_cmd.c:90
 msgid "running with version"
 msgstr "running with version"
 
-#: src/imyplay.c:111
-msgid "unknown"
-msgstr "unknown"
-
-#: src/imyplay.c:258
+#: src/imyp_cmd.c:199
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr "A program for playing iMelody ringtones (IMY files)"
 
-#: src/imyplay.c:259
+#: src/imyp_cmd.c:200
 msgid "Syntax"
 msgstr "Syntax"
 
-#: src/imyplay.c:261
+#: src/imyp_cmd.c:202
 msgid " [options] "
 msgstr " [options] "
 
-#: src/imyplay.c:263
+#: src/imyp_cmd.c:204
 msgid "Options"
 msgstr "Options"
 
-#: src/imyplay.c:264
+#: src/imyp_cmd.c:205
 msgid "Try to use this device"
 msgstr "Try to use this device"
 
-#: src/imyplay.c:266
+#: src/imyp_cmd.c:207
 msgid "Execute this program instead of sound output"
 msgstr "Execute this program instead of sound output"
 
-#: src/imyplay.c:269
+#: src/imyp_cmd.c:210
 msgid "Write raw samples to this file instead of sound output"
 msgstr "Write raw samples to this file instead of sound output"
 
-#: src/imyplay.c:271
+#: src/imyp_cmd.c:212
 msgid "Print help"
 msgstr "Print help"
 
-#: src/imyplay.c:272
+#: src/imyp_cmd.c:213
 msgid "Print license information"
 msgstr "Print license information"
 
-#: src/imyplay.c:274
+#: src/imyp_cmd.c:215
 msgid "Select MIDI instrument number"
 msgstr "Select MIDI instrument number"
 
-#: src/imyplay.c:276
+#: src/imyp_cmd.c:217
 msgid "Use the given output system"
 msgstr "Use the given output system"
 
-#: src/imyplay.c:278
+#: src/imyp_cmd.c:219
 msgid "Convert the given files to MIDI format"
 msgstr "Convert the given files to MIDI format"
 
-#: src/imyplay.c:280
+#: src/imyp_cmd.c:221
 msgid "Print version number"
 msgstr "Print version number"
+
+#: src/imyputil.c:82
+msgid "error"
+msgstr "error"
+
+#: src/imyputil.c:83
+msgid "Error while trying to set a signal handler for"
+msgstr "Error while trying to set a signal handler for"
+
+#: src/imyputil.c:87
+msgid "unknown"
+msgstr "unknown"
 
 #: src/iparsers.c:36
 msgid "Unknown token"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 1.3\n"
 "Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
-"POT-Creation-Date: 2023-09-23 20:52+0200\n"
+"POT-Creation-Date: 2025-08-19 22:37+0200\n"
 "PO-Revision-Date: 2023-09-05 19:50+0200\n"
 "Last-Translator: Bogdan Drozdowski <bogdro@users.sourceforge.net>\n"
 "Language-Team: Polish\n"
@@ -19,11 +19,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
-#: src/imyplay.c:80
+#: src/imyp_cmd.c:65
 msgid "version"
 msgstr "wersja"
 
-#: src/imyplay.c:84
+#: src/imyp_cmd.c:69
 msgid ""
 "Program for playing iMelody ringtones (IMY files).\n"
 "\n"
@@ -51,85 +51,85 @@ msgstr ""
 "ZASTOSOWAŃ\n"
 "\n"
 
-#: src/imyplay.c:94
-msgid "error"
-msgstr "błąd"
-
-#: src/imyplay.c:95
-msgid "Error while trying to set a signal handler for"
-msgstr "Błąd podczas ustawiania procedury obsługi sygnału"
-
-#: src/imyplay.c:96
+#: src/imyp_cmd.c:79
 msgid "Error during library init"
 msgstr "Błąd podczas inicjalizacji biblioteki"
 
-#: src/imyplay.c:98
+#: src/imyp_cmd.c:81
 msgid "Error during library closing."
 msgstr "Błąd podczas zamykania biblioteki"
 
-#: src/imyplay.c:106
+#: src/imyp_cmd.c:89
 msgid "compiled with version"
 msgstr "skompilowane z wersją"
 
-#: src/imyplay.c:107
+#: src/imyp_cmd.c:90
 msgid "running with version"
 msgstr "uruchomione z wersją"
 
-#: src/imyplay.c:111
-msgid "unknown"
-msgstr "nieznany"
-
-#: src/imyplay.c:258
+#: src/imyp_cmd.c:199
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr "Program do odtwarzania dzwonków iMelody (plików IMY)"
 
-#: src/imyplay.c:259
+#: src/imyp_cmd.c:200
 msgid "Syntax"
 msgstr "Składnia"
 
-#: src/imyplay.c:261
+#: src/imyp_cmd.c:202
 msgid " [options] "
 msgstr " [opcje] "
 
-#: src/imyplay.c:263
+#: src/imyp_cmd.c:204
 msgid "Options"
 msgstr "Opcje"
 
-#: src/imyplay.c:264
+#: src/imyp_cmd.c:205
 msgid "Try to use this device"
 msgstr "Spróbuj użyć tego urządzenia"
 
-#: src/imyplay.c:266
+#: src/imyp_cmd.c:207
 msgid "Execute this program instead of sound output"
 msgstr "Wykonaj ten program zamiast wyjścia dźwiękowego"
 
-#: src/imyplay.c:269
+#: src/imyp_cmd.c:210
 msgid "Write raw samples to this file instead of sound output"
 msgstr "Zapisz surowe próbki do tego pliku zamiast wyjścia dźwiękowego"
 
-#: src/imyplay.c:271
+#: src/imyp_cmd.c:212
 msgid "Print help"
 msgstr "Wyświetl pomoc"
 
-#: src/imyplay.c:272
+#: src/imyp_cmd.c:213
 msgid "Print license information"
 msgstr "Wyświetl informacje o licencji"
 
-#: src/imyplay.c:274
+#: src/imyp_cmd.c:215
 msgid "Select MIDI instrument number"
 msgstr "Wybierz numer instrumentu MIDI"
 
-#: src/imyplay.c:276
+#: src/imyp_cmd.c:217
 msgid "Use the given output system"
 msgstr "Użyj danego systemu wyjścia"
 
-#: src/imyplay.c:278
+#: src/imyp_cmd.c:219
 msgid "Convert the given files to MIDI format"
 msgstr "Przekonwertuj podane pliki na format MIDI"
 
-#: src/imyplay.c:280
+#: src/imyp_cmd.c:221
 msgid "Print version number"
 msgstr "Wyświetl numer wersji"
+
+#: src/imyputil.c:82
+msgid "error"
+msgstr "błąd"
+
+#: src/imyputil.c:83
+msgid "Error while trying to set a signal handler for"
+msgstr "Błąd podczas ustawiania procedury obsługi sygnału"
+
+#: src/imyputil.c:87
+msgid "unknown"
+msgstr "nieznany"
 
 #: src/iparsers.c:36
 msgid "Unknown token"

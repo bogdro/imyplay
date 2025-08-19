@@ -754,7 +754,7 @@ imyp_play_file (
 			{
 				imyp_put_text (melody_line, curr);
 				/* parse style */
-				int offset = 6; /* "STYLE:" */
+				offset = 6; /* "STYLE:" */
 				if ( melody_line[offset] == 'S' || melody_line[offset] == 's' )
 				{
 					offset++;

@@ -17,20 +17,25 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 image: gcc
+
 build:
   stage: build
   script:
-  - touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin po/*gmo
-    && sleep 1
-    && ./configure
-    && sleep 1
-    && touch doc/imyplay.info
-    && sleep 1
-    && make
+    - touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin
+    - for i in po/*.po; do touch ${i/.po/.gmo}; done
+    - sleep 1
+    - ./configure
+    - sleep 1
+    - touch doc/imyplay.info
+    - sleep 1
+    - make
+
 stages:
-- test
-- build
+  - test
+  - build
+
 sast:
   stage: test
+
 include:
-- template: Security/SAST.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml

@@ -21,6 +21,7 @@ image: gcc
 build:
   stage: build
   script:
+    - sudo apt-get -y install liballegro4-dev libsdl2-dev libasound2-dev libao-dev portaudio19-dev libpulse-dev libjack-dev libgstreamer-plugins-base1.0-0 libgstreamer-plugins-base1.0-dev libgstreamer1.0-dev
     - touch configure aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in config.hin
     - for i in po/*.po; do touch ${i/.po/.gmo}; done
     - sleep 1

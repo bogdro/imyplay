@@ -1,0 +1,42 @@
+name: Makefile CI - Linux
+
+on:
+  push:
+    branches: [ "master", dev, main ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Install requirements
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install check liballegro4-dev libsdl2-dev libasound2-dev libao-dev portaudio19-dev libpulse-dev libjack-dev libunwind-15-dev libgstreamer-plugins-base1.0-0 libgstreamer-plugins-base1.0
+
+    - name: Configure
+      run: |
+        #autoreconf --install
+        touch aclocal.m4 Makefile.in src/Makefile.in doc/Makefile.in test/Makefile.in config.hin po/*gmo
+        sleep 1
+        touch configure
+        ./configure
+        sleep 1
+        touch doc/imyplay.info
+        sleep 1
+
+    - name: Build
+      run: make
+
+    - name: Test
+      run: make check
+
+    #- name: Run distcheck
+    #  run: make distcheck

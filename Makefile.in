@@ -192,9 +192,9 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.hin \
 	$(top_srcdir)/setup/Makefile.in ABOUT-NLS AUTHORS COPYING \
 	ChangeLog INSTALL NEWS README THANKS build-aux/compile \
 	build-aux/config.guess build-aux/config.rpath \
-	build-aux/config.sub build-aux/install-sh build-aux/missing \
-	compile config.guess config.rpath config.sub depcomp \
-	install-sh missing mkinstalldirs ylwrap
+	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
+	build-aux/missing build-aux/texinfo.tex build-aux/ylwrap \
+	mkinstalldirs
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -371,7 +371,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = doc src po test
 ACLOCAL_AMFLAGS = -I m4
-EXTRA_DIST = config.rpath mkinstalldirs imyplay.spi m4/ax_cflag.m4 \
+EXTRA_DIST = mkinstalldirs imyplay.spi m4/ax_cflag.m4 \
 	m4/ax_unus.m4 imy THANKS dosdist.bat dosfiles.txt Makefile.dos \
 	setup/imyplay.bat setup/imyplay.nsi setup/imyplay.svg
 

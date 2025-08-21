@@ -220,8 +220,7 @@ NROFF = nroff
 MANS = $(dist_man1_MANS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(dist_man1_MANS) $(srcdir)/Makefile.in \
-	$(srcdir)/imyplay.txc $(top_srcdir)/build-aux/texinfo.tex \
-	texinfo.tex
+	$(srcdir)/imyplay.txc $(top_srcdir)/build-aux/texinfo.tex
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 ALLEGRO_LDFLAGS = @ALLEGRO_LDFLAGS@

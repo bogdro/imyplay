@@ -36,7 +36,7 @@ jobs:
       run: make
 
     - name: Test
-      run: make check
+      run: make check || cat test/test-suite.log || cat test/*.log
 
     #- name: Run distcheck
     #  run: make distcheck

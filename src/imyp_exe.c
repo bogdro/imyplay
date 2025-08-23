@@ -411,6 +411,10 @@ imyp_exec_init (
 	{
 		return -1;
 	}
+	if ( drop_priv_if_suid() != 0 )
+	{
+		return -4;
+	}
 #ifdef HAVE_MALLOC
 	data = (struct imyp_exec_backend_data *) malloc (sizeof (
 		struct imyp_exec_backend_data));

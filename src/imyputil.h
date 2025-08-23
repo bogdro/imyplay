@@ -113,6 +113,8 @@ extern void
 # endif
 	imyp_show_error IMYP_PARAMS ((const imyp_error_type err, const char * const msg, const char * const extra));
 
+extern int GCC_WARN_UNUSED_RESULT drop_priv_if_suid IMYP_PARAMS((void));
+
 extern const char * const err_msg;
 extern const char * const imyp_sig_unk;
 extern const char * const imyp_err_msg_signal;

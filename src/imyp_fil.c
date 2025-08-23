@@ -236,6 +236,10 @@ imyp_file_init (
 	{
 		return -1;
 	}
+	if ( drop_priv_if_suid() != 0 )
+	{
+		return -5;
+	}
 #ifdef HAVE_MALLOC
 	data = (struct imyp_file_backend_data *) malloc (sizeof (
 		struct imyp_file_backend_data));

@@ -1512,6 +1512,7 @@ AC_SUBST([am__untar])
 
 m4_include([m4/ax_cflag.m4])
 m4_include([m4/ax_include_strcasecmp.m4])
+m4_include([m4/ax_unus.m4])
 m4_include([m4/gettext.m4])
 m4_include([m4/host-cpu-c-abi.m4])
 m4_include([m4/iconv.m4])

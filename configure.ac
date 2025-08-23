@@ -767,7 +767,7 @@ AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type 
 AC_FUNC_MALLOC
 
 AC_CHECK_FUNCS([setlocale sigaction snprintf basename getopt_long \
-	strcasecmp strncasecmp strdup getenv])
+	strcasecmp strncasecmp strdup getenv getuid geteuid setuid])
 if ( test "x$imyp_flex_enabled" != "xyes" ); then
 
 	AC_FUNC_FSEEKO
@@ -790,6 +790,8 @@ PKG_CHECK_MODULES([CHECK], [check >= 0.9.4], [have_check=yes], [have_check=no])
 AM_CONDITIONAL([IMY_TESTS_ENABLED], [test "x$have_check" = "xyes"])
 
 if (test "x$GCC" = "xyes" ); then
+
+	AX_GCC_WARN_UNUSED_RESULT()
 
 	AX_C_CHECK_FLAG([-Wall], [CFLAGS="$CFLAGS -Wall"], [CFLAGS="$CFLAGS"])
 	AX_C_CHECK_FLAG([-Wextra], [CFLAGS="$CFLAGS -Wextra"], [CFLAGS="$CFLAGS"])

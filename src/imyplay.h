@@ -38,6 +38,14 @@
 #  define IMYP_ATTR(x)
 # endif
 
+# ifndef GCC_WARN_UNUSED_RESULT
+/*
+ if the compiler doesn't support this, define this to an empty value,
+ so that everything compiles (just in case)
+ */
+#  define GCC_WARN_UNUSED_RESULT /*IMYP_ATTR((warn_unused_result))*/
+# endif
+
 # define IMYP_SAMPBUFSIZE (128*1024)
 # define IMYP_MAX_IMY_VOLUME 15
 # define IMYP_MAX(a,b) ( ( (a) > (b) )? (a) : (b) )

@@ -7,6 +7,10 @@
    language is requested. */
 #undef ENABLE_NLS
 
+/* most gcc compilers know a function __attribute__((__warn_unused_result__))
+   */
+#undef GCC_WARN_UNUSED_RESULT
+
 /* Whether you have the allegro.h header. */
 #undef HAVE_ALLEGRO_H
 
@@ -61,6 +65,9 @@
 /* Define to 1 if you have the `getenv' function. */
 #undef HAVE_GETENV
 
+/* Define to 1 if you have the `geteuid' function. */
+#undef HAVE_GETEUID
+
 /* Define to 1 if you have the <getopt.h> header file. */
 #undef HAVE_GETOPT_H
 
@@ -69,6 +76,9 @@
 
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
+
+/* Define to 1 if you have the `getuid' function. */
+#undef HAVE_GETUID
 
 /* Whether you have the gst/gst.h header. */
 #undef HAVE_GST_GST_H
@@ -193,6 +203,9 @@
 
 /* Define to 1 if you have the `setlocale' function. */
 #undef HAVE_SETLOCALE
+
+/* Define to 1 if you have the `setuid' function. */
+#undef HAVE_SETUID
 
 /* Define to 1 if you have the `sigaction' function. */
 #undef HAVE_SIGACTION

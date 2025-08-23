@@ -8663,6 +8663,24 @@ then :
   printf "%s\n" "#define HAVE_GETENV 1" >>confdefs.h
 
 fi
+ac_fn_c_check_func "$LINENO" "getuid" "ac_cv_func_getuid"
+if test "x$ac_cv_func_getuid" = xyes
+then :
+  printf "%s\n" "#define HAVE_GETUID 1" >>confdefs.h
+
+fi
+ac_fn_c_check_func "$LINENO" "geteuid" "ac_cv_func_geteuid"
+if test "x$ac_cv_func_geteuid" = xyes
+then :
+  printf "%s\n" "#define HAVE_GETEUID 1" >>confdefs.h
+
+fi
+ac_fn_c_check_func "$LINENO" "setuid" "ac_cv_func_setuid"
+if test "x$ac_cv_func_setuid" = xyes
+then :
+  printf "%s\n" "#define HAVE_SETUID 1" >>confdefs.h
+
+fi
 
 if ( test "x$imyp_flex_enabled" != "xyes" ); then
 
@@ -11648,6 +11666,42 @@ fi
 
 
 if (test "x$GCC" = "xyes" ); then
+
+	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking whether the compiler supports function __attribute__((__warn_unused_result__))" >&5
+printf %s "checking whether the compiler supports function __attribute__((__warn_unused_result__))... " >&6; }
+if test ${ax_cv_gcc_warn_unused_result+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+__attribute__((__warn_unused_result__))
+ int f(int i) { return i; }
+int
+main (void)
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_c_try_compile "$LINENO"
+then :
+  ax_cv_gcc_warn_unused_result=yes
+else $as_nop
+  ax_cv_gcc_warn_unused_result=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.beam conftest.$ac_ext
+fi
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $ax_cv_gcc_warn_unused_result" >&5
+printf "%s\n" "$ax_cv_gcc_warn_unused_result" >&6; }
+ if test "$ax_cv_gcc_warn_unused_result" = yes; then
+
+printf "%s\n" "#define GCC_WARN_UNUSED_RESULT __attribute__((__warn_unused_result__))" >>confdefs.h
+
+ fi
+
 
 
 

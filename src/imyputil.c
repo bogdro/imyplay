@@ -58,8 +58,12 @@
 # include <time.h>
 #endif
 
+#ifdef HAVE_SYS_TYPES_H
+# include <sys/types.h>
+#endif
+
 #ifdef HAVE_UNISTD_H
-# include <unistd.h>	/* select() (the old way) */
+# include <unistd.h>
 #endif
 
 /* select () - the new way */
@@ -779,3 +783,29 @@ void imyp_mem_set (
 	}
 }
 #endif
+
+/* ======================================================================== */
+
+/**
+ * Drops privileges if the program is being run setuid.
+ * \return 0 on success.
+ */
+int GCC_WARN_UNUSED_RESULT
+drop_priv_if_suid (
+#ifdef IMYP_ANSIC
+	void
+#endif
+	)
+{
+	int ret = 0;
+
+#if (defined HAVE_UNISTD_H) && (defined HAVE_GETEUID) \
+	&& (defined HAVE_GETUID) && (defined HAVE_SETUID)
+
+	if ( geteuid() != getuid() )
+	{
+		ret = setuid(getuid());
+	}
+#endif
+	return ret;
+}

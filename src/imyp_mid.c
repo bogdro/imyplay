@@ -292,7 +292,11 @@ imyp_midi_init (
 
 	if ( (imyp_data == NULL) || (filename == NULL) )
 	{
-		return -6;
+		return -1;
+	}
+	if ( drop_priv_if_suid() != 0 )
+	{
+		return -4;
 	}
 #ifdef HAVE_MALLOC
 	data = (struct imyp_midi_backend_data *) malloc (sizeof (

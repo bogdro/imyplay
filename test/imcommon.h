@@ -46,4 +46,6 @@
 
 # define IMYP_RESULT_TEST_SKIPPED 77 /* Automake */
 
+const char * imyp_progname = "test";
+
 #endif /* IMYP_TEST_COMMON */

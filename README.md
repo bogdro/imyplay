@@ -42,6 +42,7 @@ IMYplay, in various versions, has been successfully compiled on the following en
 -   OpenMandriva 3.0, 4.2, 4.3 GNU/Linux, amd64
 -   OpenBSD 3.8, i586
 -   Debian 5.0 GNU/Linux, i686
+-   Ubuntu GNU/Linux
 -   FreeDOS (DJGPP + NASM)
 -   DOSBox (DJGPP + NASM)
 -   FreeBSD

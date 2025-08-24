@@ -11,7 +11,7 @@ imyplay \- A program for playing iMelody ringtones (IMY files).
 .B ...
 
 .SH DESCRIPTION
-The imyplay program plays the given iMelody files or converts them to MIDI format.
+The imyplay program plays the given iMelody files or converts them to MIDI or WAV format.
 IMYplay can use the following libraries to produce sound: the Allegro game library,
 SDL v1 and v2 (Simple DirectMedia Layer), ALSA (Advanced Linux Sound Architecture),
 OSS (Open Sound System), libao, PortAudiov19, PulseAudio, JACK1/JACK2, GStreamer
@@ -88,10 +88,24 @@ yourself with e.g. "jackd -d alsa -r 44100 -p 8192 &".
 .IP --to-midi
 Convert the given files to MIDI format (if the target file exists, it is deleted).
 Overrides the
+.B -o/--output
+,
+.B -e/--exec
+,
+.B -f/--file
+and
+.B --to-wav
+options. Changes any ".imy" file extension to ".mid" in the output file's
+name if filename not provided.
+.IP --to-wav
+Convert the given files to WAV format (if the target file exists, it is deleted).
+Overrides the
+.B -o/--output
+,
 .B -e/--exec
 and
 .B -f/--file
-options. Changes any ".imy" file extension to ".mid" in the output file's
+options. Changes any ".imy" file extension to ".wav" in the output file's
 name if filename not provided.
 .IP -V|--version
 Print version numbers.
@@ -104,8 +118,10 @@ output systems, but does NOT override the
 .B --to-midi
 ,
 .B -f/--file
-and
+,
 .B -e/--exec
+and
+.B --to-wav
 options.
 
 .SH DIAGNOSTICS
@@ -134,7 +150,7 @@ bogdro (at) users . sourceforge . net
 
 bogdro-soft (at) gmx . com
 
-[EN] https://imyplay.sourceforge.io
+https://imyplay.sourceforge.io
 
 .SH THANKS
 Steven Goodwin (StevenGoodwin /at/ gmail.com) for MIDI writing code.

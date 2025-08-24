@@ -53,7 +53,7 @@ Type './configure' to configure the program for your system. If you do not
 	./configure --enable-XXX=no
  where "XXX" is the output system you wish to disable (allegro, SDL, SDL2,
  ALSA, OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER,
- FILE, SPKR).
+ FILE, SPKR, WAV).
 
 By default, a flex-based scanner will be generated to parse the input file,
 if flex is available. If the scanner does not compile for you or works

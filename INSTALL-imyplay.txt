@@ -8,21 +8,20 @@ Author: Bogdan Drozdowski, bogdro (at) users.sourceforge.net
 License: GPLv3+
 
 IMYplay, in various versions, has been successfully compiled on the following
-systems:
+environments:
 - Fedora Core 4 GNU/Linux, i686
 - Fedora 12 GNU/Linux, i686
-- Mandriva 2008.1 GNU/Linux, i686
-- Mandriva 2011 GNU/Linux, i686
-- OpenMandriva 3.0 GNU/Linux, amd64
-- OpenMandriva 4.2 GNU/Linux, amd64
-- OpenMandriva 4.3 GNU/Linux, amd64
+- Mandriva 2008.1, 2011 GNU/Linux, i686
+- OpenMandriva 3.0, 4.2, 4.3 GNU/Linux, amd64
 - OpenBSD 3.8, i586
 - Debian 5.0 GNU/Linux, i686
+- Ubuntu GNU/Linux
 - FreeDOS (DJGPP + NASM)
 - DOSBox (DJGPP + NASM)
 - FreeBSD
 - Solaris/SunOS
 - macOS
+- MinGW
 
 Requirements for compiling the full version under Un*x:
 

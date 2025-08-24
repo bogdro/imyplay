@@ -160,6 +160,15 @@ AC_ARG_ENABLE(SPKR,[[  --enable-SPKR		Enable PC-Speaker output.]],
 	]
 	,feat_SPKR=yes)
 
+AC_ARG_ENABLE(WAV,[[  --enable-WAV		Enable WAV file output.]],
+	[if (test "x$enableval" = "xno"); then
+		feat_WAV=no
+	 else
+		feat_WAV=yes
+	 fi
+	]
+	,feat_WAV=yes)
+
 AC_ARG_ENABLE(FLEXPARSER,[[  --enable-FLEXPARSER	Enable flex-based parser.]],
 	[if (test "x$enableval" = "xno"); then
 		feat_FLEX=no
@@ -722,6 +731,9 @@ AM_CONDITIONAL(SPKR, [test "x$feat_SPKR" = "xyes" && test "x$have_ioctl" = "xyes
 		test "x$have_sys_types_h" = "xyes")						\
 		)])
 
+AM_CONDITIONAL(WAV, [test "x$feat_WAV" = "xyes" && test "x$libao" = "xyes" 	\
+	&& test "x$have_ao_h" = "xyes"])
+
 imyp_flex_enabled=no
 if (       test "x$feat_FLEX" = "xyes" && test "x$have_flex" = "xyes"	\
 	&& test "x$have_unistd_h" = "xyes" &&  test "x$have_errno_h" = "xyes"		\
@@ -1221,6 +1233,21 @@ else
 	else
 		echo " *	PC-Speaker: no (reason unknown)"
 
+	fi
+fi
+
+if (	test "x$feat_LIBAO" = "xyes" && test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"); then
+
+	echo " *	WAV: yes"
+else
+	if (test "x$feat_WAV" != "xyes"); then
+		echo " *	WAV: no (disabled by command line)"
+
+	elif ( test "x$libao" != "xyes" ); then
+		echo " *	WAV: no (libao library missing or unusable)"
+
+	else	#(test "x$have_ao_h" != "xyes"); then
+		echo " *	WAV: no (ao.h header missing)"
 	fi
 fi
 

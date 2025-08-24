@@ -121,7 +121,8 @@ enum IMYP_CURR_LIB
 	IMYP_CURR_EXEC,
 	IMYP_CURR_GSTREAMER,
 	IMYP_CURR_FILE,
-	IMYP_CURR_SPKR
+	IMYP_CURR_SPKR,
+	IMYP_CURR_WAV
 };
 
 struct imyp_backend_data
@@ -267,6 +268,14 @@ is defined, then the FILE backend has been enabled on the command line.
 # else
 #  ifdef IMYP_HAVE_SPKR
 #   undef IMYP_HAVE_SPKR
+#  endif
+# endif
+
+# if (defined HAVE_LIBAO) && ((defined HAVE_AO_H) || (defined HAVE_AO_AO_H))
+#  define IMYP_HAVE_WAV	1
+# else
+#  ifdef IMYP_HAVE_WAV
+#   undef IMYP_HAVE_WAV
 #  endif
 # endif
 

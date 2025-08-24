@@ -105,6 +105,9 @@ static int midi_instrument = -1;
 static int opt_file    = 0;
 static char * out_file = NULL;
 #endif
+#ifdef IMYP_HAVE_WAV
+static int opt_wav    = 0;
+#endif
 static char * device = NULL;
 static char * output_system = NULL;
 static char prog_name_output_system[25] = {0};
@@ -139,7 +142,10 @@ static const struct option opts[] =
 	{ "midi-instr", required_argument, &opt_midiins, 1 },
 	{ "to-midi",    no_argument,       &opt_tomidi,  1 },
 # endif
-	{ "output",     required_argument, &opt_output, 1 },
+# ifdef IMYP_HAVE_WAV
+	{ "to-wav",     no_argument,       &opt_wav,     1 },
+# endif
+	{ "output",     required_argument, &opt_output,  1 },
 	{ "version",    no_argument,       &opt_version, 1 },
 	{ NULL, 0, NULL, 0 }
 };
@@ -217,6 +223,9 @@ print_help (
 	printf ( "\n-o|--output <system>\t%s", _("Use the given output system") );
 #ifdef IMYP_HAVE_MIDI
 	printf ( "\n--to-midi\t\t%s", _("Convert the given files to MIDI format") );
+#endif
+#ifdef IMYP_HAVE_WAV
+	printf ( "\n--to-wav\t\t%s", _("Convert the given files to WAV format") );
 #endif
 	printf ( "\n-V|--version\t\t%s\n", _("Print version number") );
 }
@@ -481,6 +490,14 @@ int imyplay_parse_cmdline (
 			continue;
 		}
 # endif
+# ifdef IMYP_HAVE_WAV
+		if ( strstr (argv[i], "--to-wav") == argv[i] )
+		{
+			opt_wav = 1;
+			argv[i] = NULL;
+			continue;
+		}
+# endif
 	}
 	imyp_optind = 1;
 #endif
@@ -493,8 +510,9 @@ int imyplay_parse_cmdline (
 		return -1;
 	}
 
-	/* initialize a sound library, if MIDI, FILE and EXEC are not chosen */
-#if (defined IMYP_HAVE_MIDI) || (defined IMYP_HAVE_EXEC)
+	/* initialize a sound library, if MIDI, FILE, EXEC and WAV are not chosen */
+#if (defined IMYP_HAVE_MIDI) || (defined IMYP_HAVE_EXEC) \
+	|| (defined IMYP_HAVE_FILE) || (defined IMYP_HAVE_WAV)
 	if (
 # ifdef IMYP_HAVE_MIDI
 		(opt_tomidi == 0)
@@ -510,6 +528,12 @@ int imyplay_parse_cmdline (
 # endif
 # ifdef IMYP_HAVE_FILE
 		(out_file == NULL)
+#  if (defined IMYP_HAVE_WAV)
+		&&
+#  endif
+# endif
+# ifdef IMYP_HAVE_WAV
+		(opt_wav == 0)
 # endif
 		)
 #endif
@@ -526,6 +550,13 @@ int imyplay_parse_cmdline (
 			{
 #ifdef IMYP_HAVE_MIDI
 				opt_tomidi = 1;
+#endif
+			}
+			else if ( sel == IMYP_CURR_WAV )
+			{
+#ifdef IMYP_HAVE_WAV
+				/* mark it here and use a default output filename below */
+				opt_wav = 1;
 #endif
 			}
 			else if ( sel == IMYP_CURR_FILE )
@@ -545,7 +576,8 @@ int imyplay_parse_cmdline (
 #endif
 			else if ( (sel != IMYP_CURR_MIDI)
 				&& (sel != IMYP_CURR_EXEC)
-				&& (sel != IMYP_CURR_FILE) )
+				&& (sel != IMYP_CURR_FILE)
+				&& (sel != IMYP_CURR_WAV) )
 			{
 				/* try to initialize the given output system */
 				init_res = imyp_init_selected (&current_library,
@@ -580,6 +612,7 @@ int imyplay_parse_cmdline (
 				0,
 #endif
 				0,
+				0,
 #ifdef IMYP_HAVE_FILE
 				out_file
 #else
@@ -608,12 +641,12 @@ int imyplay_parse_cmdline (
 			imyp_optind++;
 			continue;
 		}
-		/* initialize special (MIDI/EXEC/FILE) output per each input file */
+		/* initialize special (MIDI/EXEC/FILE/WAV) output per each input file */
 #ifdef IMYP_HAVE_MIDI
 		if ( opt_tomidi == 1 )
 		{
 			init_res = imyp_lib_init (&current_library, 1,
-				argv[imyp_optind], 0, midi_instrument, 0, NULL);
+				argv[imyp_optind], 0, midi_instrument, 0, 0, NULL);
 			if ( init_res != 0 )
 			{
 				printf ("%s: %d\n", _(err_lib_init), init_res);
@@ -624,13 +657,44 @@ int imyplay_parse_cmdline (
 			else
 			{
 				/* skip the other special backends from initializing: */
-#ifdef IMYP_HAVE_EXEC
+# ifdef IMYP_HAVE_EXEC
 				exec_program = NULL;
-#endif
-#ifdef IMYP_HAVE_FILE
+# endif
+# ifdef IMYP_HAVE_FILE
 				out_file = NULL;
 				opt_file = 0;
+# endif
+# ifdef IMYP_HAVE_WAV
+				opt_wav = 0;
+# endif
+			}
+		}
 #endif
+#ifdef IMYP_HAVE_WAV
+		if ( opt_wav == 1 )
+		{
+			init_res = imyp_lib_init (&current_library, 0,
+				argv[imyp_optind], 0, 0, 0, 1, NULL);
+			if ( init_res != 0 )
+			{
+				printf ("%s: %d\n", _(err_lib_init), init_res);
+				imyp_optind++;
+				ret = -2;
+				continue;
+			}
+			else
+			{
+				/* skip the other special backends from initializing: */
+# ifdef IMYP_HAVE_EXEC
+				exec_program = NULL;
+# endif
+# ifdef IMYP_HAVE_FILE
+				out_file = NULL;
+				opt_file = 0;
+# endif
+# ifdef IMYP_HAVE_MIDI
+				opt_tomidi = 0;
+# endif
 			}
 		}
 #endif
@@ -638,7 +702,7 @@ int imyplay_parse_cmdline (
 		if ( exec_program != NULL )
 		{
 			init_res = imyp_lib_init (&current_library, 0,
-				exec_program, 1, 0, 0, NULL);
+				exec_program, 1, 0, 0, 0, NULL);
 			if ( init_res != 0 )
 			{
 				printf ("%s: %d\n", _(err_lib_init), init_res);
@@ -649,13 +713,16 @@ int imyplay_parse_cmdline (
 			else
 			{
 				/* skip the other special backends from initializing: */
-#ifdef IMYP_HAVE_MIDI
+# ifdef IMYP_HAVE_MIDI
 				opt_tomidi = 0;
-#endif
-#ifdef IMYP_HAVE_FILE
+# endif
+# ifdef IMYP_HAVE_FILE
 				out_file = NULL;
 				opt_file = 0;
-#endif
+# endif
+# ifdef IMYP_HAVE_WAV
+				opt_wav = 0;
+# endif
 			}
 		}
 #endif
@@ -667,7 +734,7 @@ int imyplay_parse_cmdline (
 				out_file = argv[imyp_optind];
 			}
 			init_res = imyp_lib_init (&current_library, 0,
-				device, 0, 0, 1, out_file);
+				device, 0, 0, 1, 0, out_file);
 			if ( init_res != 0 )
 			{
 				printf ("%s: %d\n", _(err_lib_init), init_res);
@@ -678,12 +745,15 @@ int imyplay_parse_cmdline (
 			else
 			{
 				/* skip the other special backends from initializing: */
-#ifdef IMYP_HAVE_EXEC
+# ifdef IMYP_HAVE_EXEC
 				exec_program = NULL;
-#endif
-#ifdef IMYP_HAVE_MIDI
+# endif
+# ifdef IMYP_HAVE_MIDI
 				opt_tomidi = 0;
-#endif
+# endif
+# ifdef IMYP_HAVE_WAV
+				opt_wav = 0;
+# endif
 			}
 			/* restore the empty value, if it was empty before: */
 			if ( out_file == argv[imyp_optind] )
@@ -712,6 +782,12 @@ int imyplay_parse_cmdline (
 # ifdef IMYP_HAVE_FILE
 			(out_file != NULL)
 			|| (opt_file != 0)
+#  ifdef IMYP_HAVE_WAV
+			||
+#  endif
+# endif
+# ifdef IMYP_HAVE_WAV
+			(opt_wav != 0)
 # endif
 		)
 		{
@@ -748,6 +824,12 @@ int imyplay_parse_cmdline (
 # ifdef IMYP_HAVE_FILE
 		(out_file == NULL)
 		&& (opt_file == 0)
+#  if (defined IMYP_HAVE_WAV)
+		&&
+#  endif
+# endif
+# ifdef IMYP_HAVE_WAV
+		(opt_wav == 0)
 # endif
 		)
 	{

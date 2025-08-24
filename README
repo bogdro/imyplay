@@ -23,6 +23,7 @@ IMYplay can use the following outputs to produce sound:
 
 It can also:
 - convert IMY ringtones to MIDI files,
+- convert IMY ringtones to WAV files,
 - write raw samples to an output file,
 - call an external program on each note.
 
@@ -108,7 +109,7 @@ Type './configure' to configure the program for your system. If you do not
 
  where "XXX" is the output system you wish to disable (allegro, SDL, SDL2,
  ALSA, OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER,
- FILE, SPKR).
+ FILE, SPKR, WAV).
 
 By default, a flex-based scanner will be generated to parse the input file,
  if flex is available. If the scanner does not compile for you or works
@@ -230,8 +231,13 @@ Command line options (in the full version):
 			access "/dev/console".
 --to-midi		Convert the given files to MIDI format (if the target
 			file exists, it is deleted). Overrides -o/--output,
+			-f/--file, -e/--exec and --to-wav. Changes any ".imy"
+			file extension to ".mid" in the output file's name if
+			filename not provided.
+--to-wav		Convert the given files to WAV format (if the target
+			file exists, it is deleted). Overrides -o/--output,
 			-f/--file and -e/--exec. Changes any ".imy" file
-			extension to ".mid" in the output file's name if
+			extension to ".wav" in the output file's name if
 			filename not provided.
 -V|--version		Print version numbers.
 

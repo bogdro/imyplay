@@ -1,0 +1,311 @@
+/*
+ * IMYplay - A program for playing iMelody ringtones (IMY files).
+ *	-- WAV backend.
+ *
+ * Copyright (C) 2025 Bogdan Drozdowski, bogdro (at) users.sourceforge.net
+ * License: GNU General Public License, v3+
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "imyp_cfg.h"
+
+#include "imyplay.h"
+#include "imyp_wav.h"
+#include "imyp_sig.h"
+#include "imyputil.h"
+
+#include <stdio.h>
+
+#ifdef IMYP_HAVE_WAV
+# if (defined HAVE_AO_AO_H)
+#  include <ao/ao.h>
+# else
+#  include <ao.h>
+# endif
+#else
+# error WAV requested, but components not found.
+#endif
+
+#ifdef HAVE_STRING_H
+# if ((!defined STDC_HEADERS) || (!STDC_HEADERS)) && (defined HAVE_MEMORY_H)
+#  include <memory.h>
+# endif
+# include <string.h>
+#endif
+
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
+#ifdef HAVE_MALLOC_H
+# include <malloc.h>
+#endif
+
+struct imyp_wav_backend_data
+{
+	ao_device *device;
+	ao_sample_format format;
+};
+
+#ifdef TEST_COMPILE
+# undef IMYP_ANSIC
+# if TEST_COMPILE > 1
+#  undef HAVE_MALLOC
+# endif
+#endif
+
+#ifndef HAVE_MALLOC
+static struct imyp_wav_backend_data imyp_wav_backend_data_static;
+#endif
+
+
+/**
+ * Play a specified tone.
+ * \param imyp_data pointer to the backend's private data.
+ * \param freq The frequency of the tone (in Hz).
+ * \param volume_level Volume of the tone (from 0 to 15).
+ * \param duration The duration of the tone, in milliseconds.
+ * \param buf The buffer for samples.
+ * \param bufsize The buffer size, in samples.
+ * \return 0 on success.
+ */
+int
+imyp_wav_play_tune (
+#ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data,
+	const double freq,
+	const int volume_level,
+	const int duration,
+	void * const buf,
+	int bufsize)
+#else
+	imyp_data, freq, volume_level, duration, buf, bufsize)
+	imyp_backend_data_t * const imyp_data;
+	const double freq;
+	const int volume_level;
+	const int duration;
+	void * const buf;
+	int bufsize;
+#endif
+{
+	int res;
+	struct imyp_wav_backend_data * data =
+		(struct imyp_wav_backend_data *)imyp_data;
+
+	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) || (duration <= 0) )
+	{
+		return -1;
+	}
+
+	bufsize = imyp_generate_samples (freq, volume_level, duration, buf, bufsize,
+		(data->format.byte_format == AO_FMT_LITTLE)? 1 : 0, 0,
+		(unsigned int)(data->format.bits), (unsigned int)(data->format.rate), NULL);
+	if ( imyp_sig_recvd != 0 )
+	{
+		return -2;
+	}
+	res = ao_play (data->device, buf, (uint_32) bufsize);
+	if ( res > 0 )
+	{
+		return 0;
+	}
+	return -1;
+}
+
+/**
+ * Pauses for the specified period of time.
+ * \param imyp_data pointer to the backend's private data.
+ * \param milliseconds Number of milliseconds to pause.
+ */
+void
+imyp_wav_pause (
+#ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data,
+	const int milliseconds, void * const buf, int bufsize)
+#else
+	imyp_data, milliseconds, buf, bufsize)
+	imyp_backend_data_t * const imyp_data;
+	const int milliseconds;
+	void * const buf;
+	int bufsize;
+#endif
+{
+	int quality = 16;
+	struct imyp_wav_backend_data * data =
+		(struct imyp_wav_backend_data *)imyp_data;
+
+	if ( (data == NULL) || (buf == NULL) || (bufsize <= 0) || (milliseconds <= 0) )
+	{
+		return;
+	}
+
+	quality = data->format.bits;
+
+	bufsize = IMYP_MIN (bufsize, (milliseconds * (int)(data->format.rate) * ((int)quality/8)) / 1000);
+	IMYP_MEMSET (buf, 0, (size_t)bufsize);
+	/* write silence to the file */
+	ao_play (data->device, buf, (uint_32) bufsize);
+}
+
+/**
+ * Outputs the given text.
+ * \param imyp_data pointer to the backend's private data.
+ * \param text The text to output.
+ */
+void
+imyp_wav_put_text (
+#ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const char * const text)
+#else
+	imyp_data, text)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const char * const text;
+#endif
+{
+	imyp_put_text_stdout (text);
+}
+
+/**
+ * Initializes the AO library for use.
+ * \param imyp_data pointer to storage for the backend's private data.
+ * \param in_file The name of the input file.
+ * \return 0 on success.
+ */
+int
+imyp_wav_init (
+#ifdef IMYP_ANSIC
+	imyp_backend_data_t ** const imyp_data,
+	const char * const in_file)
+#else
+	imyp_data, in_file)
+	imyp_backend_data_t ** const imyp_data;
+	const char * const in_file;
+#endif
+{
+	int driver;
+	const int samp_freqs[] = {44100, 22050, 11025};
+	const int endians[] = {AO_FMT_LITTLE, AO_FMT_BIG};
+	size_t i, j;
+	char * filename;
+	struct imyp_wav_backend_data * data;
+
+	if ( imyp_data == NULL )
+	{
+		return -6;
+	}
+#ifdef HAVE_MALLOC
+	data = (struct imyp_wav_backend_data *) malloc (sizeof (
+		struct imyp_wav_backend_data));
+	if ( data == NULL )
+	{
+		return -7;
+	}
+#else
+	data = &imyp_wav_backend_data_static;
+#endif
+	filename = imyp_generate_filename (in_file, ".wav");
+
+	ao_initialize();
+	driver = ao_driver_id("wav");
+
+	data->format.channels = 1;
+	IMYP_MEMSET (&(data->format.matrix), 0, sizeof (data->format.matrix));
+
+	/* file:///usr/share/doc/libao-devel-X.Y.Z/ao_example.c */
+	for ( i = 0; i < sizeof (samp_freqs) / sizeof (samp_freqs[0]); i++ )
+	{
+		data->format.rate = samp_freqs[i];
+		for ( j = 0; j < sizeof (endians) / sizeof (endians[0]); j++ )
+		{
+			data->format.byte_format = endians[j];
+			data->format.bits = 16;
+			data->device = ao_open_file (driver, filename, 1, &(data->format), NULL /* no options */);
+			if ( data->device != NULL )
+			{
+				break;
+			}
+			data->format.bits = 8;
+			data->device = ao_open_file (driver, filename, 1, &(data->format), NULL /* no options */);
+			if ( data->device != NULL )
+			{
+				break;
+			}
+		}
+		if ( j < sizeof (endians) / sizeof (endians[0]) )
+		{
+			break;
+		}
+	}
+	if ( i == sizeof (samp_freqs) / sizeof (samp_freqs[0]) )
+	{
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+		ao_shutdown();
+		return -1;
+	}
+	*imyp_data = (imyp_backend_data_t *)data;
+
+	return 0;
+}
+
+/**
+ * Closes the AO library.
+ * \param imyp_data pointer to the backend's private data.
+ * \return 0 on success.
+ */
+int
+imyp_wav_close (
+#ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+#endif
+{
+	struct imyp_wav_backend_data * data =
+		(struct imyp_wav_backend_data *)imyp_data;
+
+	if ( data != NULL )
+	{
+		if ( data->device != NULL )
+		{
+			ao_close (data->device);
+		}
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+	}
+	ao_shutdown();
+	return 0;
+}
+
+/**
+ * Displays the version of the AO library IMYplay was compiled with.
+ * \param imyp_data pointer to the backend's private data.
+ */
+void
+imyp_wav_version (
+#ifdef IMYP_ANSIC
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+#else
+	imyp_data)
+	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+#endif
+{
+	/* no version information currently available */
+	printf ( "WAV: ?\n" );
+}

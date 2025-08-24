@@ -32,7 +32,7 @@ extern int imyp_play_tune IMYP_PARAMS ((const double freq, const int volume_leve
 	const int duration, void * const buf, int bufsize, imyp_backend_t * const curr));
 extern int imyp_lib_init IMYP_PARAMS ((imyp_backend_t * const curr, const int want_midi,
 	const char * const filename, const int want_exec, const int midi_instrument,
-	const int want_file, const char * const out_file));
+	const int want_file,  const int want_wav, const char * const out_file));
 extern int imyp_init_selected IMYP_PARAMS ((imyp_backend_t * const curr,
 	const char output_system[], const char * const filename,
 	const int midi_instrument, const char * const out_file));

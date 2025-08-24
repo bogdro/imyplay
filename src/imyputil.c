@@ -304,6 +304,10 @@ imyp_parse_system (
 	{
 		return IMYP_CURR_SPKR;
 	}
+	else if ( IMYP_STRCASECMP (system_name, "wav") == 0 )
+	{
+		return IMYP_CURR_WAV;
+	}
 	return IMYP_CURR_NONE;
 }
 

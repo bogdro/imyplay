@@ -21,6 +21,7 @@ IMYplay can use the following outputs to produce sound:
 
 It can also:
 -   convert IMY ringtones to MIDI files,
+-   convert IMY ringtones to WAV files,
 -   write raw samples to an output file,
 -   call an external program on each note.
 

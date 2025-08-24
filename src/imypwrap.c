@@ -93,6 +93,9 @@
 # include "imyp_spk.h"
 #endif
 
+#ifdef IMYP_HAVE_WAV
+# include "imyp_wav.h"
+#endif
 
 #ifdef IMYP_HAVE_MIDI
 # define IMYP_ONLY_IF_MIDI
@@ -110,6 +113,12 @@
 # define IMYP_ONLY_IF_EXEC
 #else
 # define IMYP_ONLY_IF_EXEC IMYP_ATTR ((unused))
+#endif
+
+#ifdef IMYP_HAVE_WAV
+# define IMYP_ONLY_IF_WAV
+#else
+# define IMYP_ONLY_IF_WAV IMYP_ATTR ((unused))
 #endif
 
 
@@ -228,6 +237,12 @@ imyp_pause (
 		imyp_spkr_pause (curr->imyp_data, milliseconds);
 #endif
 	}
+	else if ( curr->imyp_curr_lib == IMYP_CURR_WAV )
+	{
+#ifdef IMYP_HAVE_WAV
+		imyp_wav_pause (curr->imyp_data, milliseconds, buf, bufsize);
+#endif
+	}
 }
 
 /**
@@ -329,6 +344,12 @@ imyp_put_text (
 	{
 #ifdef IMYP_HAVE_SPKR
 		imyp_spkr_put_text (curr->imyp_data, text);
+#endif
+	}
+	else if ( curr->imyp_curr_lib == IMYP_CURR_WAV )
+	{
+#ifdef IMYP_HAVE_WAV
+		imyp_wav_put_text (curr->imyp_data, text);
 #endif
 	}
 }
@@ -462,6 +483,13 @@ imyp_play_tune (
 			freq, volume_level, duration, buf, bufsize);
 #endif
 	}
+	else if ( curr->imyp_curr_lib == IMYP_CURR_WAV )
+	{
+#ifdef IMYP_HAVE_WAV
+		return imyp_wav_play_tune (curr->imyp_data,
+			freq, volume_level, duration, buf, bufsize);
+#endif
+	}
 	return -1;
 }
 
@@ -587,6 +615,12 @@ imyp_init_selected (
 		res = imyp_spkr_init (&(curr->imyp_data), filename);
 	}
 #endif
+#ifdef IMYP_HAVE_WAV
+	else if ( curr->imyp_curr_lib == IMYP_CURR_WAV )
+	{
+		res = imyp_wav_init (&(curr->imyp_data), filename);
+	}
+#endif
 	return res;
 }
 
@@ -602,11 +636,13 @@ imyp_init_selected (
 int
 imyp_lib_init (
 #ifdef IMYP_ANSIC
-	imyp_backend_t * const curr, const int want_midi IMYP_ONLY_IF_MIDI,
+	imyp_backend_t * const curr,
+	const int want_midi IMYP_ONLY_IF_MIDI,
 	const char * const filename IMYP_ONLY_IF_FILE,
 	const int want_exec IMYP_ONLY_IF_EXEC,
 	const int midi_instrument IMYP_ONLY_IF_MIDI,
 	const int want_file IMYP_ONLY_IF_FILE,
+	const int want_wav IMYP_ONLY_IF_WAV,
 	const char * const out_file IMYP_ONLY_IF_FILE
 	)
 #else
@@ -617,6 +653,7 @@ imyp_lib_init (
 	const int want_exec IMYP_ONLY_IF_EXEC;
 	const int midi_instrument IMYP_ONLY_IF_MIDI;
 	const int want_file IMYP_ONLY_IF_FILE;
+	const int want_wav IMYP_ONLY_IF_WAV;
 	const char * const out_file IMYP_ONLY_IF_FILE;
 #endif
 {
@@ -655,6 +692,17 @@ imyp_lib_init (
 		if ( res == 0 )
 		{
 			curr->imyp_curr_lib = IMYP_CURR_FILE;
+		}
+		return res;
+	}
+#endif
+#ifdef IMYP_HAVE_WAV
+	if ( want_wav != 0 )
+	{
+		res = imyp_wav_init (&(curr->imyp_data), filename);
+		if ( res == 0 )
+		{
+			curr->imyp_curr_lib = IMYP_CURR_WAV;
 		}
 		return res;
 	}
@@ -853,6 +901,12 @@ imyp_lib_close (
 		return imyp_spkr_close (curr->imyp_data);
 #endif
 	}
+	else if ( curr->imyp_curr_lib == IMYP_CURR_WAV )
+	{
+#ifdef IMYP_HAVE_WAV
+		return imyp_wav_close (curr->imyp_data);
+#endif
+	}
 	return -1;
 }
 
@@ -910,5 +964,8 @@ imyp_report_versions (
 #endif
 #ifdef IMYP_HAVE_SPKR
 	imyp_spkr_version (curr->imyp_data);
+#endif
+#ifdef IMYP_HAVE_WAV
+	imyp_wav_version (curr->imyp_data);
 #endif
 }

@@ -90,6 +90,10 @@ if SPKR
 imyplay_SOURCES += imyp_spk.c imyp_spk.h
 endif
 
+if WAV
+imyplay_SOURCES += imyp_wav.c imyp_wav.h
+endif
+
 if FLEX
 
 imyplay_SOURCES += imyparsf.l

@@ -688,6 +688,8 @@ build_cpu
 build
 FLEX_FALSE
 FLEX_TRUE
+WAV_FALSE
+WAV_TRUE
 SPKR_FALSE
 SPKR_TRUE
 FILE_FALSE
@@ -834,6 +836,7 @@ enable_EXEC
 enable_GSTREAMER
 enable_FILE
 enable_SPKR
+enable_WAV
 enable_FLEXPARSER
 enable_LIBHIDEIP
 enable_LIBNETBLOCK
@@ -1503,6 +1506,7 @@ Optional Features:
   --enable-GSTREAMER	Enable GStreamer output.
   --enable-FILE		Enable raw file output.
   --enable-SPKR		Enable PC-Speaker output.
+  --enable-WAV		Enable WAV file output.
   --enable-FLEXPARSER	Enable flex-based parser.
   --enable-LIBHIDEIP	Enable LibHideIP for IMYplay.
   --enable-LIBNETBLOCK	Enable LibNetBlock for IMYplay.
@@ -3664,6 +3668,21 @@ then :
 
 else $as_nop
   feat_SPKR=yes
+fi
+
+
+# Check whether --enable-WAV was given.
+if test ${enable_WAV+y}
+then :
+  enableval=$enable_WAV; if (test "x$enableval" = "xno"); then
+		feat_WAV=no
+	 else
+		feat_WAV=yes
+	 fi
+
+
+else $as_nop
+  feat_WAV=yes
 fi
 
 
@@ -8105,6 +8124,16 @@ fi
 else
   SPKR_TRUE='#'
   SPKR_FALSE=
+fi
+
+
+ if test "x$feat_WAV" = "xyes" && test "x$libao" = "xyes" 	\
+	&& test "x$have_ao_h" = "xyes"; then
+  WAV_TRUE=
+  WAV_FALSE='#'
+else
+  WAV_TRUE='#'
+  WAV_FALSE=
 fi
 
 
@@ -21912,6 +21941,10 @@ if test -z "${SPKR_TRUE}" && test -z "${SPKR_FALSE}"; then
   as_fn_error $? "conditional \"SPKR\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
+if test -z "${WAV_TRUE}" && test -z "${WAV_FALSE}"; then
+  as_fn_error $? "conditional \"WAV\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
 if test -z "${FLEX_TRUE}" && test -z "${FLEX_FALSE}"; then
   as_fn_error $? "conditional \"FLEX\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
@@ -23739,6 +23772,21 @@ else
 	else
 		echo " *	PC-Speaker: no (reason unknown)"
 
+	fi
+fi
+
+if (	test "x$feat_LIBAO" = "xyes" && test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"); then
+
+	echo " *	WAV: yes"
+else
+	if (test "x$feat_WAV" != "xyes"); then
+		echo " *	WAV: no (disabled by command line)"
+
+	elif ( test "x$libao" != "xyes" ); then
+		echo " *	WAV: no (libao library missing or unusable)"
+
+	else	#(test "x$have_ao_h" != "xyes"); then
+		echo " *	WAV: no (ao.h header missing)"
 	fi
 fi
 

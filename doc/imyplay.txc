@@ -91,6 +91,7 @@ IMYplay can use the following outputs to produce sound:
 It can also:
 @itemize
 @item convert IMY ringtones to MIDI files,
+@item convert IMY ringtones to WAV files,
 @item write raw samples to an output file,
 @item call an external program on each note.
 @end itemize
@@ -134,6 +135,7 @@ IMYplay, in various versions, has been successfully compiled on the following sy
 @item OpenMandriva 3.0, 4.2, 4.3 GNU/Linux, amd64
 @item OpenBSD 3.8, i586
 @item Debian 5.0 GNU/Linux, i686
+@item Ubuntu GNU/Linux
 @item FreeBSD
 @item Solaris/SunOS
 @item macOS
@@ -161,6 +163,7 @@ If you don't have any of these installed or available, then go to@*
 @item MIDI output requires the following functions from the standard C library:
 @samp{malloc}, @samp{realloc}, @samp{memset}, @samp{memcpy}, @samp{fopen},
 @samp{fwrite}, @samp{fseek}, @samp{fclose} and @samp{qsort}.
+@item WAV output requires the ao library (@url{http://xiph.org/ao/}).
 @end itemize
 
 Type
@@ -173,7 +176,7 @@ to configure the program for your system.
 If you do not with support for a particular output mechanism,
 give the @option{--enable-NAME=no} option to @samp{./configure}
 (NAME=allegro, SDL, SDL2, ALSA,
-OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE, SPKR).
+OSS, LIBAO, PORTAUDIO, PULSEAUDIO, JACK, MIDI, EXEC, GSTREAMER, FILE, SPKR, WAV).
 
 Run @samp{./configure --help} for details.
 
@@ -435,8 +438,17 @@ yourself with e.g.
 @noindent @option{--to-midi}@*
 @quotation
 Convert the given files to MIDI format (if the target file exists, it is deleted).
+Overrides @option{-o}/@option{--output}, @option{-f}/@option{--file},
+@option{-e}/@option{--exec} and @option{--to-wav}.
+Changes any @file{.imy} file extension to @file{.mid}
+in the output file's name if filename not provided.
+@end quotation
+
+@noindent @option{--to-wav}@*
+@quotation
+Convert the given files to WAV format (if the target file exists, it is deleted).
 Overrides @option{-o}/@option{--output}, @option{-f}/@option{--file}
-and @option{-e}/@option{--exec}. Changes any @file{.imy} file extension to @file{.mid}
+and @option{-e}/@option{--exec}. Changes any @file{.imy} file extension to @file{.wav}
 in the output file's name if filename not provided.
 @end quotation
 
@@ -448,8 +460,8 @@ Print version numbers and exit.
 Alternatively to using the @option{--output} option, you can launch the program as
 @command{imyplay-alsa}, @command{imyplay-allegro} and so on (these can be symbolic links
 or copies of the executable file). This overrides the default order of output systems,
-but does @strong{NOT} override the @option{--to-midi}, @option{-f}/@option{--file}
-and @option{-e}/@option{--exec} options.
+but does @strong{NOT} override the @option{--to-midi}, @option{-f}/@option{--file},
+@option{-e}/@option{--exec} and @option{--to-wav} options.
 
 If @command{imyplay-exec} is called, the @option{-e}/@option{--exec} is still
 required to provide the program to run.

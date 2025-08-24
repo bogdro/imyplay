@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 2.0\n"
 "Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-19 22:37+0200\n"
+"POT-Creation-Date: 2025-08-24 19:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,15 +104,15 @@ msgstr ""
 msgid "Print version number"
 msgstr ""
 
-#: src/imyputil.c:82
+#: src/imyputil.c:86
 msgid "error"
 msgstr ""
 
-#: src/imyputil.c:83
+#: src/imyputil.c:87
 msgid "Error while trying to set a signal handler for"
 msgstr ""
 
-#: src/imyputil.c:87
+#: src/imyputil.c:91
 msgid "unknown"
 msgstr ""
 

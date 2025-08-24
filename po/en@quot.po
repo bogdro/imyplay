@@ -29,8 +29,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 2.0\n"
 "Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-19 22:37+0200\n"
-"PO-Revision-Date: 2025-08-19 22:37+0200\n"
+"POT-Creation-Date: 2025-08-24 19:14+0200\n"
+"PO-Revision-Date: 2025-08-24 19:14+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en@quot\n"
@@ -137,15 +137,15 @@ msgstr "Convert the given files to MIDI format"
 msgid "Print version number"
 msgstr "Print version number"
 
-#: src/imyputil.c:82
+#: src/imyputil.c:86
 msgid "error"
 msgstr "error"
 
-#: src/imyputil.c:83
+#: src/imyputil.c:87
 msgid "Error while trying to set a signal handler for"
 msgstr "Error while trying to set a signal handler for"
 
-#: src/imyputil.c:87
+#: src/imyputil.c:91
 msgid "unknown"
 msgstr "unknown"
 

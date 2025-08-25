@@ -44,7 +44,7 @@ int imyp_sig_recvd = 0;
 
 START_TEST(test_file_pause_zero)
 {
-	char buf[1];
+	char buf[1] = {0};
 
 	printf ("test_file_pause_zero\n");
 	imyp_file_pause (NULL, 0, buf, 1);
@@ -53,7 +53,7 @@ END_TEST
 
 START_TEST(test_file_pause_nonzero)
 {
-	char buf[1];
+	char buf[1] = {0};
 
 	printf ("test_file_pause_nonzero\n");
 	imyp_file_pause (NULL, 10, buf, 1);
@@ -80,7 +80,7 @@ END_TEST
 
 START_TEST(test_file_play_null_data)
 {
-	char buf[1];
+	char buf[1] = {0};
 	int res;
 
 	printf ("test_file_play_null_data\n");
@@ -91,8 +91,8 @@ END_TEST
 
 START_TEST(test_file_play_duration_zero)
 {
-	imyp_backend_data_t data;
-	char buf[1];
+	imyp_backend_data_t data = {0};
+	char buf[1] = {0};
 	int res;
 
 	printf ("test_file_play_duration_zero\n");
@@ -103,8 +103,8 @@ END_TEST
 
 START_TEST(test_file_play_bufsize_zero)
 {
-	imyp_backend_data_t data;
-	char buf[1];
+	imyp_backend_data_t data = {0};
+	char buf[1] = {0};
 	int res;
 
 	printf ("test_file_play_bufsize_zero\n");
@@ -115,7 +115,7 @@ END_TEST
 
 START_TEST(test_file_play_buf_null)
 {
-	imyp_backend_data_t data;
+	imyp_backend_data_t data = {0};
 	int res;
 
 	printf ("test_file_play_buf_null\n");
@@ -224,7 +224,7 @@ END_TEST
 
 START_TEST(test_file_ver_nonnull)
 {
-	imyp_backend_data_t data;
+	imyp_backend_data_t data = {0};
 
 	printf ("test_file_ver_nonnull\n");
 	imyp_file_version (&data);

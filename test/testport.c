@@ -72,7 +72,7 @@ END_TEST
 
 START_TEST(test_portaudio_play_null_data)
 {
-	char buf[1];
+	char buf[1] = {0};
 	int res;
 
 	printf ("test_portaudio_play_null_data\n");
@@ -89,7 +89,7 @@ START_TEST(test_portaudio_play_duration_zero)
 		imyp_backend_data_t data;
 		char a[100];
 	} dt;
-	char buf[1];
+	char buf[1] = {0};
 
 	printf ("test_portaudio_play_duration_zero\n");
 	memset (dt.a, 0, 100);
@@ -106,7 +106,7 @@ START_TEST(test_portaudio_play_bufsize_zero)
 		imyp_backend_data_t data;
 		char a[100];
 	} dt;
-	char buf[1];
+	char buf[1] = {0};
 
 	printf ("test_portaudio_play_bufsize_zero\n");
 	memset (dt.a, 0, 100);
@@ -189,7 +189,7 @@ END_TEST
 
 START_TEST(test_portaudio_ver_nonnull)
 {
-	imyp_backend_data_t data;
+	imyp_backend_data_t data = {0};
 
 	printf ("test_portaudio_ver_nonnull\n");
 	imyp_portaudio_version (&data);

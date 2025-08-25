@@ -72,7 +72,7 @@ END_TEST
 
 START_TEST(test_oss_play_null_data)
 {
-	char buf[1];
+	char buf[1] = {0};
 	int res;
 
 	printf ("test_oss_play_null_data\n");
@@ -100,8 +100,8 @@ END_TEST
 
 START_TEST(test_oss_play_bufsize_zero)
 {
-	imyp_backend_data_t data;
-	char buf[1];
+	imyp_backend_data_t data = {0};
+	char buf[1] = {0};
 	int res;
 
 	printf ("test_oss_play_bufsize_zero\n");
@@ -112,7 +112,7 @@ END_TEST
 
 START_TEST(test_oss_play_buf_null)
 {
-	imyp_backend_data_t data;
+	imyp_backend_data_t data = {0};
 	int res;
 
 	printf ("test_oss_play_buf_null\n");
@@ -161,7 +161,7 @@ END_TEST
 
 START_TEST(test_oss_ver_nonnull)
 {
-	imyp_backend_data_t data;
+	imyp_backend_data_t data = {0};
 
 	printf ("test_oss_ver_nonnull\n");
 	imyp_oss_version (&data);

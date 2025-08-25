@@ -5766,7 +5766,7 @@ fi
 
 fi
 
-if ( test "x$feat_LIBAO" = "xyes" ); then
+if ( test "x$feat_LIBAO" = "xyes" || test "x$feat_WAV" = "xyes" ); then
 
 	libao=yes
 	{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for ao_initialize in -lao" >&5
@@ -7376,7 +7376,7 @@ fi
 
 fi
 
-if ( test "x$libao" = "xyes" ); then
+if ( test "x$libao" = "xyes" || test "x$feat_WAV" = "xyes" ); then
 
 	have_ao_h=yes
 	ac_fn_c_check_header_compile "$LINENO" "ao/ao.h" "ac_cv_header_ao_ao_h" "$ac_includes_default"
@@ -23775,7 +23775,7 @@ else
 	fi
 fi
 
-if (	test "x$feat_LIBAO" = "xyes" && test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"); then
+if (	test "x$feat_WAV" = "xyes" && test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"); then
 
 	echo " *	WAV: yes"
 else

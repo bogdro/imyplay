@@ -264,7 +264,7 @@ if ( test "x$feat_ALSA" = "xyes" ); then
 	AC_CHECK_LIB([asound],[snd_pcm_open],,[libalsa=no])
 fi
 
-if ( test "x$feat_LIBAO" = "xyes" ); then
+if ( test "x$feat_LIBAO" = "xyes" || test "x$feat_WAV" = "xyes" ); then
 
 	libao=yes
 	AC_CHECK_LIB([ao],[ao_initialize],,[libao=no])
@@ -467,7 +467,7 @@ if ( test "x$libalsa" = "xyes" ); then
 			have_asoundlib_h=no)])
 fi
 
-if ( test "x$libao" = "xyes" ); then
+if ( test "x$libao" = "xyes" || test "x$feat_WAV" = "xyes" ); then
 
 	have_ao_h=yes
 	AC_CHECK_HEADER([ao/ao.h],AC_DEFINE([HAVE_AO_AO_H],[1],
@@ -1236,7 +1236,7 @@ else
 	fi
 fi
 
-if (	test "x$feat_LIBAO" = "xyes" && test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"); then
+if (	test "x$feat_WAV" = "xyes" && test "x$libao" = "xyes" && test "x$have_ao_h" = "xyes"); then
 
 	echo " *	WAV: yes"
 else

@@ -158,6 +158,15 @@ testspk_CFLAGS = $(COMMON_CFLAGS)
 testspk_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_spk.o
 endif
 
+if SPKR
+TESTS += testwav
+check_PROGRAMS += testwav
+
+testwav_SOURCES = testwav.c
+testwav_CFLAGS = $(COMMON_CFLAGS)
+testwav_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_wav.o
+endif
+
 x-compile: $(TESTS)
 .PHONY: x-compile
 

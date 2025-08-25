@@ -202,7 +202,7 @@ imyp_wav_init (
 	char * filename;
 	struct imyp_wav_backend_data * data;
 
-	if ( imyp_data == NULL )
+	if ( (imyp_data == NULL) || (in_file == NULL) )
 	{
 		return -6;
 	}

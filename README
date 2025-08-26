@@ -9,7 +9,7 @@ conforming to the iMelody (https://en.wikipedia.org/wiki/IMelody)
 specification, as written in doc/imelody.txt.
 
 IMYplay can use the following outputs to produce sound:
-1. the Allegro game library (<http://alleg.sf.net>),
+1. the Allegro game library v4.x (<http://alleg.sf.net>),
 2. SDL (Simple DirectMedia Layer; <http://www.libsdl.org>),
 3. ALSA (Advanced Linux Sound Architecture; <http://alsa-project.org>),
 4. OSS (Open Sound System),
@@ -89,7 +89,7 @@ Requirements for compiling the full version under Un*x:
   of the supported libraries (except OSS and PC-speaker, which require only
   the C library and system support). If you don't have any of these installed
   or available, then go to:
-	http://alleg.sf.net/		  - for the Allegro library
+	http://alleg.sf.net/		  - for the Allegro library (v4.x)
 	http://www.libsdl.org/		  - for the SDL library
 	http://alsa-project.org/	  - for the ALSA library
 	http://xiph.org/ao/		  - for the AO library
@@ -148,7 +148,7 @@ Requirements for automatic compiling the DOS version:
   of the supported libraries (except PC-speaker, which requires only
   the C library and system support). If you don't have any of these installed
   or available, then go to
-   	http://alleg.sf.net/		- for the Allegro library
+	http://alleg.sf.net/		- for the Allegro library (v4.x)
 
 - MIDI output requires the following functions from the standard C library:
   malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),

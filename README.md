@@ -8,7 +8,7 @@ Read the info documentation (type `info doc/imyplay.info`) to get more informati
 
 IMYplay can use the following outputs to produce sound:
 
-1.  the Allegro game library (<http://alleg.sf.net>),
+1.  the Allegro game library v4.x (<http://alleg.sf.net>),
 2.  SDL (Simple DirectMedia Layer; <http://www.libsdl.org>),
 3.  ALSA (Advanced Linux Sound Architecture; <http://alsa-project.org>),
 4.  OSS (Open Sound System),

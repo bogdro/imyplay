@@ -76,7 +76,7 @@ specification, as written in @file{doc/imelody.txt}.
 
 IMYplay can use the following outputs to produce sound:
 @enumerate
-@item the Allegro game library (@url{http://alleg.sf.net}),
+@item the Allegro game library v4.x (@url{http://alleg.sf.net}),
 @item SDL v1 and v2 (Simple DirectMedia Layer; @url{http://www.libsdl.org}),
 @item ALSA (Advanced Linux Sound Architecture; @url{http://alsa-project.org}),
 @item OSS (Open Sound System),
@@ -266,7 +266,7 @@ Requirements for automatic compiling the DOS version:
 of the supported libraries (except PC-speaker, which requires only
 the C library). If you don't have any of these installed
 or available, then go to@*
-	@url{http://alleg.sf.net/}	- for the Allegro library
+	@url{http://alleg.sf.net/}	- for the Allegro library (v4.x)
 
 @item MIDI output requires the following functions from the standard C library:
 @samp{malloc}, @samp{realloc}, @samp{memset}, @samp{memcpy}, @samp{fopen},

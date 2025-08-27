@@ -37,7 +37,11 @@
 	(defined __WIN32__) || \
 	(defined __WINNT) || \
 	(defined __WINNT__) || \
-	(defined WINNT) \
+	(defined WINNT) || \
+	(defined MSDOS) || \
+	(defined __DJGPP__) || \
+	(defined DJGPP) || \
+	(defined __MSDOS) \
   )
 
 /* Compatibility fix for DLL imports in MinGW - define function once. */

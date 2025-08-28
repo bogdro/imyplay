@@ -93,6 +93,11 @@
 #   define HAVE_WRITE			1
 #   define TIME_WITH_SYS_TIME		1
 
+#   ifdef IAO
+#    define HAVE_LIBAO			1
+#    define HAVE_AO_AO_H		1
+#   endif
+
 #  else
 
 #   undef IMYP_IS_DOS

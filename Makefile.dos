@@ -60,6 +60,12 @@ ADD_FILES += src\imyparse.o
 LEX = error
 endif
 
+ifeq ($(LIBAO),1)
+CC_OPTS += -DIAO
+ADD_FILES += src\imyp_ao.o src\imyp_wav.o
+ADD_LIBS += -lao
+endif
+
 NASM = nasm
 NASM_OPTS = -O999 -f $(FORMAT) -DIMYPLAY_32BIT=$(ASM_BITS_FLAG)
 UPX = upx

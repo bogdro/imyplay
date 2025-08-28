@@ -149,6 +149,7 @@ Requirements for automatic compiling the DOS version:
   the C library and system support). If you don't have any of these installed
   or available, then go to
 	http://alleg.sf.net/		- for the Allegro library (v4.x)
+	http://xiph.org/ao/		- for the AO library
 
 - MIDI output requires the following functions from the standard C library:
   malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),

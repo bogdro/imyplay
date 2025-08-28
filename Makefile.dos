@@ -30,7 +30,7 @@ CC = gcc
 endif
 
 ifeq ($(CC_OPTS),)
-CC_OPTS = -O3
+CC_OPTS = -O3 -c
 endif
 
 ifeq ($(FORMAT16),)
@@ -48,13 +48,15 @@ RM_DIR = rmdir
 COPY = copy
 MKDIR = mkdir
 
-COMPILE_FILES = @DOSFILES.TXT
+ADD_FILES =
+ADD_LIBS =
 
 ifeq ($(FLEX),1)
-COMPILE_FILES += src\imyparsf.c -lfl
+ADD_FILES += src\imyparsf.o
+ADD_LIBS += -lfl
 LEX = flex
 else
-COMPILE_FILES += src\imyparse.c
+ADD_FILES += src\imyparse.o
 LEX = error
 endif
 
@@ -81,13 +83,8 @@ DIST_EXT = .zip
 
 all:	$(PROGNAME)$(EXE_EXT)
 
-$(PROGNAME)$(EXE_EXT): src/imyp_cfg.hin src/*.c src/*.h src/imyparsf.l src/imypdos.asm Makefile.dos
-	$(SED) 's/[@]VERSION[@]/$(VER_STRING_CODE)/' src\imyp_cfg.hin > src\imyp_cfg.h
-	$(NASM) $(NASM_OPTS) -o src\imypdos.obj src\imypdos.asm
-ifeq ($(FLEX),1)
-	$(LEX) -B -i -osrc\imyparsf.c src\imyparsf.l
-endif
-	$(CC) $(CC_OPTS) -o $(PROGNAME)$(EXE_EXT) $(COMPILE_FILES)
+$(PROGNAME)$(EXE_EXT): $(shell type DOSFILES.TXT) $(ADD_FILES) Makefile.dos
+	$(CC) -o $(PROGNAME)$(EXE_EXT) @DOSFILES.TXT $(ADD_FILES) $(ADD_LIBS)
 	$(UPX) $(UPX_OPTS) $(PROGNAME)$(EXE_EXT)
 
 dist:	$(PROGNAME)$(DIST_EXT)
@@ -124,6 +121,20 @@ cleandist:
 	$(RM_FILES) $(PROGNAME)$(DIST_EXT)
 
 clean: cleandist
-	$(RM_FILES) $(PROGNAME)$(EXE_EXT) src\imyp_cfg.h src\imypdos.obj
+	$(RM_FILES) $(PROGNAME)$(EXE_EXT) src\imyp_cfg.h src\imypdos.obj src\*.o
+
+%.o:	%.c %.h src\imyp_cfg.h
+	$(CC) $(CC_OPTS) -o $@ $<
+
+src\imypdos.obj: src\imypdos.asm
+	$(NASM) $(NASM_OPTS) -o src\imypdos.obj src\imypdos.asm
+
+src\imyparsf.c: src\imyparsf.l
+ifeq ($(FLEX),1)
+	$(LEX) -B -i -osrc\imyparsf.c src\imyparsf.l
+endif
+
+src\imyp_cfg.h:	src\imyp_cfg.hin
+	$(SED) 's/[@]VERSION[@]/$(VER_STRING_CODE)/' src\imyp_cfg.hin > src\imyp_cfg.h
 
 .PHONY: all dist cleandist clean

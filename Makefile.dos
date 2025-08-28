@@ -120,8 +120,11 @@ cleandist:
 	$(RM_DIR) imy$(VER_STRING_DIST)
 	$(RM_FILES) $(PROGNAME)$(DIST_EXT)
 
-clean: cleandist
-	$(RM_FILES) $(PROGNAME)$(EXE_EXT) src\imyp_cfg.h src\imypdos.obj src\*.o
+clean:
+	$(RM_FILES) $(PROGNAME)$(EXE_EXT)
+	$(RM_FILES) src\imyp_cfg.h
+	$(RM_FILES) src\imypdos.obj
+	$(RM_FILES) src\*.o
 
 %.o:	%.c %.h src\imyp_cfg.h
 	$(CC) $(CC_OPTS) -o $@ $<

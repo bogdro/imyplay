@@ -94,8 +94,12 @@
 #   define TIME_WITH_SYS_TIME		1
 
 #   ifdef IAO
+#    define IMYP_WANT_WAV		1
 #    define HAVE_LIBAO			1
 #    define HAVE_AO_AO_H		1
+#    ifdef IMYP_WANT_LIBAO
+#     undef IMYP_WANT_LIBAO /* no sound in DOS anyway */
+#    endif
 #   endif
 
 #  else

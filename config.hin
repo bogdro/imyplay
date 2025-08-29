@@ -288,6 +288,12 @@
 /* Define to 1 if you have the `write' function. */
 #undef HAVE_WRITE
 
+/* Whether libao was enabled. */
+#undef IMYP_WANT_LIBAO
+
+/* Whether WAV output was enabled. */
+#undef IMYP_WANT_WAV
+
 /* Name of package */
 #undef PACKAGE
 

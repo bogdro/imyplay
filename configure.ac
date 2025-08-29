@@ -264,6 +264,16 @@ if ( test "x$feat_ALSA" = "xyes" ); then
 	AC_CHECK_LIB([asound],[snd_pcm_open],,[libalsa=no])
 fi
 
+if ( test "x$feat_LIBAO" = "xyes" ); then
+
+	AC_DEFINE([IMYP_WANT_LIBAO],[1],[Whether libao was enabled.])
+fi
+
+if ( test "x$feat_WAV" = "xyes" ); then
+
+	AC_DEFINE([IMYP_WANT_WAV],[1],[Whether WAV output was enabled.])
+fi
+
 if ( test "x$feat_LIBAO" = "xyes" || test "x$feat_WAV" = "xyes" ); then
 
 	libao=yes

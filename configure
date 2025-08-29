@@ -5766,6 +5766,20 @@ fi
 
 fi
 
+if ( test "x$feat_LIBAO" = "xyes" ); then
+
+
+printf "%s\n" "#define IMYP_WANT_LIBAO 1" >>confdefs.h
+
+fi
+
+if ( test "x$feat_WAV" = "xyes" ); then
+
+
+printf "%s\n" "#define IMYP_WANT_WAV 1" >>confdefs.h
+
+fi
+
 if ( test "x$feat_LIBAO" = "xyes" || test "x$feat_WAV" = "xyes" ); then
 
 	libao=yes

@@ -186,7 +186,8 @@ typedef struct imyp_backend imyp_backend_t;
 #  endif
 # endif
 
-# if (defined HAVE_LIBAO) && ((defined HAVE_AO_H) || (defined HAVE_AO_AO_H))
+# if (defined IMYP_WANT_LIBAO) && (defined HAVE_LIBAO) \
+	&& ((defined HAVE_AO_H) || (defined HAVE_AO_AO_H))
 #  define IMYP_HAVE_LIBAO	1
 # else
 #  ifdef IMYP_HAVE_LIBAO
@@ -271,7 +272,8 @@ is defined, then the FILE backend has been enabled on the command line.
 #  endif
 # endif
 
-# if (defined HAVE_LIBAO) && ((defined HAVE_AO_H) || (defined HAVE_AO_AO_H))
+# if (defined IMYP_WANT_WAV) && (defined HAVE_LIBAO) \
+	&& ((defined HAVE_AO_H) || (defined HAVE_AO_AO_H))
 #  define IMYP_HAVE_WAV	1
 # else
 #  ifdef IMYP_HAVE_WAV

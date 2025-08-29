@@ -30,7 +30,7 @@ sed 's/[@]VERSION[@]/%imymajor%.%imyminor%/' src\imyp_cfg.hin > src\imyp_cfg.h
 if not "%errorlevel%"=="0" goto end
 nasm -O999 -f coff -DIMYPLAY_32BIT=1 -o src\imypdos.obj src\imypdos.asm
 if not "%errorlevel%"=="0" goto end
-gcc -O3 -o imyplay.exe @DOSFILES.TXT src\imyparse.c
+gcc -O3 -o imyplay.exe @DOSFILEC.TXT src\imyparse.c
 if not "%errorlevel%"=="0" goto end
 upx -9 imyplay.exe
 

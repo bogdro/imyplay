@@ -62,7 +62,7 @@ endif
 
 ifeq ($(LIBAO),1)
 CC_OPTS += -DIAO
-ADD_FILES += src\imyp_ao.o src\imyp_wav.o
+ADD_FILES += src\imyp_wav.o
 ADD_LIBS += -lao
 endif
 

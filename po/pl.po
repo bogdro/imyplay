@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 1.3\n"
 "Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-24 19:14+0200\n"
+"POT-Creation-Date: 2025-08-27 21:10+0200\n"
 "PO-Revision-Date: 2023-09-05 19:50+0200\n"
 "Last-Translator: Bogdan Drozdowski <bogdro@users.sourceforge.net>\n"
 "Language-Team: Polish\n"
@@ -67,55 +67,61 @@ msgstr "skompilowane z wersją"
 msgid "running with version"
 msgstr "uruchomione z wersją"
 
-#: src/imyp_cmd.c:199
+#: src/imyp_cmd.c:205
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr "Program do odtwarzania dzwonków iMelody (plików IMY)"
 
-#: src/imyp_cmd.c:200
+#: src/imyp_cmd.c:206
 msgid "Syntax"
 msgstr "Składnia"
 
-#: src/imyp_cmd.c:202
+#: src/imyp_cmd.c:208
 msgid " [options] "
 msgstr " [opcje] "
 
-#: src/imyp_cmd.c:204
+#: src/imyp_cmd.c:210
 msgid "Options"
 msgstr "Opcje"
 
-#: src/imyp_cmd.c:205
+#: src/imyp_cmd.c:211
 msgid "Try to use this device"
 msgstr "Spróbuj użyć tego urządzenia"
 
-#: src/imyp_cmd.c:207
+#: src/imyp_cmd.c:213
 msgid "Execute this program instead of sound output"
 msgstr "Wykonaj ten program zamiast wyjścia dźwiękowego"
 
-#: src/imyp_cmd.c:210
+#: src/imyp_cmd.c:216
 msgid "Write raw samples to this file instead of sound output"
 msgstr "Zapisz surowe próbki do tego pliku zamiast wyjścia dźwiękowego"
 
-#: src/imyp_cmd.c:212
+#: src/imyp_cmd.c:218
 msgid "Print help"
 msgstr "Wyświetl pomoc"
 
-#: src/imyp_cmd.c:213
+#: src/imyp_cmd.c:219
 msgid "Print license information"
 msgstr "Wyświetl informacje o licencji"
 
-#: src/imyp_cmd.c:215
+#: src/imyp_cmd.c:221
 msgid "Select MIDI instrument number"
 msgstr "Wybierz numer instrumentu MIDI"
 
-#: src/imyp_cmd.c:217
+#: src/imyp_cmd.c:223
 msgid "Use the given output system"
 msgstr "Użyj danego systemu wyjścia"
 
-#: src/imyp_cmd.c:219
+#: src/imyp_cmd.c:225
 msgid "Convert the given files to MIDI format"
 msgstr "Przekonwertuj podane pliki na format MIDI"
 
-#: src/imyp_cmd.c:221
+#: src/imyp_cmd.c:228
+#, fuzzy
+#| msgid "Convert the given files to MIDI format"
+msgid "Convert the given files to WAV format"
+msgstr "Przekonwertuj podane pliki na format MIDI"
+
+#: src/imyp_cmd.c:230
 msgid "Print version number"
 msgstr "Wyświetl numer wersji"
 

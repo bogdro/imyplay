@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imyplay 2.0\n"
 "Report-Msgid-Bugs-To: bogdro@users.sourceforge.net\n"
-"POT-Creation-Date: 2025-08-24 19:14+0200\n"
+"POT-Creation-Date: 2025-08-27 21:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,55 +52,59 @@ msgstr ""
 msgid "running with version"
 msgstr ""
 
-#: src/imyp_cmd.c:199
+#: src/imyp_cmd.c:205
 msgid "A program for playing iMelody ringtones (IMY files)"
 msgstr ""
 
-#: src/imyp_cmd.c:200
+#: src/imyp_cmd.c:206
 msgid "Syntax"
 msgstr ""
 
-#: src/imyp_cmd.c:202
+#: src/imyp_cmd.c:208
 msgid " [options] "
 msgstr ""
 
-#: src/imyp_cmd.c:204
+#: src/imyp_cmd.c:210
 msgid "Options"
 msgstr ""
 
-#: src/imyp_cmd.c:205
+#: src/imyp_cmd.c:211
 msgid "Try to use this device"
 msgstr ""
 
-#: src/imyp_cmd.c:207
+#: src/imyp_cmd.c:213
 msgid "Execute this program instead of sound output"
 msgstr ""
 
-#: src/imyp_cmd.c:210
+#: src/imyp_cmd.c:216
 msgid "Write raw samples to this file instead of sound output"
 msgstr ""
 
-#: src/imyp_cmd.c:212
+#: src/imyp_cmd.c:218
 msgid "Print help"
 msgstr ""
 
-#: src/imyp_cmd.c:213
+#: src/imyp_cmd.c:219
 msgid "Print license information"
 msgstr ""
 
-#: src/imyp_cmd.c:215
+#: src/imyp_cmd.c:221
 msgid "Select MIDI instrument number"
 msgstr ""
 
-#: src/imyp_cmd.c:217
+#: src/imyp_cmd.c:223
 msgid "Use the given output system"
 msgstr ""
 
-#: src/imyp_cmd.c:219
+#: src/imyp_cmd.c:225
 msgid "Convert the given files to MIDI format"
 msgstr ""
 
-#: src/imyp_cmd.c:221
+#: src/imyp_cmd.c:228
+msgid "Convert the given files to WAV format"
+msgstr ""
+
+#: src/imyp_cmd.c:230
 msgid "Print version number"
 msgstr ""
 

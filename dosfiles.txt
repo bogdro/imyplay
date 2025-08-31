@@ -1,1 +1,1 @@
-src\imyplay.o src\iparsers.o src\imyp_sig.o src\imypwrap.o src\imyputil.o src\imyp_all.o src\imyp_mid.o src\imyp_exe.o src\midifile.o src\imyp_fil.o src\imyp_spk.o src\imyp_cmd.o src\imypdos.obj -lalleg
+src\imyplay.c src\iparsers.c src\imyp_sig.c src\imypwrap.c src\imyputil.c src\imyp_all.c src\imyp_mid.c src\imyp_exe.c src\midifile.c src\imyp_fil.c src\imyp_spk.c src\imyp_cmd.c src\imypdos.obj -lalleg

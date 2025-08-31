@@ -1,1 +1,0 @@
-src\imyplay.c src\iparsers.c src\imyp_sig.c src\imypwrap.c src\imyputil.c src\imyp_all.c src\imyp_mid.c src\imyp_exe.c src\midifile.c src\imyp_fil.c src\imyp_spk.c src\imyp_cmd.c src\imypdos.obj -lalleg

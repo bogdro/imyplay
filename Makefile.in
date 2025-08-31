@@ -372,7 +372,7 @@ top_srcdir = @top_srcdir@
 SUBDIRS = doc src po test
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = mkinstalldirs imyplay.spi m4/ax_cflag.m4 \
-	m4/ax_unus.m4 imy THANKS dosdist.bat dosfiles.txt Makefile.dos \
+	m4/ax_unus.m4 imy THANKS dosdist.bat dosfiles.txt dosobjs.txt Makefile.dos \
 	setup/imyplay.bat setup/imyplay.nsi setup/imyplay.svg
 
 all: config.h

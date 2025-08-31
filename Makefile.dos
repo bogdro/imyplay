@@ -89,8 +89,8 @@ DIST_EXT = .zip
 
 all:	$(PROGNAME)$(EXE_EXT)
 
-$(PROGNAME)$(EXE_EXT): $(shell type DOSFILES.TXT) $(ADD_FILES) Makefile.dos
-	$(CC) -o $(PROGNAME)$(EXE_EXT) @DOSFILES.TXT $(ADD_FILES) $(ADD_LIBS)
+$(PROGNAME)$(EXE_EXT): $(shell type DOSOBJS.TXT) $(ADD_FILES) Makefile.dos
+	$(CC) -o $(PROGNAME)$(EXE_EXT) @DOSOBJS.TXT $(ADD_FILES) $(ADD_LIBS)
 	$(UPX) $(UPX_OPTS) $(PROGNAME)$(EXE_EXT)
 
 dist:	$(PROGNAME)$(DIST_EXT)

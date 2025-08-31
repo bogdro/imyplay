@@ -669,7 +669,14 @@ imyp_generate_filename (
 #ifdef HAVE_MALLOC
 	fnlen = strlen (filename);
 	elen = strlen (ext);
-	imy = strstr (filename, ".imy");
+	imy = strrchr (filename, '.');
+	if ( imy != NULL )
+	{
+		if ( IMYP_STRCASECMP (imy + 1, "imy") != 0 )
+		{
+			imy = NULL;
+		}
+	}
 	if ( imy != NULL )
 	{
 		imy_index = (size_t)(imy - filename);

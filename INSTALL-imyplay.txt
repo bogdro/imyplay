@@ -47,6 +47,12 @@ Requirements for compiling the full version under Un*x:
 	http://jackaudio.org/		  - for the JACK1 library
 	http://gstreamer.freedesktop.org/ - for GStreamer
 
+- MIDI output requires the following functions from the standard C library:
+  malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),
+  fclose() and qsort().
+
+- WAV output requires the AO library (http://xiph.org/ao/)
+
 Type './configure' to configure the program for your system. If you do not
  with support for a particular output mechanism, configure the program with
 	./configure --enable-XXX=no
@@ -96,6 +102,8 @@ Requirements for automatic compiling the DOS version:
   malloc(), realloc(), memset(), memcpy(), fopen(), fwrite(), fseek(),
   fclose() and qsort().
 
+- WAV output requires the AO library (http://xiph.org/ao/)
+
 - the 'sed' utility (comes with DJGPP)
 
 - the 'zip' utility (comes with DJGPP)
@@ -113,6 +121,8 @@ to
 
 Then, run "make -f Makefile.dos". If you don't have a 'make' utility, you can
 run the "dosdist.bat" file.
+
+If you want WAV output enabled, run "make -f Makefile.dos LIBAO=1".
 
 If you want to override the default C compiler, run
 "make -f Makefile.dos CC=your-compiler".

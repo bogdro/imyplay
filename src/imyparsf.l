@@ -340,7 +340,7 @@ imyp_make_pause (
 %x REPEAT_BLOCK_END
 
 IGNORED_STATEMENTS	(vibeon|vibeoff|backon|backoff|ledon|ledoff)
-DURATION		[1-5]
+DURATION		[0-5]
 OCTAVE_MODIFIER		(\*[0-8])
 
 NOTE			([a-g]{DURATION}[.:;]?)

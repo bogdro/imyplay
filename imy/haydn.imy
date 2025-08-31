@@ -1,0 +1,9 @@
+BEGIN:IMELODY
+VERSION:1.2
+FORMAT:CLASS1.0
+NAME:Joseph Haydn - Trumpet Concerto in E-flat major
+BEAT:120
+STYLE:S0
+VOLUME:V15
+MELODY:*5c1.f2d1.(f2e2g2c2e2f2r2@2)
+END:IMELODY

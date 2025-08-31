@@ -206,6 +206,10 @@ imyp_wav_init (
 	{
 		return -6;
 	}
+	if ( drop_priv_if_suid() != 0 )
+	{
+		return -5;
+	}
 #ifdef HAVE_MALLOC
 	data = (struct imyp_wav_backend_data *) malloc (sizeof (
 		struct imyp_wav_backend_data));

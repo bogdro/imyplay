@@ -183,7 +183,8 @@ imyp_ao_init (
 	int res;
 	const int samp_freqs[] = {44100, 22050, 11025};
 	const int endians[] = {AO_FMT_LITTLE, AO_FMT_BIG};
-	size_t i, j;
+	size_t i;
+	size_t j;
 	struct imyp_ao_backend_data * data;
 
 	if ( imyp_data == NULL )

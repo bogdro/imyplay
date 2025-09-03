@@ -198,7 +198,8 @@ imyp_wav_init (
 	int driver;
 	const int samp_freqs[] = {44100, 22050, 11025};
 	const int endians[] = {AO_FMT_LITTLE, AO_FMT_BIG};
-	size_t i, j;
+	size_t i;
+	size_t j;
 	const char * filename;
 	struct imyp_wav_backend_data * data;
 

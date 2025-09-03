@@ -461,7 +461,8 @@ imyp_jack_close (
 	imyp_backend_data_t * const imyp_data;
 #endif
 {
-	int res = 0, tempres;
+	int res = 0;
+	int tempres;
 	struct imyp_jack_backend_data * data =
 		(struct imyp_jack_backend_data *)imyp_data;
 

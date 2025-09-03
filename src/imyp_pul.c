@@ -208,7 +208,8 @@ imyp_pulse_init (
 	const char * const dev_file;
 #endif
 {
-	unsigned int i, j;
+	unsigned int i;
+	unsigned int j;
 	const int formats[] = {PA_SAMPLE_S16LE, PA_SAMPLE_S16BE, PA_SAMPLE_U8};
 	const uint32_t samp_freqs[] = {44100, 22050, 11025};
 	struct imyp_pulse_backend_data * data;

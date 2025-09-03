@@ -366,6 +366,7 @@ imyp_portaudio_init (
 	data->duration = 0;
 	data->last_index = 0;
 	data->sampfreq = 0;
+	data->format = paInt16;
 	data->stream = NULL;
 
 	if ( dev_file != NULL )

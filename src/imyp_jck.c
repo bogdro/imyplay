@@ -248,7 +248,10 @@ imyp_jack_play_tune (
 
 		/* imyp_jack_pause (imyp_data, duration); */
 
-		while ( (data->samples_remain > 0) && (imyp_sig_recvd == 0) ) {}
+		while ( (data->samples_remain > 0) && (imyp_sig_recvd == 0) )
+		{
+			/* wait loop, empty */
+		}
 	}
 	else
 	{

@@ -206,7 +206,7 @@ static int launch_program (
 {
 	size_t i;
 	size_t j;
-	size_t exe_index = 0;
+	size_t exe_index;
 	int sys_ret;
 	struct imyp_exec_backend_data * data =
 		(struct imyp_exec_backend_data *)imyp_data;

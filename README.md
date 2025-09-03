@@ -4,7 +4,8 @@ IMYplay is a program for playing iMelody ringtones (IMY files),
 conforming to the iMelody (<https://en.wikipedia.org/wiki/IMelody>)
 specification, as written in `doc/imelody.txt`.
 
-Read the info documentation (type `info doc/imyplay.info`) to get more information.
+Read the info documentation (type `info doc/imyplay.info`)
+to get more information.
 
 IMYplay can use the following outputs to produce sound:
 
@@ -16,7 +17,8 @@ IMYplay can use the following outputs to produce sound:
 6.  PortAudiov19 (<http://www.portaudio.com/>),
 7.  PulseAudio (<http://www.pulseaudio.org/>),
 8.  JACK1/JACK2 (<http://jackaudio.org/>),
-9.  GStreamer (<http://gstreamer.freedesktop.org/>, gstreamer-plugin-base required),
+9.  GStreamer (<http://gstreamer.freedesktop.org/>,
+gstreamer-plugin-base required),
 10.  PC-speaker
 
 It can also:
@@ -35,7 +37,8 @@ IMYplay's homepage: <https://imyplay.sourceforge.io/>.
 
 [![Travis Build Status](https://app.travis-ci.com/bogdro/imyplay.svg?token=T93Xpo2K5F4sXcUCVsd5&branch=dev)](https://app.travis-ci.com/bogdro/imyplay)
 
-IMYplay, in various versions, has been successfully compiled on the following environments:
+IMYplay, in various versions, has been successfully compiled
+on the following environments:
 
 -   Fedora Core 4 GNU/Linux, i686
 -   Fedora 12 GNU/Linux, i686
@@ -53,8 +56,10 @@ IMYplay, in various versions, has been successfully compiled on the following en
 
 ## WARNING ##
 
-The `dev` branch may contain code which is a work in progress and committed just for tests. The code here may not work properly or even compile.
+The `dev` branch may contain code which is a work in progress and
+committed just for tests. The code here may not work properly or even compile.
 
 The `master` branch may contain code which is committed just for quality tests.
 
-The tags, matching the official packages on SourceForge, should be the most reliable points.
+The tags, matching the official packages on SourceForge,
+should be the most reliable points.

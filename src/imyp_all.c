@@ -290,8 +290,8 @@ imyp_all_play_tune (
 {
 	AUDIOSTREAM * as;
 	void * new_buf;
-	struct imyp_allegro_backend_data * data =
-		(struct imyp_allegro_backend_data *)imyp_data;
+	const struct imyp_allegro_backend_data * const data =
+		(const struct imyp_allegro_backend_data * const)imyp_data;
 
 	if ( (buf == NULL) || (bufsize <= 0) || (imyp_data == NULL) || (duration <= 0) )
 	{
@@ -337,11 +337,11 @@ imyp_all_play_tune (
 void
 imyp_all_pause (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const int milliseconds)
 #else
 	imyp_data, milliseconds)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const int milliseconds;
 #endif
 {
@@ -368,11 +368,11 @@ imyp_all_pause (
 void
 imyp_all_put_text (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
 	imyp_data, text)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
@@ -520,10 +520,10 @@ imyp_all_close (
 void
 imyp_all_version (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
 #else
 	imyp_data)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
 #ifdef ALLEGRO_VERSION_STR

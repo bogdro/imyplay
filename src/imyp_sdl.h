@@ -24,16 +24,22 @@
 
 # include "imyplay.h"
 
-extern void imyp_sdl_pause IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_sdl_pause IMYP_PARAMS ((
+	const imyp_backend_data_t * const imyp_data,
 	const int milliseconds));
-extern void imyp_sdl_put_text IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_sdl_put_text IMYP_PARAMS ((
+	const imyp_backend_data_t * const imyp_data,
 	const char * const text));
-extern int imyp_sdl_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern int imyp_sdl_play_tune IMYP_PARAMS ((
+	imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_sdl_init IMYP_PARAMS ((imyp_backend_data_t ** const imyp_data,
+extern int imyp_sdl_init IMYP_PARAMS ((
+	imyp_backend_data_t ** const imyp_data,
 	const char * const dev_file));
-extern int imyp_sdl_close IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
-extern void imyp_sdl_version IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
+extern int imyp_sdl_close IMYP_PARAMS ((
+	imyp_backend_data_t * const imyp_data));
+extern void imyp_sdl_version IMYP_PARAMS ((
+	const imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_SDL */

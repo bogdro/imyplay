@@ -167,11 +167,11 @@ imyp_wav_pause (
 void
 imyp_wav_put_text (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
 	imyp_data, text)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
@@ -199,7 +199,7 @@ imyp_wav_init (
 	const int samp_freqs[] = {44100, 22050, 11025};
 	const int endians[] = {AO_FMT_LITTLE, AO_FMT_BIG};
 	size_t i, j;
-	char * filename;
+	const char * filename;
 	struct imyp_wav_backend_data * data;
 
 	if ( (imyp_data == NULL) || (in_file == NULL) )
@@ -304,10 +304,10 @@ imyp_wav_close (
 void
 imyp_wav_version (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
 #else
 	imyp_data)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
 	/* no version information currently available */

@@ -24,16 +24,22 @@
 
 # include "imyplay.h"
 
-extern void imyp_wav_pause IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_wav_pause IMYP_PARAMS ((
+	imyp_backend_data_t * const imyp_data,
 	const int milliseconds, void * const buf, int bufsize));
-extern void imyp_wav_put_text IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern void imyp_wav_put_text IMYP_PARAMS ((
+	const imyp_backend_data_t * const imyp_data,
 	const char * const text));
-extern int imyp_wav_play_tune IMYP_PARAMS ((imyp_backend_data_t * const imyp_data,
+extern int imyp_wav_play_tune IMYP_PARAMS ((
+	imyp_backend_data_t * const imyp_data,
 	const double freq, const int volume_level,
 	const int duration, void * const buf, int bufsize));
-extern int imyp_wav_init IMYP_PARAMS ((imyp_backend_data_t ** const imyp_data,
+extern int imyp_wav_init IMYP_PARAMS ((
+	imyp_backend_data_t ** const imyp_data,
 	const char * const dev_file));
-extern int imyp_wav_close IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
-extern void imyp_wav_version IMYP_PARAMS ((imyp_backend_data_t * const imyp_data));
+extern int imyp_wav_close IMYP_PARAMS ((
+	imyp_backend_data_t * const imyp_data));
+extern void imyp_wav_version IMYP_PARAMS ((
+	const imyp_backend_data_t * const imyp_data));
 
 #endif /* IMYP_WAV */

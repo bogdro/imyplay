@@ -195,7 +195,7 @@ imyp_portaudio_play_tune (
 	const double freq,
 	const int volume_level,
 	const int duration,
-	void * const buf IMYP_ATTR((unused)),
+	const void * const buf IMYP_ATTR((unused)),
 	int bufsize)
 #else
 	imyp_data, freq, volume_level, duration, buf, bufsize)
@@ -203,7 +203,7 @@ imyp_portaudio_play_tune (
 	const double freq;
 	const int volume_level;
 	const int duration;
-	void * const buf IMYP_ATTR((unused));
+	const void * const buf IMYP_ATTR((unused));
 	int bufsize;
 #endif
 {
@@ -267,11 +267,11 @@ imyp_portaudio_play_tune (
 void
 imyp_portaudio_pause (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const int milliseconds)
 #else
 	imyp_data, milliseconds)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const int milliseconds;
 #endif
 {
@@ -298,11 +298,11 @@ imyp_portaudio_pause (
 void
 imyp_portaudio_put_text (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)),
 	const char * const text)
 #else
 	imyp_data, text)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 	const char * const text;
 #endif
 {
@@ -501,10 +501,10 @@ imyp_portaudio_close (
 void
 imyp_portaudio_version (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused)))
 #else
 	imyp_data)
-	imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
+	const imyp_backend_data_t * const imyp_data IMYP_ATTR ((unused));
 #endif
 {
 	printf ( "PortAudio: %s\n", Pa_GetVersionText () );

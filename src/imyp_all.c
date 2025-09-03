@@ -450,7 +450,7 @@ imyp_all_init (
 		dev_copy = IMYP_STRDUP (dev_file);
 		if ( dev_copy != NULL )
 		{
-			colon = strrchr (dev_copy, (int)':');
+			colon = strrchr (dev_copy, ':');
 			if ( colon != NULL )
 			{
 				format = imyp_get_format (colon+1);

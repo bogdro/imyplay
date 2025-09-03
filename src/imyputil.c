@@ -435,7 +435,7 @@ imyp_generate_samples (
 
 	qual_bytes = qual_bits/8;
 	imyp_bufsize = (unsigned int)(duration * (int)samp_rate * ((int)qual_bytes)) / 1000; /* bytes */
-	imyp_bufsize = (unsigned int)IMYP_MIN ((unsigned int)bufsize, imyp_bufsize); /* bytes */
+	imyp_bufsize = IMYP_MIN ((unsigned int)bufsize, imyp_bufsize); /* bytes */
 	imyp_bufsize /= qual_bytes; /* samples */
 	max_val = (1 << (qual_bits - 1)) - 1;
 	if ( freq > 0.0 )

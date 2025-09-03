@@ -229,7 +229,7 @@ imyp_portaudio_play_tune (
 		qual_bits = 8;
 	}
 	qual_bytes = qual_bits/8;
-	data->samples_remain = (long int)(duration * (long int)data->sampfreq * qual_bytes) / 1000; /* bytes */
+	data->samples_remain = (duration * (long int)data->sampfreq * qual_bytes) / 1000; /* bytes */
 	data->samples_remain = IMYP_MIN (bufsize, data->samples_remain); /* bytes */
 	data->samples_remain /= qual_bytes; /* samples */
 
@@ -374,7 +374,7 @@ imyp_portaudio_init (
 		dev_copy = IMYP_STRDUP (dev_file);
 		if ( dev_copy != NULL )
 		{
-			colon = strrchr (dev_copy, (int)':');
+			colon = strrchr (dev_copy, ':');
 			if ( colon != NULL )
 			{
 				format = imyp_get_format (colon+1);

@@ -414,10 +414,12 @@ imyp_generate_samples (
 	unsigned int imyp_bufsize;
 	int max_val;
 	int samp_with_volume;
-	unsigned long int nperiods_rounded;
 	double periods_in_full;
 	unsigned int qual_bits = samp_quality;
 	unsigned int qual_bytes;
+#if (!defined HAVE_SIN) && (!defined HAVE_LIBM)
+	unsigned long int nperiods_rounded;
+#endif
 
 	if ( (buf == NULL) || (bufsize <= 0) || (duration <= 0) )
 	{
@@ -441,10 +443,11 @@ imyp_generate_samples (
 	if ( freq > 0.0 )
 	{
 		nperiods = samp_rate/freq;
+#if (!defined HAVE_SIN) && (!defined HAVE_LIBM)
 		/* round down, else we may think that a period fits while it doesn't: */
 		/* nperiods_rounded = (unsigned long int)IMYP_ROUND(nperiods); */
 		nperiods_rounded = (unsigned long int)nperiods;
-
+#endif
 		periods_in_full = 2 * M_PI / nperiods;
 		for ( i = last_index; i < last_index + imyp_bufsize; i++ )
 		{
@@ -459,31 +462,25 @@ imyp_generate_samples (
 					return (int)(i - last_index);
 				}
 			}
+#if (defined HAVE_SIN) || (defined HAVE_LIBM)
+			samp = (int)(max_val /* disable to get rectangular wave */ +
+				IMYP_ROUND (max_val
+					/* * sin (i * periods_in_full)/3)); */
+					/* * sin ((i % nperiods_rounded) * periods_in_full)/3)); */
+					* sin ((double)i * periods_in_full)));
+#else
 			if ( nperiods_rounded == 0 )
 			{
 				/* not a single full period fits in the buffer */
-#if (defined HAVE_SIN) || (defined HAVE_LIBM)
-				samp = (int)(max_val /* disable to get rectangular wave */ +
-					IMYP_ROUND (max_val
-						/* * sin (i * periods_in_full)/3)); */
-						* sin ((double)i * periods_in_full)));
-#else
 				samp = (int) IMYP_ROUND (i *
 					(max_val / nperiods));
-#endif
 			}
 			else
 			{
-#if (defined HAVE_SIN) || (defined HAVE_LIBM)
-				samp = (int)(max_val /* disable to get rectangular wave */ +
-					IMYP_ROUND (max_val
-						/* * sin ((i % nperiods_rounded) * periods_in_full)/3)); */
-						* sin ((double)i * periods_in_full)));
-#else
 				samp = (int) IMYP_ROUND ((i % nperiods_rounded) *
 					(max_val / nperiods));
-#endif
 			}
+#endif
 			if ( is_uns == 0 )
 			{
 				samp -= max_val;

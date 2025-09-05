@@ -646,7 +646,7 @@ imyp_lib_init (
 	const char * const out_file IMYP_ONLY_IF_FILE
 	)
 #else
-	curr, want_midi, filename, want_exec, midi_instrument, want_file, out_file)
+	curr, want_midi, filename, want_exec, midi_instrument, want_file, want_wav, out_file)
 	imyp_backend_t * const curr;
 	const int want_midi IMYP_ONLY_IF_MIDI;
 	const char * const filename IMYP_ONLY_IF_FILE;

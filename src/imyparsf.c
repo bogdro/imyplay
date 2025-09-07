@@ -852,7 +852,7 @@ imyp_play_current_note (
 {
 	int note_index = 0;
 
-	if ( (duration == NULL) || (curr_lib == NULL)
+	if ( (melody == NULL) || (curr_lib == NULL)
 		|| (play_res == NULL) || (duration == NULL) )
 	{
 		return;

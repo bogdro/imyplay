@@ -186,7 +186,7 @@ static int imyp_jack_fill_buffer (
 		nframes, &frames_to_play);
 	data->last_index += frames_to_play;
 	data->samples_remain -= frames_to_play;
-	if ( data->samples_remain <= 0 )
+	if ( data->samples_remain < 1 )
 	{
 		/* just a marker, because we need another call to the callback, otherwise the note is lost: */
 		data->samples_remain = 1;
@@ -474,10 +474,7 @@ imyp_jack_close (
 		jack_disconnect (data->jclient, jack_port_name (data->joutput1), data->ports[0]);
 		jack_disconnect (data->jclient, jack_port_name (data->joutput2), data->ports[1]);
 		tempres = jack_deactivate (data->jclient);
-		if ( res == 0 )
-		{
-			res = tempres;
-		}
+		res = tempres;
 		tempres = jack_port_unregister (data->jclient, data->joutput2);
 		if ( res == 0 )
 		{

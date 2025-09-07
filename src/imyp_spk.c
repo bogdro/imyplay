@@ -101,7 +101,7 @@ static struct imyp_spkr_backend_data imyp_spkr_backend_data_static;
 int
 imyp_spkr_play_tune (
 #ifdef IMYP_ANSIC
-	imyp_backend_data_t * const imyp_data,
+	const imyp_backend_data_t * const imyp_data,
 	const double freq,
 	const int volume_level IMYP_ATTR ((unused)),
 	const int duration,
@@ -109,7 +109,7 @@ imyp_spkr_play_tune (
 	int bufsize IMYP_ATTR ((unused)))
 #else
 	imyp_data, freq, volume_level, duration, buf, bufsize)
-	imyp_backend_data_t * const imyp_data;
+	const imyp_backend_data_t * const imyp_data;
 	const double freq;
 	const int volume_level IMYP_ATTR ((unused));
 	const int duration;
@@ -121,7 +121,7 @@ imyp_spkr_play_tune (
 	int ioctl_param;
 #ifndef IMYP_IS_DOS
 	const struct imyp_spkr_backend_data * const data =
-		(struct imyp_spkr_backend_data *)imyp_data;
+		(const struct imyp_spkr_backend_data *)imyp_data;
 #endif
 	/* The PC speaker can't generate sounds with a frequency
 	   less than 0x1234DD / 0x10000 = 18.2 Hz.

@@ -629,6 +629,6 @@ imyp_gst_version (
 # endif
 #endif
 	gst_version (&major, &minor, &micro, &nano);
-	printf ( "GStreamer (%s): %d.%d.%d.%d\n", _(ver_msg_runtime),
+	printf ( "GStreamer (%s): %u.%u.%u.%u\n", _(ver_msg_runtime),
 		major, minor, micro, nano );
 }

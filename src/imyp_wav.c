@@ -200,7 +200,7 @@ imyp_wav_init (
 	const int endians[] = {AO_FMT_LITTLE, AO_FMT_BIG};
 	size_t i;
 	size_t j;
-	const char * filename;
+	char * filename;
 	struct imyp_wav_backend_data * data;
 
 	if ( (imyp_data == NULL) || (in_file == NULL) )
@@ -254,6 +254,7 @@ imyp_wav_init (
 			break;
 		}
 	}
+	free (filename);
 	if ( i == sizeof (samp_freqs) / sizeof (samp_freqs[0]) )
 	{
 #ifdef HAVE_MALLOC

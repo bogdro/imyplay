@@ -239,7 +239,7 @@ imyp_play_current_note (
 		}
 	}
 	else if ( (is_sharp != 0) && (note_index == IMYP_NOTES_PER_OCTAVE-1)
-		&& (octave < IMYP_OCTAVES) )
+		&& (octave < IMYP_OCTAVES - 1) )
 	{
 		/* sharp 'B' note and not the last 'B' note */
 		*play_res = imyp_play_tune (imyp_notes[octave+1][0],

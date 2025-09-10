@@ -73,6 +73,9 @@ struct imyp_gst_backend_data
 	GstElement *binpipe;
 #ifndef IMYP_HAVE_GST1
 	GstController *ctl;
+#else
+	GstControlBinding *volctl_binding;
+	GstControlBinding *freqctl_binding;
 #endif
 	GstInterpolationControlSource *volctl;
 	GstInterpolationControlSource *freqctl;
@@ -192,6 +195,7 @@ imyp_gst_play_tune (
 		   so everything is OK anyway. */
 		/*if ( data->gclock_ret != GST_CLOCK_OK ) res = -2;*/
 		gst_element_set_state (data->binpipe, GST_STATE_NULL);
+		gst_clock_id_unref (data->gclock_ID);
 	}
 	else
 	{
@@ -403,9 +407,25 @@ imyp_gst_init (
 	}
 
 #ifdef IMYP_HAVE_GST1
+	data->volctl_binding = gst_direct_control_binding_new (
+		GST_OBJECT_CAST (data->src), prop_name_volume,
+		GST_CONTROL_SOURCE (data->volctl));
+	if ( data->volctl_binding == NULL )
+	{
+		g_object_unref (data->volctl);
+		/* look in imyp_gst_close() for why this is disabled: */
+		/*g_object_unref (G_OBJECT (sink));
+		g_object_unref (G_OBJECT (src));*/
+		g_object_unref (G_OBJECT (data->gclock));
+		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
+# ifdef HAVE_MALLOC
+		free (data);
+# endif
+		return -8;
+	}
 	if ( gst_object_add_control_binding (GST_OBJECT_CAST (data->src),
-		gst_direct_control_binding_new (GST_OBJECT_CAST (data->src),
-			prop_name_volume, GST_CONTROL_SOURCE (data->volctl))) == FALSE )
+		data->volctl_binding) == FALSE )
 #else
 	if ( gst_controller_set_control_source (data->ctl, prop_name_volume,
 		GST_CONTROL_SOURCE (data->volctl)) == FALSE )
@@ -424,7 +444,7 @@ imyp_gst_init (
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
-		return -8;
+		return -9;
 	}
 
 #ifdef IMYP_HAVE_GST1
@@ -444,7 +464,7 @@ imyp_gst_init (
 # ifdef HAVE_MALLOC
 		free (data);
 # endif
-		return -9;
+		return -10;
 	}
 #endif /* IMYP_HAVE_GST1 */
 
@@ -464,13 +484,30 @@ imyp_gst_init (
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
-		return -10;
+		return -11;
 	}
 
 #ifdef IMYP_HAVE_GST1
+	data->freqctl_binding = gst_direct_control_binding_new (
+		GST_OBJECT_CAST (data->src), prop_name_freq,
+		GST_CONTROL_SOURCE (data->freqctl));
+	if ( data->freqctl_binding == NULL )
+	{
+		g_object_unref (data->freqctl);
+		g_object_unref (data->volctl);
+		/* look in imyp_gst_close() for why this is disabled: */
+		/*g_object_unref (G_OBJECT (sink));
+		g_object_unref (G_OBJECT (src));*/
+		g_object_unref (G_OBJECT (data->gclock));
+		g_object_unref (G_OBJECT (data->binpipe));
+		gst_deinit ();
+# ifdef HAVE_MALLOC
+		free (data);
+# endif
+		return -12;
+	}
 	if ( gst_object_add_control_binding (GST_OBJECT_CAST (data->src),
-		gst_direct_control_binding_new (GST_OBJECT_CAST (data->src),
-			prop_name_freq, GST_CONTROL_SOURCE (data->freqctl))) == FALSE )
+		data->freqctl_binding) == FALSE )
 #else
 	if ( gst_controller_set_control_source (data->ctl, prop_name_freq,
 		GST_CONTROL_SOURCE (data->freqctl)) == FALSE )
@@ -490,7 +527,7 @@ imyp_gst_init (
 #ifdef HAVE_MALLOC
 		free (data);
 #endif
-		return -11;
+		return -13;
 	}
 
 #ifdef IMYP_HAVE_GST1
@@ -511,7 +548,7 @@ imyp_gst_init (
 # ifdef HAVE_MALLOC
 		free (data);
 # endif
-		return -12;
+		return -14;
 	}
 #endif /* IMYP_HAVE_GST1 */
 
@@ -543,10 +580,22 @@ imyp_gst_close (
 
 	if ( data != NULL )
 	{
+#ifndef IMYP_HAVE_GST1
+		if ( data->freqctl_binding != NULL )
+		{
+			g_object_unref (G_OBJECT (data->freqctl_binding));
+		}
+#endif
 		if ( data->freqctl != NULL )
 		{
 			g_object_unref (data->freqctl);
 		}
+#ifndef IMYP_HAVE_GST1
+		if ( data->volctl_binding != NULL )
+		{
+			g_object_unref (G_OBJECT (data->volctl_binding));
+		}
+#endif
 		if ( data->volctl != NULL )
 		{
 			g_object_unref (data->volctl);
@@ -578,6 +627,8 @@ imyp_gst_close (
 		*/
 		/*if ( data->sink != NULL ) g_object_unref (G_OBJECT (data->sink));
 		if ( data->src != NULL ) g_object_unref (G_OBJECT (data->src));*/
+		g_value_unset (&(data->g_vol));
+		g_value_unset (&(data->g_freq));
 		gst_deinit ();
 #ifdef HAVE_MALLOC
 		free (data);

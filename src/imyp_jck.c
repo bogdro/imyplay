@@ -491,9 +491,19 @@ imyp_jack_close (
 			res = tempres;
 		}
 #ifdef HAVE_JACK_FREE
+		/*
+		jack_free (data->joutput2);
+		jack_free (data->joutput1);
+		*/
 		jack_free (data->ports);
+		/*jack_free (data->jclient);*/
 #else
+		/*
+		free (data->joutput2);
+		free (data->joutput1);
+		*/
 		free (data->ports);
+		/*free (data->jclient);*/
 #endif
 #ifdef HAVE_MALLOC
 		free (data);

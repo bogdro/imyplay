@@ -306,6 +306,19 @@ imyp_alsa_init (
 #endif
 		return res;
 	}
+
+	/* Prepare the audio interface */
+	res = snd_pcm_prepare (data->handle);
+	if ( res < 0 )
+	{
+		snd_pcm_close (data->handle);
+		snd_pcm_hw_params_free (data->params);
+#ifdef HAVE_MALLOC
+		free (data);
+#endif
+		return res;
+	}
+
 	*imyp_data = (imyp_backend_data_t *)data;
 	return 0;
 }
@@ -331,6 +344,7 @@ imyp_alsa_close (
 	{
 		snd_pcm_drain (data->handle);
 		snd_pcm_close (data->handle);
+		snd_pcm_hw_free (data->handle);
 		snd_pcm_hw_params_free (data->params);
 #ifdef HAVE_MALLOC
 		free (data);

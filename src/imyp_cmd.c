@@ -346,7 +346,7 @@ int imyplay_parse_cmdline (
 			if ( sscanf (optarg, "%d", &midi_instrument) != 1 )
 			{
 				print_help (imyp_progname);
-				return 1;
+				return -1;
 			}
 			opt_midiins = 0;
 		}
@@ -413,7 +413,7 @@ int imyplay_parse_cmdline (
 				if ( sscanf (argv[i+1], "%d", &midi_instrument) != 1 )
 				{
 					print_help (imyp_progname);
-					return 1;
+					return -1;
 				}
 				argv[i+1] = NULL;
 			}

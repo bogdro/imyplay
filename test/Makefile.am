@@ -21,8 +21,8 @@
 
 if IMY_TESTS_ENABLED
 
-TESTS = utiltest
-check_PROGRAMS = utiltest
+TESTS = utiltest cmdtest
+check_PROGRAMS = utiltest cmdtest
 
 COMMON_LIBS = $(top_builddir)/src/imyputil.o @CHECK_LIBS@ @LIBS@
 COMMON_CFLAGS = @CHECK_CFLAGS@ -I $(top_builddir)/src
@@ -30,6 +30,10 @@ COMMON_CFLAGS = @CHECK_CFLAGS@ -I $(top_builddir)/src
 utiltest_SOURCES = utiltest.c
 utiltest_CFLAGS = $(COMMON_CFLAGS)
 utiltest_LDADD = $(COMMON_LIBS)
+
+cmdtest_SOURCES = cmdtest.c
+cmdtest_CFLAGS = $(COMMON_CFLAGS)
+cmdtest_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_cmd.o
 
 if ALLEGRO
 TESTS += testalle

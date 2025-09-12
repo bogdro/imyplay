@@ -45,6 +45,7 @@ testpuls
 testsdl
 testspk
 testwav
+cmdtest
 
 *.log
 *.trs

@@ -31,8 +31,9 @@
 
 #include <stdio.h>
 
-/* dummy variable provided by files not included in the test */
+/* dummy variables provided by files not included in the test */
 int imyp_sig_recvd = 0;
+const char * imyp_progname = "test";
 
 #ifdef IMYP_HAVE_PORTAUDIO
 

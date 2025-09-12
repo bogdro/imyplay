@@ -108,15 +108,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@IMY_TESTS_ENABLED_TRUE@TESTS = utiltest$(EXEEXT) $(am__EXEEXT_1) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_2) $(am__EXEEXT_3) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_4) $(am__EXEEXT_5) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_6) $(am__EXEEXT_7) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_8) $(am__EXEEXT_9) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_10) $(am__EXEEXT_11) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_12) $(am__EXEEXT_13) \
-@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_14)
-@IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
+@IMY_TESTS_ENABLED_TRUE@TESTS = utiltest$(EXEEXT) cmdtest$(EXEEXT) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_1) $(am__EXEEXT_2) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_3) $(am__EXEEXT_4) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_5) $(am__EXEEXT_6) \
@@ -124,6 +116,15 @@ host_triplet = @host@
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_9) $(am__EXEEXT_10) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_11) $(am__EXEEXT_12) \
 @IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_13) $(am__EXEEXT_14)
+@IMY_TESTS_ENABLED_TRUE@check_PROGRAMS = utiltest$(EXEEXT) \
+@IMY_TESTS_ENABLED_TRUE@	cmdtest$(EXEEXT) $(am__EXEEXT_1) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_2) $(am__EXEEXT_3) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_4) $(am__EXEEXT_5) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_6) $(am__EXEEXT_7) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_8) $(am__EXEEXT_9) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_10) $(am__EXEEXT_11) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_12) $(am__EXEEXT_13) \
+@IMY_TESTS_ENABLED_TRUE@	$(am__EXEEXT_14)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_1 = testalle
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_2 = testalle
 @ALSA_TRUE@@IMY_TESTS_ENABLED_TRUE@am__append_3 = testalsa
@@ -188,11 +189,19 @@ CONFIG_CLEAN_VPATH_FILES =
 @IMY_TESTS_ENABLED_TRUE@@SDL_TRUE@am__EXEEXT_13 = testsdl$(EXEEXT)
 @IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@am__EXEEXT_14 = testspk$(EXEEXT) \
 @IMY_TESTS_ENABLED_TRUE@@SPKR_TRUE@	testwav$(EXEEXT)
+am__cmdtest_SOURCES_DIST = cmdtest.c
+@IMY_TESTS_ENABLED_TRUE@am_cmdtest_OBJECTS =  \
+@IMY_TESTS_ENABLED_TRUE@	cmdtest-cmdtest.$(OBJEXT)
+cmdtest_OBJECTS = $(am_cmdtest_OBJECTS)
+@IMY_TESTS_ENABLED_TRUE@am__DEPENDENCIES_1 =  \
+@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyputil.o
+@IMY_TESTS_ENABLED_TRUE@cmdtest_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyp_cmd.o
+cmdtest_LINK = $(CCLD) $(cmdtest_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+	$(LDFLAGS) -o $@
 am__testalle_SOURCES_DIST = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@am_testalle_OBJECTS = testalle-testalle.$(OBJEXT)
 testalle_OBJECTS = $(am_testalle_OBJECTS)
-@IMY_TESTS_ENABLED_TRUE@am__DEPENDENCIES_1 =  \
-@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyputil.o
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_DEPENDENCIES =  \
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(am__DEPENDENCIES_1) \
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@	$(top_builddir)/src/imyp_all.o
@@ -333,7 +342,8 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/testalle-testalle.Po \
+am__depfiles_remade = ./$(DEPDIR)/cmdtest-cmdtest.Po \
+	./$(DEPDIR)/testalle-testalle.Po \
 	./$(DEPDIR)/testalsa-testalsa.Po ./$(DEPDIR)/testao-testao.Po \
 	./$(DEPDIR)/testexec-testexec.Po \
 	./$(DEPDIR)/testfile-testfile.Po \
@@ -363,19 +373,21 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(testalle_SOURCES) $(testalsa_SOURCES) $(testao_SOURCES) \
-	$(testexec_SOURCES) $(testfile_SOURCES) $(testgst_SOURCES) \
-	$(testjack_SOURCES) $(testmidi_SOURCES) $(testoss_SOURCES) \
-	$(testport_SOURCES) $(testpuls_SOURCES) $(testsdl_SOURCES) \
-	$(testspk_SOURCES) $(testwav_SOURCES) $(utiltest_SOURCES)
-DIST_SOURCES = $(am__testalle_SOURCES_DIST) \
-	$(am__testalsa_SOURCES_DIST) $(am__testao_SOURCES_DIST) \
-	$(am__testexec_SOURCES_DIST) $(am__testfile_SOURCES_DIST) \
-	$(am__testgst_SOURCES_DIST) $(am__testjack_SOURCES_DIST) \
-	$(am__testmidi_SOURCES_DIST) $(am__testoss_SOURCES_DIST) \
-	$(am__testport_SOURCES_DIST) $(am__testpuls_SOURCES_DIST) \
-	$(am__testsdl_SOURCES_DIST) $(am__testspk_SOURCES_DIST) \
-	$(am__testwav_SOURCES_DIST) $(am__utiltest_SOURCES_DIST)
+SOURCES = $(cmdtest_SOURCES) $(testalle_SOURCES) $(testalsa_SOURCES) \
+	$(testao_SOURCES) $(testexec_SOURCES) $(testfile_SOURCES) \
+	$(testgst_SOURCES) $(testjack_SOURCES) $(testmidi_SOURCES) \
+	$(testoss_SOURCES) $(testport_SOURCES) $(testpuls_SOURCES) \
+	$(testsdl_SOURCES) $(testspk_SOURCES) $(testwav_SOURCES) \
+	$(utiltest_SOURCES)
+DIST_SOURCES = $(am__cmdtest_SOURCES_DIST) \
+	$(am__testalle_SOURCES_DIST) $(am__testalsa_SOURCES_DIST) \
+	$(am__testao_SOURCES_DIST) $(am__testexec_SOURCES_DIST) \
+	$(am__testfile_SOURCES_DIST) $(am__testgst_SOURCES_DIST) \
+	$(am__testjack_SOURCES_DIST) $(am__testmidi_SOURCES_DIST) \
+	$(am__testoss_SOURCES_DIST) $(am__testport_SOURCES_DIST) \
+	$(am__testpuls_SOURCES_DIST) $(am__testsdl_SOURCES_DIST) \
+	$(am__testspk_SOURCES_DIST) $(am__testwav_SOURCES_DIST) \
+	$(am__utiltest_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -742,6 +754,9 @@ top_srcdir = @top_srcdir@
 @IMY_TESTS_ENABLED_TRUE@utiltest_SOURCES = utiltest.c
 @IMY_TESTS_ENABLED_TRUE@utiltest_CFLAGS = $(COMMON_CFLAGS)
 @IMY_TESTS_ENABLED_TRUE@utiltest_LDADD = $(COMMON_LIBS)
+@IMY_TESTS_ENABLED_TRUE@cmdtest_SOURCES = cmdtest.c
+@IMY_TESTS_ENABLED_TRUE@cmdtest_CFLAGS = $(COMMON_CFLAGS)
+@IMY_TESTS_ENABLED_TRUE@cmdtest_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_cmd.o
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_SOURCES = testalle.c
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_CFLAGS = $(COMMON_CFLAGS)
 @ALLEGRO_TRUE@@IMY_TESTS_ENABLED_TRUE@testalle_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_all.o @ALLEGRO_LDFLAGS@
@@ -826,6 +841,10 @@ $(am__aclocal_m4_deps):
 clean-checkPROGRAMS:
 	-test -z "$(check_PROGRAMS)" || rm -f $(check_PROGRAMS)
 
+cmdtest$(EXEEXT): $(cmdtest_OBJECTS) $(cmdtest_DEPENDENCIES) $(EXTRA_cmdtest_DEPENDENCIES) 
+	@rm -f cmdtest$(EXEEXT)
+	$(AM_V_CCLD)$(cmdtest_LINK) $(cmdtest_OBJECTS) $(cmdtest_LDADD) $(LIBS)
+
 testalle$(EXEEXT): $(testalle_OBJECTS) $(testalle_DEPENDENCIES) $(EXTRA_testalle_DEPENDENCIES) 
 	@rm -f testalle$(EXEEXT)
 	$(AM_V_CCLD)$(testalle_LINK) $(testalle_OBJECTS) $(testalle_LDADD) $(LIBS)
@@ -892,6 +911,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cmdtest-cmdtest.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testalle-testalle.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testalsa-testalsa.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/testao-testao.Po@am__quote@ # am--include-marker
@@ -927,6 +947,20 @@ am--depfiles: $(am__depfiles_remade)
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+
+cmdtest-cmdtest.o: cmdtest.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cmdtest_CFLAGS) $(CFLAGS) -MT cmdtest-cmdtest.o -MD -MP -MF $(DEPDIR)/cmdtest-cmdtest.Tpo -c -o cmdtest-cmdtest.o `test -f 'cmdtest.c' || echo '$(srcdir)/'`cmdtest.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cmdtest-cmdtest.Tpo $(DEPDIR)/cmdtest-cmdtest.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cmdtest.c' object='cmdtest-cmdtest.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cmdtest_CFLAGS) $(CFLAGS) -c -o cmdtest-cmdtest.o `test -f 'cmdtest.c' || echo '$(srcdir)/'`cmdtest.c
+
+cmdtest-cmdtest.obj: cmdtest.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cmdtest_CFLAGS) $(CFLAGS) -MT cmdtest-cmdtest.obj -MD -MP -MF $(DEPDIR)/cmdtest-cmdtest.Tpo -c -o cmdtest-cmdtest.obj `if test -f 'cmdtest.c'; then $(CYGPATH_W) 'cmdtest.c'; else $(CYGPATH_W) '$(srcdir)/cmdtest.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/cmdtest-cmdtest.Tpo $(DEPDIR)/cmdtest-cmdtest.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='cmdtest.c' object='cmdtest-cmdtest.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(cmdtest_CFLAGS) $(CFLAGS) -c -o cmdtest-cmdtest.obj `if test -f 'cmdtest.c'; then $(CYGPATH_W) 'cmdtest.c'; else $(CYGPATH_W) '$(srcdir)/cmdtest.c'; fi`
 
 testalle-testalle.o: testalle.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(testalle_CFLAGS) $(CFLAGS) -MT testalle-testalle.o -MD -MP -MF $(DEPDIR)/testalle-testalle.Tpo -c -o testalle-testalle.o `test -f 'testalle.c' || echo '$(srcdir)/'`testalle.c
@@ -1338,6 +1372,13 @@ utiltest.log: utiltest$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+cmdtest.log: cmdtest$(EXEEXT)
+	@p='cmdtest$(EXEEXT)'; \
+	b='cmdtest'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 testalle.log: testalle$(EXEEXT)
 	@p='testalle$(EXEEXT)'; \
 	b='testalle'; \
@@ -1527,7 +1568,8 @@ clean: clean-am
 clean-am: clean-checkPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/testalle-testalle.Po
+		-rm -f ./$(DEPDIR)/cmdtest-cmdtest.Po
+	-rm -f ./$(DEPDIR)/testalle-testalle.Po
 	-rm -f ./$(DEPDIR)/testalsa-testalsa.Po
 	-rm -f ./$(DEPDIR)/testao-testao.Po
 	-rm -f ./$(DEPDIR)/testexec-testexec.Po
@@ -1587,7 +1629,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/testalle-testalle.Po
+		-rm -f ./$(DEPDIR)/cmdtest-cmdtest.Po
+	-rm -f ./$(DEPDIR)/testalle-testalle.Po
 	-rm -f ./$(DEPDIR)/testalsa-testalsa.Po
 	-rm -f ./$(DEPDIR)/testao-testao.Po
 	-rm -f ./$(DEPDIR)/testexec-testexec.Po

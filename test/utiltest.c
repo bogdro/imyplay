@@ -50,8 +50,9 @@ static int errno = -1;
 
 #include "imyputil.h"
 
-/* dummy variable provided by files not included in the test */
+/* dummy variables provided by files not included in the test */
 int imyp_sig_recvd = 0;
+const char * imyp_progname = "test";
 
 /* ======================================================= */
 

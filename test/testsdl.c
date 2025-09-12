@@ -31,8 +31,9 @@
 
 #include <stdio.h>
 
-/* dummy variable provided by files not included in the test */
+/* dummy variables provided by files not included in the test */
 int imyp_sig_recvd = 0;
+const char * imyp_progname = "test";
 const char * const ver_msg_compiled = "compiled with version";
 const char * const ver_msg_runtime = "running with version";
 

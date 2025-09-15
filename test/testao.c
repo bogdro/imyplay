@@ -149,7 +149,7 @@ END_TEST
 
 START_TEST(test_ao_ver_nonnull)
 {
-	imyp_backend_data_t data;
+	imyp_backend_data_t data = {0};
 
 	printf ("test_ao_ver_nonnull\n");
 	imyp_ao_version (&data);

@@ -433,6 +433,17 @@ START_TEST(test_imyp_generate_filename_two_ext_raw)
 }
 END_TEST
 
+START_TEST(test_imyp_generate_filename_uppercase_mid)
+{
+	char * res;
+
+	printf("test_imyp_generate_filename_uppercase_mid\n");
+	res = imyp_generate_filename("TEST.IMY", ".mid");
+	ck_assert_str_eq(res, "TEST.mid");
+	free (res);
+}
+END_TEST
+
 /* ======================================================= */
 
 static Suite * imy_create_suite(void)
@@ -489,6 +500,7 @@ static Suite * imy_create_suite(void)
 	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_one_ext_raw);
 	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_two_ext_mid);
 	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_two_ext_raw);
+	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_uppercase_mid);
 
 #ifndef HAVE_STRCASECMP
 	suite_add_tcase(s, tests_imyp_compare);

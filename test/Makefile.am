@@ -35,6 +35,23 @@ cmdtest_SOURCES = cmdtest.c
 cmdtest_CFLAGS = $(COMMON_CFLAGS)
 cmdtest_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_cmd.o
 
+if FILE
+TESTS += parsetst
+check_PROGRAMS += parsetst
+
+parsetst_SOURCES = parsetst.c
+parsetst_CFLAGS = $(COMMON_CFLAGS)
+parsetst_LDADD = $(COMMON_LIBS) $(top_builddir)/src/imyp_fil.o \
+	$(top_builddir)/src/iparsers.o
+
+if FLEX
+parsetst_LDADD += $(top_builddir)/src/imyparsf.o
+else
+parsetst_LDADD += $(top_builddir)/src/imyparse.o
+endif
+
+endif
+
 if ALLEGRO
 TESTS += testalle
 check_PROGRAMS += testalle

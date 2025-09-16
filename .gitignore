@@ -46,6 +46,7 @@ testsdl
 testspk
 testwav
 cmdtest
+parsetst
 
 *.log
 *.trs

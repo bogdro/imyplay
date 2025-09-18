@@ -255,6 +255,15 @@ START_TEST(test_imyp_parse_system_pcspeaker)
 }
 END_TEST
 
+START_TEST(test_imyp_parse_system_wav)
+{
+	printf("test_imyp_parse_system_wav\n");
+	ck_assert_int_eq (imyp_parse_system ("wav"), IMYP_CURR_WAV);
+	ck_assert_int_eq (imyp_parse_system ("awav"), IMYP_CURR_NONE);
+	ck_assert_int_eq (imyp_parse_system ("wava"), IMYP_CURR_NONE);
+}
+END_TEST
+
 START_TEST(test_imyp_parse_system_null)
 {
 	printf("test_imyp_parse_system_null\n");
@@ -444,6 +453,74 @@ START_TEST(test_imyp_generate_filename_uppercase_mid)
 }
 END_TEST
 
+START_TEST(test_imyp_generate_filename_null)
+{
+	char * res;
+
+	printf("test_imyp_generate_filename_null\n");
+	res = imyp_generate_filename(NULL, ".mid");
+	ck_assert_ptr_null(res);
+}
+END_TEST
+
+/* ======================================================= */
+
+START_TEST(test_imyp_samples_zero_be_qual32)
+{
+	int res;
+	char buf[100];
+	unsigned long int start_index = 1;
+
+	printf("test_imyp_samples_zero_be_qual32\n");
+	memset(buf, 1, sizeof(buf));
+	res = imyp_generate_samples(0, 15, 100, buf, 100, 0, 0, 32, 44100, &start_index);
+	ck_assert_int_ne(res, 0);
+	ck_assert_int_eq(buf[0], 0);
+}
+END_TEST
+
+START_TEST(test_imyp_samples_zero_be_qual8)
+{
+	int res;
+	char buf[100];
+	unsigned long int start_index = 1;
+
+	printf("test_imyp_samples_zero_be_qual8\n");
+	memset(buf, 1, sizeof(buf));
+	res = imyp_generate_samples(0, 15, 100, buf, 100, 0, 0, 8, 44100, &start_index);
+	ck_assert_int_ne(res, 0);
+	ck_assert_int_eq(buf[0], 0);
+}
+END_TEST
+
+START_TEST(test_imyp_samples_nonzero_be_qual16)
+{
+	int res;
+	char buf[100];
+	unsigned long int start_index = 1;
+
+	printf("test_imyp_samples_nonzero_be_qual16\n");
+	memset(buf, 1, sizeof(buf));
+	res = imyp_generate_samples(20, 15, 100, buf, 100, 0, 0, 16, 44100, &start_index);
+	ck_assert_int_ne(res, 0);
+	ck_assert_int_ne(buf[0], 0);
+}
+END_TEST
+
+START_TEST(test_imyp_samples_nonzero_be_qual8)
+{
+	int res;
+	char buf[100];
+	unsigned long int start_index = 1;
+
+	printf("test_imyp_samples_nonzero_be_qual8\n");
+	memset(buf, 1, sizeof(buf));
+	res = imyp_generate_samples(20, 15, 100, buf, 100, 0, 0, 8, 44100, &start_index);
+	ck_assert_int_ne(res, 0);
+	ck_assert_int_ne(buf[0], 0);
+}
+END_TEST
+
 /* ======================================================= */
 
 static Suite * imy_create_suite(void)
@@ -456,6 +533,7 @@ static Suite * imy_create_suite(void)
 	TCase * tests_imyp_parse_system = tcase_create("imyp_parse_system");
 	TCase * tests_imyp_get_format = tcase_create("imyp_get_format");
 	TCase * tests_imyp_generate_filename = tcase_create("imyp_generate_filename");
+	TCase * tests_imyp_generate_samples = tcase_create("imyp_generate_samples");
 
 #ifndef HAVE_STRCASECMP
 	tcase_add_test (tests_imyp_compare, test_imyp_compare_both_null);
@@ -480,6 +558,7 @@ static Suite * imy_create_suite(void)
 	tcase_add_test (tests_imyp_parse_system, test_imyp_parse_system_gstreamer);
 	tcase_add_test (tests_imyp_parse_system, test_imyp_parse_system_file);
 	tcase_add_test (tests_imyp_parse_system, test_imyp_parse_system_pcspeaker);
+	tcase_add_test (tests_imyp_parse_system, test_imyp_parse_system_wav);
 	tcase_add_test (tests_imyp_parse_system, test_imyp_parse_system_null);
 
 	tcase_add_test (tests_imyp_get_format, test_imyp_get_format_s16le);
@@ -501,6 +580,12 @@ static Suite * imy_create_suite(void)
 	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_two_ext_mid);
 	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_two_ext_raw);
 	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_uppercase_mid);
+	tcase_add_test (tests_imyp_generate_filename, test_imyp_generate_filename_null);
+
+	tcase_add_test (tests_imyp_generate_samples, test_imyp_samples_zero_be_qual32);
+	tcase_add_test (tests_imyp_generate_samples, test_imyp_samples_zero_be_qual8);
+	tcase_add_test (tests_imyp_generate_samples, test_imyp_samples_nonzero_be_qual16);
+	tcase_add_test (tests_imyp_generate_samples, test_imyp_samples_nonzero_be_qual8);
 
 #ifndef HAVE_STRCASECMP
 	suite_add_tcase(s, tests_imyp_compare);

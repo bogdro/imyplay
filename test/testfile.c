@@ -41,6 +41,8 @@ const char * imyp_progname = "test";
 
 #ifdef IMYP_HAVE_FILE
 
+# define IMYP_TEST_OUT_NAME "aimytest.raw"
+
 /* ======================================================= */
 
 START_TEST(test_file_pause_zero)
@@ -92,12 +94,16 @@ END_TEST
 
 START_TEST(test_file_play_duration_zero)
 {
-	imyp_backend_data_t data = {0};
+	imyp_backend_data_t * data;
 	char buf[1] = {0};
 	int res;
 
 	printf ("test_file_play_duration_zero\n");
-	res = imyp_file_play_tune (&data, 1000, 7, 0, buf, 1);
+	res = imyp_file_init(&data, NULL, IMYP_TEST_OUT_NAME);
+	ck_assert_int_eq (res, 0);
+	res = imyp_file_play_tune (data, 1000, 7, 0, buf, 1);
+	imyp_file_close (data);
+	unlink(IMYP_TEST_OUT_NAME);
 	ck_assert_int_eq (res, 0);
 }
 END_TEST

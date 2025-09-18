@@ -102,23 +102,33 @@ END_TEST
 
 START_TEST(test_spkr_play_bufsize_zero)
 {
-	imyp_backend_data_t data = {0};
+	union d
+	{
+		imyp_backend_data_t data;
+		char a[100];
+	} dt;
 	char buf[1] = {0};
 	int res;
 
 	printf ("test_spkr_play_bufsize_zero\n");
-	res = imyp_spkr_play_tune (&data, 1000, 7, 500, buf, 0);
+	memset (dt.a, 1, 100);
+	res = imyp_spkr_play_tune ((imyp_backend_data_t *)&dt, 1000, 7, 500, buf, 0);
 	ck_assert_int_ne (res, 0);
 }
 END_TEST
 
 START_TEST(test_spkr_play_buf_null)
 {
-	imyp_backend_data_t data = {0};
+	union d
+	{
+		imyp_backend_data_t data;
+		char a[100];
+	} dt;
 	int res;
 
 	printf ("test_spkr_play_buf_null\n");
-	res = imyp_spkr_play_tune (&data, 1000, 7, 500, NULL, 100);
+	memset (dt.a, 1, 100);
+	res = imyp_spkr_play_tune ((imyp_backend_data_t *)&dt, 1000, 7, 500, NULL, 100);
 	ck_assert_int_ne (res, 0);
 }
 END_TEST

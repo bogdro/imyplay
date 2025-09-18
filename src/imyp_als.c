@@ -344,7 +344,7 @@ imyp_alsa_close (
 	{
 		snd_pcm_drain (data->handle);
 		snd_pcm_close (data->handle);
-		snd_pcm_hw_free (data->handle);
+		/*snd_pcm_hw_free (data->handle);*/
 		snd_pcm_hw_params_free (data->params);
 #ifdef HAVE_MALLOC
 		free (data);

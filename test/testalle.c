@@ -31,6 +31,10 @@
 
 #include <stdio.h>
 
+#ifdef IMYP_HAVE_ALLEGRO
+# include <allegro.h>	/* END_OF_MAIN() */
+#endif
+
 /* dummy variables provided by files not included in the test */
 int imyp_sig_recvd = 0;
 const char * imyp_progname = "test";
@@ -225,6 +229,10 @@ static Suite * imy_create_suite(void)
 }
 #endif /* #ifdef IMYP_HAVE_ALLEGRO */
 
+#ifdef END_OF_MAIN
+int _mangled_main (int argc, char * argv[]);
+#endif
+
 int main(void)
 {
 #ifdef IMYP_HAVE_ALLEGRO
@@ -243,3 +251,7 @@ int main(void)
 	return IMYP_RESULT_TEST_SKIPPED;
 #endif
 }
+
+#ifdef END_OF_MAIN
+END_OF_MAIN ()
+#endif

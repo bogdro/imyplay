@@ -473,7 +473,7 @@ START_TEST(test_imyp_samples_zero_be_qual32)
 
 	printf("test_imyp_samples_zero_be_qual32\n");
 	memset(buf, 1, sizeof(buf));
-	res = imyp_generate_samples(0, 15, 100, buf, 100, 0, 0, 32, 44100, &start_index);
+	res = imyp_generate_samples(0, 15, 100, buf, sizeof(buf) / 4, 0, 0, 32, 44100, &start_index);
 	ck_assert_int_ne(res, 0);
 	ck_assert_int_eq(buf[0], 0);
 }
@@ -487,7 +487,7 @@ START_TEST(test_imyp_samples_zero_be_qual8)
 
 	printf("test_imyp_samples_zero_be_qual8\n");
 	memset(buf, 1, sizeof(buf));
-	res = imyp_generate_samples(0, 15, 100, buf, 100, 0, 0, 8, 44100, &start_index);
+	res = imyp_generate_samples(0, 15, 100, buf, sizeof(buf), 0, 0, 8, 44100, &start_index);
 	ck_assert_int_ne(res, 0);
 	ck_assert_int_eq(buf[0], 0);
 }
@@ -500,10 +500,10 @@ START_TEST(test_imyp_samples_nonzero_be_qual16)
 	unsigned long int start_index = 1;
 
 	printf("test_imyp_samples_nonzero_be_qual16\n");
-	memset(buf, 1, sizeof(buf));
-	res = imyp_generate_samples(20, 15, 100, buf, 100, 0, 0, 16, 44100, &start_index);
+	memset(buf, 0, sizeof(buf));
+	res = imyp_generate_samples(440, 15, 100, buf, sizeof(buf) / 2, 0, 0, 16, 44100, &start_index);
 	ck_assert_int_ne(res, 0);
-	ck_assert_int_ne(buf[0], 0);
+	ck_assert_int_ne(buf[15], 0);
 }
 END_TEST
 
@@ -515,7 +515,7 @@ START_TEST(test_imyp_samples_nonzero_be_qual8)
 
 	printf("test_imyp_samples_nonzero_be_qual8\n");
 	memset(buf, 1, sizeof(buf));
-	res = imyp_generate_samples(20, 15, 100, buf, 100, 0, 0, 8, 44100, &start_index);
+	res = imyp_generate_samples(440, 15, 100, buf, sizeof(buf), 0, 0, 8, 44100, &start_index);
 	ck_assert_int_ne(res, 0);
 	ck_assert_int_ne(buf[0], 0);
 }
@@ -593,6 +593,7 @@ static Suite * imy_create_suite(void)
 	suite_add_tcase(s, tests_imyp_parse_system);
 	suite_add_tcase(s, tests_imyp_get_format);
 	suite_add_tcase(s, tests_imyp_generate_filename);
+	suite_add_tcase(s, tests_imyp_generate_samples);
 
 	return s;
 }

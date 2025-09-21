@@ -235,14 +235,14 @@ SectionGroup "Shortcuts"
 
 		StrCpy $has_start_menu "1"
 		CreateDirectory "$SMPROGRAMS\IMYplay"
-		CreateShortCut "$SMPROGRAMS\IMYplay\IMYplay ${VERSION}.lnk" "$INSTDIR\imyplay.bat"
+		CreateShortCut "$SMPROGRAMS\IMYplay\IMYplay ${VERSION}.lnk" "$INSTDIR\imyplay.bat" "" "$INSTDIR\imyplay.ico"
 		CreateShortCut "$SMPROGRAMS\IMYplay\Uninstall IMYplay.lnk" "$INSTDIR\uninstall.exe"
 
 	SectionEnd
 
 	Section "Desktop shortcut"
 
-		CreateShortCut "$DESKTOP\IMYplay.lnk" "$INSTDIR\imyplay.exe"
+		CreateShortCut "$DESKTOP\IMYplay.lnk" "$INSTDIR\imyplay.exe" "" "$INSTDIR\imyplay.ico"
 
 	SectionEnd
 
@@ -250,7 +250,7 @@ SectionGroup "Shortcuts"
 
 		StrCmp "$QUICKLAUNCH" "$TEMP" no_quicklaunch
 
-			CreateShortCut "$QUICKLAUNCH\IMYplay.lnk" "$INSTDIR\imyplay.exe"
+			CreateShortCut "$QUICKLAUNCH\IMYplay.lnk" "$INSTDIR\imyplay.exe" "" "$INSTDIR\imyplay.ico"
 
 		no_quicklaunch:
 
@@ -266,7 +266,7 @@ SectionGroup "Shortcuts"
 
 			FileClose $0
 
-			CreateShortCut "$SENDTO\IMYplay.lnk" "$INSTDIR\imyplay-sendto.bat" "" "$INSTDIR\imyplay.exe"
+			CreateShortCut "$SENDTO\IMYplay.lnk" "$INSTDIR\imyplay-sendto.bat" "" "$INSTDIR\imyplay.ico"
 
 		file_error:
 

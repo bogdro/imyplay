@@ -35,6 +35,14 @@
 # include <unistd.h>	/* write(), close() */
 #endif
 
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
+
+#ifdef HAVE_MALLOC_H
+# include <malloc.h>
+#endif
+
 /* dummy variables provided by files not included in the test */
 int imyp_sig_recvd = 0;
 const char * imyp_progname = "test";
@@ -45,6 +53,15 @@ const char * imyp_progname = "test";
 
 /* ======================================================= */
 
+START_TEST(test_file_pause_zero_null_data)
+{
+	char buf[1] = {0};
+
+	printf ("test_file_pause_zero_null_data\n");
+	imyp_file_pause (NULL, 0, buf, 1);
+}
+END_TEST
+
 START_TEST(test_file_pause_zero)
 {
 	char buf[1] = {0};
@@ -54,12 +71,55 @@ START_TEST(test_file_pause_zero)
 }
 END_TEST
 
-START_TEST(test_file_pause_nonzero)
+START_TEST(test_file_pause)
 {
+	imyp_backend_data_t * data;
 	char buf[1] = {0};
+	FILE * f;
+	int res;
 
 	printf ("test_file_pause_nonzero\n");
-	imyp_file_pause (NULL, 10, buf, 1);
+	res = imyp_file_init (&data, "44100:s16le", "filename");
+	ck_assert_int_eq (res, 0);
+	imyp_file_pause (data, 10, buf, 1);
+	res = imyp_file_close (data);
+	ck_assert_int_eq (res, 0);
+	f = fopen ("filename.raw", "r");
+	if ( f != NULL )
+	{
+		fclose (f);
+		unlink ("filename.raw");
+	}
+	else
+	{
+		ck_assert (f != NULL);
+	}
+}
+END_TEST
+
+START_TEST(test_file_pause_8bit)
+{
+	imyp_backend_data_t * data;
+	char buf[1] = {0};
+	FILE * f;
+	int res;
+
+	printf ("test_file_pause_8bit\n");
+	res = imyp_file_init (&data, "44100:s8le", "filename");
+	ck_assert_int_eq (res, 0);
+	imyp_file_pause (data, 10, buf, 1);
+	res = imyp_file_close (data);
+	ck_assert_int_eq (res, 0);
+	f = fopen ("filename.raw", "r");
+	if ( f != NULL )
+	{
+		fclose (f);
+		unlink ("filename.raw");
+	}
+	else
+	{
+		ck_assert (f != NULL);
+	}
 }
 END_TEST
 
@@ -128,6 +188,33 @@ START_TEST(test_file_play_buf_null)
 	printf ("test_file_play_buf_null\n");
 	res = imyp_file_play_tune (&data, 1000, 7, 500, NULL, 100);
 	ck_assert_int_ne (res, 0);
+}
+END_TEST
+
+START_TEST(test_file_play_8b_uns_be)
+{
+	imyp_backend_data_t * data;
+	char buf[100] = {0};
+	FILE * f;
+	int res;
+
+	printf ("test_file_play_8b_uns_be\n");
+	res = imyp_file_init (&data, "44100:u8be", "filename");
+	ck_assert_int_eq (res, 0);
+	res = imyp_file_play_tune (data, 1000, 7, 500, buf, 100);
+	ck_assert_int_eq (res, 0);
+	res = imyp_file_close (data);
+	ck_assert_int_eq (res, 0);
+	f = fopen ("filename.raw", "r");
+	if ( f != NULL )
+	{
+		fclose (f);
+		unlink ("filename.raw");
+	}
+	else
+	{
+		ck_assert (f != NULL);
+	}
 }
 END_TEST
 
@@ -203,6 +290,30 @@ START_TEST(test_file_init_close_rev_dev)
 }
 END_TEST
 
+START_TEST(test_file_init_close_invalid_samp)
+{
+	imyp_backend_data_t * data;
+	int res;
+	FILE * f;
+
+	printf ("test_file_init_close_invalid_samp\n");
+	res = imyp_file_init (&data, "-44100:s16le", "filename");
+	ck_assert_int_eq (res, 0);
+	res = imyp_file_close (data);
+	ck_assert_int_eq (res, 0);
+	f = fopen ("filename.raw", "r");
+	if ( f != NULL )
+	{
+		fclose (f);
+		unlink ("filename.raw");
+	}
+	else
+	{
+		ck_assert (f != NULL);
+	}
+}
+END_TEST
+
 START_TEST(test_file_init_close)
 {
 	imyp_backend_data_t * data;
@@ -224,6 +335,20 @@ START_TEST(test_file_init_close)
 	{
 		ck_assert (f != NULL);
 	}
+}
+END_TEST
+
+START_TEST(test_file_close_null_file)
+{
+	imyp_backend_data_t * data;
+	int res;
+
+	printf ("test_file_close_null_file\n");
+	data = (imyp_backend_data_t *) malloc (100);
+	ck_assert_ptr_nonnull(data);
+	memset (data, 0, 100);
+	res = imyp_file_close (data);
+	ck_assert_int_ne (res, 0);
 }
 END_TEST
 
@@ -257,19 +382,28 @@ static Suite * imy_create_suite(void)
 	TCase * tc_init_close = tcase_create("init_close");
 	TCase * tc_version = tcase_create("version");
 
+	tcase_add_test (tc_pause, test_file_pause_zero_null_data);
 	tcase_add_test (tc_pause, test_file_pause_zero);
-	tcase_add_test (tc_pause, test_file_pause_nonzero);
+	tcase_add_test (tc_pause, test_file_pause);
+	tcase_add_test (tc_pause, test_file_pause_8bit);
+
 	tcase_add_test (tc_put_text, test_file_put_text_null);
 	tcase_add_test (tc_put_text, test_file_put_text_nonnull);
+
 	tcase_add_test (tc_play, test_file_play_null_data);
 	tcase_add_test (tc_play, test_file_play_duration_zero);
 	tcase_add_test (tc_play, test_file_play_bufsize_zero);
 	tcase_add_test (tc_play, test_file_play_buf_null);
+	tcase_add_test (tc_play, test_file_play_8b_uns_be);
+
 	tcase_add_test (tc_init_close, test_file_init_close_dev_null_fn_null);
 	tcase_add_test (tc_init_close, test_file_init_close_dev_notnull_fn_null);
 	tcase_add_test (tc_init_close, test_file_init_close_dev_null_fn_notnull);
 	tcase_add_test (tc_init_close, test_file_init_close_rev_dev);
+	tcase_add_test (tc_init_close, test_file_init_close_invalid_samp);
 	tcase_add_test (tc_init_close, test_file_init_close);
+	tcase_add_test (tc_init_close, test_file_close_null_file);
+
 	tcase_add_test (tc_version, test_file_ver_nonnull);
 	tcase_add_test (tc_version, test_file_ver_null);
 

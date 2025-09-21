@@ -523,6 +523,29 @@ END_TEST
 
 /* ======================================================= */
 
+START_TEST(test_imyp_show_error)
+{
+	printf("test_imyp_show_error\n");
+	imyp_show_error(1, "test_imyp_show_error", "extra");
+}
+END_TEST
+
+START_TEST(test_imyp_show_error_null_extra)
+{
+	printf("test_imyp_show_error_null_extra\n");
+	imyp_show_error(0, "test_imyp_show_error_null_extra", NULL);
+}
+END_TEST
+
+START_TEST(test_imyp_show_error_null_msg)
+{
+	printf("test_imyp_show_error_null_msg\n");
+	imyp_show_error(-1, NULL, "extra");
+}
+END_TEST
+
+/* ======================================================= */
+
 static Suite * imy_create_suite(void)
 {
 	Suite * s = suite_create("imyplay_util");
@@ -534,6 +557,7 @@ static Suite * imy_create_suite(void)
 	TCase * tests_imyp_get_format = tcase_create("imyp_get_format");
 	TCase * tests_imyp_generate_filename = tcase_create("imyp_generate_filename");
 	TCase * tests_imyp_generate_samples = tcase_create("imyp_generate_samples");
+	TCase * tests_imyp_show_error = tcase_create("imyp_show_error");
 
 #ifndef HAVE_STRCASECMP
 	tcase_add_test (tests_imyp_compare, test_imyp_compare_both_null);
@@ -587,6 +611,10 @@ static Suite * imy_create_suite(void)
 	tcase_add_test (tests_imyp_generate_samples, test_imyp_samples_nonzero_be_qual16);
 	tcase_add_test (tests_imyp_generate_samples, test_imyp_samples_nonzero_be_qual8);
 
+	tcase_add_test (tests_imyp_show_error, test_imyp_show_error);
+	tcase_add_test (tests_imyp_show_error, test_imyp_show_error_null_extra);
+	tcase_add_test (tests_imyp_show_error, test_imyp_show_error_null_msg);
+
 #ifndef HAVE_STRCASECMP
 	suite_add_tcase(s, tests_imyp_compare);
 #endif /* ! HAVE_STRCASECMP */
@@ -594,6 +622,7 @@ static Suite * imy_create_suite(void)
 	suite_add_tcase(s, tests_imyp_get_format);
 	suite_add_tcase(s, tests_imyp_generate_filename);
 	suite_add_tcase(s, tests_imyp_generate_samples);
+	suite_add_tcase(s, tests_imyp_show_error);
 
 	return s;
 }

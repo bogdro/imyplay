@@ -43,33 +43,83 @@ const char * imyp_progname = "test";
 
 /* ======================================================= */
 
+START_TEST(test_midi_pause_null_data)
+{
+	printf ("test_midi_pause_null_data\n");
+	imyp_midi_pause (NULL, 0, 0);
+}
+END_TEST
+
 START_TEST(test_midi_pause_zero)
 {
+	imyp_backend_data_t * data;
+	int res;
+
 	printf ("test_midi_pause_zero\n");
+	res = imyp_midi_init (&data, "filename", 1);
+	ck_assert_int_eq (res, 0);
 	imyp_midi_pause (NULL, 0, 0);
+	imyp_midi_close (data);
 }
 END_TEST
 
 START_TEST(test_midi_pause_nonzero)
 {
+	imyp_backend_data_t * data;
+	int res;
+
 	printf ("test_midi_pause_nonzero\n");
+	res = imyp_midi_init (&data, "filename", 1);
+	ck_assert_int_eq (res, 0);
 	imyp_midi_pause (NULL, 10, 1);
+	imyp_midi_close (data);
 }
 END_TEST
 
 /* ======================================================= */
 
+START_TEST(test_midi_put_text_null_data)
+{
+	printf ("test_midi_put_text_null_data\n");
+	imyp_midi_put_text (NULL, NULL);
+}
+END_TEST
+
 START_TEST(test_midi_put_text_null)
 {
+	imyp_backend_data_t * data;
+	int res;
+
 	printf ("test_midi_put_text_null\n");
+	res = imyp_midi_init (&data, "filename", 1);
+	ck_assert_int_eq (res, 0);
 	imyp_midi_put_text (NULL, NULL);
 }
 END_TEST
 
 START_TEST(test_midi_put_text_nonnull)
 {
+	imyp_backend_data_t * data;
+	int res;
+
 	printf ("test_midi_put_text_nonnull\n");
+	res = imyp_midi_init (&data, "filename", 1);
+	ck_assert_int_eq (res, 0);
 	imyp_midi_put_text (NULL, "imyp_midi_put_text works");
+	imyp_midi_close (data);
+}
+END_TEST
+
+START_TEST(test_midi_put_text_matches)
+{
+	imyp_backend_data_t * data;
+	int res;
+
+	printf ("test_midi_put_text_matches\n");
+	res = imyp_midi_init (&data, "filename", 1);
+	ck_assert_int_eq (res, 0);
+	imyp_midi_put_text (NULL, "NAME: TEST");
+	imyp_midi_close (data);
 }
 END_TEST
 
@@ -142,6 +192,44 @@ START_TEST(test_midi_play_buf_null)
 }
 END_TEST
 
+START_TEST(test_midi_play_volume_zero)
+{
+	/* Needs SOME kind of initialization not to crash: */
+	union d
+	{
+		imyp_backend_data_t data;
+		char a[100];
+	} dt;
+	imyp_backend_data_t * dtp = (imyp_backend_data_t *)&dt;
+	char buf[1] = {0};
+	int res;
+
+	printf ("test_midi_play_buf_null\n");
+	memset (dt.a, 0, 100);
+	res = imyp_midi_play_tune (dtp, 440, 0, 500, buf, 100);
+	ck_assert_int_ne (res, 0);
+}
+END_TEST
+
+START_TEST(test_midi_play_invalid_octave)
+{
+	/* Needs SOME kind of initialization not to crash: */
+	union d
+	{
+		imyp_backend_data_t data;
+		char a[100];
+	} dt;
+	imyp_backend_data_t * dtp = (imyp_backend_data_t *)&dt;
+	char buf[1] = {0};
+	int res;
+
+	printf ("test_midi_play_buf_null\n");
+	memset (dt.a, 0, 100);
+	res = imyp_midi_play_tune (dtp, 44000, 7, 500, buf, 100);
+	ck_assert_int_ne (res, 0);
+}
+END_TEST
+
 /* ======================================================= */
 
 START_TEST(test_midi_init_close_fn_null)
@@ -163,6 +251,30 @@ START_TEST(test_midi_init_close)
 
 	printf ("test_midi_init_close\n");
 	res = imyp_midi_init (&data, "filename", 1);
+	ck_assert_int_eq (res, 0);
+	res = imyp_midi_close (data);
+	ck_assert_int_eq (res, 0);
+	f = fopen ("filename.mid", "r");
+	if ( f != NULL )
+	{
+		fclose (f);
+		unlink ("filename.mid");
+	}
+	else
+	{
+		ck_assert (f != NULL);
+	}
+}
+END_TEST
+
+START_TEST(test_midi_init_close_no_instr)
+{
+	imyp_backend_data_t * data;
+	int res;
+	FILE * f;
+
+	printf ("test_midi_init_close_no_instr\n");
+	res = imyp_midi_init (&data, "filename", -1);
 	ck_assert_int_eq (res, 0);
 	res = imyp_midi_close (data);
 	ck_assert_int_eq (res, 0);
@@ -209,16 +321,26 @@ static Suite * imy_create_suite(void)
 	TCase * tc_init_close = tcase_create("init_close");
 	TCase * tc_version = tcase_create("version");
 
+	tcase_add_test (tc_pause, test_midi_pause_null_data);
 	tcase_add_test (tc_pause, test_midi_pause_zero);
 	tcase_add_test (tc_pause, test_midi_pause_nonzero);
+
+	tcase_add_test (tc_put_text, test_midi_put_text_null_data);
 	tcase_add_test (tc_put_text, test_midi_put_text_null);
 	tcase_add_test (tc_put_text, test_midi_put_text_nonnull);
+	tcase_add_test (tc_put_text, test_midi_put_text_matches);
+
 	tcase_add_test (tc_play, test_midi_play_null_data);
 	tcase_add_test (tc_play, test_midi_play_duration_zero);
 	tcase_add_test (tc_play, test_midi_play_bufsize_zero);
 	tcase_add_test (tc_play, test_midi_play_buf_null);
+	tcase_add_test (tc_play, test_midi_play_volume_zero);
+	tcase_add_test (tc_play, test_midi_play_invalid_octave);
+
 	tcase_add_test (tc_init_close, test_midi_init_close_fn_null);
 	tcase_add_test (tc_init_close, test_midi_init_close);
+	tcase_add_test (tc_init_close, test_midi_init_close_no_instr);
+
 	tcase_add_test (tc_version, test_midi_ver_nonnull);
 	tcase_add_test (tc_version, test_midi_ver_null);
 

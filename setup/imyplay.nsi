@@ -139,6 +139,7 @@ Var has_start_menu
 
 	!define MUI_FINISHPAGE_NOAUTOCLOSE
 	!define MUI_UNFINISHPAGE_NOAUTOCLOSE
+	!define MUI_COMPONENTSPAGE_NODESC
 
 	!insertmacro MUI_PAGE_WELCOME
 	!insertmacro MUI_PAGE_LICENSE "license.txt"

@@ -96,7 +96,7 @@ START_TEST(test_imyp_parse_file)
 	fputs("BEAT:120\n", f);
 	fputs("STYLE:S1\n", f);
 	fputs("VOLUME:V15\n", f);
-	fputs("MELODY:c1vibeond2vibeoffV3e3.backonf4:backoffg5;v+\r\n ledon*0(E4*4V5\r\n &f4*33#g4V+r4V-ledon@3)V33&c0ledoff*8V-#B4*4&C5&A5#G5#B5R5\n", f);
+	fputs("MELODY:c1vibeond2vibeoffV3e3.aaVVbackonf4:*99backoffg5;v+\r\n ledon*0(E4*4V5\r\n &f4*33#g4V+r4V-ledonv22*xvz@3)V33(a1@z)&c0ledoff*8V-#B4*4&C5*x&A5#G5#B5R5x\n", f);
 	fputs("END:IMELODY\n", f);
 	fclose(f);
 

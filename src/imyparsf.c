@@ -1670,7 +1670,7 @@ YY_RULE_SETUP
 {
 
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -1692,7 +1692,7 @@ YY_RULE_SETUP
 {
 
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -1714,7 +1714,7 @@ YY_RULE_SETUP
 {
 
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -1736,7 +1736,7 @@ YY_RULE_SETUP
 {
 
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -1757,7 +1757,7 @@ YY_RULE_SETUP
 {
 
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -1777,7 +1777,7 @@ YY_RULE_SETUP
 {
 
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -1819,7 +1819,7 @@ YY_RULE_SETUP
 {
 
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -1871,7 +1871,7 @@ YY_RULE_SETUP
 	}
 	/*printf ("Got new volume (value) in repeat block: '%s'\n", yytext);*/
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -1916,6 +1916,7 @@ YY_RULE_SETUP
 #line 870 "imyparsf.l"
 {
 
+	repeat_pos += yyleng;
 	if ( YY_START == IN_REPEAT_BLOCK /*repeat_count == -2*/ )
 	{
 		if ( sscanf (strchr (yytext, '@')+1, "%d", &repeat_count) == 1 )
@@ -1962,11 +1963,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 916 "imyparsf.l"
+#line 917 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -1999,13 +2000,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 950 "imyparsf.l"
+#line 951 "imyparsf.l"
 {
 
 	if ( repeat_count == -1 )
 	{
 		/* infinite repeat: return everything to the stream, so we can catch the line again. */
 		yyless (0);
+		repeat_pos = pos;
 		BEGIN (IN_REPEAT_BLOCK_PASS);
 	}
 	else
@@ -2015,6 +2017,7 @@ YY_RULE_SETUP
 		{
 			/* return everything to the stream, so we can catch the line again. */
 			yyless (0);
+			repeat_pos = pos;
 			BEGIN (IN_REPEAT_BLOCK_PASS);
 		}
 		else
@@ -2034,7 +2037,7 @@ YY_RULE_SETUP
 case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
-#line 981 "imyparsf.l"
+#line 984 "imyparsf.l"
 {
 
 	/* a newline NOT followed by whitespace means the end of the melody line. */
@@ -2051,10 +2054,10 @@ YY_RULE_SETUP
 case 35:
 /* rule 35 can match eol */
 YY_RULE_SETUP
-#line 994 "imyparsf.l"
+#line 997 "imyparsf.l"
 {
 
-	pos = 0;
+	repeat_pos = 0;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -2068,11 +2071,11 @@ YY_RULE_SETUP
 case 36:
 /* rule 36 can match eol */
 YY_RULE_SETUP
-#line 1007 "imyparsf.l"
+#line 1010 "imyparsf.l"
 {
 
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -2085,13 +2088,13 @@ YY_RULE_SETUP
 /* anything not processed up to here is an unknown token */
 case 37:
 YY_RULE_SETUP
-#line 1021 "imyparsf.l"
+#line 1024 "imyparsf.l"
 {
 
 	printf ("%s: '%c' (0x%x) %s %d:%d\n",
 		_(err_unkn_token),
-		*yytext,
-		(unsigned int)*yytext,
+		*(yytext + yyleng - 1),
+		(unsigned int)*(yytext + yyleng - 1),
 		_(err_at_pos),
 		yylineno,
 		pos+1);
@@ -2106,18 +2109,19 @@ YY_RULE_SETUP
 /* anything not processed up to here is an unknown token */
 case 38:
 YY_RULE_SETUP
-#line 1039 "imyparsf.l"
+#line 1042 "imyparsf.l"
 {
 
-	printf ("%s: '%c' (0x%x) %s %d:%d\n",
+	printf ("%s: '%c' (0x%x) %s %d:%d - '%s'\n",
 		_(err_unkn_token),
-		*yytext,
-		(unsigned int)*yytext,
+		*(yytext + yyleng - 1),
+		(unsigned int)*(yytext + yyleng - 1),
 		_(err_at_pos),
 		yylineno,
-		repeat_pos+1);
+		yyleng - 1,
+		yytext);
 	/* update the line position to display the position of unknown tokens */
-	repeat_pos = pos + yyleng;
+	repeat_pos += yyleng;
 	/* in a repeat block, collect all the elements to repeat and return to them
 	   after looking through the whole repeat block. */
 	yymore ();
@@ -2130,7 +2134,7 @@ YY_RULE_SETUP
 case 39:
 /* rule 39 can match eol */
 YY_RULE_SETUP
-#line 1059 "imyparsf.l"
+#line 1063 "imyparsf.l"
 {
 
 	BEGIN (INITIAL);
@@ -2146,7 +2150,7 @@ YY_RULE_SETUP
 case 40:
 /* rule 40 can match eol */
 YY_RULE_SETUP
-#line 1071 "imyparsf.l"
+#line 1075 "imyparsf.l"
 {
 
 	/* skip leftover newline characters inside the melody block
@@ -2160,7 +2164,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 1082 "imyparsf.l"
+#line 1086 "imyparsf.l"
 {
 
 	ECHO; /* echo unknown characters inside the melody block */
@@ -2173,7 +2177,7 @@ YY_RULE_SETUP
 case 42:
 /* rule 42 can match eol */
 YY_RULE_SETUP
-#line 1091 "imyparsf.l"
+#line 1095 "imyparsf.l"
 {
 /* NOTE: using just ".|\x00" is NOT enough */
 
@@ -2187,10 +2191,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 1102 "imyparsf.l"
+#line 1106 "imyparsf.l"
 YY_FATAL_ERROR( "flex scanner jammed" );
 	YY_BREAK
-#line 2194 "imyparsf.c"
+#line 2198 "imyparsf.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(IN_IMELODY):
 case YY_STATE_EOF(IN_MELODY_LINE):
@@ -3176,7 +3180,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 1102 "imyparsf.l"
+#line 1106 "imyparsf.l"
 
 
 /* ======================================================================== */

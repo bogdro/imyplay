@@ -67,6 +67,14 @@
 # define M_PI 3.14159265358979323846
 #endif
 
+#if (defined WIN32) || (defined WINNT)
+# define IMYP_SDL_WIN 1
+#else
+# ifdef IMYP_SDL_WIN
+#  undef IMYP_SDL_WIN
+# endif
+#endif
+
 struct imyp_sdl_backend_data
 {
 	double tone_freq;
@@ -247,8 +255,11 @@ imyp_sdl_play_tune (
 		SDL_PauseAudio (0);	/* start playing */
 		SDL_UnlockAudio ();
 
+#ifdef IMYP_SDL_WIN
+		while ( (data->samples_remain > 0) && (imyp_sig_recvd == 0) ) { /* wait while playing */ }
+#else
 		imyp_sdl_pause (imyp_data, duration);
-
+#endif
 		SDL_PauseAudio (1);
 		SDL_LockAudio ();
 
@@ -339,7 +350,11 @@ imyp_sdl_init (
 		AUDIO_S16LSB, /**< Audio data format */
 		1, /**< Number of channels: 1 mono, 2 stereo */
 		0, /**< Audio buffer silence value (calculated) */
-		100 /**< Audio buffer size in samples */,
+#ifdef IMYP_SDL_WIN
+		44100,
+#else
+		100, /**< Audio buffer size in samples */
+#endif
 		0, /**< Necessary for some compile environments */
 		0, /**< Audio buffer size in bytes (calculated) */
 		&imyp_sdl_fill_buffer,
@@ -355,7 +370,7 @@ imyp_sdl_init (
 		return -100;
 	}
 
-#if (defined HAVE_GETENV) && ((defined WIN32) || (defined WINNT))
+#if (defined HAVE_GETENV) && (defined IMYP_SDL_WIN)
 	/* try to set some default SDL audio backend, if none is set */
 	if ( getenv ("SDL_AUDIODRIVER") == NULL )
 	{

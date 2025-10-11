@@ -20,7 +20,7 @@
 #
 
 VERSION_MAJ = 2
-VERSION_MIN = 0
+VERSION_MIN = 1
 VERSION_SUB = 
 
 ##################################

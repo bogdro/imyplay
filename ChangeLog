@@ -1,3 +1,99 @@
+2025-10-04	Bogdan Drozdowski <bogdro =at/ users . sourceforge . net>
+
+	* IMYplay version 2.1
+	  Added WAV file output support (+ DOS). SDL output improvements.
+	  Parser improvements. Compatibility improvements. Security
+	  improvements - IMYplay now drops suid permissions with the EXEC,
+	  FILE, MIDI and the new WAV backends. Code quality updates
+	  (SonarCloud, Codacy, cppcheck, flawfinder). Memory management
+	  improvements (with help from Valgrind). Updates in unit tests and
+	  new tests. Other code changes, fixes and improvements. Updates
+	  in the build system (especially for DOS). Documentation updates.
+	* configure.ac: Check for the strncasecmp(), getuid(), geteuid() and
+	  setuid() functions. Use an auxiliary build directory. Check for the
+	  GCC's __warn_unused_result__ function attribute.
+	* src/imyp_sdl.c (imyp_sdl_fill_buffer): Fixed processing the buffer.
+	* src/imyp_sdl.c (imyp_sdl_init): Shortened the buffer to have shorter
+	  silence between notes.
+	* src/imyp_jck.c (imyp_jack_fill_buffer): Fix a case of potentially-
+	  uninitialized variable. Update frame count check.
+	* src/imyp_sdl.c (imyp_sdl_play_tune),
+	  src/imyp_por.c (imyp_portaudio_play_tune): Removed spin-loops.
+	* src/imyputil.{c,h} (imyp_compare_n): Created a replacement for the
+	  strncasecmp() function.
+	* src/imyputil.{c,h} (drop_priv_if_suid): Created a function to drop
+	  set-user-id privileges to use in potentially-dangerous backends.
+	* src/imyp_exe.c (imyp_exec_init): Drop set-user-id privileges on init
+	  and return error if not done.
+	* src/imyp_fil.c (imyp_file_init): Drop set-user-id privileges on init
+	  and return error if not done.
+	* src/imyp_mid.c (imyp_midi_init): Drop set-user-id privileges on init
+	  and return error if not done.
+	* src/imyparse.c (imyp_play_file): Use the strncasecmp() function
+	  (or the replacement), removing imyp_check_string().
+	* src/imyparsf.l, src/imyparse.c (imyp_play_file): Allow STYLE values
+	  without an "S" and VOLUME values without "V".
+	* src/imyp_cmd.{c,h}, src/imyplay.{c,h}, src/imyputil.{c,h},
+	  src/imyp_gst.c, src/imyp_pul.c, src/imyp_sdl.c, src/imyp_sig.h,
+	  dosfiles.txt: Moved parsing the command line to a separate file.
+	* src/imyplay.h: #defined empty GCC_WARN_UNUSED_RESULT if not present.
+	* src/imyp_wav.{c,h}, src/imyplay.h, src/imypwrap.{c,h},src/imyputil.c,
+	  src/imyp_cmd.c, src/Makefile.am, configure.ac, doc/imyplay.txc,
+	  README, README.md, INSTALL-imyplay.txt, doc/imyplay.1: Add WAV
+	  output support.
+	* src/imyp_all.c: Avoid duplicated function declarations in DOS.
+	* src/imyputil.c (imyp_generate_filename): Look for the ".imy" file
+	  extension case-insensitive when replacing.
+	* src/imyparsf.l: Allow the duration value 0. Better reporting of
+	  invalid tokens. Check for bigger durations and octaves when parsing
+	  and substituting maximum values.
+	* src/imyparsf.l (imyp_play_current_note): Added missing NULL check.
+	* src/imyp_por.c (imyp_portaudio_init): Fixed uninitialized value
+	  (found by SonarCloud).
+	* src/imyputil.c (imyp_generate_samples): Moved common code before the
+	  if/else condition.
+	* src/imyp_gst.c (imyp_gst_version): Changed printf() format to match
+	  variable types.
+	* src/imyp_jck.c (imyp_jack_close): Removed unnecessary check.
+	* src/imyparse.c (imyp_play_current_note): Fixed check for last B#.
+	* src/imyp_gst.c (imyp_gst_play_tune, imyp_gst_init, imyp_gst_close):
+	  Reduced memory leaks (found by Valgrind).
+	* src/imyp_als.c (imyp_alsa_init): Call also snd_pcm_prepare().
+	* src/imyp_als.c (imyp_alsa_close): Add commented-out calling of
+	  snd_pcm_hw_free().
+	* src/imyp_cmd.c (imyplay_parse_cmdline): Return an error if the
+	  provided MIDI instrument was invalid (not a number).
+	* src/*.{c,h}: Code quality changes (SonarCloud, Codacy) - use
+	  pointers to const. Removed redundant casts. One declaration per
+	  line. Added comments to empty blocks.
+	* test/testwav.c, test/Makefile.am: Added a test for the WAV backend.
+	* test/cmdtest.c, test/Makefile.am: Added a test for command-line
+	  parsing.
+	* test/parsetst.c, test/Makefile.am: Added a test for the parsers.
+	* test/*.c: Adjusted tests after adding command-line parsing.
+	* setup/Makefile.in: Sorted the phony-list.
+	* setup/imyplay.nsi: Added icons to shortcuts. Disabled component
+	  descriptions (were empty).
+	* po/*.po: Change encoding to UTF-8. Updated after moving code.
+	* README, doc/imyplay.txc: Moved the PC-speaker to the list of output
+	  methods.
+	* doc/imyplay.txc: Removed '()' from function names. Linked compiling
+	  issues to the dedicated section "Reporting issues".
+	* README, README.md, INSTALL-imyplay.txt, doc/imyplay.txc: Clarified
+	  the version of the Allegro library. Updated OS compatibility.
+	* doc/imyplay.1: Updated with WAV output.
+	* Makefile.am: Removed unnecessary entries from distribution list.
+	* dosobjs.txt: A separate file with compiled object file names.
+	* Makefile.dos: Improved the building rules and dependency management.
+	  Use object files as dependencies instead of source files. Improved
+	  cleanup. Separated libraries from input files.
+	* Makefile.dos, src/imyp_cfg.hin: Added WAV output support for DOS.
+	* config.guess, config.sub, m4/ax_unus.m4: Updated.
+	* src/*.c, src/*.h, src/*.hin, doc/imyplay.txc, test/*.c, test/*.h,
+	  src/*.l, setup/*.bat, setup/Makefile.in, setup/*.nsi, src/*.asm,
+	  */Makefile.am, dosdist.bat, Makefile.dos, po/*.po, configure.ac,
+	  README, imyplay.spi: Updated the license blocks.
+
 2023-09-29	Bogdan Drozdowski <bogdro =at/ users . sourceforge . net>
 
 	* IMYplay version 2.0
